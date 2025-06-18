@@ -1,26 +1,30 @@
 plugins {
     id 'java'
+    id 'java-library'
+    id 'maven-publish'
     id 'org.springframework.boot' version '3.5.0'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'com.prosilion'
-version = '0.0.1-SNAPSHOT'
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
+group = rootProject.property("nostr-java.group")
+version = rootProject.property("nostr-java.version")
+description = rootProject.property("nostr-java.description")
 
 repositories {
+    gradlePluginPortal()
+    mavenLocal()
     mavenCentral()
+}
+
+publishing {
+    publications {
+        nostrjava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 dependencies {
@@ -32,7 +36,7 @@ dependencies {
     def gson = rootProject.property("nostr-java.gson")
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    
+
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-json'
     implementation 'com.google.code.gson:gson:' + gson
@@ -42,15 +46,27 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:' + apacheCommonsLang3
 
     annotationProcessor 'org.projectlombok:lombok:' + lombok
-    
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.projectlombok:lombok:' + lombok
     testImplementation 'com.google.guava:guava:' + googleGuava
-    
+
     testAnnotationProcessor 'org.projectlombok:lombok:' + lombok
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
