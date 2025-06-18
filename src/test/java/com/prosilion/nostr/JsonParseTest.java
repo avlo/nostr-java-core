@@ -5,8 +5,8 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.codec.deserializer.TagDeserializer;
 import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.enums.Command;
+import com.prosilion.nostr.event.GenericEventId;
 import com.prosilion.nostr.event.internal.ElementAttribute;
-import com.prosilion.nostr.event.GenericEventDto;
 import com.prosilion.nostr.event.GenericEventDtoIF;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.enums.Marker;
@@ -83,7 +83,7 @@ public class JsonParseTest {
 
     List<Filterable> eventFilter = filters.getFilterByType(EventFilter.FILTER_KEY);
     assertEquals(1, eventFilter.size());
-    assertEquals(new EventFilter<>(new GenericEventDto("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), eventFilter.getFirst());
+    assertEquals(new EventFilter<>(new GenericEventId("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), eventFilter.getFirst());
 
     List<Filterable> referencedPublicKeyfilter = filters.getFilterByType(ReferencedPublicKeyFilter.FILTER_KEY);
     assertEquals(1, referencedPublicKeyfilter.size());

@@ -12,9 +12,7 @@ import java.util.List;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
-public interface GenericEventDtoIF extends IEvent, ISignableEntity
-//    , ISignableDto 
-{
+public interface GenericEventDtoIF extends IEvent, ISignableEntity {
   default String serialize() throws NostrException {
     var arrayNode = JsonNodeFactory.instance.arrayNode();
 
@@ -32,50 +30,19 @@ public interface GenericEventDtoIF extends IEvent, ISignableEntity
     }
   }
 
-//  @Transient
-//  Supplier<ByteBuffer> getByteArraySupplier();
-
   String getId();
-
   PublicKey getPublicKey();
-
   Long getCreatedAt();
-
   Kind getKind();
-
   List<BaseTag> getTags();
-
   String getContent();
-
   Signature getSignature();
 
-//  byte[] get_serializedEvent();
-
-//  Integer getNip();
-
-  //  void setPubKey(PublicKey pubKey);
-//
-//  void setCreatedAt(Long createdAt);
-//
-//  void setKind(Integer kind);
-//
-//  void setTags(List<BaseTag> tags);
-//
-//  void setContent(String content);
-//
-//  void setSignature(Signature signature);
-//
-//  void set_serializedEvent(byte[] _serializedEvent);
-//
-//  void setNip(Integer nip);
   String toBech32();
-
   String toString();
-
   boolean equals(Object o);
 
-//  boolean canEqual(Object other);
-
+  //  boolean canEqual(Object other);
   int hashCode();
 
 //  void setKind(Kind kind);

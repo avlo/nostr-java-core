@@ -70,3 +70,12 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+
+tasks.bootJar {
+    enabled = true
+}
+
+tasks.jar {
+    archiveClassifier = ''
+}
+
