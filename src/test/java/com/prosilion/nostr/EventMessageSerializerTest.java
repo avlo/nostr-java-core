@@ -1,0 +1,62 @@
+package com.prosilion.nostr;
+
+import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.GenericEventDto;
+import com.prosilion.nostr.codec.IDecoder;
+import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.user.Signature;
+import com.prosilion.nostr.message.EventMessage;
+import com.prosilion.nostr.tag.IdentifierTag;
+import java.io.IOException;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.test.context.ActiveProfiles;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@JsonTest
+@ActiveProfiles("test")
+public class EventMessageSerializerTest {
+  @Autowired
+  JacksonTester<EventMessage> tester;
+
+  @Test
+  void testEventMessageNoSubscriberIdEncoder() throws IOException {
+    EventMessage eventMessage = new EventMessage(
+        new GenericEventDto(
+            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+            1111111111111L,
+            Kind.valueOf(31923),
+            List.of(new IdentifierTag("superconductor_subscriber_id-0")),
+            "matching kind, author, identity-tag filter test",
+            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
+    
+    assertThat(
+        tester.write(eventMessage)
+    ).isEqualToJson(
+        IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage));
+  }
+
+  @Test
+  void testEventMessageWithSubscriberIdEncoder() throws IOException {
+    EventMessage eventMessage = new EventMessage(
+        new GenericEventDto(
+            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+            1111111111111L,
+            Kind.valueOf(31923),
+            List.of(new IdentifierTag("superconductor_subscriber_id-0")),
+            "matching kind, author, identity-tag filter test",
+            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")),
+        "subscriberId");
+
+    assertThat(
+        tester.write(eventMessage)
+    ).isEqualToJson(
+        IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage));
+  }
+}

@@ -1,0 +1,36 @@
+package com.prosilion.nostr.filter.event;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.prosilion.nostr.event.GenericEventDto;
+import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.filter.AbstractFilterable;
+import com.prosilion.nostr.filter.Filterable;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+public class EventFilter<T extends GenericEventDtoIF> extends AbstractFilterable<T> {
+  public final static String FILTER_KEY = "ids";
+
+  public EventFilter(T event) {
+    super(event, FILTER_KEY);
+  }
+
+  @Override
+  public Predicate<GenericEventDtoIF> getPredicate() {
+    return (genericEvent) ->
+        genericEvent.getId().equals(getFilterableValue());
+  }
+
+  @Override
+  public String getFilterableValue() {
+    return getEvent().getId();
+  }
+
+  private GenericEventDtoIF getEvent() {
+    return super.getFilterable();
+  }
+
+  public static Function<JsonNode, Filterable> fxn = node -> new EventFilter<>(new GenericEventDto(node.asText()));
+}
