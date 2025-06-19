@@ -22,10 +22,8 @@ public class ReqMessageSerializer<T extends ReqMessage> extends StdSerializer<T>
         .add(value.getCommand().getName())
         .add(value.getSubscriptionId());
 
-    FiltersEncoder filtersEncoder = new FiltersEncoder();
-    
     value.getFiltersList().stream()
-        .map(filtersEncoder::encode)
+        .map(FiltersEncoder::encode)
         .map(Encoder::createJsonNode)
         .forEach(encoderArrayNode::add);
 

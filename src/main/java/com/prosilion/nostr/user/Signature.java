@@ -23,9 +23,9 @@ public class Signature {
         return NostrUtil.bytesToHex(rawData);
     }
 
-    public static Signature fromString(String sig) {
+    public static Signature fromString(String signatureString) {
       Signature signature = new Signature();
-      signature.setRawData(NostrUtil.hex128ToBytes(sig));
+      signature.setRawData(NostrUtil.hex128ToBytes(signatureString));
       return signature;
     }
 }

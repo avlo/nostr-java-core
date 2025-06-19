@@ -1,12 +1,13 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.GenericEventDto;
 import com.prosilion.nostr.codec.IDecoder;
-import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.user.Signature;
+import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.event.GenericEventDto;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.user.Signature;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ public class EventMessageSerializerTest {
   JacksonTester<EventMessage> tester;
 
   @Test
-  void testEventMessageNoSubscriberIdEncoder() throws IOException {
+  void testEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
     EventMessage eventMessage = new EventMessage(
         new GenericEventDto(
             "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
@@ -34,15 +35,12 @@ public class EventMessageSerializerTest {
             List.of(new IdentifierTag("superconductor_subscriber_id-0")),
             "matching kind, author, identity-tag filter test",
             Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
-    
-    assertThat(
-        tester.write(eventMessage)
-    ).isEqualToJson(
-        IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage));
+
+    getEqualToJson(eventMessage);
   }
 
   @Test
-  void testEventMessageWithSubscriberIdEncoder() throws IOException {
+  void testEventMessageWithSubscriberIdEncoder() throws IOException, NostrException {
     EventMessage eventMessage = new EventMessage(
         new GenericEventDto(
             "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
@@ -54,9 +52,16 @@ public class EventMessageSerializerTest {
             Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")),
         "subscriberId");
 
+    getEqualToJson(eventMessage);
+  }
+
+  private void getEqualToJson(EventMessage eventMessage) throws IOException, NostrException {
+    String expected = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage);
     assertThat(
-        tester.write(eventMessage)
-    ).isEqualToJson(
-        IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage));
+        tester.write(eventMessage))
+        .isEqualToJson(
+            expected)
+        .isEqualToJson(
+            eventMessage.encode());
   }
 }

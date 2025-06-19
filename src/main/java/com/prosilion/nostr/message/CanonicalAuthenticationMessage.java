@@ -1,10 +1,13 @@
 package com.prosilion.nostr.message;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
+import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.event.GenericEventDto;
 import com.prosilion.nostr.event.GenericEventDtoIF;
 import com.prosilion.nostr.filter.Filterable;
@@ -18,16 +21,25 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 
+import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
 @JsonSerialize(using = EventMessageSerializer.class)
 public record CanonicalAuthenticationMessage(
-    @Getter GenericEventDtoIF eventDto) implements BaseMessage {
+    @Getter GenericEventDtoIF event) implements BaseMessage {
 
   public static Command command = Command.AUTH;
 
   public static final String CHALLENGE = "challenge";
   public static final String RELAY = "relay";
+
+  @Override
+  public String encode() throws JsonProcessingException, NostrException {
+    return ENCODER_MAPPED_AFTERBURNER.writeValueAsString(
+        JsonNodeFactory.instance.arrayNode()
+            .add(getCommand().name)
+            .add(event.serialize()));
+  }
 
   @SneakyThrows
   public static <T extends BaseMessage> T decode(@NonNull Map map) {

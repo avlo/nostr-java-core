@@ -17,7 +17,7 @@ public interface Encoder<T> {
 
   String encode(T value) throws JsonProcessingException;
 
-  default ObjectNode createObjectNode() {
+  static ObjectNode createObjectNode() {
     return ENCODER_MAPPED_AFTERBURNER.createObjectNode();
   }
 

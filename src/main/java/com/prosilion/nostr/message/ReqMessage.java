@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.prosilion.nostr.enums.Command;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.prosilion.nostr.codec.Encoder;
 import com.prosilion.nostr.codec.FiltersDecoder;
+import com.prosilion.nostr.codec.FiltersEncoder;
 import com.prosilion.nostr.codec.serializer.ReqMessageSerializer;
+import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.filter.Filters;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -15,6 +18,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.stream.Streams;
 import org.springframework.lang.NonNull;
 
+import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
 @JsonTypeName("REQ")
@@ -36,21 +40,20 @@ public record ReqMessage(
     this.filtersList = filtersList;
   }
 
-//  @Override
-//  public String encode() throws JsonProcessingException {
-//    var encoderArrayNode = JsonNodeFactory.instance.arrayNode();
-//    encoderArrayNode
-//        .add(getCommand().name())
-//        .add(getSubscriptionId());
-//
-//    filtersList.stream()
-//        .map(FiltersEncoder::new)
-//        .map(FiltersEncoder::encode)
-//        .map(ReqMessage::createJsonNode)
-//        .forEach(encoderArrayNode::add);
-//
-//    return ENCODER_MAPPED_AFTERBURNER.writeValueAsString(encoderArrayNode);
-//  }
+  @Override
+  public String encode() throws JsonProcessingException {
+    var encoderArrayNode = JsonNodeFactory.instance.arrayNode();
+    encoderArrayNode
+        .add(getCommand().name())
+        .add(getSubscriptionId());
+
+    filtersList.stream()
+        .map(FiltersEncoder::encode)
+        .map(Encoder::createJsonNode)
+        .forEach(encoderArrayNode::add);
+
+    return ENCODER_MAPPED_AFTERBURNER.writeValueAsString(encoderArrayNode);
+  }
 
   public static <T extends BaseMessage> T decode(@NonNull Object subscriptionId, @NonNull String jsonString) throws JsonProcessingException {
     List<String> jsonFiltersList = getJsonFiltersList(jsonString);

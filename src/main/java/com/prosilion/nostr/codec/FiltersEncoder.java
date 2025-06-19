@@ -3,11 +3,11 @@ package com.prosilion.nostr.codec;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.prosilion.nostr.filter.Filters;
 
-public class FiltersEncoder implements Encoder<Filters> {
+public class FiltersEncoder {
+//  public record FiltersEncoder(Filters filters) implements Encoder {
 
-  @Override
-  public String encode(Filters filters) {
-    ObjectNode root = createObjectNode();
+  public static String encode(Filters filters) {
+    ObjectNode root = Encoder.createObjectNode();
 
     filters.getFiltersMap().forEach((key, filterableList) ->
         root.setAll(
