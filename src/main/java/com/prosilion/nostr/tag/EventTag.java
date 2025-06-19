@@ -14,20 +14,20 @@ import org.springframework.lang.Nullable;
 @JsonPropertyOrder({"idEvent", "recommendedRelayUrl", "marker"})
 public record EventTag(
     @Getter @Key String idEvent,
-    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String recommendedUrl,
+    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String recommendedRelayUrl,
     @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) Marker marker) implements BaseTag {
 
   public EventTag(String idEvent) {
     this(idEvent, null);
   }
 
-  public EventTag(String idEvent, String recommendedUrl) {
-    this(idEvent, recommendedUrl, null);
+  public EventTag(String idEvent, String recommendedRelayUrl) {
+    this(idEvent, recommendedRelayUrl, null);
   }
 
-  public EventTag(String idEvent, String recommendedUrl, Marker marker) {
+  public EventTag(String idEvent, String recommendedRelayUrl, Marker marker) {
     this.idEvent = HexStringValidator.validateHex(idEvent, 64);
-    this.recommendedUrl = recommendedUrl;
+    this.recommendedRelayUrl = recommendedRelayUrl;
     this.marker = marker;
   }
 
