@@ -11,7 +11,7 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public abstract class AbstractBadgeAwardEvent<T extends Type> extends BaseEvent implements AbstractBadgeAwardEventIF<T> {
+public abstract class AbstractBadgeAwardEvent<T extends Type> extends BaseEvent implements EventKindTypeIF<T> {
   private final T type;
 
   public AbstractBadgeAwardEvent(
