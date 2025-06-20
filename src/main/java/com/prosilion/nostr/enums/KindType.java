@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Type {
+public enum KindType {
   UPVOTE(Kind.BADGE_AWARD_EVENT, "upvote"),
   DOWNVOTE(Kind.BADGE_AWARD_EVENT, "downvote"),
   REPUTATION(Kind.BADGE_AWARD_EVENT, "reputation");

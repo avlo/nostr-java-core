@@ -1,8 +1,8 @@
 package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.enums.Type;
+import com.prosilion.nostr.enums.KindType;
 
 public interface GenericEventKindTypeIF extends GenericEventKindIF {
   GenericEventKindIF getGenericEventKind();
-  Type getType();
+  KindType getKindType();
 }

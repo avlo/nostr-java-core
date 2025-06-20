@@ -3,7 +3,7 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.enums.NostrException;
-import com.prosilion.nostr.enums.Type;
+import com.prosilion.nostr.enums.KindType;
 import com.prosilion.nostr.event.GenericEventKind;
 import com.prosilion.nostr.event.GenericEventKindType;
 import com.prosilion.nostr.message.EventMessage;
@@ -70,7 +70,7 @@ public class EventMessageSerializerTest {
                 List.of(new AddressTag(
                     Kind.BADGE_AWARD_EVENT,
                     new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-                    new IdentifierTag(Type.UPVOTE.getName()))),
+                    new IdentifierTag(KindType.UPVOTE.getName()))),
                 "matching kind, author, identity-tag filter test",
                 Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"))));
 

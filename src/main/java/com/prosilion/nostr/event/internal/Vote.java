@@ -1,7 +1,7 @@
 package com.prosilion.nostr.event.internal;
 
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.Type;
+import com.prosilion.nostr.enums.KindType;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
@@ -18,8 +18,8 @@ import org.springframework.lang.NonNull;
 public class Vote {
   private final List<BaseTag> voteTags;
 
-  public Vote(@NonNull PublicKey voter, @NonNull PublicKey upvotedUser, @NonNull Type voteType) {
-    IdentifierTag identifierTag = new IdentifierTag(voteType.getName());
+  public Vote(@NonNull PublicKey voter, @NonNull PublicKey upvotedUser, @NonNull KindType voteKindType) {
+    IdentifierTag identifierTag = new IdentifierTag(voteKindType.getName());
     AddressTag addressTag = new AddressTag(
         Kind.BADGE_AWARD_EVENT,
         voter,

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.Type;
+import com.prosilion.nostr.enums.KindType;
 import com.prosilion.nostr.event.GenericEventKind;
 import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.event.GenericEventKindType;
@@ -61,7 +61,7 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   }
 
   private GenericEventKindIF checkForType(GenericEventKindIF genericEventKind) {
-    if (Arrays.stream(Type.values()).map(Type::getKind).distinct().noneMatch(genericEventKind.getKind()::equals))
+    if (Arrays.stream(KindType.values()).map(KindType::getKind).distinct().noneMatch(genericEventKind.getKind()::equals))
       return genericEventKind;
 
 //    TODO: revisit below- if above Type::getKind check matches a Type.values() entry, then AddressTag below must/should(?) be included 
