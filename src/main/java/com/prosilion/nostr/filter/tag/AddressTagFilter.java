@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.GenericEventKindIF;
-import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -26,10 +25,10 @@ import org.springframework.lang.NonNull;
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
-public class AddressTagFilter<T extends AddressTag> extends AbstractFilterable<T> {
+public class AddressTagFilter extends AbstractFilterable<AddressTag> {
   public final static String FILTER_KEY = "#a";
 
-  public AddressTagFilter(T addressTag) {
+  public AddressTagFilter(AddressTag addressTag) {
     super(addressTag, FILTER_KEY);
   }
 
@@ -56,14 +55,14 @@ public class AddressTagFilter<T extends AddressTag> extends AbstractFilterable<T
         String.join("\",\"", identifierTagPortion, relay.getUri())).orElse(identifierTagPortion);
   }
 
-  private T getAddressTag() {
+  private AddressTag getAddressTag() {
     return super.getFilterable();
   }
 
   public static Function<JsonNode, Filterable> fxn = node ->
-      new AddressTagFilter<>(createAddressTag(node));
+      new AddressTagFilter(createAddressTag(node));
 
-  protected static <T extends BaseTag> T createAddressTag(@NonNull JsonNode node) {
+  protected static AddressTag createAddressTag(@NonNull JsonNode node) {
     ArrayNode arrayNode = I_DECODER_MAPPER_AFTERBURNER.createArrayNode();
     arrayNode.addAll(StreamSupport.stream(node.spliterator(), false).toList());
 
@@ -85,7 +84,7 @@ public class AddressTagFilter<T extends AddressTag> extends AbstractFilterable<T
     }
 
     if (list1.size() < 2)
-      return (T) addressTagAtomic.get();
+      return addressTagAtomic.get();
 
     Optional.ofNullable(list1.get(1)).ifPresent(s ->
         addressTagAtomic.set(
@@ -95,6 +94,6 @@ public class AddressTagFilter<T extends AddressTag> extends AbstractFilterable<T
                 new IdentifierTag(nodes.get(2)),
                 new Relay(s.asText().replaceAll("^\"", "")))));
 
-    return (T) addressTagAtomic.get();
+    return addressTagAtomic.get();
   }
 }

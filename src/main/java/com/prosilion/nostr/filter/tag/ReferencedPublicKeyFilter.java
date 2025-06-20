@@ -2,19 +2,19 @@ package com.prosilion.nostr.filter.tag;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.event.GenericEventKindIF;
-import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.user.PublicKey;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
-public class ReferencedPublicKeyFilter<T extends PubKeyTag> extends AbstractFilterable<T> {
+public class ReferencedPublicKeyFilter extends AbstractFilterable<PubKeyTag> {
   public final static String FILTER_KEY = "#p";
 
-  public ReferencedPublicKeyFilter(T referencedPubKeyTag) {
+  public ReferencedPublicKeyFilter(PubKeyTag referencedPubKeyTag) {
     super(referencedPubKeyTag, FILTER_KEY);
   }
 
@@ -31,9 +31,9 @@ public class ReferencedPublicKeyFilter<T extends PubKeyTag> extends AbstractFilt
     return getReferencedPublicKey().getPublicKey().toHexString();
   }
 
-  private T getReferencedPublicKey() {
+  private PubKeyTag getReferencedPublicKey() {
     return super.getFilterable();
   }
 
-  public static Function<JsonNode, Filterable> fxn = node -> new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey(node.asText())));
+  public static Function<JsonNode, Filterable> fxn = node -> new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(node.asText())));
 }

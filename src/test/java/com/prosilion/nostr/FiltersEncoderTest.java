@@ -130,7 +130,7 @@ public class FiltersEncoderTest {
 
     AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author));
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(new AddressTagFilter<>(addressTag)));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new AddressTagFilter(addressTag)));
 
     String addressableTag = String.join(":", String.valueOf(kind), author) + ":";
 
@@ -148,7 +148,7 @@ public class FiltersEncoderTest {
 
     AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author), new IdentifierTag(uuidValue1), relay);
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(new AddressTagFilter<>(addressTag)));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new AddressTagFilter(addressTag)));
 
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
     String joined = String.join("\\\",\\\"", addressableTag, relay.getUri());
@@ -163,7 +163,7 @@ public class FiltersEncoderTest {
 
     String uuidValue1 = "UUID-1";
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(new IdentifierTagFilter<>(new IdentifierTag(uuidValue1))));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new IdentifierTagFilter(new IdentifierTag(uuidValue1))));
 
     assertEquals("{\"#d\":[\"" + uuidValue1 + "\"]}", encodedFilters);
   }
@@ -177,8 +177,8 @@ public class FiltersEncoderTest {
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
         List.of(
-            new IdentifierTagFilter<>(new IdentifierTag(uuidValue1)),
-            new IdentifierTagFilter<>(new IdentifierTag(uuidValue2)))));
+            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+            new IdentifierTagFilter(new IdentifierTag(uuidValue2)))));
 
 
     String dTags = String.join("\",\"", uuidValue1, uuidValue2);
@@ -191,7 +191,7 @@ public class FiltersEncoderTest {
 
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedEventFilter<>(new EventTag(eventId))));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedEventFilter(new EventTag(eventId))));
 
     assertEquals("{\"#e\":[\"" + eventId + "\"]}", encodedFilters);
   }
@@ -205,8 +205,8 @@ public class FiltersEncoderTest {
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
         List.of(
-            new ReferencedEventFilter<>(new EventTag(eventId1)),
-            new ReferencedEventFilter<>(new EventTag(eventId2)))));
+            new ReferencedEventFilter(new EventTag(eventId1)),
+            new ReferencedEventFilter(new EventTag(eventId2)))));
 
 
     String eventIds = String.join("\",\"", eventId1, eventId2);
@@ -219,7 +219,7 @@ public class FiltersEncoderTest {
 
     String pubKeyString = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey(pubKeyString)))));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(pubKeyString)))));
 
 
     assertEquals("{\"#p\":[\"" + pubKeyString + "\"]}", encodedFilters);
@@ -233,8 +233,8 @@ public class FiltersEncoderTest {
     String pubKeyString2 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
-        new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey(pubKeyString1))),
-        new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey(pubKeyString2)))));
+        new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(pubKeyString1))),
+        new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(pubKeyString2)))));
 
 
     String pubKeyTags = String.join("\",\"", pubKeyString1, pubKeyString2);
@@ -248,7 +248,7 @@ public class FiltersEncoderTest {
     String new_geohash = "2vghde";
 
     String encodedFilters = FiltersEncoder.encode(
-        new Filters(new GeohashTagFilter<>(new GeohashTag(new_geohash))));
+        new Filters(new GeohashTagFilter(new GeohashTag(new_geohash))));
 
 
     assertEquals("{\"#g\":[\"2vghde\"]}", encodedFilters);
@@ -262,8 +262,8 @@ public class FiltersEncoderTest {
     String geohashValue2 = "3abcde";
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
-        new GeohashTagFilter<>(new GeohashTag(geohashValue1)),
-        new GeohashTagFilter<>(new GeohashTag(geohashValue2))));
+        new GeohashTagFilter(new GeohashTag(geohashValue1)),
+        new GeohashTagFilter(new GeohashTag(geohashValue2))));
 
 
     assertEquals("{\"#g\":[\"2vghde\",\"3abcde\"]}", encodedFilters);
@@ -276,7 +276,7 @@ public class FiltersEncoderTest {
     String hashtag_target = "2vghde";
 
     String encodedFilters = FiltersEncoder.encode(
-        new Filters(new HashtagTagFilter<>(new HashtagTag(hashtag_target))));
+        new Filters(new HashtagTagFilter(new HashtagTag(hashtag_target))));
 
 
     assertEquals("{\"#t\":[\"2vghde\"]}", encodedFilters);
@@ -290,8 +290,8 @@ public class FiltersEncoderTest {
     String hashtagValue2 = "3abcde";
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
-        new HashtagTagFilter<>(new HashtagTag(hashtagValue1)),
-        new HashtagTagFilter<>(new HashtagTag(hashtagValue2))));
+        new HashtagTagFilter(new HashtagTag(hashtagValue1)),
+        new HashtagTagFilter(new HashtagTag(hashtagValue2))));
 
 
     assertEquals("{\"#t\":[\"2vghde\",\"3abcde\"]}", encodedFilters);
@@ -305,7 +305,7 @@ public class FiltersEncoderTest {
     String customValue = "2vghde";
 
     String encodedFilters = FiltersEncoder.encode(
-        new Filters(new GenericTagQueryFilter<>(new GenericTagQuery(customKey, customValue))));
+        new Filters(new GenericTagQueryFilter(new GenericTagQuery(customKey, customValue))));
 
 
     assertEquals("{\"#b\":[\"2vghde\"]}", encodedFilters);
@@ -320,8 +320,8 @@ public class FiltersEncoderTest {
     String customValue2 = "3abcde";
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
-        new GenericTagQueryFilter<>(new GenericTagQuery(customKey, customValue1)),
-        new GenericTagQueryFilter<>(new GenericTagQuery(customKey, customValue2))));
+        new GenericTagQueryFilter(new GenericTagQuery(customKey, customValue1)),
+        new GenericTagQueryFilter(new GenericTagQuery(customKey, customValue2))));
 
 
     assertEquals("{\"#b\":[\"2vghde\",\"3abcde\"]}", encodedFilters);
@@ -344,8 +344,8 @@ public class FiltersEncoderTest {
     AddressTag addressTag2 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author), new IdentifierTag(uuidValue2));
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
-        new AddressTagFilter<>(addressTag1),
-        new AddressTagFilter<>(addressTag2)));
+        new AddressTagFilter(addressTag1),
+        new AddressTagFilter(addressTag2)));
 
     String addressableTags = String.join("\",\"", addressableTag1, addressableTag2);
     assertEquals("{\"#a\":[\"" + addressableTags + "\"]}", encodedFilters);
@@ -388,6 +388,6 @@ public class FiltersEncoderTest {
 
     assertDoesNotThrow(() ->
         new ReqMessage(subscriptionId, new Filters(
-            new GenericTagQueryFilter<>(new GenericTagQuery("some-tag", "some-value")))));
+            new GenericTagQueryFilter(new GenericTagQuery("some-tag", "some-value")))));
   }
 }

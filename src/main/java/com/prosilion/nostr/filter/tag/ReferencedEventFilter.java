@@ -10,10 +10,10 @@ import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
-public class ReferencedEventFilter<T extends EventTag> extends AbstractFilterable<T> {
+public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
   public final static String FILTER_KEY = "#e";
 
-  public ReferencedEventFilter(T referencedEventTag) {
+  public ReferencedEventFilter(EventTag referencedEventTag) {
     super(referencedEventTag, FILTER_KEY);
   }
 
@@ -30,9 +30,9 @@ public class ReferencedEventFilter<T extends EventTag> extends AbstractFilterabl
     return getReferencedEventTag().getIdEvent();
   }
 
-  private T getReferencedEventTag() {
+  private EventTag getReferencedEventTag() {
     return super.getFilterable();
   }
 
-  public static Function<JsonNode, Filterable> fxn = node -> new ReferencedEventFilter<>(new EventTag(node.asText()));
+  public static Function<JsonNode, Filterable> fxn = node -> new ReferencedEventFilter(new EventTag(node.asText()));
 }

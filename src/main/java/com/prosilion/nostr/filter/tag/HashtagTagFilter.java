@@ -10,10 +10,10 @@ import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
-public class HashtagTagFilter<T extends HashtagTag> extends AbstractFilterable<T> {
+public class HashtagTagFilter extends AbstractFilterable<HashtagTag> {
   public final static String FILTER_KEY = "#t";
 
-  public HashtagTagFilter(T hashtagTag) {
+  public HashtagTagFilter(HashtagTag hashtagTag) {
     super(hashtagTag, FILTER_KEY);
   }
 
@@ -29,9 +29,9 @@ public class HashtagTagFilter<T extends HashtagTag> extends AbstractFilterable<T
     return getHashtagTag().getHashTag();
   }
 
-  private T getHashtagTag() {
+  private HashtagTag getHashtagTag() {
     return super.getFilterable();
   }
 
-  public static Function<JsonNode, Filterable> fxn = node -> new HashtagTagFilter<>(new HashtagTag(node.asText()));
+  public static Function<JsonNode, Filterable> fxn = node -> new HashtagTagFilter(new HashtagTag(node.asText()));
 }

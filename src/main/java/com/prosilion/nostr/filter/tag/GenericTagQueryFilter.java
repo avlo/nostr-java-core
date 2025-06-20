@@ -1,8 +1,8 @@
 package com.prosilion.nostr.filter.tag;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.prosilion.nostr.event.internal.ElementAttribute;
 import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.internal.ElementAttribute;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.filter.GenericTagQuery;
@@ -12,10 +12,10 @@ import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
-public class GenericTagQueryFilter<T extends GenericTagQuery> extends AbstractFilterable<T> {
+public class GenericTagQueryFilter extends AbstractFilterable<GenericTagQuery> {
   public static final String HASH_PREFIX = "#";
 
-  public GenericTagQueryFilter(T genericTagQuery) {
+  public GenericTagQueryFilter(GenericTagQuery genericTagQuery) {
     super(genericTagQuery, genericTagQuery.getTagName());
   }
 
@@ -43,7 +43,7 @@ public class GenericTagQueryFilter<T extends GenericTagQuery> extends AbstractFi
     return getGenericTagQuery().getValue();
   }
 
-  private T getGenericTagQuery() {
+  private GenericTagQuery getGenericTagQuery() {
     return super.getFilterable();
   }
 
@@ -54,6 +54,6 @@ public class GenericTagQueryFilter<T extends GenericTagQuery> extends AbstractFi
   }
 
   public static Function<JsonNode, Filterable> fxn(String type) {
-    return node -> new GenericTagQueryFilter<>(new GenericTagQuery(type, node.asText()));
+    return node -> new GenericTagQueryFilter(new GenericTagQuery(type, node.asText()));
   }
 }

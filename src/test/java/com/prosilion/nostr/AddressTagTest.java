@@ -85,22 +85,22 @@ class AddressTagTest {
     AddressTag eight = new AddressTag(kind, publicKey, identifierTagA, relayZ);
     assertNotEquals(seven, eight);
 
-    AddressTagFilter<AddressTag> atOne = new AddressTagFilter<>(one);
-    AddressTagFilter<AddressTag> atTwo = new AddressTagFilter<>(two);
+    AddressTagFilter atOne = new AddressTagFilter(one);
+    AddressTagFilter atTwo = new AddressTagFilter(two);
     assertEquals(atOne, atTwo);
 
-    AddressTagFilter<AddressTag> atThree = new AddressTagFilter<>(three);
+    AddressTagFilter atThree = new AddressTagFilter(three);
     assertNotEquals(atOne, atThree);
 
-    AddressTagFilter<AddressTag> atFour = new AddressTagFilter<>(four);
-    AddressTagFilter<AddressTag> atFive = new AddressTagFilter<>(five);
+    AddressTagFilter atFour = new AddressTagFilter(four);
+    AddressTagFilter atFive = new AddressTagFilter(five);
     assertEquals(atFour, atFive);
 
-    AddressTagFilter<AddressTag> atSix = new AddressTagFilter<>(six);
-    AddressTagFilter<AddressTag> atSeven = new AddressTagFilter<>(seven);
+    AddressTagFilter atSix = new AddressTagFilter(six);
+    AddressTagFilter atSeven = new AddressTagFilter(seven);
     assertEquals(atSix, atSeven);
 
-    AddressTagFilter<AddressTag> atEight = new AddressTagFilter<>(eight);
+    AddressTagFilter atEight = new AddressTagFilter(eight);
     assertNotEquals(atSix, atEight);
   }
 

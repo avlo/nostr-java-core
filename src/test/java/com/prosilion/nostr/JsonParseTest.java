@@ -87,7 +87,7 @@ public class JsonParseTest {
 
     List<Filterable> referencedPublicKeyfilter = filters.getFilterByType(ReferencedPublicKeyFilter.FILTER_KEY);
     assertEquals(1, referencedPublicKeyfilter.size());
-    assertEquals(new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712"))), referencedPublicKeyfilter.getFirst());
+    assertEquals(new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712"))), referencedPublicKeyfilter.getFirst());
   }
 
   @Test
@@ -139,7 +139,7 @@ public class JsonParseTest {
 
     List<Filterable> referencedPublicKeyfilter = filters.getFilterByType(ReferencedPublicKeyFilter.FILTER_KEY);
     assertEquals(1, referencedPublicKeyfilter.size());
-    assertEquals(new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712"))), referencedPublicKeyfilter.getFirst());
+    assertEquals(new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712"))), referencedPublicKeyfilter.getFirst());
   }
 
   @Test
@@ -171,7 +171,7 @@ public class JsonParseTest {
 
     List<Filterable> referencedEventFilters = filters.getFilterByType(ReferencedEventFilter.FILTER_KEY);
     assertEquals(1, referencedEventFilters.size());
-    assertEquals(new ReferencedEventFilter<>(new EventTag("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712")), referencedEventFilters.getFirst());
+    assertEquals(new ReferencedEventFilter(new EventTag("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712")), referencedEventFilters.getFirst());
   }
 
   @Test
@@ -437,8 +437,8 @@ public class JsonParseTest {
 
     ReqMessage reqMessage = new ReqMessage("npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9",
         new Filters(
-            new GenericTagQueryFilter<>(new GenericTagQuery("#g", new_geohash)),
-            new GenericTagQueryFilter<>(new GenericTagQuery("#g", second_geohash))));
+            new GenericTagQueryFilter(new GenericTagQuery("#g", new_geohash)),
+            new GenericTagQueryFilter(new GenericTagQuery("#g", second_geohash))));
 
     assertDoesNotThrow(() -> {
       String jsonMessage = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(reqMessage);
@@ -460,7 +460,7 @@ public class JsonParseTest {
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
         new Filters(
-            new GeohashTagFilter<>(new GeohashTag(geohashValue))));
+            new GeohashTagFilter(new GeohashTag(geohashValue))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
   }
@@ -480,8 +480,8 @@ public class JsonParseTest {
 
       ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
           new Filters(
-              new GeohashTagFilter<>(new GeohashTag(geohashValue1)),
-              new GeohashTagFilter<>(new GeohashTag(geohashValue2))));
+              new GeohashTagFilter(new GeohashTag(geohashValue1)),
+              new GeohashTagFilter(new GeohashTag(geohashValue2))));
 
       assertEquals(reqJsonWithCustomTagQueryFiltersToDecode, ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
       assertEquals(expectedReqMessage, decodedReqMessage);
@@ -501,7 +501,7 @@ public class JsonParseTest {
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
         new Filters(
-            new HashtagTagFilter<>(new HashtagTag(hashtagValue))));
+            new HashtagTagFilter(new HashtagTag(hashtagValue))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
   }
@@ -521,8 +521,8 @@ public class JsonParseTest {
 
       ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
           new Filters(
-              new HashtagTagFilter<>(new HashtagTag(hashtagValue1)),
-              new HashtagTagFilter<>(new HashtagTag(hashtagValue2))));
+              new HashtagTagFilter(new HashtagTag(hashtagValue1)),
+              new HashtagTagFilter(new HashtagTag(hashtagValue2))));
 
       assertEquals(reqJsonWithCustomTagQueryFiltersToDecode, ENCODER_MAPPED_AFTERBURNER.writeValueAsString((decodedReqMessage)));
       assertEquals(expectedReqMessage, decodedReqMessage);
@@ -555,12 +555,12 @@ public class JsonParseTest {
 
       ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
           new Filters(
-              new GeohashTagFilter<>(new GeohashTag(geohashValue1)),
-              new GeohashTagFilter<>(new GeohashTag(geohashValue2)),
-              new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey(author))),
+              new GeohashTagFilter(new GeohashTag(geohashValue1)),
+              new GeohashTagFilter(new GeohashTag(geohashValue2)),
+              new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
               new KindFilter<>(Kind.TEXT_NOTE),
               new AuthorFilter<>(new PublicKey(author)),
-              new ReferencedEventFilter<>(new EventTag(referencedEventId))));
+              new ReferencedEventFilter(new EventTag(referencedEventId))));
 
       assertEquals(expectedReqMessage, decodedReqMessage);
     });
@@ -596,11 +596,11 @@ public class JsonParseTest {
         new Filters(
             new KindFilter<>(Kind.TEXT_NOTE),
             new AuthorFilter<>(new PublicKey(author)),
-            new ReferencedEventFilter<>(new EventTag(referencedEventId)),
-            new GeohashTagFilter<>(new GeohashTag(geohashValue1)),
-            new GeohashTagFilter<>(new GeohashTag(geohashValue2)),
-            new IdentifierTagFilter<>(new IdentifierTag(uuidValue1)),
-            new IdentifierTagFilter<>(new IdentifierTag(uuidValue2))));
+            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new GeohashTagFilter(new GeohashTag(geohashValue1)),
+            new GeohashTagFilter(new GeohashTag(geohashValue2)),
+            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+            new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
   }
@@ -635,9 +635,9 @@ public class JsonParseTest {
         new Filters(
             new KindFilter<>(Kind.TEXT_NOTE),
             new AuthorFilter<>(new PublicKey(author)),
-            new ReferencedEventFilter<>(new EventTag(referencedEventId)),
-            new ReferencedPublicKeyFilter<>(new PubKeyTag(new PublicKey(author))),
-            new AddressTagFilter<>(addressTag1)));
+            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
+            new AddressTagFilter(addressTag1)));
 
     String encoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
     String decoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage);
@@ -671,7 +671,7 @@ public class JsonParseTest {
             new KindFilter<>(Kind.RECOMMEND_SERVER),
             new AuthorFilter<>(new PublicKey(author)),
             new AuthorFilter<>(new PublicKey(author2)),
-            new ReferencedEventFilter<>(new EventTag(referencedEventId))));
+            new ReferencedEventFilter(new EventTag(referencedEventId))));
 
     assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
     assertEquals(expectedReqMessage, decodedReqMessage);
@@ -711,11 +711,11 @@ public class JsonParseTest {
             new KindFilter<>(Kind.RECOMMEND_SERVER),
             new AuthorFilter<>(new PublicKey(author)),
             new AuthorFilter<>(new PublicKey(author2)),
-            new ReferencedEventFilter<>(new EventTag(referencedEventId)),
-            new GeohashTagFilter<>(new GeohashTag(geohashValue1)),
-            new GeohashTagFilter<>(new GeohashTag(geohashValue2)),
-            new IdentifierTagFilter<>(new IdentifierTag(uuidValue1)),
-            new IdentifierTagFilter<>(new IdentifierTag(uuidValue2))));
+            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new GeohashTagFilter(new GeohashTag(geohashValue1)),
+            new GeohashTagFilter(new GeohashTag(geohashValue2)),
+            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+            new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
 
     assertTrue(JsonComparator.isEquivalentJson(
         MAPPER_AFTERBURNER.createArrayNode()
