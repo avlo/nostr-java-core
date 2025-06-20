@@ -48,7 +48,7 @@ public class FiltersDecoderTest {
 
     assertEquals(
         new Filters(
-            new EventFilter<>(new GenericEventId(eventId))),
+            new EventFilter(new GenericEventId(eventId))),
         decodedFilters);
   }
 
@@ -67,8 +67,8 @@ public class FiltersDecoderTest {
 
     assertEquals(
         new Filters(
-            new EventFilter<>(new GenericEventId(eventId1)),
-            new EventFilter<>(new GenericEventId(eventId2))),
+            new EventFilter(new GenericEventId(eventId1)),
+            new EventFilter(new GenericEventId(eventId2))),
         decodedFilters);
   }
 
@@ -144,7 +144,7 @@ public class FiltersDecoderTest {
     String expected = "{\"" + filterKey + "\":[" + kind.toString() + "]}";
     Filters decodedFilters = FiltersDecoder.decode(expected);
 
-    assertEquals(new Filters(new KindFilter<>(kind)), decodedFilters);
+    assertEquals(new Filters(new KindFilter(kind)), decodedFilters);
   }
 
   @Test
@@ -162,8 +162,8 @@ public class FiltersDecoderTest {
 
     assertEquals(
         new Filters(
-            new KindFilter<>(kind1),
-            new KindFilter<>(kind2)),
+            new KindFilter(kind1),
+            new KindFilter(kind2)),
         decodedFilters);
   }
 

@@ -48,7 +48,7 @@ public class FiltersEncoderTest {
     assertEquals("{\"ids\":[\"" + eventId + "\"]}",
         FiltersEncoder.encode(
             new Filters(
-                new EventFilter<>(
+                new EventFilter(
                     new GenericEventId(eventId)))));
   }
 
@@ -63,8 +63,8 @@ public class FiltersEncoderTest {
     assertEquals("{\"ids\":[\"" + events + "\"]}",
         FiltersEncoder.encode(
             new Filters(
-                new EventFilter<>(new GenericEventId(eventId1)),
-                new EventFilter<>(new GenericEventId(eventId2)))));
+                new EventFilter(new GenericEventId(eventId1)),
+                new EventFilter(new GenericEventId(eventId2)))));
   }
 
   @Test
@@ -72,7 +72,7 @@ public class FiltersEncoderTest {
     log.info("testKindFiltersEncoder");
 
     Kind kind = Kind.valueOf(1);
-    String encodedFilters = FiltersEncoder.encode(new Filters(new KindFilter<>(kind)));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new KindFilter(kind)));
     assertEquals("{\"kinds\":[" + kind.toString() + "]}", encodedFilters);
   }
 
@@ -81,7 +81,7 @@ public class FiltersEncoderTest {
     log.info("testAuthorFilterEncoder");
 
     String pubKeyString = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
-    String encodedFilters = FiltersEncoder.encode(new Filters(new AuthorFilter<>(new PublicKey(pubKeyString))));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new AuthorFilter(new PublicKey(pubKeyString))));
 
 
     assertEquals("{\"authors\":[\"" + pubKeyString + "\"]}", encodedFilters);
@@ -95,8 +95,8 @@ public class FiltersEncoderTest {
     String pubKeyString2 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     String encodedFilters = FiltersEncoder.encode(new Filters(
         List.of(
-            new AuthorFilter<>(new PublicKey(pubKeyString1)),
-            new AuthorFilter<>(new PublicKey(pubKeyString2)))));
+            new AuthorFilter(new PublicKey(pubKeyString1)),
+            new AuthorFilter(new PublicKey(pubKeyString2)))));
 
 
     String authorPubKeys = String.join("\",\"", pubKeyString1, pubKeyString2);
@@ -113,8 +113,8 @@ public class FiltersEncoderTest {
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
         List.of(
-            new KindFilter<>(kind1),
-            new KindFilter<>(kind2))));
+            new KindFilter(kind1),
+            new KindFilter(kind2))));
 
 
     String kinds = String.join(",", kind1.toString(), kind2.toString());

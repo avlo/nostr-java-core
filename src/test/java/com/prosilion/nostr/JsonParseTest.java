@@ -79,11 +79,11 @@ public class JsonParseTest {
 
     List<Filterable> kindFilters = filters.getFilterByType(KindFilter.FILTER_KEY);
     assertEquals(1, kindFilters.size());
-    assertEquals(new KindFilter<>(Kind.TEXT_NOTE), kindFilters.getFirst());
+    assertEquals(new KindFilter(Kind.TEXT_NOTE), kindFilters.getFirst());
 
     List<Filterable> eventFilter = filters.getFilterByType(EventFilter.FILTER_KEY);
     assertEquals(1, eventFilter.size());
-    assertEquals(new EventFilter<>(new GenericEventId("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), eventFilter.getFirst());
+    assertEquals(new EventFilter(new GenericEventId("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), eventFilter.getFirst());
 
     List<Filterable> referencedPublicKeyfilter = filters.getFilterByType(ReferencedPublicKeyFilter.FILTER_KEY);
     assertEquals(1, referencedPublicKeyfilter.size());
@@ -131,11 +131,11 @@ public class JsonParseTest {
 
     List<Filterable> kindFilters = filters.getFilterByType(KindFilter.FILTER_KEY);
     assertEquals(1, kindFilters.size());
-    assertEquals(new KindFilter<>(Kind.TEXT_NOTE), kindFilters.getFirst());
+    assertEquals(new KindFilter(Kind.TEXT_NOTE), kindFilters.getFirst());
 
     List<Filterable> authorFilters = filters.getFilterByType(AuthorFilter.FILTER_KEY);
     assertEquals(1, authorFilters.size());
-    assertEquals(new AuthorFilter<>(new PublicKey("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), authorFilters.getFirst());
+    assertEquals(new AuthorFilter(new PublicKey("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), authorFilters.getFirst());
 
     List<Filterable> referencedPublicKeyfilter = filters.getFilterByType(ReferencedPublicKeyFilter.FILTER_KEY);
     assertEquals(1, referencedPublicKeyfilter.size());
@@ -163,11 +163,11 @@ public class JsonParseTest {
 
     List<Filterable> kindFilters = filters.getFilterByType(KindFilter.FILTER_KEY);
     assertEquals(1, kindFilters.size());
-    assertEquals(new KindFilter<>(Kind.TEXT_NOTE), kindFilters.getFirst());
+    assertEquals(new KindFilter(Kind.TEXT_NOTE), kindFilters.getFirst());
 
     List<Filterable> authorFilters = filters.getFilterByType(AuthorFilter.FILTER_KEY);
     assertEquals(1, authorFilters.size());
-    assertEquals(new AuthorFilter<>(new PublicKey("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), authorFilters.getFirst());
+    assertEquals(new AuthorFilter(new PublicKey("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")), authorFilters.getFirst());
 
     List<Filterable> referencedEventFilters = filters.getFilterByType(ReferencedEventFilter.FILTER_KEY);
     assertEquals(1, referencedEventFilters.size());
@@ -182,11 +182,11 @@ public class JsonParseTest {
 
     ReqMessage expectedReqMessage = new ReqMessage(publicKey.toString(),
         new Filters(
-            new KindFilter<>(Kind.SET_METADATA),
-            new KindFilter<>(Kind.TEXT_NOTE),
-            new KindFilter<>(Kind.CONTACT_LIST),
-            new KindFilter<>(Kind.DELETION),
-            new AuthorFilter<>(publicKey)));
+            new KindFilter(Kind.SET_METADATA),
+            new KindFilter(Kind.TEXT_NOTE),
+            new KindFilter(Kind.CONTACT_LIST),
+            new KindFilter(Kind.DELETION),
+            new AuthorFilter(publicKey)));
 
     String jsonMessage = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
 
@@ -558,8 +558,8 @@ public class JsonParseTest {
               new GeohashTagFilter(new GeohashTag(geohashValue1)),
               new GeohashTagFilter(new GeohashTag(geohashValue2)),
               new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
-              new KindFilter<>(Kind.TEXT_NOTE),
-              new AuthorFilter<>(new PublicKey(author)),
+              new KindFilter(Kind.TEXT_NOTE),
+              new AuthorFilter(new PublicKey(author)),
               new ReferencedEventFilter(new EventTag(referencedEventId))));
 
       assertEquals(expectedReqMessage, decodedReqMessage);
@@ -594,8 +594,8 @@ public class JsonParseTest {
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
         new Filters(
-            new KindFilter<>(Kind.TEXT_NOTE),
-            new AuthorFilter<>(new PublicKey(author)),
+            new KindFilter(Kind.TEXT_NOTE),
+            new AuthorFilter(new PublicKey(author)),
             new ReferencedEventFilter(new EventTag(referencedEventId)),
             new GeohashTagFilter(new GeohashTag(geohashValue1)),
             new GeohashTagFilter(new GeohashTag(geohashValue2)),
@@ -633,8 +633,8 @@ public class JsonParseTest {
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
         new Filters(
-            new KindFilter<>(Kind.TEXT_NOTE),
-            new AuthorFilter<>(new PublicKey(author)),
+            new KindFilter(Kind.TEXT_NOTE),
+            new AuthorFilter(new PublicKey(author)),
             new ReferencedEventFilter(new EventTag(referencedEventId)),
             new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
             new AddressTagFilter(addressTag1)));
@@ -667,10 +667,10 @@ public class JsonParseTest {
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
         new Filters(
-            new KindFilter<>(Kind.TEXT_NOTE),
-            new KindFilter<>(Kind.RECOMMEND_SERVER),
-            new AuthorFilter<>(new PublicKey(author)),
-            new AuthorFilter<>(new PublicKey(author2)),
+            new KindFilter(Kind.TEXT_NOTE),
+            new KindFilter(Kind.RECOMMEND_SERVER),
+            new AuthorFilter(new PublicKey(author)),
+            new AuthorFilter(new PublicKey(author2)),
             new ReferencedEventFilter(new EventTag(referencedEventId))));
 
     assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
@@ -707,10 +707,10 @@ public class JsonParseTest {
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
         new Filters(
-            new KindFilter<>(Kind.TEXT_NOTE),
-            new KindFilter<>(Kind.RECOMMEND_SERVER),
-            new AuthorFilter<>(new PublicKey(author)),
-            new AuthorFilter<>(new PublicKey(author2)),
+            new KindFilter(Kind.TEXT_NOTE),
+            new KindFilter(Kind.RECOMMEND_SERVER),
+            new AuthorFilter(new PublicKey(author)),
+            new AuthorFilter(new PublicKey(author2)),
             new ReferencedEventFilter(new EventTag(referencedEventId)),
             new GeohashTagFilter(new GeohashTag(geohashValue1)),
             new GeohashTagFilter(new GeohashTag(geohashValue2)),

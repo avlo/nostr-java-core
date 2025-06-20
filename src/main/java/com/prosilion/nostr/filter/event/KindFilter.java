@@ -13,10 +13,10 @@ import lombok.EqualsAndHashCode;
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
-public class KindFilter<T extends Kind> extends AbstractFilterable<T> {
+public class KindFilter extends AbstractFilterable<Kind> {
   public final static String FILTER_KEY = "kinds";
 
-  public KindFilter(T kind) {
+  public KindFilter(Kind kind) {
     super(kind, FILTER_KEY);
   }
 
@@ -38,9 +38,9 @@ public class KindFilter<T extends Kind> extends AbstractFilterable<T> {
     return getKind().getValue();
   }
 
-  private T getKind() {
+  private Kind getKind() {
     return super.getFilterable();
   }
 
-  public static Function<JsonNode, Filterable> fxn = node -> new KindFilter<>(Kind.valueOf(node.asInt()));
+  public static Function<JsonNode, Filterable> fxn = node -> new KindFilter(Kind.valueOf(node.asInt()));
 }
