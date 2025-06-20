@@ -7,9 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum KindType implements KindTypeIF {
-  UPVOTE(Kind.BADGE_AWARD_EVENT, "upvote"),
-  DOWNVOTE(Kind.BADGE_AWARD_EVENT, "downvote"),
-  REPUTATION(Kind.BADGE_AWARD_EVENT, "reputation");
+//  no default values in nostr-java-core.  to be defined in clients/callers implementing KindTypeIF
+  ;
 
   private final Kind kind;
 
