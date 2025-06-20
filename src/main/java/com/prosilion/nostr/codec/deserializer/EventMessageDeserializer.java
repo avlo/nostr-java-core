@@ -5,13 +5,19 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.event.GenericEventDto;
-import com.prosilion.nostr.user.Signature;
+import com.prosilion.nostr.enums.Type;
+import com.prosilion.nostr.event.GenericEventKind;
+import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.GenericEventKindType;
+import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.message.EventMessage;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.user.Signature;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
@@ -32,22 +38,40 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
             node.path(NODE_POSITION_AFTER_EVENT_LABEL).path("subscriptionId").asText());
   }
 
-  private static GenericEventDto getEvent(JsonNode node) {
-    return
-        new GenericEventDto(
-            node.path("id").asText(),
-            new PublicKey(
-                node.path("pubkey").asText()),
-            Long.valueOf(
-                node.path("created_at").asText()),
-            Kind.valueOf(
-                node.path("kind").asInt()),
-            Arrays.asList(
-                I_DECODER_MAPPER_AFTERBURNER.convertValue(
-                    node.path("tags"),
-                    BaseTag[].class)),
-            node.path("content").asText(),
-            Signature.fromString(
-                node.path("sig").asText()));
+  private GenericEventKindIF getEvent(JsonNode node) {
+    GenericEventKindIF genericEventKind = getGenericEventKind(node);
+    GenericEventKindIF genericEventKindIF = checkForType(genericEventKind);
+    return genericEventKindIF;
+  }
+
+  private GenericEventKindIF getGenericEventKind(JsonNode node) {
+    return new GenericEventKind(
+        node.path("id").asText(),
+        new PublicKey(
+            node.path("pubkey").asText()),
+        Long.valueOf(
+            node.path("created_at").asText()),
+        Kind.valueOf(
+            node.path("kind").asInt()),
+        Arrays.asList(
+            I_DECODER_MAPPER_AFTERBURNER.convertValue(
+                node.path("tags"),
+                BaseTag[].class)),
+        node.path("content").asText(),
+        Signature.fromString(
+            node.path("sig").asText()));
+  }
+
+  private GenericEventKindIF checkForType(GenericEventKindIF genericEventKind) {
+    if (Arrays.stream(Type.values()).map(Type::getKind).distinct().noneMatch(genericEventKind.getKind()::equals))
+      return genericEventKind;
+
+    List<AddressTag> typeSpecificTags = Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind);
+
+    if (typeSpecificTags.isEmpty())
+      return genericEventKind;
+
+    GenericEventKindIF genericEventKindIF = new GenericEventKindType(genericEventKind);
+    return genericEventKindIF;
   }
 }

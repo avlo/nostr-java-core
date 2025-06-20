@@ -7,7 +7,7 @@ import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.event.GenericEventId;
 import com.prosilion.nostr.event.internal.ElementAttribute;
-import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.enums.Marker;
 import com.prosilion.nostr.user.PublicKey;
@@ -358,7 +358,7 @@ public class JsonParseTest {
         + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(classifiedListingEventJson);
-    GenericEventDtoIF event = ((EventMessage) message).getEvent();
+    GenericEventKindIF event = ((EventMessage) message).getEvent();
 
     assertEquals("28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a", event.getId());
     assertEquals(30402, event.getKind().getValue());

@@ -1,7 +1,7 @@
 package com.prosilion.nostr.filter.tag;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
@@ -19,7 +19,7 @@ public class ReferencedPublicKeyFilter<T extends PubKeyTag> extends AbstractFilt
   }
 
   @Override
-  public Predicate<GenericEventDtoIF> getPredicate() {
+  public Predicate<GenericEventKindIF> getPredicate() {
     return (genericEvent) ->
         Filterable.getTypeSpecificTags(PubKeyTag.class, genericEvent).stream()
             .anyMatch(pubKeyTag ->

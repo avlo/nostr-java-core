@@ -21,18 +21,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.lang.NonNull;
 
-public record GenericEventDto(
+public record GenericEventKind(
     @Getter String id,
     @Getter @JsonProperty("pubkey") PublicKey publicKey,
     @Getter @JsonProperty("created_at") @EqualsAndHashCode.Exclude Long createdAt,
     @Getter @EqualsAndHashCode.Exclude Kind kind,
     @Getter @EqualsAndHashCode.Exclude @JsonProperty("tags") List<BaseTag> tags,
     @Getter @EqualsAndHashCode.Exclude String content,
-    @Getter @JsonProperty("sig") @EqualsAndHashCode.Exclude Signature signature) implements GenericEventDtoIF {
+    @Getter @JsonProperty("sig") @EqualsAndHashCode.Exclude Signature signature) implements GenericEventKindIF {
   @JsonIgnore
-  private static final Log log = LogFactory.getLog(GenericEventDto.class);
+  private static final Log log = LogFactory.getLog(GenericEventKind.class);
 
-  public GenericEventDto {
+  public GenericEventKind {
     id = validateId(id);
   }
 

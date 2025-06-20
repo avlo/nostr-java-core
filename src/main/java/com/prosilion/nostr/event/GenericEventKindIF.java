@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
-public interface GenericEventDtoIF extends IEvent, ISignableEntity {
+public interface GenericEventKindIF extends IEvent, ISignableEntity {
   default String serialize() throws NostrException {
     var arrayNode = JsonNodeFactory.instance.arrayNode();
 

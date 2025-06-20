@@ -3,7 +3,7 @@ package com.prosilion.nostr.filter.tag;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.AbstractFilterable;
@@ -34,7 +34,7 @@ public class AddressTagFilter<T extends AddressTag> extends AbstractFilterable<T
   }
 
   @Override
-  public Predicate<GenericEventDtoIF> getPredicate() {
+  public Predicate<GenericEventKindIF> getPredicate() {
     return (genericEvent) ->
         Filterable.getTypeSpecificTags(AddressTag.class, genericEvent).stream()
             .anyMatch(addressTag ->

@@ -1,7 +1,8 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.codec.BaseMessageDecoder;
+import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,33 @@ public class EventMessageDeserializerTest {
     BaseMessage actual = BaseMessageDecoder.decode(eventJsonIncludingSubscriberId);
     assertEquals(
         tester.parseObject(eventJsonIncludingSubscriberId),
+        actual);
+  }
+
+  @Test
+  void testEventMessageGenericEventKindTypeEncoder() throws IOException, NostrException {
+    final String jsonWithType = "["
+        + "\"EVENT\","
+        + "{"
+        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+        + "\"kind\":8,"
+        + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
+        + "\"created_at\":1687765220,"
+        + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
+        + "\"tags\":["
+        + "[\"a\",\"1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:upvote\"],"
+        + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
+        + "],"
+        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+        + "}]";
+
+    BaseMessage actual = BaseMessageDecoder.decode(jsonWithType);
+    assertEquals(
+        tester.parseObject(jsonWithType).getEvent(),
+        ((EventMessage) actual).getEvent());
+
+    assertEquals(
+        tester.parseObject(jsonWithType),
         actual);
   }
 }

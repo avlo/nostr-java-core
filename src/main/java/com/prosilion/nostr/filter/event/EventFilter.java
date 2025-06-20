@@ -1,7 +1,7 @@
 package com.prosilion.nostr.filter.event;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.event.GenericEventId;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
@@ -18,7 +18,7 @@ public class EventFilter<T extends GenericEventId> extends AbstractFilterable<T>
   }
 
   @Override
-  public Predicate<GenericEventDtoIF> getPredicate() {
+  public Predicate<GenericEventKindIF> getPredicate() {
     return (genericEvent) ->
         genericEvent.getId().equals(getFilterableValue());
   }

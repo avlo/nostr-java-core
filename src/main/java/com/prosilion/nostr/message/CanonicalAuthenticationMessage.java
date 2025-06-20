@@ -8,8 +8,8 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
 import com.prosilion.nostr.enums.NostrException;
-import com.prosilion.nostr.event.GenericEventDto;
-import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.event.GenericEventKind;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.GenericTag;
@@ -26,7 +26,7 @@ import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
 @JsonSerialize(using = EventMessageSerializer.class)
 public record CanonicalAuthenticationMessage(
-    @Getter GenericEventDtoIF event) implements BaseMessage {
+    @Getter GenericEventKindIF event) implements BaseMessage {
 
   public static Command command = Command.AUTH;
 
@@ -43,7 +43,7 @@ public record CanonicalAuthenticationMessage(
 
   @SneakyThrows
   public static <T extends BaseMessage> T decode(@NonNull Map map) {
-    GenericEventDtoIF event = I_DECODER_MAPPER_AFTERBURNER.convertValue(map, new TypeReference<>() {
+    GenericEventKindIF event = I_DECODER_MAPPER_AFTERBURNER.convertValue(map, new TypeReference<>() {
     });
 
     List<GenericTag> genericTags = event.getTags().stream()
@@ -55,7 +55,7 @@ public record CanonicalAuthenticationMessage(
 
     List<BaseTag> list = Stream.concat(Stream.of(challengeTag), relayTags.stream()).toList();
 
-    GenericEventDtoIF canonEvent = new GenericEventDto(
+    GenericEventKindIF canonEvent = new GenericEventKind(
         map.get("id").toString(),
         event.getPublicKey(),
         event.getCreatedAt(),

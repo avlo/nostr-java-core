@@ -2,7 +2,7 @@ package com.prosilion.nostr.filter.tag;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.event.internal.ElementAttribute;
-import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.filter.GenericTagQuery;
@@ -20,7 +20,7 @@ public class GenericTagQueryFilter<T extends GenericTagQuery> extends AbstractFi
   }
 
   @Override
-  public Predicate<GenericEventDtoIF> getPredicate() {
+  public Predicate<GenericEventKindIF> getPredicate() {
     return (genericEvent) ->
         Filterable.getTypeSpecificTags(GenericTag.class, genericEvent).stream()
             .filter(genericTag ->

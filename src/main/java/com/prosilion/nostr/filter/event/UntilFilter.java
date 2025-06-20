@@ -2,7 +2,7 @@ package com.prosilion.nostr.filter.event;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.prosilion.nostr.event.GenericEventDtoIF;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import java.util.List;
@@ -21,7 +21,7 @@ public class UntilFilter extends AbstractFilterable<Long> {
   }
 
   @Override
-  public Predicate<GenericEventDtoIF> getPredicate() {
+  public Predicate<GenericEventKindIF> getPredicate() {
     return (genericEvent) ->
         genericEvent.getCreatedAt() < getUntil();
   }
