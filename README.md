@@ -24,7 +24,7 @@
 ----
 
 used extensively by nostr-java projects:
-- [subdivisions](https://github.com/avlo/subdivisions) Java web-socket client & related utilities
+- [subdivisions](https://github.com/avlo/subdivisions) Reactive java web-socket client and related utilities:
   - nostr event publisher
   - nostr request subscriber (reactive web-socket client)
   - request pool manager
