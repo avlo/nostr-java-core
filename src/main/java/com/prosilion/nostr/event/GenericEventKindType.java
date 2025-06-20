@@ -2,8 +2,9 @@ package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.enums.KindType;
+import com.prosilion.nostr.enums.KindTypeIF;
+import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
@@ -25,7 +26,7 @@ public class GenericEventKindType implements GenericEventKindTypeIF {
   @Getter
   private final GenericEventKindIF genericEventKind;
   @Getter
-  private final KindType kindType;
+  private final KindTypeIF kindType;
 
   //  TODO: below needs test of counterfactual/non-happy path
   public GenericEventKindType(GenericEventKindIF genericEventKind) {

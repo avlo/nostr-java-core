@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum KindType {
+public enum KindType implements KindTypeIF {
   UPVOTE(Kind.BADGE_AWARD_EVENT, "upvote"),
   DOWNVOTE(Kind.BADGE_AWARD_EVENT, "downvote"),
   REPUTATION(Kind.BADGE_AWARD_EVENT, "reputation");
