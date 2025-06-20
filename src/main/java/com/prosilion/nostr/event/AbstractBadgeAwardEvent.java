@@ -13,11 +13,11 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public abstract class AbstractBadgeAwardEvent<KindType> extends BaseEvent {
-  private final KindType kindType;
+public abstract class AbstractBadgeAwardEvent<KindTypeIF> extends BaseEvent {
+  private final KindTypeIF kindType;
 
   public AbstractBadgeAwardEvent(
-      @NonNull KindType kindType,
+      @NonNull KindTypeIF kindType,
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
       @NonNull String content) throws NostrException, NoSuchAlgorithmException {
@@ -32,7 +32,7 @@ public abstract class AbstractBadgeAwardEvent<KindType> extends BaseEvent {
   }
 
   public AbstractBadgeAwardEvent(
-      @NonNull KindType kindType,
+      @NonNull KindTypeIF kindType,
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
       @NonNull List<BaseTag> tags,
