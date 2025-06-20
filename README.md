@@ -1,6 +1,4 @@
-# Nostr-Java Core Library  
-
-----
+# Nostr-Java Core Library
 ## Optimized variant of [nostr-java](https://github.com/tcheeric/nostr-java/tree/develop), differentiation:
 
 - event classes refactored into interfaces backed by record implementations, yields:  
