@@ -10,7 +10,7 @@
 - support for "Kind" subtyping, called "KindType" (req'd by NIP-08 and available for additional Nips per need)
 - removal of vulnerable Nip-XX API
 - de-coupling web-socket connection from nostr event
-  - web-socket functionality provided by optional [subdivisions](/README.md?#L27) library
+  - web-socket functionality provided by optional [subdivisions](https://github.com/avlo/subdivisions) library (details, bottom of page)
 - smaller compilation footprint:
   - single jar, 194004 (194K) bytes  
   vs
