@@ -10,7 +10,7 @@
 - support for "Kind" subtyping, called "KindType" (req'd by NIP-08 and available for additional Nips per need)
 - removal of vulnerable Nip-XX API
 - de-coupling web-socket connection from nostr event
-  - web-socket functionality provided by optional    [subdivisions](https://github.com/avlo/subdivisions) library  
+  - web-socket functionality provided by optional [subdivisions](/README.md?plain=1#L27) library
 - smaller compilation footprint:
   - single jar, 194004 (194K) bytes  
   vs
@@ -25,5 +25,9 @@
 
 used extensively by nostr-java projects:
 - [subdivisions](https://github.com/avlo/subdivisions) Java web-socket client & related utilities
+  - nostr event publisher
+  - nostr request subscriber (reactive web-socket client)
+  - request pool manager
 - [superconductor](https://github.com/avlo/superconductor) Java Nostr-Relay Framework & WebSocket Application Server
+  - available as jar, war and/or spring-boot starter 
 - [afterimage](https://github.com/avlo/afterimage) Nostr-Reputation Authority
