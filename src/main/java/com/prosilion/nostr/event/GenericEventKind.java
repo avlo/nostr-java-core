@@ -43,6 +43,7 @@ public record GenericEventKind(
 
   @Override
   public String toBech32() {
+//    TODO: fix below
     try {
       return Bech32.toBech32(Bech32Prefix.NOTE, this.getId());
     } catch (Exception e) {

@@ -49,8 +49,9 @@ public record EventMessage(
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
-    EventMessage that = (EventMessage) o;
-    return Objects.equals(event, that.event);
+    return Objects.equals(
+        event,
+        ((EventMessage) o).event);
   }
 
   @Override

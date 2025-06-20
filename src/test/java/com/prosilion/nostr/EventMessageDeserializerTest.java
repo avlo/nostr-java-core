@@ -1,7 +1,6 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.BaseMessageDecoder;
-import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;
 import java.io.IOException;
@@ -66,7 +65,7 @@ public class EventMessageDeserializerTest {
   }
 
   @Test
-  void testEventMessageGenericEventKindTypeEncoder() throws IOException, NostrException {
+  void testEventMessageGenericEventKindTypeEncoder() throws IOException {
     final String jsonWithType = "["
         + "\"EVENT\","
         + "{"

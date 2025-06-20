@@ -17,7 +17,6 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
@@ -39,9 +38,8 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   }
 
   private GenericEventKindIF getEvent(JsonNode node) {
-    GenericEventKindIF genericEventKind = getGenericEventKind(node);
-    GenericEventKindIF genericEventKindIF = checkForType(genericEventKind);
-    return genericEventKindIF;
+    return checkForType(
+        getGenericEventKind(node));
   }
 
   private GenericEventKindIF getGenericEventKind(JsonNode node) {
@@ -66,12 +64,10 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
     if (Arrays.stream(Type.values()).map(Type::getKind).distinct().noneMatch(genericEventKind.getKind()::equals))
       return genericEventKind;
 
-    List<AddressTag> typeSpecificTags = Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind);
-
-    if (typeSpecificTags.isEmpty())
+//    TODO: revisit below- if above Type::getKind check matches a Type.values() entry, then AddressTag below must/should(?) be included 
+    if (Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).isEmpty())
       return genericEventKind;
 
-    GenericEventKindIF genericEventKindIF = new GenericEventKindType(genericEventKind);
-    return genericEventKindIF;
+    return new GenericEventKindType(genericEventKind);
   }
 }

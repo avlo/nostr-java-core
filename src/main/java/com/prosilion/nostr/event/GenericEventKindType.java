@@ -7,7 +7,6 @@ import com.prosilion.nostr.enums.Type;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.beans.Transient;
@@ -19,22 +18,23 @@ import lombok.Getter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class GenericEventKindType implements GenericEventKindTypeIF<Type> {
+public class GenericEventKindType implements GenericEventKindTypeIF {
+  @JsonIgnore
+  private static final Log log = LogFactory.getLog(GenericEventKindType.class);
+
   @Getter
   private final GenericEventKindIF genericEventKind;
   @Getter
   private final Type type;
 
-  @JsonIgnore
-  private static final Log log = LogFactory.getLog(GenericEventKindType.class);
-
-  //  TODO: below needs test
+  //  TODO: below needs test of counterfactual/non-happy path
   public GenericEventKindType(GenericEventKindIF genericEventKind) {
-    IdentifierTag identifierTag = Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).stream()
-        .findFirst().orElseThrow().getIdentifierTag();
-    IdentifierTag identifierTag1 = Objects.requireNonNull(identifierTag);
-    String uuid = identifierTag1.getUuid();
-    this.type = Type.valueOf(uuid.toUpperCase());
+    this.type = Type.valueOf(
+        Objects.requireNonNull(
+                Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).stream()
+                    .findFirst().orElseThrow()
+                    .getIdentifierTag())
+            .getUuid().toUpperCase());
     this.genericEventKind = genericEventKind;
   }
 
@@ -45,7 +45,8 @@ public class GenericEventKindType implements GenericEventKindTypeIF<Type> {
             this.getClass() != o.getClass())) return false;
     return Objects.equals(
         genericEventKind,
-        ((GenericEventKindTypeIF<Type>) o).getGenericEventKind());
+//        TODO: revisit below cast; hack-ey
+        ((GenericEventKindTypeIF) o).getGenericEventKind());
   }
 
   @Override

@@ -12,14 +12,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.lang.NonNull;
 
-public class BadgeAwardUpvoteEvent<T extends Type> extends AbstractBadgeAwardEvent<T> {
+public class BadgeAwardUpvoteEvent extends AbstractBadgeAwardEvent<Type> {
   private static final Log log = LogFactory.getLog(BadgeAwardUpvoteEvent.class);
 
   public BadgeAwardUpvoteEvent(
       @NonNull Identity identity,
       @NonNull Identity upvotedUser,
       @NonNull String content) throws NostrException, NoSuchAlgorithmException {
-    super((T) Type.UPVOTE, identity,
+    super(Type.UPVOTE, identity,
         new Vote(
             identity.getPublicKey(),
             upvotedUser.getPublicKey(),
@@ -32,7 +32,7 @@ public class BadgeAwardUpvoteEvent<T extends Type> extends AbstractBadgeAwardEve
       @NonNull Identity upvotedUser,
       @NonNull List<BaseTag> tags,
       @NonNull String content) throws NostrException, NoSuchAlgorithmException {
-    super((T) Type.UPVOTE, identity,
+    super(Type.UPVOTE, identity,
         Stream.concat(new Vote(
             identity.getPublicKey(),
             upvotedUser.getPublicKey(),
