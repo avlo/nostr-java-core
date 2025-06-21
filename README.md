@@ -1,16 +1,16 @@
 # Nostr-Java Core Library
-## Optimized variant of [nostr-java](https://github.com/tcheeric/nostr-java/tree/develop), differentiation:
+## Optimized variant of [nostr-java](https://github.com/tcheeric/nostr-java/tree/develop) library, specifically:
 
-- event classes refactored into interfaces backed by record implementations, yields:  
+- event classes refactored into interfaces implemented by java record, yields:  
   - immutable events 
-    - guarantees event signatures match event content  
-- tag classes refactored into interfaces backed by record implementations, yields:
+    - insures event signatures provably match event content and are both unchangeable
+- tag classes refactored into interfaces implemented by java record, yields:
   - immutable tags
-    - container classes (Filter, List) no longer require generics
+  - container classes (Filter, List, Services) no longer require use of generics
 - support for "Kind" subtyping, called "KindType" (req'd by NIP-08 and available for additional Nips per need)
-- removal of vulnerable Nip-XX API
-- de-coupling web-socket connection from nostr event
-  - web-socket functionality provided by optional [subdivisions](https://github.com/avlo/subdivisions) library (details, bottom of page)
+- removal of mutation-vulnerable Nip-XX API
+- de-coupling of web-socket connection from nostr event
+  - web-socket functionality (event publishing, request subscriptions) available in optional [subdivisions](https://github.com/avlo/subdivisions) library (details, bottom of page)
 - smaller compilation footprint:
   - single jar, 194004 (194K) bytes  
   vs
@@ -26,8 +26,8 @@
 used extensively by nostr-java projects:
 - [subdivisions](https://github.com/avlo/subdivisions) Reactive java web-socket client and related utilities:
   - nostr event publisher
-  - nostr request subscriber (reactive web-socket client)
-  - request pool manager
+  - nostr request subscriber (reactive spring web-socket client)
+  - request subscriptions pool manager
 - [superconductor](https://github.com/avlo/superconductor) Java Nostr-Relay Framework & WebSocket Application Server
   - available as jar, war and/or spring-boot starter 
 - [afterimage](https://github.com/avlo/afterimage) Nostr-Reputation Authority
