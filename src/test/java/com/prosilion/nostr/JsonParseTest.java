@@ -46,6 +46,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.json.JsonComparator;
+import org.springframework.test.json.JsonComparison;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
@@ -62,6 +64,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class JsonParseTest {
+
+  private final JsonComparator jsonComparator = (expectedJson, actualJson) -> JsonComparison.match();
 
   @Test
   public void testBaseMessageDecoderEventFilter() throws JsonProcessingException {
@@ -723,13 +727,17 @@ public class JsonParseTest {
             new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
             new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
 
-    assertTrue(JsonComparator.isEquivalentJson(
+    assertEquals(expectedReqMessage, decodedReqMessage);
+
+    jsonComparator.compare(
         MAPPER_AFTERBURNER.createArrayNode()
             .add(MAPPER_AFTERBURNER.readTree(
-                ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage))),
+                ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
+            .toString(),
         MAPPER_AFTERBURNER.createArrayNode()
-            .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))));
-    assertEquals(expectedReqMessage, decodedReqMessage);
+            .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
+            .toString());
+
   }
 
   @Test
