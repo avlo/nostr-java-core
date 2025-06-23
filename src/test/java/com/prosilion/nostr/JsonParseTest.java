@@ -1,31 +1,30 @@
 package com.prosilion.nostr;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.codec.deserializer.TagDeserializer;
+import com.prosilion.nostr.config.SerializerConfig;
 import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.enums.Command;
-import com.prosilion.nostr.event.GenericEventId;
-import com.prosilion.nostr.event.internal.ElementAttribute;
-import com.prosilion.nostr.event.GenericEventKindIF;
-import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.enums.Marker;
-import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.filter.tag.AddressTagFilter;
-import com.prosilion.nostr.filter.event.AuthorFilter;
-import com.prosilion.nostr.filter.event.EventFilter;
+import com.prosilion.nostr.event.GenericEventId;
+import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.internal.ElementAttribute;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.filter.Filters;
 import com.prosilion.nostr.filter.GenericTagQuery;
+import com.prosilion.nostr.filter.event.AuthorFilter;
+import com.prosilion.nostr.filter.event.EventFilter;
+import com.prosilion.nostr.filter.event.KindFilter;
+import com.prosilion.nostr.filter.tag.AddressTagFilter;
 import com.prosilion.nostr.filter.tag.GenericTagQueryFilter;
 import com.prosilion.nostr.filter.tag.GeohashTagFilter;
 import com.prosilion.nostr.filter.tag.HashtagTagFilter;
 import com.prosilion.nostr.filter.tag.IdentifierTagFilter;
-import com.prosilion.nostr.filter.event.KindFilter;
 import com.prosilion.nostr.filter.tag.ReferencedEventFilter;
 import com.prosilion.nostr.filter.tag.ReferencedPublicKeyFilter;
 import com.prosilion.nostr.message.BaseMessage;
-import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.message.ReqMessage;
 import com.prosilion.nostr.tag.AddressTag;
@@ -37,12 +36,16 @@ import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PriceTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.user.PublicKey;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
@@ -53,8 +56,11 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Slf4j
 @JsonTest
-@Log
+@SpringJUnitConfig(classes = SerializerConfig.class)
+//@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 public class JsonParseTest {
 
   @Test

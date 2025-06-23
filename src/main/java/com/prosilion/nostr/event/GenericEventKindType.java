@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.enums.KindTypeIF;
 import com.prosilion.nostr.enums.NostrException;
@@ -15,15 +14,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 import lombok.Getter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public record GenericEventKindType(
     @Getter GenericEventKindIF genericEventKind,
-    @Getter List<KindTypeIF> definedKindTypes) implements GenericEventKindTypeIF {
-
-  @JsonIgnore
-  private static final Log log = LogFactory.getLog(GenericEventKindType.class);
+    List<KindTypeIF> definedKindTypes) implements GenericEventKindTypeIF {
 
   //  TODO: below needs test of counterfactual/non-happy path
   public GenericEventKindType(GenericEventKindIF genericEventKind, List<KindTypeIF> definedKindTypes) {

@@ -20,17 +20,26 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
+@Slf4j
 public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   public static final int NODE_POSITION_AFTER_EVENT_LABEL = 1;
   public static final int CANONICAL_NODE_LENGTH = 2;
 
-  private final List<KindTypeIF> kindType;
+  private static List<KindTypeIF> kindType;
+
+  public EventMessageDeserializer() {
+    log.info("EventMessageDeserializer default Ctor() [{}]", this);
+  }
 
   public EventMessageDeserializer(List<KindTypeIF> kindType) {
-    this.kindType = kindType;
+    super();
+    EventMessageDeserializer.kindType = kindType;
+    log.info("EventMessageDeserializer instance [{}]", this);
+    log.info("Loading default kind types [{}]", (Object[]) KindType.values());
   }
 
   @Override

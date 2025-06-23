@@ -39,6 +39,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-json'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'com.google.code.gson:gson:' + gson
     implementation 'com.fasterxml.jackson.module:jackson-module-afterburner:' + jacksonModuleAfterburner
     implementation 'org.bouncycastle:bcprov-jdk18on:' + bouncyCastle
