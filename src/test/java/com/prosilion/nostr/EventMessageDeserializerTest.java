@@ -1,25 +1,33 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.BaseMessageDecoder;
+import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.json.JsonComparator;
+import org.springframework.test.json.JsonComparison;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 @JsonTest
 @ActiveProfiles("test")
 public class EventMessageDeserializerTest {
+  private final JsonComparator jsonComparator = (expected, actual) -> JsonComparison.match();
   @Autowired
   JacksonTester<EventMessage> tester;
 
+
   @Test
-  void testEventMessageNoSubscriberIdDecoder() throws IOException {
+  void testEventMessageNoSubscriberIdDecoder() throws IOException, NostrException {
     final String json = "["
         + "\"EVENT\","
         + "{"
@@ -35,14 +43,23 @@ public class EventMessageDeserializerTest {
         + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
         + "}]";
 
-    assertEquals(
-        tester.parseObject(json),
-        BaseMessageDecoder.decode(json));
+    EventMessage expected = tester.parseObject(json);
+    BaseMessage message = BaseMessageDecoder.decode(json);
+    assertEquals(expected, message);
+
+    String encoded = message.encode();
+    log.debug("");
+    log.debug("testing testEventMessageNoSubscriberIdDecoder\n");
+    log.debug(json);
+    log.debug("------");
+    log.debug(encoded);
+    log.debug("");
+    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encoded).getResult());
   }
 
   @Test
-  void testEventMessageWithSubscriberIdDecoder() throws IOException {
-    final String eventJsonIncludingSubscriberId = "["
+  void testEventMessageWithSubscriberIdDecoder() throws IOException, NostrException {
+    final String json = "["
         + "\"EVENT\","
         + "\"temp20230627\","
         + "{"
@@ -58,15 +75,23 @@ public class EventMessageDeserializerTest {
         + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
         + "}]";
 
-    BaseMessage actual = BaseMessageDecoder.decode(eventJsonIncludingSubscriberId);
-    assertEquals(
-        tester.parseObject(eventJsonIncludingSubscriberId),
-        actual);
+    BaseMessage message = BaseMessageDecoder.decode(json);
+    EventMessage expected = tester.parseObject(json);
+    assertEquals(expected, message);
+
+    String encoded = message.encode();
+    log.debug("");
+    log.debug("testing testEventMessageWithSubscriberIdDecoder\n");
+    log.debug(json);
+    log.debug("------");
+    log.debug(encoded);
+    log.debug("");
+    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encoded).getResult());
   }
 
   @Test
-  void testEventMessageGenericEventKindTypeEncoder() throws IOException {
-    final String jsonWithType = "["
+  void testEventMessageGenericEventKindTypeEncoder() throws IOException, NostrException {
+    final String json = "["
         + "\"EVENT\","
         + "{"
         + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
@@ -81,13 +106,21 @@ public class EventMessageDeserializerTest {
         + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
         + "}]";
 
-    BaseMessage actual = BaseMessageDecoder.decode(jsonWithType);
-    assertEquals(
-        tester.parseObject(jsonWithType).getEvent(),
-        ((EventMessage) actual).getEvent());
+    BaseMessage message = BaseMessageDecoder.decode(json);
+    GenericEventKindIF expected = tester.parseObject(json).getEvent();
+    assertEquals(expected, ((EventMessage) message).getEvent());
 
     assertEquals(
-        tester.parseObject(jsonWithType),
-        actual);
+        tester.parseObject(json),
+        message);
+
+    String encoded = message.encode();
+    log.debug("");
+    log.debug("testing testEventMessageGenericEventKindTypeEncoder\n");
+    log.debug(json);
+    log.debug("------");
+    log.debug(encoded);
+    log.debug("");
+    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encoded).getResult());
   }
 }
