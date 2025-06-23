@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.prosilion.nostr.message.EventMessage;
 import java.io.IOException;
 
-public class EventMessageSerializer<T extends EventMessage> extends StdSerializer<T> {
+public class EventMessageSerializer extends StdSerializer<EventMessage> {
   public EventMessageSerializer() {
-    super((Class<T>) EventMessage.class);
+    super(EventMessage.class);
   }
 
-  public void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+  public void serialize(EventMessage value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
     gen.writeStartArray();
     gen.writePOJO(value.getCommand().getName());
     gen.writePOJO(value.getEvent());

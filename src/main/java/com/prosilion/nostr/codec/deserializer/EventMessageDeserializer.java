@@ -18,6 +18,7 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
@@ -25,6 +26,12 @@ import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   public static final int NODE_POSITION_AFTER_EVENT_LABEL = 1;
   public static final int CANONICAL_NODE_LENGTH = 2;
+
+  private final List<KindTypeIF> kindType;
+
+  public EventMessageDeserializer(List<KindTypeIF> kindType) {
+    this.kindType = kindType;
+  }
 
   @Override
   public EventMessage deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
@@ -39,8 +46,9 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   }
 
   private GenericEventKindIF getEvent(JsonNode node) {
-    return checkForType(
-        getGenericEventKind(node));
+    GenericEventKindIF genericEventKind = getGenericEventKind(node);
+    GenericEventKindIF genericEventKindIF = checkForType(genericEventKind);
+    return genericEventKindIF;
   }
 
   private GenericEventKindIF getGenericEventKind(JsonNode node) {
@@ -69,6 +77,6 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
     if (Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).isEmpty())
       return genericEventKind;
 
-    return new GenericEventKindType(genericEventKind);
+    return new GenericEventKindType(genericEventKind, kindType);
   }
 }

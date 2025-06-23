@@ -2,7 +2,6 @@ package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.KindType;
 import com.prosilion.nostr.enums.KindTypeIF;
 import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.filter.Filterable;
@@ -19,24 +18,41 @@ import lombok.Getter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class GenericEventKindType implements GenericEventKindTypeIF {
+public record GenericEventKindType(
+    @Getter GenericEventKindIF genericEventKind,
+    @Getter List<KindTypeIF> definedKindTypes) implements GenericEventKindTypeIF {
+
   @JsonIgnore
   private static final Log log = LogFactory.getLog(GenericEventKindType.class);
 
-  @Getter
-  private final GenericEventKindIF genericEventKind;
-  @Getter
-  private final KindTypeIF kindType;
-
   //  TODO: below needs test of counterfactual/non-happy path
-  public GenericEventKindType(GenericEventKindIF genericEventKind) {
-    this.kindType = KindType.valueOf(
-        Objects.requireNonNull(
-                Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).stream()
-                    .findFirst().orElseThrow()
-                    .getIdentifierTag())
-            .getUuid().toUpperCase());
+  public GenericEventKindType(GenericEventKindIF genericEventKind, List<KindTypeIF> definedKindTypes) {
+    AddressTag addressTag = Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).stream()
+        .findFirst().orElseThrow();
+
+    String upperCaseUuid = Objects.requireNonNull(
+            addressTag
+                .getIdentifierTag())
+        .getUuid().toUpperCase();
+
+    this.definedKindTypes = definedKindTypes.stream()
+        .filter(f ->
+        {
+          Kind genericEventKindKind = genericEventKind.getKind();
+          Kind addressTagKind = addressTag.getKind();
+          return f.equals(
+              genericEventKindKind,
+              addressTagKind,
+              upperCaseUuid);
+        })
+        .toList();
+
     this.genericEventKind = genericEventKind;
+  }
+
+  @Override
+  public List<KindTypeIF> getDefinedKindTypes() {
+    return this.definedKindTypes;
   }
 
   @Override
@@ -47,7 +63,7 @@ public class GenericEventKindType implements GenericEventKindTypeIF {
     return Objects.equals(
         genericEventKind,
 //        TODO: revisit below cast; hack-ey
-        ((GenericEventKindTypeIF) o).getGenericEventKind());
+        ((GenericEventKindTypeIF) o).genericEventKind());
   }
 
   @Override
@@ -57,7 +73,7 @@ public class GenericEventKindType implements GenericEventKindTypeIF {
 
   @Override
   public String toBech32() {
-    return getGenericEventKind().toBech32();
+    return genericEventKind().toBech32();
   }
 
   @Transient

@@ -1,6 +1,65 @@
 package com.prosilion.nostr.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.time.temporal.ValueRange;
+import java.util.Arrays;
+import java.util.Objects;
+
 public interface KindTypeIF {
   Kind getKind();
+
+  Kind getKindDefinition();
+
   String getName();
+
+  KindTypeIF[] getValues();
+
+  @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+  default KindTypeIF valueOf(Kind kind, Kind kindDefinition, String name) {
+    assert ValueRange.of(0, 65_535).isValidIntValue(kind.getValue()) :
+        new IllegalArgumentException(String.format("Kind must be between 0 and 65535 but was [%d]",
+            kind.getValue()));
+
+    assert Objects.equals(kindDefinition, Kind.BADGE_DEFINITION_EVENT) :
+        new IllegalArgumentException(
+            String.format("Kind definition must be [%d], but was [%d]",
+                Kind.BADGE_DEFINITION_EVENT.getValue(),
+                kind.getValue()));
+
+    KindTypeIF[] values = getValues();
+
+    for (KindTypeIF k : values) {
+      if (k.getKind().equals(kind) && k.getKindDefinition().equals(kindDefinition) && k.getName().equals(name))
+        return k;
+    }
+
+    throw new IllegalArgumentException(
+        String.format("Kind [%s], KindDefinition [%s], KindName [%s] does not match any KindTypes in [%s]",
+            kind,
+            kindDefinition,
+            name,
+            Arrays.toString(values)));
+  }
+
+  default boolean equals(KindTypeIF k1, KindTypeIF k2) {
+    boolean kindEquals = k1.getKind().equals(k2.getKind());
+    boolean kindDefinitionEquals = k1.getKindDefinition().equals(k2.getKindDefinition());
+    boolean kindNameEquals = k1.getName().equalsIgnoreCase(k2.getName());
+    return (kindEquals && kindDefinitionEquals && kindNameEquals);
+  }
+
+  default boolean equals(KindTypeIF k2) {
+    boolean kindEquals = getKind().equals(k2.getKind());
+    boolean kindDefinitionEquals = getKindDefinition().equals(k2.getKindDefinition());
+    boolean kindNameEquals = getName().equalsIgnoreCase(k2.getName());
+    return (kindEquals && kindDefinitionEquals && kindNameEquals);
+  }
+
+  default boolean equals(Kind k2, Kind k3, String name) {
+    boolean kindEquals = getKind().equals(k2);
+    boolean kindDefinitionEquals = getKindDefinition().equals(k3);
+    boolean kindNameEquals = getName().equalsIgnoreCase(name);
+    return (kindEquals && kindDefinitionEquals && kindNameEquals);
+  }
 }
+

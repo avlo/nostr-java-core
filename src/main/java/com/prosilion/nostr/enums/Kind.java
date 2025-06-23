@@ -3,11 +3,9 @@ package com.prosilion.nostr.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.temporal.ValueRange;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum Kind {
   SET_METADATA(0, "set_metadata"),
   TEXT_NOTE(1, "text_note"),
@@ -54,6 +52,11 @@ public enum Kind {
   private final int value;
 
   private final String name;
+
+  Kind(int i, String textNote) {
+    this.value = i;
+    this.name = textNote;
+  }
 
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
   public static Kind valueOf(int value) {
