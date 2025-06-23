@@ -26,9 +26,7 @@ public interface KindTypeIF {
                 Kind.BADGE_DEFINITION_EVENT.getValue(),
                 kind.getValue()));
 
-    KindTypeIF[] values = getValues();
-
-    for (KindTypeIF k : values) {
+    for (KindTypeIF k : getValues()) {
       if (k.getKind().equals(kind) && k.getKindDefinition().equals(kindDefinition) && k.getName().equals(name))
         return k;
     }
@@ -38,21 +36,7 @@ public interface KindTypeIF {
             kind,
             kindDefinition,
             name,
-            Arrays.toString(values)));
-  }
-
-  default boolean equals(KindTypeIF k1, KindTypeIF k2) {
-    boolean kindEquals = k1.getKind().equals(k2.getKind());
-    boolean kindDefinitionEquals = k1.getKindDefinition().equals(k2.getKindDefinition());
-    boolean kindNameEquals = k1.getName().equalsIgnoreCase(k2.getName());
-    return (kindEquals && kindDefinitionEquals && kindNameEquals);
-  }
-
-  default boolean equals(KindTypeIF k2) {
-    boolean kindEquals = getKind().equals(k2.getKind());
-    boolean kindDefinitionEquals = getKindDefinition().equals(k2.getKindDefinition());
-    boolean kindNameEquals = getName().equalsIgnoreCase(k2.getName());
-    return (kindEquals && kindDefinitionEquals && kindNameEquals);
+            Arrays.toString(getValues())));
   }
 
   default boolean equals(Kind k2, Kind k3, String name) {

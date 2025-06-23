@@ -1,113 +1,74 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prosilion.nostr.crypto.HexStringValidator;
+import com.prosilion.nostr.crypto.bech32.Bech32;
+import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.enums.KindTypeIF;
 import com.prosilion.nostr.enums.NostrException;
-import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.beans.Transient;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+// TODO: common code w/ GenericEventKind, needs cleanup
+@Slf4j
 public record GenericEventKindType(
-    @Getter GenericEventKindIF genericEventKind,
-    List<KindTypeIF> definedKindTypes) implements GenericEventKindTypeIF {
+    @Getter String id,
+    @Getter @JsonProperty("pubkey") PublicKey publicKey,
+    @Getter @JsonProperty("created_at") @EqualsAndHashCode.Exclude Long createdAt,
+    @Getter @EqualsAndHashCode.Exclude Kind kind,
+    @Getter @EqualsAndHashCode.Exclude @JsonProperty("tags") List<BaseTag> tags,
+    @Getter @EqualsAndHashCode.Exclude String content,
+    @Getter @JsonProperty("sig") @EqualsAndHashCode.Exclude Signature signature,
+    @Getter @JsonIgnore List<KindTypeIF> definedKindTypes) implements GenericEventKindTypeIF {
 
-  //  TODO: below needs test of counterfactual/non-happy path
-  public GenericEventKindType(GenericEventKindIF genericEventKind, List<KindTypeIF> definedKindTypes) {
-    AddressTag addressTag = Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).stream()
+  public GenericEventKindType {
+    HexStringValidator.validateHex(id, 64);
+
+    AddressTag addressTag = tags.stream()
+        .filter(AddressTag.class::isInstance)
+        .map(AddressTag.class::cast)
         .findFirst().orElseThrow();
 
-    String upperCaseUuid = Objects.requireNonNull(
-            addressTag
-                .getIdentifierTag())
-        .getUuid().toUpperCase();
-
-    this.definedKindTypes = definedKindTypes.stream()
+    definedKindTypes.stream()
         .filter(f ->
-        {
-          Kind genericEventKindKind = genericEventKind.getKind();
-          Kind addressTagKind = addressTag.getKind();
-          return f.equals(
-              genericEventKindKind,
-              addressTagKind,
-              upperCaseUuid);
-        })
-        .toList();
-
-    this.genericEventKind = genericEventKind;
-  }
-
-  @Override
-  public List<KindTypeIF> getDefinedKindTypes() {
-    return this.definedKindTypes;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || (
-        this.genericEventKind.getClass() != o.getClass() &&
-            this.getClass() != o.getClass())) return false;
-    return Objects.equals(
-        genericEventKind,
-//        TODO: revisit below cast; hack-ey
-        ((GenericEventKindTypeIF) o).genericEventKind());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(genericEventKind);
+            f.equals(
+                kind,
+                addressTag.getKind(),
+                Objects.requireNonNull(
+                        addressTag
+                            .getIdentifierTag(), "GenericEventKindType address tag's identifier tag must not be null")
+                    .getUuid().toUpperCase()))
+        .findAny().orElseThrow();
   }
 
   @Override
   public String toBech32() {
-    return genericEventKind().toBech32();
+//    TODO: cleanup below
+    try {
+      return Bech32.toBech32(Bech32Prefix.NOTE, this.getId());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Transient
   @Override
   public Supplier<ByteBuffer> getByteArraySupplier() throws NostrException {
-    return genericEventKind.getByteArraySupplier();
-  }
-
-  @Override
-  public Kind getKind() {
-    return genericEventKind.getKind();
-  }
-
-  @Override
-  public List<BaseTag> getTags() {
-    return genericEventKind.getTags();
-  }
-
-  @Override
-  public String getContent() {
-    return genericEventKind.getContent();
-  }
-
-  @Override
-  public Signature getSignature() {
-    return genericEventKind.getSignature();
-  }
-
-  @Override
-  public String getId() {
-    return genericEventKind.getId();
-  }
-
-  @Override
-  public PublicKey getPublicKey() {
-    return genericEventKind.getPublicKey();
-  }
-
-  @Override
-  public Long getCreatedAt() {
-    return genericEventKind.getCreatedAt();
+    byte[] serializedEvent = serialize().getBytes(StandardCharsets.UTF_8);
+    log.info(String.format("Serialized GenericEventKindType event: %s", new String(serializedEvent)));
+    return () -> ByteBuffer.wrap(serializedEvent);
   }
 }

@@ -9,10 +9,7 @@ import com.prosilion.nostr.enums.KindType;
 import com.prosilion.nostr.enums.KindTypeIF;
 import com.prosilion.nostr.event.GenericEventKind;
 import com.prosilion.nostr.event.GenericEventKindIF;
-import com.prosilion.nostr.event.GenericEventKindType;
-import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.message.EventMessage;
-import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
@@ -55,12 +52,6 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   }
 
   private GenericEventKindIF getEvent(JsonNode node) {
-    GenericEventKindIF genericEventKind = getGenericEventKind(node);
-    GenericEventKindIF genericEventKindIF = checkForType(genericEventKind);
-    return genericEventKindIF;
-  }
-
-  private GenericEventKindIF getGenericEventKind(JsonNode node) {
     return new GenericEventKind(
         node.path("id").asText(),
         new PublicKey(
@@ -76,16 +67,5 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
         node.path("content").asText(),
         Signature.fromString(
             node.path("sig").asText()));
-  }
-
-  private GenericEventKindIF checkForType(GenericEventKindIF genericEventKind) {
-    if (Arrays.stream(KindType.values()).map(KindTypeIF::getKind).distinct().noneMatch(genericEventKind.getKind()::equals))
-      return genericEventKind;
-
-//    TODO: revisit below- if above Type::getKind check matches a Type.values() entry, then AddressTag below must/should(?) be included 
-    if (Filterable.getTypeSpecificTags(AddressTag.class, genericEventKind).isEmpty())
-      return genericEventKind;
-
-    return new GenericEventKindType(genericEventKind, kindType);
   }
 }

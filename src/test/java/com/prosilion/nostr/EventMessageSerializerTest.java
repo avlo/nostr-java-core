@@ -20,18 +20,13 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.json.JsonComparator;
-import org.springframework.test.json.JsonComparison;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @JsonTest
 @ActiveProfiles("test")
 public class EventMessageSerializerTest {
-  private final JsonComparator jsonComparator = (expected, actual) -> JsonComparison.match();
-
   @Autowired
   JacksonTester<EventMessage> tester;
 
@@ -40,9 +35,9 @@ public class EventMessageSerializerTest {
           "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
           new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
           1111111111111L,
-          Kind.valueOf(31923),
+          Kind.BADGE_AWARD_EVENT,
           List.of(new AddressTag(
-              Kind.BADGE_AWARD_EVENT,
+              Kind.BADGE_DEFINITION_EVENT,
               new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
               new IdentifierTag(TestKindType.UPVOTE.getName()))),
           "matching kind, author, identity-tag filter test",
@@ -54,25 +49,22 @@ public class EventMessageSerializerTest {
   }
 
   @Test
-  void testNestedGenericEventKindTypeEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
+  void testGenericEventKindTypeEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
     EventMessage eventMessageUsingKindType = new EventMessage(
         new GenericEventKindType(
-            new GenericEventKind(
-                "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+            1111111111111L,
+            Kind.BADGE_AWARD_EVENT,
+            List.of(new AddressTag(
+                Kind.BADGE_DEFINITION_EVENT,
                 new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-                1111111111111L,
-                Kind.valueOf(31923),
-                List.of(new AddressTag(
-                    Kind.BADGE_AWARD_EVENT,
-                    new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-                    new IdentifierTag(TestKindType.UPVOTE.getName()))),
-                "matching kind, author, identity-tag filter test",
-                Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")),
+                new IdentifierTag(TestKindType.UPVOTE.getName()))),
+            "matching kind, author, identity-tag filter test",
+            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"),
             List.of(TestKindType.values())));
 
     getEqualToJson(eventMessageUsingKindType);
-
-    assertEquals(eventMessage, eventMessageUsingKindType);
   }
 
   @Test
@@ -82,9 +74,9 @@ public class EventMessageSerializerTest {
             "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
             new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
             1111111111111L,
-            Kind.valueOf(31923),
+            Kind.BADGE_AWARD_EVENT,
             List.of(new AddressTag(
-                Kind.BADGE_AWARD_EVENT,
+                Kind.BADGE_DEFINITION_EVENT,
                 new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
                 new IdentifierTag(TestKindType.UPVOTE.getName()))),
             "matching kind, author, identity-tag filter test",
@@ -117,7 +109,7 @@ public class EventMessageSerializerTest {
 
   private String expectedJson() {
     return """
-        ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":31923,"tags":[["a","8:bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984:upvote"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]
+        ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["a","30009:bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984:upvote"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]
         """;
   }
 }

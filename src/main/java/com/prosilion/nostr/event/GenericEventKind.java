@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prosilion.nostr.crypto.HexStringValidator;
 import com.prosilion.nostr.crypto.bech32.Bech32;
@@ -17,10 +16,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.lang.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+// TODO: common code w/ GenericEventKindType, needs cleanup
+@Slf4j
 public record GenericEventKind(
     @Getter String id,
     @Getter @JsonProperty("pubkey") PublicKey publicKey,
@@ -29,21 +28,14 @@ public record GenericEventKind(
     @Getter @EqualsAndHashCode.Exclude @JsonProperty("tags") List<BaseTag> tags,
     @Getter @EqualsAndHashCode.Exclude String content,
     @Getter @JsonProperty("sig") @EqualsAndHashCode.Exclude Signature signature) implements GenericEventKindIF {
-  @JsonIgnore
-  private static final Log log = LogFactory.getLog(GenericEventKind.class);
 
   public GenericEventKind {
-    id = validateId(id);
-  }
-
-  private String validateId(@NonNull String id) {
     HexStringValidator.validateHex(id, 64);
-    return id;
   }
 
   @Override
   public String toBech32() {
-//    TODO: fix below
+//    TODO: cleanup below
     try {
       return Bech32.toBech32(Bech32Prefix.NOTE, this.getId());
     } catch (Exception e) {
@@ -55,7 +47,7 @@ public record GenericEventKind(
   @Override
   public Supplier<ByteBuffer> getByteArraySupplier() throws NostrException {
     byte[] serializedEvent = serialize().getBytes(StandardCharsets.UTF_8);
-    log.info(String.format("Serialized event: %s", new String(serializedEvent)));
+    log.info(String.format("Serialized GenericEventKind event: %s", new String(serializedEvent)));
     return () -> ByteBuffer.wrap(serializedEvent);
   }
 }

@@ -106,21 +106,27 @@ public class EventMessageDeserializerTest {
         + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
         + "}]";
 
-    BaseMessage message = BaseMessageDecoder.decode(json);
-    GenericEventKindIF expected = tester.parseObject(json).getEvent();
-    assertEquals(expected, ((EventMessage) message).getEvent());
+    BaseMessage baseMessage = BaseMessageDecoder.decode(json);
+    EventMessage eventMessage = tester.parseObject(json);
+    GenericEventKindIF expected = eventMessage.getEvent();
+    assertEquals(expected, ((EventMessage) baseMessage).getEvent());
 
     assertEquals(
-        tester.parseObject(json),
-        message);
+        eventMessage,
+        baseMessage);
 
-    String encoded = message.encode();
+    String encodedBaseMessage = baseMessage.encode();
     log.debug("");
     log.debug("testing testEventMessageGenericEventKindTypeEncoder\n");
     log.debug(json);
     log.debug("------");
-    log.debug(encoded);
+    log.debug(encodedBaseMessage);
     log.debug("");
-    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encoded).getResult());
+
+    String encodedEventMessage = eventMessage.encode();
+    assertEquals(encodedEventMessage, encodedBaseMessage);
+    
+    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encodedBaseMessage).getResult());
+    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encodedEventMessage).getResult());
   }
 }
