@@ -16,7 +16,6 @@ import com.prosilion.nostr.filter.tag.IdentifierTagFilter;
 import com.prosilion.nostr.filter.tag.ReferencedEventFilter;
 import com.prosilion.nostr.filter.tag.ReferencedPublicKeyFilter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
@@ -50,25 +49,15 @@ public class FilterableProvider {
   @SneakyThrows
   private static List<Filterable> getFilterableMulti(JsonNode jsonNode, Function<JsonNode, Filterable> filterFunction) {
     List<Filterable> list = new ArrayList<>();
-    JsonNode jsonNode1 = getJsonNode1(jsonNode);
-    Iterator<JsonNode> iterator = jsonNode1.iterator();
-    iterator.forEachRemaining(node ->
-    {
-      Filterable applied = filterFunction.apply(node);
-      list.add(applied);
-    });
+    jsonNode(jsonNode).iterator().forEachRemaining(node ->
+        list.add(filterFunction.apply(node)));
     return list;
   }
-
-  private static JsonNode getJsonNode1(JsonNode jsonNode) throws JsonProcessingException {
-    String string = jsonNode.toString();
-    String prefix = Strings.concat("[", string);
-    String postfix = Strings.concat(prefix, "]");
-    JsonNode jsonNode1 = IDecoder.I_DECODER_MAPPER_AFTERBURNER.readTree(postfix);
-    boolean b = string.startsWith("[[");
-    if (b) {
-      return jsonNode;
-    }
-    return jsonNode1;
+// TODO: likely proper other class/location candidate for below, plus- hack-ey
+  private static JsonNode jsonNode(JsonNode jsonNode) throws JsonProcessingException {
+    return (jsonNode.toString().startsWith("[[")) ?
+        jsonNode
+        :
+        IDecoder.I_DECODER_MAPPER_AFTERBURNER.readTree(Strings.concat(Strings.concat("[", jsonNode.toString()), "]"));
   }
 }
