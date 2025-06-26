@@ -40,6 +40,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class FiltersEncoderTest {
 
   @Test
+  public void emptyFiltersTest() {
+    assertThrows(IllegalArgumentException.class, Filters::new);
+  }
+  
+  @Test
   public void testEventFilterEncoder() {
     log.info("testEventFilterEncoder");
 
