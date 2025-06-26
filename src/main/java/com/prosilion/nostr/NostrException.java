@@ -1,4 +1,4 @@
-package com.prosilion.nostr.enums;
+package com.prosilion.nostr;
 
 import lombok.experimental.StandardException;
 

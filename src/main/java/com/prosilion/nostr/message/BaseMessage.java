@@ -2,7 +2,7 @@ package com.prosilion.nostr.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prosilion.nostr.enums.Command;
-import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.NostrException;
 import java.time.temporal.ValueRange;
 
 public interface BaseMessage {

@@ -1,7 +1,6 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.event.ClassifiedListingEvent;
 import com.prosilion.nostr.event.internal.ClassifiedListing;
 import com.prosilion.nostr.tag.BaseTag;

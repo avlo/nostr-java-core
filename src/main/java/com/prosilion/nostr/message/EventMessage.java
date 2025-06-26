@@ -11,7 +11,7 @@ import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.codec.deserializer.EventMessageDeserializer;
 import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
 import com.prosilion.nostr.enums.Command;
-import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.GenericEventKindIF;
 import java.util.Objects;
 import lombok.Getter;

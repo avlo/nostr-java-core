@@ -2,7 +2,6 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.event.GenericEventKind;
 import com.prosilion.nostr.event.GenericEventKindType;
 import com.prosilion.nostr.message.EventMessage;

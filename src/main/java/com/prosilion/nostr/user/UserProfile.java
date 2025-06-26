@@ -1,7 +1,7 @@
 package com.prosilion.nostr.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
 import java.net.URL;

@@ -1,7 +1,6 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.BaseMessageDecoder;
-import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;

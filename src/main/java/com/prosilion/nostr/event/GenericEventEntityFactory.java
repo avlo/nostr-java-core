@@ -3,7 +3,7 @@ package com.prosilion.nostr.event;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.crypto.NostrUtil;
 import com.prosilion.nostr.user.ISignableEntity;
 import com.prosilion.nostr.user.Identity;

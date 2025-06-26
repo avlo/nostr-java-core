@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
-import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.GenericEventKind;
 import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.filter.Filterable;

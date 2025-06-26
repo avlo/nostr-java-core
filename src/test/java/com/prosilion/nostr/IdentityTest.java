@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.enums.NostrException;
 import com.prosilion.nostr.event.BaseEvent;
 import com.prosilion.nostr.event.TextNoteEvent;
 import com.prosilion.nostr.user.Identity;

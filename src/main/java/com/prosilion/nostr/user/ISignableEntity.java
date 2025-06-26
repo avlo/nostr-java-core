@@ -1,6 +1,6 @@
 package com.prosilion.nostr.user;
 
-import com.prosilion.nostr.enums.NostrException;
+import com.prosilion.nostr.NostrException;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
