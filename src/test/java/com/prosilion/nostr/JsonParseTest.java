@@ -3,7 +3,6 @@ package com.prosilion.nostr;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.codec.deserializer.TagDeserializer;
-import com.prosilion.nostr.config.SerializerConfig;
 import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.enums.Kind;
@@ -60,7 +59,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @JsonTest
-@SpringJUnitConfig(classes = SerializerConfig.class)
+@SpringJUnitConfig
 //@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class JsonParseTest {

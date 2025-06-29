@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.KindType;
-import com.prosilion.nostr.enums.KindTypeIF;
 import com.prosilion.nostr.event.GenericEventKind;
 import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.message.EventMessage;
@@ -15,7 +13,6 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,17 +23,8 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   public static final int NODE_POSITION_AFTER_EVENT_LABEL = 1;
   public static final int CANONICAL_NODE_LENGTH = 2;
 
-  private static List<KindTypeIF> kindType;
-
   public EventMessageDeserializer() {
     log.info("EventMessageDeserializer default Ctor() [{}]", this);
-  }
-
-  public EventMessageDeserializer(List<KindTypeIF> kindType) {
-    super();
-    EventMessageDeserializer.kindType = kindType;
-    log.info("EventMessageDeserializer instance [{}]", this);
-    log.info("Loading default kind types [{}]", (Object[]) KindType.values());
   }
 
   @Override

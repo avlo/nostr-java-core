@@ -32,26 +32,10 @@ public record GenericEventKindType(
     @Getter @EqualsAndHashCode.Exclude @JsonProperty("tags") List<BaseTag> tags,
     @Getter @EqualsAndHashCode.Exclude String content,
     @Getter @JsonProperty("sig") @EqualsAndHashCode.Exclude Signature signature,
-    @Getter @JsonIgnore List<KindTypeIF> definedKindTypes) implements GenericEventKindTypeIF {
+    @Getter @EqualsAndHashCode.Exclude @JsonIgnore KindTypeIF kindType) implements GenericEventKindTypeIF {
 
   public GenericEventKindType {
     HexStringValidator.validateHex(id, 64);
-
-    AddressTag addressTag = tags.stream()
-        .filter(AddressTag.class::isInstance)
-        .map(AddressTag.class::cast)
-        .findFirst().orElseThrow();
-
-    definedKindTypes.stream()
-        .filter(f ->
-            f.equals(
-                kind,
-                addressTag.getKind(),
-                Objects.requireNonNull(
-                        addressTag
-                            .getIdentifierTag(), "GenericEventKindType address tag's identifier tag must not be null")
-                    .getUuid().toUpperCase()))
-        .findAny().orElseThrow();
   }
 
   @Override
