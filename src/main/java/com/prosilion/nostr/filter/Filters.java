@@ -3,6 +3,7 @@ package com.prosilion.nostr.filter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
@@ -54,5 +55,16 @@ public record Filters(
     });
 
     return filtersMap;
+  }
+
+  @Override
+  public @NonNull String toString() {
+    return filtersMap.entrySet().stream()
+        .map(entry ->
+            entry.getKey() +
+                ": " +
+                entry.getValue().stream()
+                    .map(Filterable::getFilterableValue)
+                    .map(Object::toString).collect(Collectors.joining(","))).collect(Collectors.joining(","));
   }
 }
