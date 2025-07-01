@@ -23,13 +23,12 @@ public class IdentityTest {
   }
 
 //  @Test
-//  public void testSignDelegationTag() {
+//  public void privateKeyPublicKeyConvenience() {
 //    System.out.println("testSignDelegationTag");
 //    Identity identity = Identity.generateRandomIdentity();
+//    System.out.println("private key: " + identity.getPrivateKey());
 //    PublicKey publicKey = identity.getPublicKey();
-//    DelegationTag delegationTag = new DelegationTag(publicKey, null);
-//    identity.sign(delegationTag);
-//    Assertions.assertNotNull(delegationTag.getSignature());
+//    System.out.println("public key: " + publicKey);
 //  }
     
     
