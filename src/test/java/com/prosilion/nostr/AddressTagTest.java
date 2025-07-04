@@ -47,9 +47,7 @@ class AddressTagTest {
             {
               try {
                 return addressTag.getFieldValue(field).stream();
-              } catch (NoSuchFieldException e) {
-                throw new RuntimeException(e);
-              } catch (IllegalAccessException e) {
+              } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException(e);
               }
             })
@@ -82,6 +80,8 @@ class AddressTagTest {
     assertEquals(six, seven);
 
     Relay relayZ = new Relay("ws://localhost:8081");
+    assertNotEquals(relayY, relayZ);
+    
     AddressTag eight = new AddressTag(kind, publicKey, identifierTagA, relayZ);
     assertNotEquals(seven, eight);
 
