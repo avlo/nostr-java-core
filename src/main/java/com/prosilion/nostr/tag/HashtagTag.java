@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-@Tag(code = "t", nip = 12)
+@Tag(code = "t")
 public record HashtagTag(
     @Getter @Key @JsonProperty("t") String hashTag) implements BaseTag {
 

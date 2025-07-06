@@ -14,6 +14,6 @@ public class CanonicalAuthenticationEvent extends BaseEvent {
     super(identity, Kind.CLIENT_AUTH,
         List.of(
             GenericTag.create("challenge", challenge),
-            GenericTag.create("relay", relay.getUri())));
+            GenericTag.create("relay", relay.getUri().toString())));
   }
 }

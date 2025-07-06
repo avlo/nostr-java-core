@@ -7,6 +7,7 @@ import com.prosilion.nostr.filter.tag.AddressTagFilter;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.List;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ class AddressTagTest {
   String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
   PublicKey publicKey = new PublicKey(author);
   IdentifierTag identifierTag = new IdentifierTag("UUID-1");
-  Relay relay = new Relay("ws://localhost:8080");
+  Relay relay = new Relay(URI.create("ws://localhost:8080"));
 
   @Test
   void getSupportedFields() {
@@ -71,15 +72,15 @@ class AddressTagTest {
     AddressTag five = new AddressTag(kind, publicKey, identifierTagA);
     assertEquals(four, five);
 
-    Relay relayX = new Relay("ws://localhost:8080");
+    Relay relayX = new Relay(URI.create("ws://localhost:8080"));
     AddressTag six = new AddressTag(kind, publicKey, identifierTagA, relayX);
     assertNotEquals(four, six);
 
-    Relay relayY = new Relay("ws://localhost:8080");
+    Relay relayY = new Relay(URI.create("ws://localhost:8080"));
     AddressTag seven = new AddressTag(kind, publicKey, identifierTagA, relayY);
     assertEquals(six, seven);
 
-    Relay relayZ = new Relay("ws://localhost:8081");
+    Relay relayZ = new Relay(URI.create("ws://localhost:8081"));
     assertNotEquals(relayY, relayZ);
     
     AddressTag eight = new AddressTag(kind, publicKey, identifierTagA, relayZ);
@@ -113,9 +114,7 @@ class AddressTagTest {
     assertTrue(fields.stream().flatMap(field -> {
       try {
         return addressTag.getFieldValue(field).stream();
-      } catch (NoSuchFieldException e) {
-        throw new RuntimeException(e);
-      } catch (IllegalAccessException e) {
+      } catch (NoSuchFieldException | IllegalAccessException e) {
         throw new RuntimeException(e);
       }
     }).anyMatch(predicate));

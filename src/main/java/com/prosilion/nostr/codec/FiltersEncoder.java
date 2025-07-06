@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.prosilion.nostr.filter.Filters;
 
 public class FiltersEncoder {
-//  public record FiltersEncoder(Filters filters) implements Encoder {
-
   public static String encode(Filters filters) {
     ObjectNode root = Encoder.createObjectNode();
 

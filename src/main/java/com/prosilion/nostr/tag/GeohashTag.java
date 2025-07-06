@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-@Tag(code = "g", nip = 12)
+@Tag(code = "g")
 public record GeohashTag(
     @Getter @Key @JsonProperty("g") String location) implements BaseTag {
 

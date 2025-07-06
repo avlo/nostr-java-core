@@ -8,13 +8,12 @@ import java.util.Optional;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-@Tag(code = "r", nip = 12)
+@Tag(code = "r")
 @JsonSerialize(using = ReferenceTagSerializer.class)
 public record ReferenceTag(
     @Getter @Key URI uri) implements BaseTag {
   public static BaseTag deserialize(@NonNull JsonNode node) {
     return new ReferenceTag(
-        URI.create(Optional.of(node.get(1)).orElseThrow().asText())
-    );
+        URI.create(Optional.of(node.get(1)).orElseThrow().asText()));
   }
 }

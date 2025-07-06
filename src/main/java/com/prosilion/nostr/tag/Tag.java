@@ -10,9 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Tag {
 
-    String code();
+  String code();
 
-    String name() default "";
-    
-    int nip() default 1;
+  String name() default "";
 }

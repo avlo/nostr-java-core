@@ -10,6 +10,7 @@ import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -23,6 +24,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
+import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
 public class AddressTagFilter extends AbstractFilterable<AddressTag> {
@@ -41,18 +43,15 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
   }
 
   @Override
-  public Object getFilterableValue() {
+  public String getFilterableValue() {
     String requiredAttributes = Stream.of(
             getAddressTag().getKind(),
             getAddressTag().getPublicKey().toHexString())
         .map(Object::toString).collect(Collectors.joining(":"));
 
-    String identifierTagPortion = Optional.ofNullable(getAddressTag().getIdentifierTag()).map(identifierTag ->
+    return Optional.ofNullable(getAddressTag().getIdentifierTag()).map(identifierTag ->
         String.join(":", requiredAttributes, identifierTag.getUuid())).orElse(
         Strings.concat(requiredAttributes, ":"));
-
-    return Optional.ofNullable(getAddressTag().getRelay()).map(relay ->
-        String.join("\",\"", identifierTagPortion, relay.getUri())).orElse(identifierTagPortion);
   }
 
   private AddressTag getAddressTag() {
@@ -86,14 +85,31 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
     if (list1.size() < 2)
       return addressTagAtomic.get();
 
-    Optional.ofNullable(list1.get(1)).ifPresent(s ->
+    Optional.ofNullable(list1.get(1)).ifPresent(jsonNode ->
         addressTagAtomic.set(
             new AddressTag(
                 Kind.valueOf(Integer.parseInt(nodes.getFirst())),
                 new PublicKey(nodes.get(1)),
                 new IdentifierTag(nodes.get(2)),
-                new Relay(s.asText().replaceAll("^\"", "")))));
+                new Relay(
+                    URI.create(
+                        jsonNode.asText().replaceAll("^\"", ""))))));
 
     return addressTagAtomic.get();
+  }
+
+  @Override
+  public void addToArrayNode(ArrayNode arrayNode) {
+    Optional.ofNullable(
+            getAddressTag().getRelay())
+        .map(relay ->
+            relay.getUri().toString()).ifPresentOrElse(s ->
+            arrayNode.addAll(
+                MAPPER_AFTERBURNER.createArrayNode()
+                    .add(getFilterableValue())
+                    .add(s)), () ->
+            arrayNode.addAll(
+                MAPPER_AFTERBURNER.createArrayNode()
+                    .add(getFilterableValue())));
   }
 }

@@ -5,7 +5,7 @@ import java.util.Optional;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-@Tag(code = "subject", nip = 14)
+@Tag(code = "subject")
 public record SubjectTag(
     @Getter @Key String subject) implements BaseTag {
 

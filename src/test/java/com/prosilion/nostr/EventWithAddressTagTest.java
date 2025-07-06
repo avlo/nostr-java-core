@@ -12,6 +12,7 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +60,7 @@ public class EventWithAddressTagTest {
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     PublicKey publicKey = new PublicKey(author);
     IdentifierTag identifierTag = new IdentifierTag("UUID-1");
-    Relay relay = new Relay("ws://localhost:8080");
+    Relay relay = new Relay(URI.create("ws://localhost:8080"));
 
     AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, publicKey, identifierTag, relay);
     expectedTags.add(addressTag);

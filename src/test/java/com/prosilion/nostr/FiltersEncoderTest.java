@@ -26,6 +26,7 @@ import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.PublicKey;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,7 @@ public class FiltersEncoderTest {
   public void emptyFiltersTest() {
     assertThrows(IllegalArgumentException.class, Filters::new);
   }
-  
+
   @Test
   public void testEventFilterEncoder() {
     log.info("testEventFilterEncoder");
@@ -143,7 +144,7 @@ public class FiltersEncoderTest {
   }
 
   @Test
-  public void testAddressableTagWithRelayFilterEncoder() {
+  public void testAddressableTagWithRelayFilterEncoder() throws URISyntaxException {
     log.info("testAddressableTagWithRelayFilterEncoder");
 
     Integer kind = 1;
@@ -151,15 +152,25 @@ public class FiltersEncoderTest {
     String uuidValue1 = "UUID-1";
     Relay relay = new Relay("ws://localhost:5555");
 
-    AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author), new IdentifierTag(uuidValue1), relay);
-
-    String encodedFilters = FiltersEncoder.encode(new Filters(new AddressTagFilter(addressTag)));
+    String actual = FiltersEncoder.encode(
+        new Filters(
+            new AddressTagFilter(
+                new AddressTag(
+                    Kind.TEXT_NOTE,
+                    new PublicKey(author),
+                    new IdentifierTag(uuidValue1),
+                    relay))));
 
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
-    String joined = String.join("\\\",\\\"", addressableTag, relay.getUri());
+    String joined = String.join("\",\"", addressableTag, relay.getUri().toString());
 
     String expected = "{\"#a\":[\"" + joined + "\"]}";
-    assertEquals(expected, encodedFilters);
+    System.out.println("000000000000000000000000000");
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(actual);
+    System.out.println("000000000000000000000000000");
+    assertEquals(expected, actual);
   }
 
   @Test

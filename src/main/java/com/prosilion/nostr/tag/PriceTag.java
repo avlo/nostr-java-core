@@ -9,7 +9,7 @@ import java.util.Optional;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-@Tag(code = "price", nip = 99)
+@Tag(code = "price")
 @JsonPropertyOrder({"number", "currency", "frequency"})
 public record PriceTag(
     @Getter @Key @JsonFormat(shape = JsonFormat.Shape.STRING) BigDecimal number,

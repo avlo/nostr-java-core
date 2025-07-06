@@ -8,7 +8,7 @@ import java.util.Optional;
 import lombok.Getter;
 import lombok.NonNull;
 
-@Tag(code = "d", nip = 1)
+@Tag(code = "d")
 @JsonSerialize(using = IdentifierTagSerializer.class)
 public record IdentifierTag(@Getter @Key String uuid) implements BaseTag {
 
