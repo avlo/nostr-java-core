@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.codec.serializer.AddressTagSerializer;
+import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.user.PublicKey;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -62,11 +62,12 @@ public record AddressTag(
     if (o == null || getClass() != o.getClass())
       return false;
     AddressTag that = (AddressTag) o;
-    return
-        Objects.equals(kind, that.kind) &&
-            Objects.equals(publicKey, that.publicKey) &&
-            Objects.equals(identifierTag, that.identifierTag) &&
-            Objects.equals(relay, that.relay);
+    return Objects.equals(kind, that.kind) &&
+        Objects.equals(publicKey, that.publicKey) &&
+        Objects.equals(identifierTag, that.identifierTag)
+//  TODO: revisit AddressTag equals for relay inclusion/superfluity        
+//      && (Objects.isNull(relay) && Objects.isNull(that.relay) || Objects.nonNull(relay) && Objects.nonNull(that.relay) && Objects.equals(relay.getUri().toString(), that.relay.getUri().toString()))
+        ;
   }
 
   @Override
