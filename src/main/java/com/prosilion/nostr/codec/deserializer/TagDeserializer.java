@@ -15,6 +15,7 @@ import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PriceTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelaysTag;
 import com.prosilion.nostr.tag.SubjectTag;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class TagDeserializer extends JsonDeserializer<BaseTag> {
       case "e" -> EventTag.deserialize(node);
       case "g" -> GeohashTag.deserialize(node);
       case "p" -> PubKeyTag.deserialize(node);
+      case "r" -> ReferenceTag.deserialize(node);
       case "t" -> HashtagTag.deserialize(node);
 //                case "v" -> VoteTag.deserialize(node);
 

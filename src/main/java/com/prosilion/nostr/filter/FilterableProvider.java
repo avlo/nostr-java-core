@@ -13,6 +13,7 @@ import com.prosilion.nostr.filter.tag.GenericTagQueryFilter;
 import com.prosilion.nostr.filter.tag.GeohashTagFilter;
 import com.prosilion.nostr.filter.tag.HashtagTagFilter;
 import com.prosilion.nostr.filter.tag.IdentifierTagFilter;
+import com.prosilion.nostr.filter.tag.ReferenceTagFilter;
 import com.prosilion.nostr.filter.tag.ReferencedEventFilter;
 import com.prosilion.nostr.filter.tag.ReferencedPublicKeyFilter;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class FilterableProvider {
       case ReferencedEventFilter.FILTER_KEY -> getFilterable(node, ReferencedEventFilter.fxn);
       case IdentifierTagFilter.FILTER_KEY -> getFilterable(node, IdentifierTagFilter.fxn);
       case AddressTagFilter.FILTER_KEY -> getFilterableMulti(node, AddressTagFilter.fxn);
+      case ReferenceTagFilter.FILTER_KEY -> getFilterable(node, ReferenceTagFilter.fxn);
       case GeohashTagFilter.FILTER_KEY -> getFilterable(node, GeohashTagFilter.fxn);
       case HashtagTagFilter.FILTER_KEY -> getFilterable(node, HashtagTagFilter.fxn);
 //      case VoteTagFilter.FILTER_KEY -> getFilterable(node, VoteTagFilter.fxn);
