@@ -29,6 +29,7 @@ public enum Kind {
   ZAP_REQUEST(9734, "zap_request"),
   ZAP_RECEIPT(9735, "zap_receipt"),
   REPLACEABLE_EVENT(10_000, "replaceable_event"),
+  RELAY_LIST_METADATA(10_002, "relay_list_metadata"),
   PIN_LIST(10_001, "pin_list"),
   EPHEMEREAL_EVENT(20_000, "ephemereal_event"),
   CLIENT_AUTH(22_242, "authentication_of_clients_to_relays"),
