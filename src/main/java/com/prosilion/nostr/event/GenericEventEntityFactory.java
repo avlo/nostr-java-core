@@ -45,7 +45,7 @@ class GenericEventEntityFactory {
         content,
         identity.sign(flux));
 
-    log.info(String.format("\nGenericEvenRecord created:\n  %s\n", genericEventRecord));
+    log.debug(String.format("\nGenericEventRecord created:\n  %s\n", genericEventRecord));
 
     return genericEventRecord;
   }

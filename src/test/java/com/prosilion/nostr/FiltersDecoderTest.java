@@ -39,7 +39,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testEventFiltersDecoder() throws JsonProcessingException {
-    log.info("testEventFiltersDecoder");
+    log.debug("testEventFiltersDecoder");
 
     String filterKey = "ids";
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
@@ -55,7 +55,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleEventFiltersDecoder() throws JsonProcessingException {
-    log.info("testMultipleEventFiltersDecoder");
+    log.debug("testMultipleEventFiltersDecoder");
 
     String filterKey = "ids";
     String eventId1 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
@@ -75,7 +75,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testAddressTagFiltersKindPublicKey() throws JsonProcessingException {
-    log.info("testAddressTagFiltersKindPublicKey");
+    log.debug("testAddressTagFiltersKindPublicKey");
 
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
@@ -95,7 +95,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testAddressTagFiltersKindPublicKeyIdentifierTag() throws JsonProcessingException {
-    log.info("testAddressTagFiltersKindPublicKeyIdentifierTag");
+    log.debug("testAddressTagFiltersKindPublicKeyIdentifierTag");
 
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String uuidValue1 = "UUID-1";
@@ -115,7 +115,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testAddressableTagFiltersWithRelayDecoder() throws JsonProcessingException {
-    log.info("testAddressableTagFiltersWithRelayDecoder");
+    log.debug("testAddressableTagFiltersWithRelayDecoder");
 
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String uuidValue1 = "UUID-1";
@@ -137,7 +137,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testKindFiltersDecoder() throws JsonProcessingException {
-    log.info("testKindFiltersDecoder");
+    log.debug("testKindFiltersDecoder");
 
     String filterKey = KindFilter.FILTER_KEY;
     Kind kind = Kind.valueOf(1);
@@ -150,7 +150,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleKindFiltersDecoder() throws JsonProcessingException {
-    log.info("testMultipleKindFiltersDecoder");
+    log.debug("testMultipleKindFiltersDecoder");
 
     String filterKey = KindFilter.FILTER_KEY;
     Kind kind1 = Kind.valueOf(1);
@@ -170,7 +170,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testIdentifierTagFilterDecoder() throws JsonProcessingException {
-    log.info("testIdentifierTagFilterDecoder");
+    log.debug("testIdentifierTagFilterDecoder");
 
     String uuidValue1 = "UUID-1";
 
@@ -183,7 +183,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleIdentifierTagFilterDecoder() throws JsonProcessingException {
-    log.info("testMultipleIdentifierTagFilterDecoder");
+    log.debug("testMultipleIdentifierTagFilterDecoder");
 
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
@@ -202,7 +202,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testReferencedEventFilterDecoder() throws JsonProcessingException {
-    log.info("testReferencedEventFilterDecoder");
+    log.debug("testReferencedEventFilterDecoder");
 
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
@@ -214,7 +214,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleReferencedEventFilterDecoder() throws JsonProcessingException {
-    log.info("testMultipleReferencedEventFilterDecoder");
+    log.debug("testMultipleReferencedEventFilterDecoder");
 
     String eventId1 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String eventId2 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
@@ -232,7 +232,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testReferencedPublicKeyFilterDecofder() throws JsonProcessingException {
-    log.info("testReferencedPublicKeyFilterDecoder");
+    log.debug("testReferencedPublicKeyFilterDecoder");
 
     String pubkeyString = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
@@ -244,7 +244,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleReferencedPublicKeyFilterDecoder() throws JsonProcessingException {
-    log.info("testMultipleReferencedPublicKeyFilterDecoder");
+    log.debug("testMultipleReferencedPublicKeyFilterDecoder");
 
     String pubkeyString1 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String pubkeyString2 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
@@ -263,7 +263,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testGeohashTagFiltersDecoder() throws JsonProcessingException {
-    log.info("testGeohashTagFiltersDecoder");
+    log.debug("testGeohashTagFiltersDecoder");
 
     String geohashKey = "#g";
     String geohashValue = "2vghde";
@@ -276,7 +276,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleGeohashTagFiltersDecoder() throws JsonProcessingException {
-    log.info("testMultipleGeohashTagFiltersDecoder");
+    log.debug("testMultipleGeohashTagFiltersDecoder");
 
     String geohashKey = "#g";
     String geohashValue1 = "2vghde";
@@ -293,7 +293,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testHashtagTagFiltersDecoder() throws JsonProcessingException {
-    log.info("testHashtagTagFiltersDecoder");
+    log.debug("testHashtagTagFiltersDecoder");
 
     String hashtagKey = "#t";
     String hashtagValue = "2vghde";
@@ -306,7 +306,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleHashtagTagFiltersDecoder() throws JsonProcessingException {
-    log.info("testMultipleHashtagTagFiltersDecoder");
+    log.debug("testMultipleHashtagTagFiltersDecoder");
 
     String hashtagKey = "#t";
     String hashtagValue1 = "2vghde";
@@ -323,7 +323,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testGenericTagFiltersDecoder() throws JsonProcessingException {
-    log.info("testGenericTagFiltersDecoder");
+    log.debug("testGenericTagFiltersDecoder");
 
     String customTagKey = "#b";
     String customTagValue = "2vghde";
@@ -336,7 +336,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testMultipleGenericTagFiltersDecoder() throws JsonProcessingException {
-    log.info("testMultipleGenericTagFiltersDecoder");
+    log.debug("testMultipleGenericTagFiltersDecoder");
 
     String customTagKey = "#b";
     String customTagValue1 = "2vghde";
@@ -355,7 +355,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testSinceFiltersDecoder() throws JsonProcessingException {
-    log.info("testSinceFiltersDecoder");
+    log.debug("testSinceFiltersDecoder");
 
     Long since = Date.from(Instant.now()).getTime();
 
@@ -367,7 +367,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testUntilFiltersDecoder() throws JsonProcessingException {
-    log.info("testUntilFiltersDecoder");
+    log.debug("testUntilFiltersDecoder");
 
     Long until = Date.from(Instant.now()).getTime();
 
@@ -379,7 +379,7 @@ public class FiltersDecoderTest {
 
   @Test
   public void testFailedAddressableTagMalformedSeparator() {
-    log.info("testFailedAddressableTagMalformedSeparator");
+    log.debug("testFailedAddressableTagMalformedSeparator");
 
     Integer kind = 1;
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";

@@ -47,7 +47,7 @@ public record GenericEventKind(
   @Override
   public Supplier<ByteBuffer> getByteArraySupplier() throws NostrException {
     byte[] serializedEvent = serialize().getBytes(StandardCharsets.UTF_8);
-    log.info(String.format("Serialized GenericEventKind event: %s", new String(serializedEvent)));
+    log.debug(String.format("Serialized GenericEventKind event: %s", new String(serializedEvent)));
     return () -> ByteBuffer.wrap(serializedEvent);
   }
 }
