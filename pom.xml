@@ -130,4 +130,18 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/avlo/nostr-java-core</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:git://github.com/avlo/nostr-java-core.git</connection>
+        <developerConnection>scm:git:ssh://github.com:avlo/nostr-java-core.git</developerConnection>
+        <url>https://github.com/avlo/nostr-java-core</url>
+        <tag>${version}</tag>
+    </scm>
 </project>
