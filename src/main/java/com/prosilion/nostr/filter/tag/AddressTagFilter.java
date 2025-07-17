@@ -10,7 +10,6 @@ import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -92,8 +91,7 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
                 new PublicKey(nodes.get(1)),
                 new IdentifierTag(nodes.get(2)),
                 new Relay(
-                    URI.create(
-                        jsonNode.asText().replaceAll("^\"", ""))))));
+                    jsonNode.asText().replaceAll("^\"", "")))));
 
     return addressTagAtomic.get();
   }

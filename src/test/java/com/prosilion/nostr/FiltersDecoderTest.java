@@ -25,7 +25,6 @@ import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.PublicKey;
-import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
@@ -119,7 +118,7 @@ public class FiltersDecoderTest {
 
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String uuidValue1 = "UUID-1";
-    Relay relay = new Relay(URI.create("ws://localhost:5555"));
+    Relay relay = new Relay("ws://localhost:5555");
 
     String manualJoined = "1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1";
 
