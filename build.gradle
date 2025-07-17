@@ -33,14 +33,12 @@ dependencies {
     def bouncyCastle = rootProject.property("nostr-java.bouncyCastle")
     def lombok = rootProject.property("nostr-java.lombok")
     def googleGuava = rootProject.property("nostr-java.googleGuava")
-    def gson = rootProject.property("nostr-java.gson")
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-json'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    implementation 'com.google.code.gson:gson:' + gson
     implementation 'com.fasterxml.jackson.module:jackson-module-afterburner:' + jacksonModuleAfterburner
     implementation 'org.bouncycastle:bcprov-jdk18on:' + bouncyCastle
     implementation 'org.projectlombok:lombok:' + lombok
