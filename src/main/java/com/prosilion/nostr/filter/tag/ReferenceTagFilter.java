@@ -5,7 +5,6 @@ import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.ReferenceTag;
-import java.net.URI;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
@@ -35,5 +34,5 @@ public class ReferenceTagFilter extends AbstractFilterable<ReferenceTag> {
     return super.getFilterable();
   }
 
-  public static Function<JsonNode, Filterable> fxn = node -> new ReferenceTagFilter(new ReferenceTag(URI.create(node.asText())));
+  public static Function<JsonNode, Filterable> fxn = node -> new ReferenceTagFilter(new ReferenceTag(node.asText()));
 }
