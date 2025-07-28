@@ -20,7 +20,7 @@ public class EventFilter extends AbstractFilterable<GenericEventId> {
   @Override
   public Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
-        genericEvent.getId().equals(getFilterableValue());
+        genericEvent.getEventId().equals(getFilterableValue());
   }
 
   @Override

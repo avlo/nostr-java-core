@@ -34,8 +34,9 @@ public record GenericEventKindType(
   }
 
   @Override
-  public String getId() {
-    return genericEventKind.getId();
+  @JsonProperty("id")
+  public String getEventId() {
+    return genericEventKind.getEventId();
   }
 
   @Override

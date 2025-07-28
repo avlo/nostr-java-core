@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public record GenericEventKind(
-    @Getter String id,
+    @Getter @JsonProperty("id") String eventId,
     @Getter @JsonProperty("pubkey") PublicKey publicKey,
     @Getter @JsonProperty("created_at") @EqualsAndHashCode.Exclude Long createdAt,
     @Getter @EqualsAndHashCode.Exclude Kind kind,
@@ -29,14 +29,14 @@ public record GenericEventKind(
     @Getter @JsonProperty("sig") @EqualsAndHashCode.Exclude Signature signature) implements GenericEventKindIF {
 
   public GenericEventKind {
-    HexStringValidator.validateHex(id, 64);
+    HexStringValidator.validateHex(eventId, 64);
   }
 
   @Override
   public String toBech32() {
 //    TODO: cleanup below
     try {
-      return Bech32.toBech32(Bech32Prefix.NOTE, this.getId());
+      return Bech32.toBech32(Bech32Prefix.NOTE, this.getEventId());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

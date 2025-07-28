@@ -44,7 +44,7 @@ public abstract class BaseEvent implements EventIF {
   }
 
   @Override
-  public String getId() {
+  public String getEventId() {
     return genericEventRecord.getId();
   }
 

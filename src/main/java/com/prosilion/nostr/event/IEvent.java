@@ -7,5 +7,4 @@ import com.prosilion.nostr.user.IBech32Encodable;
 
 public interface IEvent extends IBech32Encodable {
   ObjectMapper MAPPER_AFTERBURNER = JsonMapper.builder().addModule(new AfterburnerModule()).build();
-  String getId();
 }
