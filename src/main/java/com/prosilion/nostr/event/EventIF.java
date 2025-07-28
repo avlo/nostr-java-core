@@ -4,14 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
+import java.io.Serializable;
 import java.util.List;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
-public interface EventIF {
+public interface EventIF extends Serializable {
   default String serialize() throws NostrException {
     var arrayNode = JsonNodeFactory.instance.arrayNode();
 
