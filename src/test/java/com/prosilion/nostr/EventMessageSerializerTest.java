@@ -11,6 +11,8 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import com.prosilion.nostr.util.TestKindType;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -47,7 +49,8 @@ public class EventMessageSerializerTest {
 
   @Test
   void testEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
-    getEqualToJson(eventMessage);
+    checkWithoutExplicitJson(eventMessage);
+    checkWithExplicitJson(eventMessage);
   }
 
   @Test
@@ -63,14 +66,41 @@ public class EventMessageSerializerTest {
             new IdentifierTag(TestKindType.UPVOTE.getName()))),
         "matching kind, author, identity-tag filter test",
         Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
-    getEqualToJson(new EventMessage(genericEventKind));
+    EventMessage eventMessage = new EventMessage(genericEventKind);
+    checkWithoutExplicitJson(eventMessage);
+    checkWithExplicitJson(eventMessage);
 
 //    as parameter to decorator
     GenericEventKindType genericEventKindType = new GenericEventKindType(
         genericEventKind,
         TestKindType.UPVOTE);
 
-    getEqualToJson(new EventMessage(genericEventKindType));
+    EventMessage eventMessage2 = new EventMessage(genericEventKindType);
+    checkWithoutExplicitJson(eventMessage2);
+    checkWithExplicitJson(eventMessage2);
+  }
+
+  @Test
+  void secondTestGenericEventKindTypeDecorator() throws IOException, NostrException {
+    GenericEventKind genericEventKind = new GenericEventKind(
+        EventTagTest.generateRandomHex64String(),
+        new PublicKey(EventTagTest.generateRandomHex64String()),
+        Date.from(Instant.now()).getTime(),
+        Kind.BADGE_AWARD_EVENT,
+        List.of(new AddressTag(
+            Kind.BADGE_DEFINITION_EVENT,
+            new PublicKey(EventTagTest.generateRandomHex64String()),
+            new IdentifierTag(TestKindType.UPVOTE.getName()))),
+        EventTagTest.generateRandomHex64String(),
+        Signature.fromString(EventTagTest.generateRandomHex64String().concat(EventTagTest.generateRandomHex64String())));
+    checkWithoutExplicitJson(new EventMessage(genericEventKind));
+
+//    as parameter to decorator
+    GenericEventKindType genericEventKindType = new GenericEventKindType(
+        genericEventKind,
+        TestKindType.UPVOTE);
+
+    checkWithoutExplicitJson(new EventMessage(genericEventKindType));
   }
 
   @Test
@@ -89,10 +119,42 @@ public class EventMessageSerializerTest {
             Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")),
         "subscriberId");
 
-    getEqualToJson(eventMessageContainingSubscriberId);
+    checkWithoutExplicitJson(eventMessageContainingSubscriberId);
+    checkWithExplicitJson(eventMessageContainingSubscriberId);
   }
 
-  private void getEqualToJson(EventMessage eventMessage) throws IOException, NostrException {
+  private void checkWithoutExplicitJson(EventMessage eventMessage) throws IOException, NostrException {
+    JsonContent<EventMessage> testWriterEventMessage = tester.write(eventMessage);
+    JsonComparator jsonComparator = (expectedJson, actualJson) -> JsonComparison.match();
+
+    String afterBurnerEncodedJson = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage);
+    String eventMessageEncodedJson = eventMessage.encode();
+    String testWriterEventMessageJson = testWriterEventMessage.getJson();
+
+    log.debug("\nafterBurnerEncodedJson:");
+    log.debug(afterBurnerEncodedJson);
+    log.debug("--- testWriterEventMessage.toString() ----");
+    log.debug(testWriterEventMessageJson);
+    log.debug("--- eventMessage.encode() ----");
+    log.debug(eventMessageEncodedJson);
+    log.debug("");
+
+    log.debug("afterBurnerEncodedJson, eventMessageEncodedJson:\n  {}",
+        jsonComparator.compare(afterBurnerEncodedJson, eventMessageEncodedJson).getResult());
+
+    log.debug("afterBurnerEncodedJson, testWriterEventMessageJson:\n  {}",
+        jsonComparator.compare(afterBurnerEncodedJson, testWriterEventMessageJson).getResult());
+
+    log.debug("eventMessageEncodedJson, testWriterEventMessageJson:\n  {}",
+        jsonComparator.compare(eventMessageEncodedJson, testWriterEventMessageJson).getResult());
+
+    assertThat(testWriterEventMessage).isEqualToJson(afterBurnerEncodedJson);
+    assertThat(testWriterEventMessage).isEqualToJson(eventMessageEncodedJson);
+//
+    assertEquals(afterBurnerEncodedJson, eventMessageEncodedJson);
+  }
+
+  private void checkWithExplicitJson(EventMessage eventMessage) throws IOException, NostrException {
     JsonContent<EventMessage> testWriterEventMessage = tester.write(eventMessage);
     JsonComparator jsonComparator = (expectedJson, actualJson) -> JsonComparison.match();
 
@@ -118,20 +180,7 @@ public class EventMessageSerializerTest {
     log.debug("explicitJson, testWriterEventMessageJson:\n  {}",
         jsonComparator.compare(explicitJson, testWriterEventMessageJson).getResult());
 
-    log.debug("afterBurnerEncodedJson, eventMessageEncodedJson:\n  {}",
-        jsonComparator.compare(afterBurnerEncodedJson, eventMessageEncodedJson).getResult());
-
-    log.debug("afterBurnerEncodedJson, testWriterEventMessageJson:\n  {}",
-        jsonComparator.compare(afterBurnerEncodedJson, testWriterEventMessageJson).getResult());
-
-    log.debug("eventMessageEncodedJson, testWriterEventMessageJson:\n  {}",
-        jsonComparator.compare(eventMessageEncodedJson, testWriterEventMessageJson).getResult());
-
-    assertThat(testWriterEventMessage).isEqualToJson(afterBurnerEncodedJson);
-    assertThat(testWriterEventMessage).isEqualToJson(eventMessageEncodedJson);
     assertThat(testWriterEventMessage).isEqualToJson(explicitJson);
-//
-    assertEquals(afterBurnerEncodedJson, eventMessageEncodedJson);
   }
 
   private String expectedJson() {
