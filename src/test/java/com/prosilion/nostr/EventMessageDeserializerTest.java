@@ -1,7 +1,7 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.BaseMessageDecoder;
-import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;
 import java.io.IOException;
@@ -107,7 +107,7 @@ public class EventMessageDeserializerTest {
 
     BaseMessage baseMessage = BaseMessageDecoder.decode(json);
     EventMessage eventMessage = tester.parseObject(json);
-    GenericEventKindIF expected = eventMessage.getEvent();
+    EventIF expected = eventMessage.getEvent();
     assertEquals(expected, ((EventMessage) baseMessage).getEvent());
 
     assertEquals(

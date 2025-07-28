@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.enums.Command;
-import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
+import com.prosilion.nostr.enums.Command;
+import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventKind;
-import com.prosilion.nostr.event.GenericEventKindIF;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.GenericTag;
@@ -26,7 +26,7 @@ import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
 @JsonSerialize(using = EventMessageSerializer.class)
 public record CanonicalAuthenticationMessage(
-    @Getter GenericEventKindIF event) implements BaseMessage {
+    @Getter EventIF event) implements BaseMessage {
 
   public static Command command = Command.AUTH;
 
@@ -43,7 +43,7 @@ public record CanonicalAuthenticationMessage(
 
   @SneakyThrows
   public static <T extends BaseMessage> T decode(@NonNull Map map) {
-    GenericEventKindIF event = I_DECODER_MAPPER_AFTERBURNER.convertValue(map, new TypeReference<>() {
+    EventIF event = I_DECODER_MAPPER_AFTERBURNER.convertValue(map, new TypeReference<>() {
     });
 
     List<GenericTag> genericTags = event.getTags().stream()
@@ -55,7 +55,7 @@ public record CanonicalAuthenticationMessage(
 
     List<BaseTag> list = Stream.concat(Stream.of(challengeTag), relayTags.stream()).toList();
 
-    GenericEventKindIF canonEvent = new GenericEventKind(
+    EventIF canonEvent = new GenericEventKind(
         map.get("id").toString(),
         event.getPublicKey(),
         event.getCreatedAt(),

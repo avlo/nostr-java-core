@@ -3,7 +3,7 @@ package com.prosilion.nostr.filter.event;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import java.util.function.Function;
@@ -21,7 +21,7 @@ public class KindFilter extends AbstractFilterable<Kind> {
   }
 
   @Override
-  public Predicate<GenericEventKindIF> getPredicate() {
+  public Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
         getFilterableValue().equals(genericEvent.getKind().getValue());
   }

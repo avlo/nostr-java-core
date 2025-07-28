@@ -2,7 +2,7 @@ package com.prosilion.nostr.filter;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.tag.BaseTag;
 import java.util.List;
 import java.util.Optional;
@@ -12,12 +12,12 @@ import org.springframework.lang.NonNull;
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 public interface Filterable {
-  Predicate<GenericEventKindIF> getPredicate();
+  Predicate<EventIF> getPredicate();
   <T> T getFilterable();
   Object getFilterableValue();
   String getFilterKey();
 
-  static <T extends BaseTag> List<T> getTypeSpecificTags(@NonNull Class<T> tagClass, @NonNull GenericEventKindIF event) {
+  static <T extends BaseTag> List<T> getTypeSpecificTags(@NonNull Class<T> tagClass, @NonNull EventIF event) {
     return event.getTags().stream()
         .filter(tagClass::isInstance)
         .map(tagClass::cast)

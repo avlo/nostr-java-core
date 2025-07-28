@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;
@@ -45,7 +45,7 @@ public class EventWithAddressTagTest {
     assertEquals(Command.EVENT, message.getCommand());
     assertInstanceOf(EventMessage.class, message);
 
-    GenericEventKindIF eventImpl = ((EventMessage) message).getEvent();
+    EventIF eventImpl = ((EventMessage) message).getEvent();
     assertEquals("28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a", eventImpl.getId());
     assertEquals(Kind.TEXT_NOTE, eventImpl.getKind());
     assertEquals("2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984", eventImpl.getPublicKey().toString());
@@ -102,7 +102,7 @@ public class EventWithAddressTagTest {
     assertEquals(Command.EVENT, message.getCommand());
     assertInstanceOf(EventMessage.class, message);
 
-    GenericEventKindIF eventImpl = ((EventMessage) message).getEvent();
+    EventIF eventImpl = ((EventMessage) message).getEvent();
 
     assertEquals("28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a", eventImpl.getId());
     assertEquals(Kind.TEXT_NOTE, eventImpl.getKind());

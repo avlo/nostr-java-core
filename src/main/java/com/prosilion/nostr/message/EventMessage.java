@@ -12,7 +12,7 @@ import com.prosilion.nostr.codec.deserializer.EventMessageDeserializer;
 import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.NostrException;
-import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.EventIF;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
@@ -23,16 +23,16 @@ import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 @JsonSerialize(using = EventMessageSerializer.class)
 @JsonDeserialize(using = EventMessageDeserializer.class)
 public record EventMessage(
-    @Getter @JsonPropertyDescription("EVENT") GenericEventKindIF event,
+    @Getter @JsonPropertyDescription("EVENT") EventIF event,
     @Getter @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String subscriptionId) implements BaseMessage {
   @JsonIgnore
   public static Command command = Command.EVENT;
 
-  public EventMessage(@JsonProperty GenericEventKindIF event) {
+  public EventMessage(@JsonProperty EventIF event) {
     this(event, null);
   }
 
-  public EventMessage(@JsonProperty GenericEventKindIF event, @Nullable String subscriptionId) {
+  public EventMessage(@JsonProperty EventIF event, @Nullable String subscriptionId) {
     this.event = event;
     this.subscriptionId = subscriptionId;
   }
