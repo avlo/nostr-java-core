@@ -2,17 +2,12 @@ package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.user.ISignableEntity;
-import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.user.Signature;
-import com.prosilion.nostr.tag.BaseTag;
-import java.util.List;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
-public interface GenericEventKindIF extends IEvent, ISignableEntity {
+public interface GenericEventKindIF extends EventIF, IEvent, ISignableEntity {
   default String serialize() throws NostrException {
     var arrayNode = JsonNodeFactory.instance.arrayNode();
 
@@ -30,17 +25,8 @@ public interface GenericEventKindIF extends IEvent, ISignableEntity {
     }
   }
 
-  String getId();
-  PublicKey getPublicKey();
-  Long getCreatedAt();
-  Kind getKind();
-  List<BaseTag> getTags();
-  String getContent();
-  Signature getSignature();
-
   String toBech32();
   String toString();
   boolean equals(Object o);
-
   int hashCode();
 }

@@ -3,6 +3,7 @@ package com.prosilion.nostr.event;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.user.Signature;
 import java.util.List;
 
 public interface EventIF {
@@ -20,5 +21,5 @@ public interface EventIF {
 
   String getContent();
 
-  String getSignature();
+  Signature getSignature();
 }

@@ -5,6 +5,7 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.user.Signature;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Function;
@@ -29,7 +30,7 @@ public abstract class BaseEvent implements EventIF {
   }
 
   public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, List<BaseTag> tags, String content) throws NostrException, NoSuchAlgorithmException {
-    this.genericEventRecord = GenericEventEntityFactory.createInstance(identity, kind, tags, content);
+    this.genericEventRecord = GenericEventRecordFactory.createInstance(identity, kind, tags, content);
   }
 
   @Override
@@ -58,8 +59,8 @@ public abstract class BaseEvent implements EventIF {
   }
 
   @Override
-  public String getSignature() {
-    return genericEventRecord.getSignature().toString();
+  public Signature getSignature() {
+    return genericEventRecord.getSignature();
   }
 
   @Override

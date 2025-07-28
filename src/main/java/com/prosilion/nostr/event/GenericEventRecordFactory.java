@@ -21,8 +21,8 @@ import org.apache.commons.logging.LogFactory;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
-class GenericEventEntityFactory {
-  private static final Log log = LogFactory.getLog(GenericEventEntityFactory.class);
+class GenericEventRecordFactory {
+  private static final Log log = LogFactory.getLog(GenericEventRecordFactory.class);
 
   protected static GenericEventRecord createInstance(
       @NonNull Identity identity,

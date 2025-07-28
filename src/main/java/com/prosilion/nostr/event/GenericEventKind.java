@@ -1,11 +1,11 @@
 package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.crypto.HexStringValidator;
 import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
@@ -18,7 +18,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-// TODO: common code w/ GenericEventKindType, needs cleanup
 @Slf4j
 public record GenericEventKind(
     @Getter String id,
