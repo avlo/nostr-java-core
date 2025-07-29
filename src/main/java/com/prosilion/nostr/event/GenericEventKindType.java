@@ -19,7 +19,7 @@ import org.springframework.lang.NonNull;
 
 @Slf4j
 public record GenericEventKindType(
-    @NonNull @JsonIgnore GenericEventKind genericEventKind,
+    @NonNull @JsonIgnore GenericEventKindIF genericEventKind,
     @NonNull @Getter @EqualsAndHashCode.Exclude @JsonIgnore KindTypeIF kindType) implements GenericEventKindTypeIF {
 
   @Override
