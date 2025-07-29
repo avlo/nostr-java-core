@@ -45,10 +45,15 @@ public record GenericEventRecord(
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     GenericEventRecord that = (GenericEventRecord) o;
-    return Objects.equals(id, that.id) && Objects.equals(kind, that.kind) && Objects.equals(createdAt, that.createdAt) && Objects.equals(content, that.content) && Objects.equals(publicKey, that.publicKey) && Objects.equals(signature, that.signature) &&
-        // fast list equality    
-        new HashSet<>(tags).containsAll(that.tags)
-        ;
+    return
+        // test tags first, also HashSet for fast list equality    
+        new HashSet<>(tags).containsAll(that.tags) &&
+            Objects.equals(id, that.id) &&
+            Objects.equals(kind, that.kind) &&
+            Objects.equals(createdAt, that.createdAt) &&
+            Objects.equals(content, that.content) &&
+            Objects.equals(publicKey, that.publicKey) &&
+            Objects.equals(signature, that.signature);
   }
 
   @Override
