@@ -46,15 +46,15 @@ public record GenericEventRecord(
     if (o == null || getClass() != o.getClass()) return false;
     GenericEventRecord that = (GenericEventRecord) o;
     return Objects.equals(id, that.id) && Objects.equals(kind, that.kind) && Objects.equals(createdAt, that.createdAt) && Objects.equals(content, that.content) && Objects.equals(publicKey, that.publicKey) && Objects.equals(signature, that.signature) &&
-        // in lieu of changing List<BaseTag> to Collection<BaseTag> downstream affects, just use fast list comparison    
+        // fast list equality    
         new HashSet<>(tags).containsAll(that.tags)
         ;
   }
 
-//  @Override
-//  public int hashCode() {
-//    return Objects.hash(id, publicKey, createdAt, kind,
-//        new HashSet<>(tags),
-//        content, signature);
-//  }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, publicKey, createdAt, kind,
+        new HashSet<>(tags),
+        content, signature);
+  }
 }

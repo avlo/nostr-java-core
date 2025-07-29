@@ -12,12 +12,16 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import com.prosilion.nostr.util.TestKindType;
 import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GenericEventRecordTest {
   public static final String CONTENT = EventTagTest.generateRandomHex64String();
+  public static final String EVENT_TAG_CONTENT = EventTagTest.generateRandomHex64String();
   public final Identity identity = Identity.generateRandomIdentity();
 
   private final String id;
@@ -27,7 +31,7 @@ public class GenericEventRecordTest {
   private final Signature signature;
 
   public GenericEventRecordTest() {
-    this.id = EventTagTest.generateRandomHex64String();
+    this.id = EVENT_TAG_CONTENT;
     this.publicKey = identity.getPublicKey();
     this.createdAt = System.currentTimeMillis();
     this.kind = Kind.TEXT_NOTE;
@@ -68,20 +72,19 @@ public class GenericEventRecordTest {
 
   @Test
   void testComplesTags() {
-    String eventTagContent = EventTagTest.generateRandomHex64String();
     List<BaseTag> tags1 = List.of(
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
             new IdentifierTag(TestKindType.UPVOTE.getName())),
-        new EventTag(eventTagContent));
+        new EventTag(EVENT_TAG_CONTENT));
 
     List<BaseTag> tags2 = List.of(
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
             new IdentifierTag(TestKindType.UPVOTE.getName())),
-        new EventTag(eventTagContent));
+        new EventTag(EVENT_TAG_CONTENT));
 
     GenericEventRecord firstRecord = new GenericEventRecord(
         id, publicKey, createdAt, kind, tags1, CONTENT, signature);
@@ -94,10 +97,8 @@ public class GenericEventRecordTest {
 
   @Test
   void testRearrangedIdenticalTags() {
-    String eventTagContent = EventTagTest.generateRandomHex64String();
     List<BaseTag> tags1 = List.of(
-        new EventTag(eventTagContent)
-        ,
+        new EventTag(EVENT_TAG_CONTENT),
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
@@ -109,7 +110,7 @@ public class GenericEventRecordTest {
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
             new IdentifierTag(TestKindType.UPVOTE.getName())),
-        new EventTag(eventTagContent)
+        new EventTag(EVENT_TAG_CONTENT)
     );
 
     GenericEventRecord firstRecord = new GenericEventRecord(
@@ -123,15 +124,14 @@ public class GenericEventRecordTest {
 
   @Test
   void testRearrangedIdenticalTags2() {
-    String eventTagContent = EventTagTest.generateRandomHex64String();
     List<BaseTag> tags1 = List.of(
-        new EventTag(eventTagContent),
+        new EventTag(EVENT_TAG_CONTENT),
         new PubKeyTag(publicKey)
     );
 
     List<BaseTag> tags2 = List.of(
         new PubKeyTag(publicKey),
-        new EventTag(eventTagContent)
+        new EventTag(EVENT_TAG_CONTENT)
     );
 
     GenericEventRecord firstRecord = new GenericEventRecord(
@@ -141,5 +141,99 @@ public class GenericEventRecordTest {
         id, publicKey, createdAt, kind, tags2, CONTENT, signature);
 
     assertEquals(firstRecord, secondRecord);
+  }
+
+  @Test
+  void testUnequalTags() {
+    List<BaseTag> tags1 = List.of(
+        new PubKeyTag(publicKey)
+    );
+
+    List<BaseTag> tags2 = List.of(
+        new PubKeyTag(publicKey),
+        new EventTag(EVENT_TAG_CONTENT)
+    );
+
+    GenericEventRecord firstRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags1, CONTENT, signature);
+
+    GenericEventRecord secondRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags2, CONTENT, signature);
+
+    assertNotEquals(firstRecord, secondRecord);
+  }
+
+  @Test
+  void testUnequalContent() {
+    List<BaseTag> tags = List.of(
+        new PubKeyTag(publicKey)
+    );
+
+    GenericEventRecord firstRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags, EVENT_TAG_CONTENT, signature);
+
+    GenericEventRecord secondRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags, CONTENT, signature);
+
+    assertNotEquals(firstRecord, secondRecord);
+  }
+  
+  @Test
+  void testUnequalContentWithEqualTags() {
+    List<BaseTag> tags1 = List.of(
+        new PubKeyTag(publicKey)
+    );
+
+    List<BaseTag> tags2 = List.of(
+        new PubKeyTag(publicKey)
+    );
+
+    GenericEventRecord firstRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags1, EVENT_TAG_CONTENT, signature);
+
+    GenericEventRecord secondRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags2, CONTENT, signature);
+
+    assertNotEquals(firstRecord, secondRecord);
+  }
+
+  @Test
+  void testHashCodeEquality() {
+    List<BaseTag> tags1 = List.of(
+        new PubKeyTag(publicKey)
+    );
+
+    List<BaseTag> tags2 = List.of(
+        new PubKeyTag(publicKey)
+    );
+
+    GenericEventRecord firstRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags1, CONTENT, signature);
+
+    GenericEventRecord secondRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags2, CONTENT, signature);
+
+    assertEquals(firstRecord.hashCode(), secondRecord.hashCode());
+  }
+
+  @Test
+  void testRearrangedIdenticalTagsHashCodeEquality() {
+    List<BaseTag> tags1 = List.of(
+        new EventTag(EVENT_TAG_CONTENT),
+        new PubKeyTag(publicKey)
+    );
+
+    List<BaseTag> tags2 = List.of(
+        new PubKeyTag(publicKey),
+        new EventTag(EVENT_TAG_CONTENT)
+    );
+
+    GenericEventRecord firstRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags1, CONTENT, signature);
+
+    GenericEventRecord secondRecord = new GenericEventRecord(
+        id, publicKey, createdAt, kind, tags2, CONTENT, signature);
+
+    assertEquals(firstRecord.hashCode(), secondRecord.hashCode());
   }
 }
