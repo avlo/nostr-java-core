@@ -2,9 +2,9 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.GenericEventKind;
-import com.prosilion.nostr.event.GenericEventKindType;
-import com.prosilion.nostr.message.EventMessage;
+import com.prosilion.nostr.event.GenericEventKindTypeRxR;
+import com.prosilion.nostr.event.GenericEventRecordRxR;
+import com.prosilion.nostr.message.EventMessageRxR;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
@@ -30,22 +30,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @JsonTest
 @ActiveProfiles("test")
-public class EventMessageSerializerTest {
-  @Autowired
-  JacksonTester<EventMessage> tester;
+public class EventMessageSerializerRxRTest {
+  private final JacksonTester<EventMessageRxR> tester;
+  private final EventMessageRxR eventMessage;
 
-  private final EventMessage eventMessage = new EventMessage(
-      new GenericEventKind(
-          "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
-          new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-          1111111111111L,
-          Kind.BADGE_AWARD_EVENT,
-          List.of(new AddressTag(
-              Kind.BADGE_DEFINITION_EVENT,
-              new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-              new IdentifierTag(TestKindType.UPVOTE.getName()))),
-          "matching kind, author, identity-tag filter test",
-          Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
+  @Autowired
+  public EventMessageSerializerRxRTest(JacksonTester<EventMessageRxR> tester) {
+    this.tester = tester;
+
+//    this.eventMessage = new EventMessageRxR(
+//        new GenericEventKind(
+//            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+//            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+//            1111111111111L,
+//            Kind.BADGE_AWARD_EVENT,
+//            List.of(new AddressTag(
+//                Kind.BADGE_DEFINITION_EVENT,
+//                new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+//                new IdentifierTag(TestKindType.UPVOTE.getName()))),
+//            "matching kind, author, identity-tag filter test",
+//            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
+
+    eventMessage = new EventMessageRxR(
+        new GenericEventRecordRxR(
+            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+            1111111111111L,
+            Kind.BADGE_AWARD_EVENT,
+            List.of(new AddressTag(
+                Kind.BADGE_DEFINITION_EVENT,
+                new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+                new IdentifierTag(TestKindType.UPVOTE.getName()))),
+            "matching kind, author, identity-tag filter test",
+            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
+  }
 
   @Test
   void testEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
@@ -55,7 +73,7 @@ public class EventMessageSerializerTest {
 
   @Test
   void testGenericEventKindTypeDecorator() throws IOException, NostrException {
-    GenericEventKind genericEventKind = new GenericEventKind(
+    GenericEventRecordRxR genericEventKind = new GenericEventRecordRxR(
         "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
         new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
         1111111111111L,
@@ -66,23 +84,23 @@ public class EventMessageSerializerTest {
             new IdentifierTag(TestKindType.UPVOTE.getName()))),
         "matching kind, author, identity-tag filter test",
         Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
-    EventMessage eventMessage = new EventMessage(genericEventKind);
+    EventMessageRxR eventMessage = new EventMessageRxR(genericEventKind);
     checkWithoutExplicitJson(eventMessage);
     checkWithExplicitJson(eventMessage);
 
 //    as parameter to decorator
-    GenericEventKindType genericEventKindType = new GenericEventKindType(
+    GenericEventKindTypeRxR genericEventKindType = new GenericEventKindTypeRxR(
         genericEventKind,
         TestKindType.UPVOTE);
 
-    EventMessage eventMessage2 = new EventMessage(genericEventKindType);
+    EventMessageRxR eventMessage2 = new EventMessageRxR(genericEventKindType);
     checkWithoutExplicitJson(eventMessage2);
     checkWithExplicitJson(eventMessage2);
   }
 
   @Test
   void secondTestGenericEventKindTypeDecorator() throws IOException, NostrException {
-    GenericEventKind genericEventKind = new GenericEventKind(
+    GenericEventRecordRxR genericEventKind = new GenericEventRecordRxR(
         EventTagTest.generateRandomHex64String(),
         new PublicKey(EventTagTest.generateRandomHex64String()),
         Date.from(Instant.now()).getTime(),
@@ -93,20 +111,20 @@ public class EventMessageSerializerTest {
             new IdentifierTag(TestKindType.UPVOTE.getName()))),
         EventTagTest.generateRandomHex64String(),
         Signature.fromString(EventTagTest.generateRandomHex64String().concat(EventTagTest.generateRandomHex64String())));
-    checkWithoutExplicitJson(new EventMessage(genericEventKind));
+    checkWithoutExplicitJson(new EventMessageRxR(genericEventKind));
 
 //    as parameter to decorator
-    GenericEventKindType genericEventKindType = new GenericEventKindType(
+    GenericEventKindTypeRxR genericEventKindType = new GenericEventKindTypeRxR(
         genericEventKind,
         TestKindType.UPVOTE);
 
-    checkWithoutExplicitJson(new EventMessage(genericEventKindType));
+    checkWithoutExplicitJson(new EventMessageRxR(genericEventKindType));
   }
 
   @Test
   void testEventMessageWithSubscriberIdEncoder() throws IOException, NostrException {
-    EventMessage eventMessageContainingSubscriberId = new EventMessage(
-        new GenericEventKind(
+    EventMessageRxR eventMessageContainingSubscriberId = new EventMessageRxR(
+        new GenericEventRecordRxR(
             "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
             new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
             1111111111111L,
@@ -123,8 +141,8 @@ public class EventMessageSerializerTest {
     checkWithExplicitJson(eventMessageContainingSubscriberId);
   }
 
-  private void checkWithoutExplicitJson(EventMessage eventMessage) throws IOException, NostrException {
-    JsonContent<EventMessage> testWriterEventMessage = tester.write(eventMessage);
+  private void checkWithoutExplicitJson(EventMessageRxR eventMessage) throws IOException, NostrException {
+    JsonContent<EventMessageRxR> testWriterEventMessage = tester.write(eventMessage);
     JsonComparator jsonComparator = (expectedJson, actualJson) -> JsonComparison.match();
 
     String afterBurnerEncodedJson = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage);
@@ -154,14 +172,14 @@ public class EventMessageSerializerTest {
     assertEquals(afterBurnerEncodedJson, eventMessageEncodedJson);
   }
 
-  private void checkWithExplicitJson(EventMessage eventMessage) throws IOException, NostrException {
-    JsonContent<EventMessage> testWriterEventMessage = tester.write(eventMessage);
+  private void checkWithExplicitJson(EventMessageRxR eventMessage) throws IOException, NostrException {
+    JsonContent<EventMessageRxR> testWriterEventMessage = tester.write(eventMessage);
     JsonComparator jsonComparator = (expectedJson, actualJson) -> JsonComparison.match();
 
     String explicitJson = expectedJson();
 
     log.debug("reference explicitJson:\n{}", explicitJson);
-    
+
     String afterBurnerEncodedJson = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage);
     String eventMessageEncodedJson = eventMessage.encode();
     String testWriterEventMessageJson = testWriterEventMessage.getJson();
