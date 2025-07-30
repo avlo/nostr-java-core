@@ -9,7 +9,7 @@ import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.EventIF;
-import com.prosilion.nostr.event.GenericEventKind;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.GenericTag;
@@ -55,7 +55,7 @@ public record CanonicalAuthenticationMessage(
 
     List<BaseTag> list = Stream.concat(Stream.of(challengeTag), relayTags.stream()).toList();
 
-    EventIF canonEvent = new GenericEventKind(
+    EventIF canonEvent = new GenericEventRecord(
         map.get("id").toString(),
         event.getPublicKey(),
         event.getCreatedAt(),

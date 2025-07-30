@@ -2,8 +2,7 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.EventIF;
-import com.prosilion.nostr.event.GenericEventKind;
-import com.prosilion.nostr.event.GenericEventKindIF;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -30,7 +29,7 @@ public class GenericEventKindTest {
   @Test
   void testEqualityWithoutTags() {
     long time = Date.from(Instant.now()).getTime();
-    EventIF firstEvent = new GenericEventKind(
+    EventIF firstEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -39,7 +38,7 @@ public class GenericEventKindTest {
         "content",
         Signature.fromString(signature));
 
-    EventIF secondEvent = new GenericEventKind(
+    EventIF secondEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -47,15 +46,15 @@ public class GenericEventKindTest {
         null,
         "content",
         Signature.fromString(signature));
-    
+
     assertEquals(firstEvent, secondEvent);
   }
-  
+
 
   @Test
   void testEqualityWithEmptyTags() {
     long time = Date.from(Instant.now()).getTime();
-    EventIF firstEvent = new GenericEventKind(
+    EventIF firstEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -64,7 +63,7 @@ public class GenericEventKindTest {
         "content",
         Signature.fromString(signature));
 
-    EventIF secondEvent = new GenericEventKind(
+    EventIF secondEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -82,9 +81,9 @@ public class GenericEventKindTest {
         Kind.BADGE_DEFINITION_EVENT,
         new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
         new IdentifierTag(TestKindType.UPVOTE.getName())));
-    
+
     long time = Date.from(Instant.now()).getTime();
-    EventIF firstEvent = new GenericEventKind(
+    EventIF firstEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -93,7 +92,7 @@ public class GenericEventKindTest {
         "content",
         Signature.fromString(signature));
 
-    EventIF secondEvent = new GenericEventKind(
+    EventIF secondEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -104,7 +103,7 @@ public class GenericEventKindTest {
 
     assertEquals(firstEvent, secondEvent);
   }
-  
+
   @Test
   void testEqualityWithPopulatedTags() {
     List<BaseTag> tags = List.of(new AddressTag(
@@ -113,7 +112,7 @@ public class GenericEventKindTest {
         new IdentifierTag(TestKindType.UPVOTE.getName())));
 
     long time = Date.from(Instant.now()).getTime();
-    GenericEventKindIF firstEvent = new GenericEventKind(
+    EventIF firstEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -122,7 +121,7 @@ public class GenericEventKindTest {
         "content",
         Signature.fromString(signature));
 
-    GenericEventKindIF secondEvent = new GenericEventKind(
+    EventIF secondEvent = new GenericEventRecord(
         eventId,
         pubkey,
         time,
@@ -148,7 +147,7 @@ public class GenericEventKindTest {
         new IdentifierTag(TestKindType.UPVOTE.getName())));
 
     long time = Date.from(Instant.now()).getTime();
-    EventIF firstEvent = new GenericEventKind(
+    EventIF firstEvent = new GenericEventRecord(
         eventId,
         this.pubkey,
         time,
@@ -157,7 +156,7 @@ public class GenericEventKindTest {
         "content",
         Signature.fromString(signature));
 
-    GenericEventKindIF secondEvent = new GenericEventKind(
+    EventIF secondEvent = new GenericEventRecord(
         eventId,
         this.pubkey,
         time,

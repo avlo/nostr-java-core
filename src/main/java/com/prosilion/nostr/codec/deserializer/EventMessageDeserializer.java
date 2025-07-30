@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.EventIF;
-import com.prosilion.nostr.event.GenericEventKind;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.PublicKey;
@@ -40,7 +40,7 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
   }
 
   private EventIF getEvent(JsonNode node) {
-    return new GenericEventKind(
+    return new GenericEventRecord(
         node.path("id").asText(),
         new PublicKey(
             node.path("pubkey").asText()),

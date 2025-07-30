@@ -239,7 +239,7 @@ public class JsonParseTest {
 //    assertEquals("npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh", ((EventMessage) message).getSubscriptionId());
     assertEquals(1, event.getKind().getValue());
     assertEquals(1686199583, event.getCreatedAt().longValue());
-    assertEquals("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712", event.getEventId());
+    assertEquals("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712", event.getId());
   }
 
   @Test
@@ -369,7 +369,7 @@ public class JsonParseTest {
     BaseMessage message = BaseMessageDecoder.decode(classifiedListingEventJson);
     EventIF event = ((EventMessage) message).getEvent();
 
-    assertEquals("28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a", event.getEventId());
+    assertEquals("28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a", event.getId());
     assertEquals(30402, event.getKind().getValue());
     assertEquals("content ipsum", event.getContent());
     assertEquals("ec0762fe78b0f0b763d1324452d973a38bef576d1d76662722d2b8ff948af1de", event.getPublicKey().toString());
@@ -792,7 +792,7 @@ public class JsonParseTest {
     final var event = (((EventMessage) eventMessage).getEvent());
     assertEquals(Kind.TEXT_NOTE, event.getKind());
     assertEquals(1786199583, event.getCreatedAt().longValue());
-    assertEquals("ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712", event.getEventId());
+    assertEquals("ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712", event.getId());
 
     String subscriptionId = "npub27x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
     final String requestJson =

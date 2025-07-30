@@ -30,7 +30,7 @@ public interface EventIF extends Serializable {
     }
   }
 
-  String getEventId();
+  String getId();
 
   PublicKey getPublicKey();
 

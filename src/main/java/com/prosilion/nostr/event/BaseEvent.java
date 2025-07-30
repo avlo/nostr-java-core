@@ -1,10 +1,10 @@
 package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Signature;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -44,7 +44,7 @@ public abstract class BaseEvent implements EventIF {
   }
 
   @Override
-  public String getEventId() {
+  public String getId() {
     return genericEventRecord.getId();
   }
 
