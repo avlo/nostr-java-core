@@ -2,17 +2,16 @@ package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.crypto.NostrUtil;
+import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.ISignableEntity;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.tag.BaseTag;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
-import java.time.Instant;
 import java.util.List;
 import java.util.function.Supplier;
 import lombok.NonNull;
@@ -30,7 +29,7 @@ class GenericEventRecordFactory {
       @NonNull List<BaseTag> tags,
       @NonNull String content) throws NostrException, NoSuchAlgorithmException {
 
-    long epochSecond = Instant.now().getEpochSecond();
+    long epochSecond = System.currentTimeMillis();
     GenericEventRecordFlux flux = new GenericEventRecordFlux(
         identity.getPublicKey(),
         epochSecond,
