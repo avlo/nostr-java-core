@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.BaseTag;
@@ -39,7 +38,7 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> {
             node.path(NODE_POSITION_AFTER_EVENT_LABEL).path("subscriptionId").asText());
   }
 
-  private EventIF getEvent(JsonNode node) {
+  private GenericEventRecord getEvent(JsonNode node) {
     return new GenericEventRecord(
         node.path("id").asText(),
         new PublicKey(

@@ -12,7 +12,9 @@ import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.codec.deserializer.EventMessageDeserializer;
 import com.prosilion.nostr.codec.serializer.EventMessageSerializer;
 import com.prosilion.nostr.enums.Command;
+import com.prosilion.nostr.event.BaseEvent;
 import com.prosilion.nostr.event.EventIF;
+import com.prosilion.nostr.event.GenericEventRecord;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,8 +30,12 @@ public record EventMessage(
   @JsonIgnore
   public static Command command = Command.EVENT;
 
-  public EventMessage(@JsonProperty EventIF event) {
+  public EventMessage(@JsonProperty GenericEventRecord event) {
     this(event, null);
+  }
+
+  public EventMessage(@JsonProperty BaseEvent event) {
+    this(event.getGenericEventRecord(), null);
   }
 
   public EventMessage(@JsonProperty EventIF event, @Nullable String subscriptionId) {
