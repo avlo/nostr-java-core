@@ -16,6 +16,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PriceTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.ReferenceTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.RelaysTag;
 import com.prosilion.nostr.tag.SubjectTag;
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class TagDeserializer extends JsonDeserializer<BaseTag> {
 
 //                case "nonce" -> NonceTag.deserialize(node);
       case "price" -> PriceTag.deserialize(node);
+      case "relay" -> RelayTag.deserialize(node);
       case "relays" -> RelaysTag.deserialize(node);
       case "subject" -> SubjectTag.deserialize(node);
       default -> decode(node);
@@ -50,7 +52,7 @@ public class TagDeserializer extends JsonDeserializer<BaseTag> {
   public static BaseTag decode(@NonNull String json) throws JsonProcessingException {
     return decode(I_DECODER_MAPPER_AFTERBURNER.readValue(json, String[].class));
   }
-  
+
   private static BaseTag decode(@NonNull JsonNode json) throws JsonProcessingException {
     return decode(I_DECODER_MAPPER_AFTERBURNER.readValue(json.toString(), String[].class));
   }
