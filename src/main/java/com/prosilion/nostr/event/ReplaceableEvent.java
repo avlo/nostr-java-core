@@ -1,9 +1,9 @@
 package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.NostrException;
-import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.user.Identity;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Function;
