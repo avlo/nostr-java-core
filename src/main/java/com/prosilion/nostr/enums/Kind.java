@@ -39,6 +39,7 @@ public enum Kind {
   PRE_LONG_FORM_CONTENT(30_023, "long_form_content"),
   FOLLOW_SETS(30_000, "follow_sets"),
   RELAY_SETS(30_002, "relay_sets"),
+  CURATION_SETS(30_004, "curation_sets"),
   RELAY_DISCOVERY(30_166, "relay_discovery"),
   CLASSIFIED_LISTING(30_402, "classified_listing_active"),
   CLASSIFIED_LISTING_INACTIVE(30_403, "classified_listing_inactive"),

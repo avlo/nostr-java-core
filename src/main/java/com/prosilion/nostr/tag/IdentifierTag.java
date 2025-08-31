@@ -3,6 +3,7 @@ package com.prosilion.nostr.tag;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prosilion.nostr.codec.serializer.IdentifierTagSerializer;
+import java.time.temporal.ValueRange;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
@@ -13,8 +14,12 @@ import lombok.NonNull;
 public record IdentifierTag(@Getter @Key String uuid) implements BaseTag {
 
   public static BaseTag deserialize(@NonNull JsonNode node) {
-    return new IdentifierTag(
-        Optional.of(node.get(1)).orElseThrow().asText());
+    String uuid = Optional.of(node.get(1)).orElseThrow().asText();
+    
+    if (!ValueRange.of(1, 64).isValidIntValue(uuid.length())) {
+      throw new IllegalArgumentException(String.format("IdentifierTag length must be between 1 and 64 characters but was [%d]", uuid.length()));
+    }
+    return new IdentifierTag(uuid);
   }
 
   @Override
