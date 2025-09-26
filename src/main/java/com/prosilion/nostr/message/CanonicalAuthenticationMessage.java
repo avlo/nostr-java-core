@@ -11,10 +11,6 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.codec.deserializer.CanonicalAuthenticationMessageDeserializer;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
-import com.prosilion.nostr.event.internal.ElementAttribute;
-import com.prosilion.nostr.tag.GenericTag;
-import java.util.List;
-import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
@@ -22,7 +18,6 @@ import org.springframework.lang.Nullable;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
-//@JsonSerialize(using = EventMessageSerializer.class)
 @JsonDeserialize(using = CanonicalAuthenticationMessageDeserializer.class)
 @JsonTypeName("AUTH")
 public record CanonicalAuthenticationMessage(
@@ -51,23 +46,6 @@ public record CanonicalAuthenticationMessage(
 
   @SneakyThrows
   public static BaseMessage decode(@NonNull String jsonString) {
-    CanonicalAuthenticationMessage canonicalAuthenticationMessage = ENCODER_MAPPED_AFTERBURNER.readValue(jsonString, CanonicalAuthenticationMessage.class);
-    return canonicalAuthenticationMessage;
-  }
-
-  private static String getAttributeValue(List<GenericTag> genericTags) {
-//    TODO: stream optional
-    Stream<List<ElementAttribute>> list = getList(genericTags);
-    List<ElementAttribute> first = list.toList().getFirst();
-    ElementAttribute first1 = first.getFirst();
-    Object value = first1.getValue();
-    String string = value.toString();
-    return string;
-  }
-
-  private static Stream<List<ElementAttribute>> getList(List<GenericTag> genericTags) {
-    Stream<List<ElementAttribute>> list = genericTags.stream()
-        .filter(tag -> tag.getCode().equalsIgnoreCase(CHALLENGE)).map(GenericTag::getAttributes);
-    return list;
+    return ENCODER_MAPPED_AFTERBURNER.readValue(jsonString, CanonicalAuthenticationMessage.class);
   }
 }
