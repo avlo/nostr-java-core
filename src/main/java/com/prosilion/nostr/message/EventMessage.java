@@ -28,7 +28,6 @@ public record EventMessage(
     @Getter @JsonPropertyDescription("EVENT") EventIF event,
     @Getter @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String subscriptionId) implements BaseMessage {
   @JsonIgnore
-  public static Command command = Command.EVENT;
 
   public EventMessage(@JsonProperty GenericEventRecord event) {
     this(event, null);
@@ -68,6 +67,6 @@ public record EventMessage(
   @Override
   @JsonIgnore
   public Command getCommand() {
-    return command;
+    return Command.EVENT;
   }
 }

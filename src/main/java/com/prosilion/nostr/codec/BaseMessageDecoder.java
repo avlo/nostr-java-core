@@ -9,9 +9,7 @@ import com.prosilion.nostr.message.EoseMessage;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.message.NoticeMessage;
 import com.prosilion.nostr.message.OkMessage;
-import com.prosilion.nostr.message.RelayAuthenticationMessage;
 import com.prosilion.nostr.message.ReqMessage;
-import java.util.Map;
 import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
@@ -26,9 +24,10 @@ public class BaseMessageDecoder {
 
     return switch (Command.valueOf(validNostrJsonStructure.getCommand())) {
 //          client <-> relay messages
-      case Command.AUTH -> subscriptionId instanceof Map map ?
-          CanonicalAuthenticationMessage.decode(map) :
-          RelayAuthenticationMessage.decode(subscriptionId);
+      case Command.AUTH ->
+//          subscriptionId instanceof Map map ?
+          CanonicalAuthenticationMessage.decode(jsonString);
+//          RelayAuthenticationMessage.decode(subscriptionId);
       case Command.EVENT -> EventMessage.decode(jsonString);
 //            missing client <-> relay handlers
 //            case "COUNT" -> CountMessage.decode(subscriptionId);

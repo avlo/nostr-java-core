@@ -15,7 +15,6 @@ public record OkMessage(
     @Getter String eventId,
     @Getter Boolean flag,
     @Getter String message) implements BaseMessage {
-  public static Command command = Command.OK;
 
   @Override
   public String encode() throws JsonProcessingException {
@@ -38,6 +37,6 @@ public record OkMessage(
 
   @Override
   public Command getCommand() {
-    return command;
+    return Command.OK;
   }
 }
