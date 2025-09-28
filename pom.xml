@@ -12,7 +12,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <spring-boot.version>3.5.0</spring-boot.version>
+        <spring-boot.version>3.5.1</spring-boot.version>
         <apache.commons.lang3.version>3.17.0</apache.commons.lang3.version>
         <bouncycastle.version>1.80</bouncycastle.version>
         <google.guava.version>33.2.1-jre</google.guava.version>
