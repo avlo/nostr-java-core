@@ -382,7 +382,7 @@ public class JsonParseTest {
         .map(PriceTag.class::cast)
         .map(PriceTag::number).findFirst().orElseThrow());
 
-    assertEquals("BTC", Filterable.getTypeSpecificTags(PriceTag.class, event).stream()
+    assertEquals("BTC", Filterable.getTypeSpecificTagsStream(PriceTag.class, event)
         .map(PriceTag::currency).findFirst().orElseThrow());
 
     assertEquals("1", event.getTags().stream().filter(baseTag ->

@@ -20,7 +20,7 @@ public class HashtagTagFilter extends AbstractFilterable<HashtagTag> {
   @Override
   public Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
-        Filterable.getTypeSpecificTags(HashtagTag.class, genericEvent).stream().anyMatch(hashtagTag ->
+        Filterable.getTypeSpecificTagsStream(HashtagTag.class, genericEvent).anyMatch(hashtagTag ->
             hashtagTag.getHashTag().equals(getFilterableValue()));
   }
 

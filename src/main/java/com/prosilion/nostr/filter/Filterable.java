@@ -7,6 +7,8 @@ import com.prosilion.nostr.tag.BaseTag;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
@@ -18,10 +20,13 @@ public interface Filterable {
   String getFilterKey();
 
   static <T extends BaseTag> List<T> getTypeSpecificTags(@NonNull Class<T> tagClass, @NonNull EventIF event) {
+    return getTypeSpecificTagsStream(tagClass, event).collect(Collectors.toList());
+  }
+
+  static <T extends BaseTag> Stream<T> getTypeSpecificTagsStream(@NonNull Class<T> tagClass, @NonNull EventIF event) {
     return event.getTags().stream()
         .filter(tagClass::isInstance)
-        .map(tagClass::cast)
-        .toList();
+        .map(tagClass::cast);
   }
 
   default ObjectNode toObjectNode(ObjectNode objectNode) {

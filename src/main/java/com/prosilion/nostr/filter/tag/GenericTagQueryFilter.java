@@ -22,7 +22,7 @@ public class GenericTagQueryFilter extends AbstractFilterable<GenericTagQuery> {
   @Override
   public Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
-        Filterable.getTypeSpecificTags(GenericTag.class, genericEvent).stream()
+        Filterable.getTypeSpecificTagsStream(GenericTag.class, genericEvent)
             .filter(genericTag ->
                 genericTag.getCode().equals(stripLeadingHashTag()))
             .anyMatch(genericTag ->

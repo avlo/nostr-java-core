@@ -20,7 +20,7 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
   @Override
   public Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
-        Filterable.getTypeSpecificTags(EventTag.class, genericEvent).stream()
+        Filterable.getTypeSpecificTagsStream(EventTag.class, genericEvent)
             .anyMatch(eventTag ->
                 eventTag.getIdEvent().equals(getFilterableValue()));
   }
