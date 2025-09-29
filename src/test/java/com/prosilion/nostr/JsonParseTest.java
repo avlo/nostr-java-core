@@ -24,6 +24,7 @@ import com.prosilion.nostr.filter.tag.IdentifierTagFilter;
 import com.prosilion.nostr.filter.tag.ReferencedEventFilter;
 import com.prosilion.nostr.filter.tag.ReferencedPublicKeyFilter;
 import com.prosilion.nostr.message.BaseMessage;
+import com.prosilion.nostr.message.ClosedMessage;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.message.ReqMessage;
 import com.prosilion.nostr.tag.AddressTag;
@@ -767,6 +768,23 @@ public class JsonParseTest {
             "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
 
     assertThrows(IllegalArgumentException.class, () -> BaseMessageDecoder.decode(parseTarget));
+  }
+
+  @Test
+  public void testClosedMessage() throws JsonProcessingException {
+    log.debug("testClosedMessage");
+
+    String sessionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
+    String reason = "auth-required: some reason";
+    
+    final String parseTarget =
+        "[\"CLOSED\", \"" + sessionId +  "\", \"" + reason + "\"]";
+
+    ClosedMessage decodedReqMessage = (ClosedMessage) BaseMessageDecoder.decode(parseTarget);
+    ClosedMessage closedMessage = new ClosedMessage(sessionId, reason);
+
+    assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(closedMessage));
+    assertEquals(decodedReqMessage, closedMessage);
   }
 
   @Test

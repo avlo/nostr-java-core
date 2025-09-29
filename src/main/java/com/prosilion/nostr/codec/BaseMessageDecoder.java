@@ -5,6 +5,7 @@ import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.CanonicalAuthenticationMessage;
 import com.prosilion.nostr.message.CloseMessage;
+import com.prosilion.nostr.message.ClosedMessage;
 import com.prosilion.nostr.message.EoseMessage;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.message.NoticeMessage;
@@ -34,6 +35,7 @@ public class BaseMessageDecoder {
 
 //            client -> relay messages
       case Command.CLOSE -> CloseMessage.decode(subscriptionId);
+      case Command.CLOSED -> ClosedMessage.decode(subscriptionId, jsonString);
       case Command.REQ -> ReqMessage.decode(subscriptionId, jsonString);
 
 //            relay -> client handlers
