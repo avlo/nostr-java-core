@@ -2,13 +2,15 @@ package com.prosilion.nostr.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.codec.deserializer.CanonicalAuthenticationMessageDeserializer;
+import com.prosilion.nostr.codec.serializer.CanonicalAuthenticationMessageSerializer;
+import com.prosilion.nostr.event.BaseEvent;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
 import lombok.Getter;
@@ -18,17 +20,19 @@ import org.springframework.lang.Nullable;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
+@JsonSerialize(using = CanonicalAuthenticationMessageSerializer.class)
 @JsonDeserialize(using = CanonicalAuthenticationMessageDeserializer.class)
 @JsonTypeName("AUTH")
 public record CanonicalAuthenticationMessage(
-    @Getter @JsonPropertyDescription("AUTH") EventIF event,
+    @Getter EventIF event,
     @Getter @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String subscriptionId) implements BaseAuthenticationMessageIF {
 
-  public static final String CHALLENGE = "challenge";
-  public static final String RELAY = "relay";
+  public CanonicalAuthenticationMessage(@Nullable String subscriptionId, @JsonProperty GenericEventRecord event) {
+    this(event, subscriptionId);
+  }
 
-  public CanonicalAuthenticationMessage(@JsonProperty GenericEventRecord event) {
-    this(event, null);
+  public CanonicalAuthenticationMessage(@JsonProperty BaseEvent event, @Nullable String subscriptionId) {
+    this(event.getGenericEventRecord(), subscriptionId);
   }
 
   public CanonicalAuthenticationMessage(@JsonProperty EventIF event, @Nullable String subscriptionId) {
@@ -38,10 +42,7 @@ public record CanonicalAuthenticationMessage(
 
   @Override
   public String encode() throws JsonProcessingException, NostrException {
-    return ENCODER_MAPPED_AFTERBURNER.writeValueAsString(
-        JsonNodeFactory.instance.arrayNode()
-            .add(getCommand().name)
-            .add(event.serialize()));
+    return IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(this);
   }
 
   @SneakyThrows
