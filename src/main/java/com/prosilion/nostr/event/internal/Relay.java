@@ -5,16 +5,18 @@ import com.prosilion.nostr.codec.serializer.RelaysTagSerializer;
 import com.prosilion.nostr.tag.Key;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import lombok.Getter;
 import org.springframework.lang.NonNull;
 import org.springframework.web.util.InvalidUrlException;
 
 @JsonSerialize(using = RelaysTagSerializer.class)
-public record Relay(@Key String url) {
-  public String getUrl() {
-    return asLocalOrCanonicalUrl(url);
+public record Relay(@Key @Getter String url) {
+
+  public Relay(@NonNull String url) {
+    this.url = asLocalOrCanonicalUrl(url);
   }
 
-  public static String asLocalOrCanonicalUrl(@NonNull String url) {
+  private static String asLocalOrCanonicalUrl(@NonNull String url) {
     return asLocalHostUrl(url) ? url : asCanonicalUrl(url);
   }
 

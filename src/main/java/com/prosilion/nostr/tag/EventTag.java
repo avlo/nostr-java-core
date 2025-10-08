@@ -41,6 +41,6 @@ public record EventTag(
   }
 
   private static String urlValidator(String url) {
-    return Strings.isBlank(url) ? url : Relay.asLocalOrCanonicalUrl(url);
+    return Strings.isBlank(url) ? url : new Relay(url).getUrl();
   }
 }

@@ -8,12 +8,13 @@ import com.prosilion.nostr.tag.ReferenceTag;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
+import org.springframework.lang.NonNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class ReferenceTagFilter extends AbstractFilterable<ReferenceTag> {
   public final static String FILTER_KEY = "#r";
 
-  public ReferenceTagFilter(ReferenceTag referencedPubKeyTag) {
+  public ReferenceTagFilter(@NonNull ReferenceTag referencedPubKeyTag) {
     super(referencedPubKeyTag, FILTER_KEY);
   }
 
@@ -22,12 +23,12 @@ public class ReferenceTagFilter extends AbstractFilterable<ReferenceTag> {
     return (genericEvent) ->
         Filterable.getTypeSpecificTagsStream(ReferenceTag.class, genericEvent)
             .anyMatch(referenceTag ->
-                referenceTag.getUri().toString().equals(getFilterableValue()));
+                referenceTag.getUrl().equals(getFilterableValue()));
   }
 
   @Override
   public String getFilterableValue() {
-    return getReferenceTag().getUri().toString();
+    return getReferenceTag().getUrl();
   }
 
   private ReferenceTag getReferenceTag() {
