@@ -161,7 +161,7 @@ public class FiltersEncoderTest {
                     relay))));
 
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
-    String joined = String.join("\",\"", addressableTag, relay.getUri().toString());
+    String joined = String.join("\",\"", addressableTag, relay.getUrl().toString());
 
     String expected = "{\"#a\":[\"" + joined + "\"]}";
     System.out.println("000000000000000000000000000");

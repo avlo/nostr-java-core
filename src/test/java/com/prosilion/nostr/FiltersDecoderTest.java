@@ -124,7 +124,7 @@ public class FiltersDecoderTest {
 
     AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author), new IdentifierTag(uuidValue1), relay);
 
-    String manualExpected = String.join("\",\"", manualJoined, relay.getUri().toString());
+    String manualExpected = String.join("\",\"", manualJoined, relay.getUrl().toString());
     String addressableTag = "{\"#a\":[\"" + manualExpected + "\"]}";
     Filters decodedFilters = FiltersDecoder.decode(addressableTag);
 

@@ -15,7 +15,7 @@ public class RelaysTagSerializer extends JsonSerializer<RelaysTag> {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("relays");
     for (Relay json : relaysTag.getRelays()) {
-      writeString(jsonGenerator, json.getUri().toString());
+      writeString(jsonGenerator, json.getUrl().toString());
     }
     jsonGenerator.writeEndArray();
   }

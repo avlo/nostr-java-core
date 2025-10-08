@@ -20,7 +20,7 @@ public class AddressTagSerializer extends JsonSerializer<AddressTag> {
         );
 
         if (value.getRelay() != null) {
-            jsonGenerator.writeString(value.getRelay().getUri().toString());
+            jsonGenerator.writeString(value.getRelay().getUrl().toString());
         }
         jsonGenerator.writeEndArray();
     }

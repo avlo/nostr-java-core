@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.stream.Streams;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
@@ -101,7 +102,9 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
     Optional.ofNullable(
             getAddressTag().getRelay())
         .map(relay ->
-            relay.getUri().toString()).ifPresentOrElse(s ->
+            Streams.failableStream(relay)
+                .map(Relay::getUrl).stream()
+                .findFirst().orElseThrow().toString()).ifPresentOrElse(s ->
             arrayNode.addAll(
                 MAPPER_AFTERBURNER.createArrayNode()
                     .add(getFilterableValue())
@@ -110,4 +113,5 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
                 MAPPER_AFTERBURNER.createArrayNode()
                     .add(getFilterableValue())));
   }
+
 }
