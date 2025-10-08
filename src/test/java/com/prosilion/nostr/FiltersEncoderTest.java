@@ -26,7 +26,6 @@ import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.PublicKey;
-import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -144,7 +143,7 @@ public class FiltersEncoderTest {
   }
 
   @Test
-  public void testAddressableTagWithRelayFilterEncoder() throws URISyntaxException {
+  public void testAddressableTagWithRelayFilterEncoder() {
     log.info("testAddressableTagWithRelayFilterEncoder");
 
     Integer kind = 1;
