@@ -301,6 +301,39 @@ public class JsonParseTest {
   }
 
   @Test
+  public void testEventTagNullUrlDecoder() throws JsonProcessingException {
+    log.debug("testBaseEventMessageMarkerDecoder");
+
+    final String json = "["
+        + "\"EVENT\","
+        + "\"temp20230627\","
+        + "{"
+        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+        + "\"kind\":1,"
+        + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
+        + "\"created_at\":1687765220,"
+        + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
+        + "\"tags\":["
+        + "[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\",\"ws://localhost:5555\",\"root\"],"
+        + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
+        + "],"
+        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+        + "}]";
+
+    BaseMessage message = BaseMessageDecoder.decode(json);
+
+    final var event = (((EventMessage) message).getEvent());
+    var tags = event.getTags();
+    for (BaseTag t : tags) {
+      if (t.getCode().equalsIgnoreCase("e")) {
+        EventTag et = (EventTag) t;
+        assertEquals(Marker.ROOT, et.getMarker());
+        assertEquals("ws://localhost:5555", et.getRecommendedRelayUrl());
+      }
+    }
+  }
+  
+  @Test
   public void testBaseEventMessageMarkerDecoder() throws JsonProcessingException {
     log.debug("testBaseEventMessageMarkerDecoder");
 

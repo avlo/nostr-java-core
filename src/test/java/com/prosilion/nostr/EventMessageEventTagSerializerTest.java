@@ -5,12 +5,10 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.TextNoteEvent;
 import com.prosilion.nostr.message.EventMessage;
-import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
-import com.prosilion.nostr.util.TestKindType;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -30,58 +28,51 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @JsonTest
 @ActiveProfiles("test")
-public class EventMessageSerializerTest {
+public class EventMessageEventTagSerializerTest {
   private final JacksonTester<EventMessage> tester;
-  private final EventMessage eventMessage;
+  private final EventMessage eventMessageWithUrl;
+  private final EventMessage eventMessageWithoutUrl;
 
   @Autowired
-  public EventMessageSerializerTest(JacksonTester<EventMessage> tester) {
+  public EventMessageEventTagSerializerTest(JacksonTester<EventMessage> tester) {
     this.tester = tester;
-    eventMessage = new EventMessage(
+    eventMessageWithUrl = new EventMessage(
         new GenericEventRecord(
             "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
             new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
             1111111111111L,
             Kind.BADGE_AWARD_EVENT,
-            List.of(new AddressTag(
-                Kind.BADGE_DEFINITION_EVENT,
-                new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-                new IdentifierTag(TestKindType.UPVOTE.getName()))),
-            "matching kind, author, identity-tag filter test",
+            List.of(new EventTag(
+                "494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346",
+                "ws://localhost:5555")),
+            "event tag test",
+            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
+
+    eventMessageWithoutUrl = new EventMessage(
+        new GenericEventRecord(
+            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+            1111111111111L,
+            Kind.BADGE_AWARD_EVENT,
+            List.of(new EventTag(
+                "494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346")),
+            "event tag test",
             Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
   }
 
   @Test
   void testEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
-    checkWithoutExplicitJson(eventMessage);
-    checkWithExplicitJson(eventMessage, explicitJsonNoSubscriberIdEncoder());
-  }
+    checkWithoutExplicitJson(eventMessageWithUrl);
+    checkWithExplicitJson(eventMessageWithUrl, explicitJsonNoSubscriberIdEncoder());
 
-  @Test
-  void testEventMessageWithSubscriberIdEncoder() throws IOException, NostrException {
-    EventMessage eventMessageContainingSubscriberId = new EventMessage(
-        new GenericEventRecord(
-            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
-            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-            1111111111111L,
-            Kind.BADGE_AWARD_EVENT,
-            List.of(new AddressTag(
-                Kind.BADGE_DEFINITION_EVENT,
-                new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-                new IdentifierTag(TestKindType.UPVOTE.getName()))),
-            "matching kind, author, identity-tag filter test",
-            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")),
-        "subscriberId");
-
-    checkWithoutExplicitJson(eventMessageContainingSubscriberId);
-    checkWithExplicitJson(eventMessageContainingSubscriberId, explicitJsonNoSubscriberIdEncoder());
+    checkWithoutExplicitJson(eventMessageWithoutUrl);
+    checkWithExplicitJson(eventMessageWithoutUrl, explicitJsonEventEventTagNoUrlEncoder());
   }
 
   @Test
   void testEventMessageWithTextNoteEvent() throws IOException, NostrException, NoSuchAlgorithmException {
     Identity identity = Identity.generateRandomIdentity();
     TextNoteEvent content = new TextNoteEvent(identity, "content");
-    GenericEventRecord genericEventRecord = content.getGenericEventRecord();
     EventMessage eventMessageContainingSubscriberId = new EventMessage(
         content,
         "subscriberId");
@@ -149,8 +140,12 @@ public class EventMessageSerializerTest {
 
     assertThat(testWriterEventMessage).isEqualToJson(explicitJson);
   }
-
+  
   private String explicitJsonNoSubscriberIdEncoder() {
-    return "[\"EVENT\",{\"id\":\"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001\",\"pubkey\":\"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\",\"created_at\":1111111111111,\"kind\":8,\"tags\":[[\"a\",\"30009:bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984:upvote\"]],\"content\":\"matching kind, author, identity-tag filter test\",\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\"}]";
+    return "[\"EVENT\",{\"id\":\"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001\",\"pubkey\":\"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\",\"created_at\":1111111111111,\"kind\":8,\"tags\":[[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\",\"ws://localhost:5555\"]],\"content\":\"event tag test\",\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\"}]";
+  }
+
+  private String explicitJsonEventEventTagNoUrlEncoder() {
+    return "[\"EVENT\",{\"id\":\"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001\",\"pubkey\":\"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\",\"created_at\":1111111111111,\"kind\":8,\"tags\":[[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\"]],\"content\":\"event tag test\",\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\"}]";
   }
 }

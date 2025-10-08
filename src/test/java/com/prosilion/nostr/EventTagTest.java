@@ -13,6 +13,7 @@ import org.springframework.web.util.InvalidUrlException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -66,7 +67,7 @@ class EventTagTest {
   @Test
   void testBlankNullUrlsAsValidAttribute() {
     assertEquals("", new EventTag(EVENT_ID, "", Marker.REPLY).getRecommendedRelayUrl());
-    assertEquals(null, new EventTag(EVENT_ID, null, Marker.REPLY).getRecommendedRelayUrl());
+    assertNull(new EventTag(EVENT_ID, null, Marker.REPLY).getRecommendedRelayUrl());
   }
 
   @Test
@@ -95,9 +96,7 @@ class EventTagTest {
     assertTrue(fields.stream().flatMap(field -> {
       try {
         return eventTag.getFieldValue(field).stream();
-      } catch (NoSuchFieldException e) {
-        throw new RuntimeException(e);
-      } catch (IllegalAccessException e) {
+      } catch (NoSuchFieldException | IllegalAccessException e) {
         throw new RuntimeException(e);
       }
     }).anyMatch(predicate));
