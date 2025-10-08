@@ -13,7 +13,6 @@ import com.prosilion.nostr.tag.SubjectTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.math.BigDecimal;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ class ClassifiedListingEventTest {
 
   private final ClassifiedListingEvent instance;
 
-  public ClassifiedListingEventTest() throws NostrException, NoSuchAlgorithmException {
+  public ClassifiedListingEventTest() throws NostrException {
     identity = Identity.generateRandomIdentity();
     senderPubkey = new PublicKey(identity.getPublicKey().toString());
 

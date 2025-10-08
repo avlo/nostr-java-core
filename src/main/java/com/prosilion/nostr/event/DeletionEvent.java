@@ -7,7 +7,6 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.KindTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -18,25 +17,25 @@ import org.springframework.lang.NonNull;
 
 public class DeletionEvent extends BaseEvent {
 
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<EventTag> eventTags, @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+  public DeletionEvent(@NonNull Identity identity, @NonNull List<EventTag> eventTags, @NonNull String content) throws NostrException {
     super(identity, Kind.DELETION, new ArrayList<>(eventTags), content);
   }
 
-  public DeletionEvent(@NonNull Identity identity, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException, NoSuchAlgorithmException {
+  public DeletionEvent(@NonNull Identity identity, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException {
     super(identity, Kind.DELETION, new ArrayList<>(
             addressTags.stream().map(
                 DeletionEvent::validatePubkeyMatch).toList()),
         content);
   }
 
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull List<EventTag> eventTags, @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull List<EventTag> eventTags, @NonNull String content) throws NostrException {
     super(identity, Kind.DELETION,
         Stream.concat(
             kindTags.stream(),
             eventTags.stream()).collect(Collectors.toList()), content);
   }
 
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException, NoSuchAlgorithmException {
+  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException {
     super(identity, Kind.DELETION,
         Stream.concat(
             kindTags.stream(),
@@ -44,7 +43,7 @@ public class DeletionEvent extends BaseEvent {
                 DeletionEvent::validatePubkeyMatch)).collect(Collectors.toList()), content);
   }
 
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull List<EventTag> eventTags, @NonNull List<AddressTag> addressTags, @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull List<EventTag> eventTags, @NonNull List<AddressTag> addressTags, @NonNull String content) throws NostrException {
     super(identity, Kind.DELETION,
         Stream.concat(
             Stream.concat(
@@ -59,7 +58,7 @@ public class DeletionEvent extends BaseEvent {
 
   private static final BiFunction<AddressTag, PublicKey, String> errorMessage = (addressTag, publicKey) -> String.format("Deletion Event contains an AddressTag with PublicKey [%s] that does not match event-creator's PublicKey [%s]", addressTag.getPublicKey().toString(), publicKey.toString());
 
-//  TODO: revisit below- commented impl may not match NIP-09 requirement
+  //  TODO: revisit below- commented impl may not match NIP-09 requirement
   protected static AddressTag validatePubkeyMatch(@NonNull AddressTag addressTag) {
 //    assert ((Predicate<PublicKey>) DeletionEvent.addressTagPredicate).test(addressTag.getPublicKey()) : ((Function<AddressTag, String>) DeletionEvent.errorMessage).apply(addressTag);
     return addressTag;

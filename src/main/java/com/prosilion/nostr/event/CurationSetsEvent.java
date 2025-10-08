@@ -8,7 +8,6 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +15,7 @@ import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 public class CurationSetsEvent extends ReplaceableEvent {
-  public CurationSetsEvent(@NonNull Identity identity, @NonNull PublicKey publicKey, @NonNull List<CurationSet> curationSets, @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+  public CurationSetsEvent(@NonNull Identity identity, @NonNull PublicKey publicKey, @NonNull List<CurationSet> curationSets, @NonNull String content) throws NostrException {
     super(
         identity,
         Kind.CURATION_SETS,

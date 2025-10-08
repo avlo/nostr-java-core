@@ -4,7 +4,6 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -12,7 +11,7 @@ import org.springframework.lang.NonNull;
 
 public class ReplaceableEvent extends BaseEvent {
 
-  public ReplaceableEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull List<BaseTag> tags, @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+  public ReplaceableEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull List<BaseTag> tags, @NonNull String content) throws NostrException {
     super(identity, validateKind(kind, replaceableAddressableKindPredicate, errorMessage), tags, content);
   }
 

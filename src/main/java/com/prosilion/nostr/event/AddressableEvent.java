@@ -1,10 +1,9 @@
 package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.NostrException;
-import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.BaseTag;
-import java.security.NoSuchAlgorithmException;
+import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -12,7 +11,7 @@ import lombok.NonNull;
 
 public class AddressableEvent extends BaseEvent {
 
-  public AddressableEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull List<BaseTag> baseTags, @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+  public AddressableEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull List<BaseTag> baseTags, @NonNull String content) throws NostrException {
     super(identity, validateKind(kind, intPredicate, errorMessage), baseTags, content);
   }
 

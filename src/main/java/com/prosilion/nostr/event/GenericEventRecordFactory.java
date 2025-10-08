@@ -11,7 +11,6 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Supplier;
 import lombok.NonNull;
@@ -27,7 +26,7 @@ class GenericEventRecordFactory {
       @NonNull Identity identity,
       @NonNull Kind kind,
       @NonNull List<BaseTag> tags,
-      @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+      @NonNull String content) throws NostrException {
 
     long epochSecond = System.currentTimeMillis();
     GenericEventRecordFlux flux = new GenericEventRecordFlux(

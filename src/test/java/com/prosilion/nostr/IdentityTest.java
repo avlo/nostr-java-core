@@ -4,7 +4,6 @@ import com.prosilion.nostr.event.BaseEvent;
 import com.prosilion.nostr.event.TextNoteEvent;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import java.security.NoSuchAlgorithmException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,7 @@ public class IdentityTest {
   }
 
   @Test
-  public void testSignEvent() throws NostrException, NoSuchAlgorithmException {
+  public void testSignEvent() throws NostrException {
     System.out.println("testSignEvent");
     Identity identity = Identity.generateRandomIdentity();
     PublicKey publicKey = identity.getPublicKey();

@@ -1,11 +1,10 @@
 package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.AwardEvent;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,7 +19,7 @@ public abstract class AbstractBadgeAwardEvent<KindTypeIF> extends BaseEvent {
       @NonNull KindTypeIF kindType,
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
-      @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+      @NonNull String content) throws NostrException {
     super(identity, Kind.BADGE_AWARD_EVENT,
         Stream.concat(
                 awardEvent.pubkeyTags().stream(),
@@ -36,7 +35,7 @@ public abstract class AbstractBadgeAwardEvent<KindTypeIF> extends BaseEvent {
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
       @NonNull List<BaseTag> tags,
-      @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+      @NonNull String content) throws NostrException {
     super(identity, Kind.BADGE_AWARD_EVENT,
         Stream.concat(
                 Stream.concat(tags.stream(), Stream.of(awardEvent.addressTag())),

@@ -6,7 +6,6 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -17,19 +16,19 @@ public abstract class BaseEvent implements EventIF {
   @Getter
   private final GenericEventRecord genericEventRecord;
 
-  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind) throws NostrException, NoSuchAlgorithmException {
+  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind) throws NostrException {
     this(identity, kind, List.of());
   }
 
-  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull String content) throws NostrException {
     this(identity, kind, List.of(), content);
   }
 
-  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull List<BaseTag> tags) throws NostrException, NoSuchAlgorithmException {
+  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull List<BaseTag> tags) throws NostrException {
     this(identity, kind, tags, "");
   }
 
-  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, List<BaseTag> tags, String content) throws NostrException, NoSuchAlgorithmException {
+  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, List<BaseTag> tags, String content) throws NostrException {
     this.genericEventRecord = GenericEventRecordFactory.createInstance(identity, kind, tags, content);
   }
 

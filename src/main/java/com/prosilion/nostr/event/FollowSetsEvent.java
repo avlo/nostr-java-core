@@ -9,7 +9,6 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -22,7 +21,7 @@ public class FollowSetsEvent extends BaseEvent {
       @NonNull Identity identity,
       @NonNull PublicKey publicKey,
       @NonNull List<EventTagAddressTagPair> pairedTags,
-      @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+      @NonNull String content) throws NostrException {
     super(
         identity,
         Kind.FOLLOW_SETS,
@@ -41,7 +40,7 @@ public class FollowSetsEvent extends BaseEvent {
       @NonNull PublicKey publicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull List<EventTagAddressTagPair> pairedTags,
-      @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+      @NonNull String content) throws NostrException {
     super(
         identity,
         Kind.FOLLOW_SETS,
@@ -62,7 +61,7 @@ public class FollowSetsEvent extends BaseEvent {
       @NonNull PublicKey publicKey,
       @NonNull List<EventTagAddressTagPair> pairedTags,
       @NonNull List<BaseTag> baseTags,
-      @NonNull String content) throws NostrException, NoSuchAlgorithmException {
+      @NonNull String content) throws NostrException {
     super(
         identity,
         Kind.FOLLOW_SETS,

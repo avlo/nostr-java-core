@@ -5,15 +5,11 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.TextNoteEvent;
 import com.prosilion.nostr.message.CanonicalAuthenticationMessage;
-import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.GenericTag;
-import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
-import com.prosilion.nostr.util.TestKindType;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +76,7 @@ public class CanonicalAuthenticationMessageSerializerTest {
   }
 
   @Test
-  void testEventMessageWithTextNoteEvent() throws IOException, NostrException, NoSuchAlgorithmException {
+  void testEventMessageWithTextNoteEvent() throws IOException, NostrException {
     Identity identity = Identity.generateRandomIdentity();
     TextNoteEvent content = new TextNoteEvent(identity, "content");
     GenericEventRecord genericEventRecord = content.getGenericEventRecord();

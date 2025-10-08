@@ -12,7 +12,6 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import com.prosilion.nostr.util.TestKindType;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -78,7 +77,7 @@ public class EventMessageSerializerTest {
   }
 
   @Test
-  void testEventMessageWithTextNoteEvent() throws IOException, NostrException, NoSuchAlgorithmException {
+  void testEventMessageWithTextNoteEvent() throws IOException, NostrException {
     Identity identity = Identity.generateRandomIdentity();
     TextNoteEvent content = new TextNoteEvent(identity, "content");
     GenericEventRecord genericEventRecord = content.getGenericEventRecord();
