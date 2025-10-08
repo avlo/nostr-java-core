@@ -13,7 +13,7 @@ public record RelayTag(@Getter Relay relay) implements BaseTag {
 
   public static BaseTag deserialize(JsonNode node) {
     return new RelayTag(Optional.ofNullable(node).map(jsonNode ->
-        new Relay(jsonNode.get(1).asText())).orElseThrow());
+        new Relay(Relay.asLocalOrCanonicalUrl(jsonNode.get(1).asText()))).orElseThrow());
   }
 }
 

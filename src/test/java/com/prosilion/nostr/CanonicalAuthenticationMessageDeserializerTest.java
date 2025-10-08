@@ -32,7 +32,7 @@ public class CanonicalAuthenticationMessageDeserializerTest {
               "pubkey" : "bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984",
               "created_at" : 1111111111111,
               "kind" : 22242,
-              "tags" : [ [ "challenge", "challenge" ], [ "relay", "relay" ] ],
+              "tags" : [ [ "challenge", "challenge" ], [ "relay", "ws://localhost:5555" ] ],
               "content" : "matching kind, author, identity-tag filter test",
               "sig" : "86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"
             } ]
@@ -60,7 +60,7 @@ public class CanonicalAuthenticationMessageDeserializerTest {
               "pubkey" : "bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984",
               "created_at" : 1111111111111,
               "kind" : 22242,
-              "tags" : [ [ "challenge", "challenge" ], [ "relay", "relay" ] ],
+              "tags" : [ [ "challenge", "challenge" ], [ "relay", "wss://localhost:5555" ] ],
               "content" : "matching kind, author, identity-tag filter test",
               "sig" : "86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"
             } ]

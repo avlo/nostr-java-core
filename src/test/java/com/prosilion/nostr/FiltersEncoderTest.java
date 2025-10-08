@@ -29,14 +29,14 @@ import com.prosilion.nostr.user.PublicKey;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Log
+@Slf4j
 public class FiltersEncoderTest {
 
   @Test
@@ -161,7 +161,7 @@ public class FiltersEncoderTest {
                     relay))));
 
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
-    String joined = String.join("\",\"", addressableTag, relay.getUrl().toString());
+    String joined = String.join("\",\"", addressableTag, relay.getUrl());
 
     String expected = "{\"#a\":[\"" + joined + "\"]}";
     System.out.println("000000000000000000000000000");

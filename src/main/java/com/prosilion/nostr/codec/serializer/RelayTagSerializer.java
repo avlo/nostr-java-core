@@ -13,7 +13,7 @@ public class RelayTagSerializer extends JsonSerializer<RelayTag> {
   public void serialize(@NonNull RelayTag relayTag, @NonNull JsonGenerator jsonGenerator, @NonNull SerializerProvider serializerProvider) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("relay");
-    writeString(jsonGenerator, relayTag.getRelay().getUrl().toString());
+    writeString(jsonGenerator, relayTag.getRelay().getUrl());
     jsonGenerator.writeEndArray();
   }
 
