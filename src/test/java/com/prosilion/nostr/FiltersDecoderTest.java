@@ -118,13 +118,14 @@ public class FiltersDecoderTest {
 
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String uuidValue1 = "UUID-1";
-    Relay relay = new Relay("ws://localhost:5555");
+    String RELAY_URL = "ws://localhost:5555";
+    Relay relay = new Relay(RELAY_URL);
 
     String manualJoined = "1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1";
 
     AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author), new IdentifierTag(uuidValue1), relay);
 
-    String manualExpected = String.join("\",\"", manualJoined, relay.getUrl());
+    String manualExpected = String.join("\",\"", manualJoined, RELAY_URL);
     String addressableTag = "{\"#a\":[\"" + manualExpected + "\"]}";
     Filters decodedFilters = FiltersDecoder.decode(addressableTag);
 

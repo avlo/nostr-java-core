@@ -1,16 +1,15 @@
 package com.prosilion.nostr.event.internal;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.prosilion.nostr.codec.serializer.RelaysTagSerializer;
 import com.prosilion.nostr.tag.Key;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import lombok.Getter;
 import org.springframework.lang.NonNull;
 import org.springframework.web.util.InvalidUrlException;
 
-@JsonSerialize(using = RelaysTagSerializer.class)
-public record Relay(@Key @Getter String url) {
+public record Relay(@Key String url) {
+  public String getUrl() {
+    return url;
+  }
 
   public Relay(@NonNull String url) {
     this.url = asLocalOrCanonicalUrl(url);

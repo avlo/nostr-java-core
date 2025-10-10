@@ -13,11 +13,11 @@ import org.springframework.lang.NonNull;
 public record ReferenceTag(@Key @Getter String url) implements BaseTag {
 
   public ReferenceTag(@NonNull String url) {
-    this.url = new Relay(url).getUrl();
+    this.url = new Relay(url).url();
   }
 
   public static BaseTag deserialize(@NonNull JsonNode node) {
     return Optional.of(node).map(jsonNode ->
-        new ReferenceTag(new Relay(jsonNode.get(1).asText()).getUrl())).orElseThrow();
+        new ReferenceTag(jsonNode.get(1).asText())).orElseThrow();
   }
 }
