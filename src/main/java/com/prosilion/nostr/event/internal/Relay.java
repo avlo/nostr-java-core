@@ -3,14 +3,11 @@ package com.prosilion.nostr.event.internal;
 import com.prosilion.nostr.tag.Key;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import lombok.Getter;
 import org.springframework.lang.NonNull;
 import org.springframework.web.util.InvalidUrlException;
 
-public record Relay(@Key String url) {
-  public String getUrl() {
-    return url;
-  }
-
+public record Relay(@Getter @Key String url) {
   public Relay(@NonNull String url) {
     this.url = asLocalOrCanonicalUrl(url);
   }
