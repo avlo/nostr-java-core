@@ -15,12 +15,8 @@ public class RelaysTagSerializer extends JsonSerializer<RelaysTag> {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("relays");
     for (Relay json : relaysTag.getRelays()) {
-      writeString(jsonGenerator, json.getUrl().toString());
+      jsonGenerator.writeString(json.getUrl());
     }
     jsonGenerator.writeEndArray();
-  }
-
-  private static void writeString(JsonGenerator jsonGenerator, String json) throws IOException {
-    jsonGenerator.writeString(json);
   }
 }

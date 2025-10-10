@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.RelayTag;
+import java.net.MalformedURLException;
 import org.junit.jupiter.api.Test;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
@@ -25,7 +26,7 @@ class RelayTagTest {
   }
 
   @Test
-  void testDeserialize() throws JsonProcessingException {
+  void testDeserialize() throws JsonProcessingException, MalformedURLException {
     final String EXPECTED = "[\"relay\",\"ws://localhost:5555\"]";
     JsonNode node = MAPPER_AFTERBURNER.readTree(EXPECTED);
     RelayTag deserialize = (RelayTag) RelayTag.deserialize(node);
