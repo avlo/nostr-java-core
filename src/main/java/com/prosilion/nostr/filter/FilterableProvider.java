@@ -16,6 +16,7 @@ import com.prosilion.nostr.filter.tag.IdentifierTagFilter;
 import com.prosilion.nostr.filter.tag.ReferenceTagFilter;
 import com.prosilion.nostr.filter.tag.ReferencedEventFilter;
 import com.prosilion.nostr.filter.tag.ReferencedPublicKeyFilter;
+import com.prosilion.nostr.filter.tag.RelayTagFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -32,6 +33,7 @@ public class FilterableProvider {
       case IdentifierTagFilter.FILTER_KEY -> getFilterable(node, IdentifierTagFilter.fxn);
       case AddressTagFilter.FILTER_KEY -> getFilterableMulti(node, AddressTagFilter.fxn);
       case ReferenceTagFilter.FILTER_KEY -> getFilterable(node, ReferenceTagFilter.fxn);
+      case RelayTagFilter.FILTER_KEY -> getFilterable(node, RelayTagFilter.fxn);
       case GeohashTagFilter.FILTER_KEY -> getFilterable(node, GeohashTagFilter.fxn);
       case HashtagTagFilter.FILTER_KEY -> getFilterable(node, HashtagTagFilter.fxn);
 //      case VoteTagFilter.FILTER_KEY -> getFilterable(node, VoteTagFilter.fxn);
@@ -55,7 +57,8 @@ public class FilterableProvider {
         list.add(filterFunction.apply(node)));
     return list;
   }
-// TODO: likely proper other class/location candidate for below, plus- hack-ey
+
+  // TODO: likely proper other class/location candidate for below, plus- hack-ey
   private static JsonNode jsonNode(JsonNode jsonNode) throws JsonProcessingException {
     return (jsonNode.toString().startsWith("[[")) ?
         jsonNode
