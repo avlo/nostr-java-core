@@ -17,6 +17,7 @@ import com.prosilion.nostr.filter.event.AuthorFilter;
 import com.prosilion.nostr.filter.event.EventFilter;
 import com.prosilion.nostr.filter.event.KindFilter;
 import com.prosilion.nostr.filter.tag.AddressTagFilter;
+import com.prosilion.nostr.filter.tag.ExternalIdentityTagFilter;
 import com.prosilion.nostr.filter.tag.GenericTagQueryFilter;
 import com.prosilion.nostr.filter.tag.GeohashTagFilter;
 import com.prosilion.nostr.filter.tag.HashtagTagFilter;
@@ -30,6 +31,7 @@ import com.prosilion.nostr.message.ReqMessage;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.GenericTag;
 import com.prosilion.nostr.tag.GeohashTag;
 import com.prosilion.nostr.tag.HashtagTag;
@@ -332,7 +334,7 @@ public class JsonParseTest {
       }
     }
   }
-  
+
   @Test
   public void testBaseEventMessageMarkerDecoder() throws JsonProcessingException {
     log.debug("testBaseEventMessageMarkerDecoder");
@@ -721,6 +723,33 @@ public class JsonParseTest {
   }
 
   @Test
+  public void testReqMessageExternalIdentifierTagDecoder() throws IOException {
+    log.debug("testReqMessageExternalIdentifierTagDecoder");
+
+    String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
+    String externalIdentifierTag = "8:UNIT_UPVOTE:+1";
+    String reqJsonWithCustomTagQueryFilterToDecode =
+        "[\"REQ\", " +
+            "\"" + subscriptionId + "\", " +
+            "{" +
+            "\"#i\": [\"" + externalIdentifierTag + "\"]" +
+            "}]";
+
+    BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
+
+    ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
+        new Filters(
+            new ExternalIdentityTagFilter(
+                new ExternalIdentityTag(
+                    Kind.BADGE_AWARD_EVENT,
+                    new IdentifierTag("UNIT_UPVOTE"),
+                    "+1"))));
+
+    assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
+    assertEquals(expectedReqMessage, decodedReqMessage);
+  }
+
+  @Test
   public void testGenericTagQueryListDecoder() throws IOException {
     log.debug("testReqMessagePopulatedListOfFiltersListDecoder");
 
@@ -809,9 +838,9 @@ public class JsonParseTest {
 
     String sessionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
     String reason = "auth-required: some reason";
-    
+
     final String parseTarget =
-        "[\"CLOSED\", \"" + sessionId +  "\", \"" + reason + "\"]";
+        "[\"CLOSED\", \"" + sessionId + "\", \"" + reason + "\"]";
 
     ClosedMessage decodedReqMessage = (ClosedMessage) BaseMessageDecoder.decode(parseTarget);
     ClosedMessage closedMessage = new ClosedMessage(sessionId, reason);

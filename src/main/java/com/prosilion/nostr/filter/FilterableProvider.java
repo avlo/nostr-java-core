@@ -9,6 +9,7 @@ import com.prosilion.nostr.filter.event.KindFilter;
 import com.prosilion.nostr.filter.event.SinceFilter;
 import com.prosilion.nostr.filter.event.UntilFilter;
 import com.prosilion.nostr.filter.tag.AddressTagFilter;
+import com.prosilion.nostr.filter.tag.ExternalIdentityTagFilter;
 import com.prosilion.nostr.filter.tag.GenericTagQueryFilter;
 import com.prosilion.nostr.filter.tag.GeohashTagFilter;
 import com.prosilion.nostr.filter.tag.HashtagTagFilter;
@@ -29,6 +30,7 @@ public class FilterableProvider {
   public static List<Filterable> getFilterFunction(@NonNull String type, @NonNull JsonNode node) {
     return switch (type) {
       case ReferencedPublicKeyFilter.FILTER_KEY -> getFilterable(node, ReferencedPublicKeyFilter.fxn);
+      case ExternalIdentityTagFilter.FILTER_KEY -> getFilterableMulti(node, ExternalIdentityTagFilter.fxn);
       case ReferencedEventFilter.FILTER_KEY -> getFilterable(node, ReferencedEventFilter.fxn);
       case IdentifierTagFilter.FILTER_KEY -> getFilterable(node, IdentifierTagFilter.fxn);
       case AddressTagFilter.FILTER_KEY -> getFilterableMulti(node, AddressTagFilter.fxn);

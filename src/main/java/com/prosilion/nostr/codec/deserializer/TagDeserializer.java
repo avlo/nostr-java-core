@@ -9,6 +9,7 @@ import com.prosilion.nostr.event.internal.ElementAttribute;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.GenericTag;
 import com.prosilion.nostr.tag.GeohashTag;
 import com.prosilion.nostr.tag.HashtagTag;
@@ -35,6 +36,7 @@ public class TagDeserializer extends JsonDeserializer<BaseTag> {
       case "d" -> IdentifierTag.deserialize(node);
       case "e" -> EventTag.deserialize(node);
       case "g" -> GeohashTag.deserialize(node);
+      case "i" -> ExternalIdentityTag.deserialize(node);
       case "p" -> PubKeyTag.deserialize(node);
       case "r" -> ReferenceTag.deserialize(node);
       case "t" -> HashtagTag.deserialize(node);
