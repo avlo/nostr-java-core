@@ -6,32 +6,20 @@ import com.prosilion.nostr.event.internal.AwardEvent;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public abstract class AbstractBadgeAwardEvent<KindTypeIF> extends BaseEvent {
-  private final KindTypeIF kindType;
-
+public abstract class AbstractBadgeAwardEvent extends BaseEvent {
   public AbstractBadgeAwardEvent(
-      @NonNull KindTypeIF kindType,
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
       @NonNull String content) throws NostrException {
-    super(identity, Kind.BADGE_AWARD_EVENT,
-        Stream.concat(
-                awardEvent.pubkeyTags().stream(),
-                Stream.of(
-                    awardEvent.addressTag()))
-            .collect(Collectors.toList()),
-        content);
-    this.kindType = kindType;
+    this(identity, awardEvent, List.of(), content);
   }
 
   public AbstractBadgeAwardEvent(
-      @NonNull KindTypeIF kindType,
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
       @NonNull List<BaseTag> tags,
@@ -42,6 +30,5 @@ public abstract class AbstractBadgeAwardEvent<KindTypeIF> extends BaseEvent {
                 awardEvent.pubkeyTags().stream())
             .toList(),
         content);
-    this.kindType = kindType;
   }
 }
