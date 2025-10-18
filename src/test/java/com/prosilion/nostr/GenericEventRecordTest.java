@@ -10,14 +10,11 @@ import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
-import com.prosilion.nostr.util.TestKindType;
 import java.util.List;
-import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GenericEventRecordTest {
   public static final String CONTENT = EventTagTest.generateRandomHex64String();
@@ -54,12 +51,12 @@ public class GenericEventRecordTest {
     List<BaseTag> tags1 = List.of(new AddressTag(
         Kind.BADGE_DEFINITION_EVENT,
         publicKey,
-        new IdentifierTag(TestKindType.UPVOTE.getName())));
+        new IdentifierTag(EventMessageSerializerTest.UPVOTE)));
 
     List<BaseTag> tags2 = List.of(new AddressTag(
         Kind.BADGE_DEFINITION_EVENT,
         publicKey,
-        new IdentifierTag(TestKindType.UPVOTE.getName())));
+        new IdentifierTag(EventMessageSerializerTest.UPVOTE)));
 
     GenericEventRecord firstRecord = new GenericEventRecord(
         id, publicKey, createdAt, kind, tags1, CONTENT, signature);
@@ -76,14 +73,14 @@ public class GenericEventRecordTest {
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
-            new IdentifierTag(TestKindType.UPVOTE.getName())),
+            new IdentifierTag(EventMessageSerializerTest.UPVOTE)),
         new EventTag(EVENT_TAG_CONTENT));
 
     List<BaseTag> tags2 = List.of(
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
-            new IdentifierTag(TestKindType.UPVOTE.getName())),
+            new IdentifierTag(EventMessageSerializerTest.UPVOTE)),
         new EventTag(EVENT_TAG_CONTENT));
 
     GenericEventRecord firstRecord = new GenericEventRecord(
@@ -102,14 +99,14 @@ public class GenericEventRecordTest {
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
-            new IdentifierTag(TestKindType.UPVOTE.getName()))
+            new IdentifierTag(EventMessageSerializerTest.UPVOTE))
     );
 
     List<BaseTag> tags2 = List.of(
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
-            new IdentifierTag(TestKindType.UPVOTE.getName())),
+            new IdentifierTag(EventMessageSerializerTest.UPVOTE)),
         new EventTag(EVENT_TAG_CONTENT)
     );
 
@@ -177,7 +174,7 @@ public class GenericEventRecordTest {
 
     assertNotEquals(firstRecord, secondRecord);
   }
-  
+
   @Test
   void testUnequalContentWithEqualTags() {
     List<BaseTag> tags1 = List.of(

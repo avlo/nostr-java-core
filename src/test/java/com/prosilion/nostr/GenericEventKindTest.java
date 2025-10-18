@@ -8,7 +8,6 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
-import com.prosilion.nostr.util.TestKindType;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -80,7 +79,7 @@ public class GenericEventKindTest {
     List<BaseTag> tags = List.of(new AddressTag(
         Kind.BADGE_DEFINITION_EVENT,
         new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-        new IdentifierTag(TestKindType.UPVOTE.getName())));
+        new IdentifierTag(EventMessageSerializerTest.UPVOTE)));
 
     long time = Date.from(Instant.now()).getTime();
     EventIF firstEvent = new GenericEventRecord(
@@ -109,7 +108,7 @@ public class GenericEventKindTest {
     List<BaseTag> tags = List.of(new AddressTag(
         Kind.BADGE_DEFINITION_EVENT,
         new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-        new IdentifierTag(TestKindType.UPVOTE.getName())));
+        new IdentifierTag(EventMessageSerializerTest.UPVOTE)));
 
     long time = Date.from(Instant.now()).getTime();
     EventIF firstEvent = new GenericEventRecord(
@@ -139,12 +138,12 @@ public class GenericEventKindTest {
     List<BaseTag> tags1 = List.of(new AddressTag(
         Kind.BADGE_DEFINITION_EVENT,
         new PublicKey(pubkey),
-        new IdentifierTag(TestKindType.UPVOTE.getName())));
+        new IdentifierTag(EventMessageSerializerTest.UPVOTE)));
 
     List<BaseTag> tags2 = List.of(new AddressTag(
         Kind.BADGE_DEFINITION_EVENT,
         new PublicKey(pubkey),
-        new IdentifierTag(TestKindType.UPVOTE.getName())));
+        new IdentifierTag(EventMessageSerializerTest.UPVOTE)));
 
     long time = Date.from(Instant.now()).getTime();
     EventIF firstEvent = new GenericEventRecord(

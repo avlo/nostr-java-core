@@ -16,6 +16,7 @@
         <apache.commons.lang3.version>3.17.0</apache.commons.lang3.version>
         <bouncycastle.version>1.80</bouncycastle.version>
         <google.guava.version>33.2.1-jre</google.guava.version>
+        <EvalEx.version>3.5.0</EvalEx.version>
         <jackson.module.afterburner.version>2.18.3</jackson.module.afterburner.version>
         <lombok.version>1.18.36</lombok.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
@@ -78,6 +79,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${apache.commons.lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ezylang</groupId>
+            <artifactId>EvalEx</artifactId>
+            <version>${EvalEx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
