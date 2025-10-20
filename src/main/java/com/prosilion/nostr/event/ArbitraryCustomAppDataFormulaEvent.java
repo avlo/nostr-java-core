@@ -30,7 +30,7 @@ public class ArbitraryCustomAppDataFormulaEvent extends ArbitraryCustomAppDataEv
 
   private static String validate(String formula) throws ParseException {
     if (StringUtils.isBlank(formula))
-      throw new ParseException(formula, "formula is blank");
+      throw new ParseException(formula, "supplied formula is blank");
     new Expression(
         String.format("%s %s", "validate", formula)).validate();
     return formula;
