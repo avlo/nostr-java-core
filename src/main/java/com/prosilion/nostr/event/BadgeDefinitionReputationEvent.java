@@ -19,12 +19,49 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull BadgeDefinitionReputationFormulaEvent badgeDefinitionReputationFormulaEvent) throws NostrException {
+    this(
+        identity,
+        identifierTag,
+        List.of(badgeDefinitionReputationFormulaEvent),
+        List.of(),
+        "");
+  }
+
+  public BadgeDefinitionReputationEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvent) throws NostrException {
+    this(
+        identity,
+        identifierTag,
+        badgeDefinitionReputationFormulaEvent,
+        List.of(),
+        "");
+  }
+
+  public BadgeDefinitionReputationEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
       @NonNull BadgeDefinitionReputationFormulaEvent badgeDefinitionReputationFormulaEvent,
       @NonNull String content) throws NostrException {
     this(
         identity,
         identifierTag,
         List.of(badgeDefinitionReputationFormulaEvent),
+        List.of(),
+        content);
+  }
+
+  public BadgeDefinitionReputationEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvent,
+      @NonNull String content) throws NostrException {
+    this(
+        identity,
+        identifierTag,
+        badgeDefinitionReputationFormulaEvent,
         List.of(),
         content);
   }
@@ -68,7 +105,8 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
         .map(EventTag::new).toList();
   }
 
-  public record BadgeDefinitionReputationEventFormulaMapUtil(@NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
+  public record BadgeDefinitionReputationEventFormulaMapUtil(
+      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
     @JsonIgnore
     public Map<BadgeDefinitionReputationEvent, List<String>> asFormulaUuidMap() {
       return fxn.apply(badgeDefinitionReputationEvent);
