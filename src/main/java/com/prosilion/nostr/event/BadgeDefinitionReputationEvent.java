@@ -14,7 +14,6 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
-  @JsonIgnore @Getter IdentifierTag identifierTag;
   @JsonIgnore @Getter List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvents;
 
   public BadgeDefinitionReputationEvent(
@@ -60,7 +59,6 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
             baseTags.stream()).toList(),
         content);
     this.badgeDefinitionReputationFormulaEvents = badgeDefinitionReputationFormulaEvents;
-    this.identifierTag = identifierTag;
   }
 
   @JsonIgnore
@@ -75,22 +73,22 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
     public Map<BadgeDefinitionReputationEvent, List<String>> asFormulaUuidMap() {
       return fxn.apply(badgeDefinitionReputationEvent);
     }
-  
+
     @JsonIgnore
     public Map<BadgeDefinitionReputationEvent, List<String>> asFormulaUuidMapWithAccumulator(@NonNull BadgeDefinitionReputationEventFormulaMapUtil other) {
       asFormulaUuidMapWithAccumulator(other.asFormulaUuidMap());
       return other.asFormulaUuidMap();
     }
-  
+
     @JsonIgnore
     public Map<BadgeDefinitionReputationEvent, List<String>> asFormulaUuidMapWithAccumulator(@NonNull Map<BadgeDefinitionReputationEvent, List<String>> other) {
       other.putIfAbsent(badgeDefinitionReputationEvent, getUuids(badgeDefinitionReputationEvent));
       return other;
     }
-    
+
     private static final Function<BadgeDefinitionReputationEvent, Map<BadgeDefinitionReputationEvent, List<String>>> fxn =
         event -> Map.of(event, getUuids(event));
-  
+
     private static List<String> getUuids(BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
       return badgeDefinitionReputationEvent.getBadgeDefinitionReputationFormulaEvents().stream()
           .map(BadgeDefinitionReputationFormulaEvent::getIdentifierTag)

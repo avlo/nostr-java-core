@@ -2,17 +2,13 @@ package com.prosilion.nostr.event;
 
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 public class BadgeDefinitionReputationFormulaEvent extends ArbitraryCustomAppDataEvent {
-  @JsonIgnore @Getter IdentifierTag identifierTag;
-
   public BadgeDefinitionReputationFormulaEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
@@ -21,7 +17,6 @@ public class BadgeDefinitionReputationFormulaEvent extends ArbitraryCustomAppDat
         identity,
         identifierTag,
         validate(formula));
-    this.identifierTag = identifierTag;
   }
 
   public String getFormula() {
