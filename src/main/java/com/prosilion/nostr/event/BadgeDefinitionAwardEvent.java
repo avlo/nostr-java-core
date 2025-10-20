@@ -39,16 +39,13 @@ public class BadgeDefinitionAwardEvent extends AddressableEvent {
     this.identifierTag = identifierTag;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (Objects.isNull(o) ||
-        !Objects.equals(
-              getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class),
-            o.getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class)))
+  public boolean matches(@NonNull BadgeDefinitionAwardEvent that) {
+    if (!Objects.equals(
+            this.getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class),
+            that.getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class)))
       return false;
     
-    BadgeDefinitionAwardEvent that = (BadgeDefinitionAwardEvent) o;
     return Objects.equals(this.getPublicKey(), that.getPublicKey()) &&
-        Objects.equals(identifierTag, that.identifierTag);
+        Objects.equals(this.identifierTag, that.identifierTag);
   }
 }

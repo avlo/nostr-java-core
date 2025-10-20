@@ -7,23 +7,25 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   @JsonIgnore @Getter IdentifierTag identifierTag;
-  @JsonIgnore @Getter List<ArbitraryCustomAppDataFormulaEvent> arbitraryCustomAppDataFormulaEvents;
+  @JsonIgnore @Getter List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvents;
 
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
-      @NonNull ArbitraryCustomAppDataFormulaEvent arbitraryCustomAppDataFormulaEvent,
+      @NonNull BadgeDefinitionReputationFormulaEvent badgeDefinitionReputationFormulaEvent,
       @NonNull String content) throws NostrException {
     this(
         identity,
         identifierTag,
-        List.of(arbitraryCustomAppDataFormulaEvent),
+        List.of(badgeDefinitionReputationFormulaEvent),
         List.of(),
         content);
   }
@@ -31,13 +33,13 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
-      @NonNull ArbitraryCustomAppDataFormulaEvent arbitraryCustomAppDataFormulaEvent,
+      @NonNull BadgeDefinitionReputationFormulaEvent badgeDefinitionReputationFormulaEvent,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     this(
         identity,
         identifierTag,
-        List.of(arbitraryCustomAppDataFormulaEvent),
+        List.of(badgeDefinitionReputationFormulaEvent),
         baseTags,
         content);
   }
@@ -45,26 +47,55 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
-      @NonNull List<ArbitraryCustomAppDataFormulaEvent> arbitraryCustomAppDataFormulaEvents,
+      @NonNull List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvents,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     super(
         identity,
         identifierTag,
         Stream.concat(
-            arbitraryCustomAppDataFormulaEvents.stream()
-                .map(ArbitraryCustomAppDataFormulaEvent::getId)
+            badgeDefinitionReputationFormulaEvents.stream()
+                .map(BadgeDefinitionReputationFormulaEvent::getId)
                 .map(EventTag::new),
             baseTags.stream()).toList(),
         content);
-    this.arbitraryCustomAppDataFormulaEvents =  arbitraryCustomAppDataFormulaEvents;
+    this.badgeDefinitionReputationFormulaEvents = badgeDefinitionReputationFormulaEvents;
     this.identifierTag = identifierTag;
   }
 
   @JsonIgnore
   public List<EventTag> getEventTags() {
-    return arbitraryCustomAppDataFormulaEvents.stream()
-        .map(ArbitraryCustomAppDataFormulaEvent::getId)
+    return badgeDefinitionReputationFormulaEvents.stream()
+        .map(BadgeDefinitionReputationFormulaEvent::getId)
         .map(EventTag::new).toList();
+  }
+
+  public record BadgeDefinitionReputationEventFormulaMapUtil(@NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
+    @JsonIgnore
+    public Map<BadgeDefinitionReputationEvent, List<String>> asFormulaUuidMap() {
+      return fxn.apply(badgeDefinitionReputationEvent);
+    }
+  
+    @JsonIgnore
+    public Map<BadgeDefinitionReputationEvent, List<String>> asFormulaUuidMapWithAccumulator(@NonNull BadgeDefinitionReputationEventFormulaMapUtil other) {
+      asFormulaUuidMapWithAccumulator(other.asFormulaUuidMap());
+      return other.asFormulaUuidMap();
+    }
+  
+    @JsonIgnore
+    public Map<BadgeDefinitionReputationEvent, List<String>> asFormulaUuidMapWithAccumulator(@NonNull Map<BadgeDefinitionReputationEvent, List<String>> other) {
+      other.putIfAbsent(badgeDefinitionReputationEvent, getUuids(badgeDefinitionReputationEvent));
+      return other;
+    }
+    
+    private static final Function<BadgeDefinitionReputationEvent, Map<BadgeDefinitionReputationEvent, List<String>>> fxn =
+        event -> Map.of(event, getUuids(event));
+  
+    private static List<String> getUuids(BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
+      return badgeDefinitionReputationEvent.getBadgeDefinitionReputationFormulaEvents().stream()
+          .map(BadgeDefinitionReputationFormulaEvent::getIdentifierTag)
+          .map(IdentifierTag::getUuid)
+          .toList();
+    }
   }
 }

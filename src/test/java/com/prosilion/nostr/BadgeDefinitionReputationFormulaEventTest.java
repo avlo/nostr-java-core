@@ -2,14 +2,14 @@ package com.prosilion.nostr;
 
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.ArbitraryCustomAppDataFormulaEvent;
+import com.prosilion.nostr.event.BadgeDefinitionReputationFormulaEvent;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ArbitraryCustomAppDataFormulaEventTest {
+public class BadgeDefinitionReputationFormulaEventTest {
 
   @Test
   public void formulaValidationTestUnitAdd() throws ParseException {
@@ -49,38 +49,38 @@ public class ArbitraryCustomAppDataFormulaEventTest {
     IdentifierTag identifierTag = new IdentifierTag("BadgeDefinitionReputation-UUID");
 
     validateReturnedFormula(
-        new ArbitraryCustomAppDataFormulaEvent(
+        new BadgeDefinitionReputationFormulaEvent(
             identity,
             identifierTag,
             "+1").getFormula());
 
     validateReturnedFormula(
-        new ArbitraryCustomAppDataFormulaEvent(
+        new BadgeDefinitionReputationFormulaEvent(
             identity,
             identifierTag,
             "-1").getFormula());
 
-    assertThrows(ParseException.class, () -> new ArbitraryCustomAppDataFormulaEvent(
+    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
         identity,
         identifierTag,
         "a"));
 
-    assertThrows(ParseException.class, () -> new ArbitraryCustomAppDataFormulaEvent(
+    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
         identity,
         identifierTag,
         ""));
 
-    assertThrows(ParseException.class, () -> new ArbitraryCustomAppDataFormulaEvent(
+    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
         identity,
         identifierTag,
         " "));
 
-    assertThrows(ParseException.class, () -> new ArbitraryCustomAppDataFormulaEvent(
+    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
         identity,
         identifierTag,
         " "));
 
-    assertThrows(ParseException.class, () -> new ArbitraryCustomAppDataFormulaEvent(
+    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
         identity,
         identifierTag,
         "1"));

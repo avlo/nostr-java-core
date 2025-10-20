@@ -10,10 +10,10 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
-public class ArbitraryCustomAppDataFormulaEvent extends ArbitraryCustomAppDataEvent {
+public class BadgeDefinitionReputationFormulaEvent extends ArbitraryCustomAppDataEvent {
   @JsonIgnore @Getter IdentifierTag identifierTag;
 
-  public ArbitraryCustomAppDataFormulaEvent(
+  public BadgeDefinitionReputationFormulaEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
       @NonNull String formula) throws NostrException, ParseException {
