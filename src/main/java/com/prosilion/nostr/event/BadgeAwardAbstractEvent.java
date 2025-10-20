@@ -11,15 +11,15 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public abstract class AbstractBadgeAwardEvent extends BaseEvent {
-  public AbstractBadgeAwardEvent(
+public abstract class BadgeAwardAbstractEvent extends BaseEvent {
+  public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
       @NonNull String content) throws NostrException {
     this(identity, awardEvent, List.of(), content);
   }
 
-  public AbstractBadgeAwardEvent(
+  public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
       @NonNull List<BaseTag> tags,
