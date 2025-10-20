@@ -18,6 +18,12 @@ public class BadgeDefinitionAwardEvent extends AddressableEvent {
 
   public BadgeDefinitionAwardEvent(
       @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag) throws NostrException {
+    this(identity, identifierTag, List.of(), "");
+  }
+  
+  public BadgeDefinitionAwardEvent(
+      @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
       @NonNull String content) throws NostrException {
     this(identity, identifierTag, List.of(), content);
