@@ -7,6 +7,7 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -36,5 +37,18 @@ public class BadgeDefinitionAwardEvent extends AddressableEvent {
             .collect(Collectors.toList()),
         content);
     this.identifierTag = identifierTag;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (Objects.isNull(o) ||
+        !Objects.equals(
+              getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class),
+            o.getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class)))
+      return false;
+    
+    BadgeDefinitionAwardEvent that = (BadgeDefinitionAwardEvent) o;
+    return Objects.equals(this.getPublicKey(), that.getPublicKey()) &&
+        Objects.equals(identifierTag, that.identifierTag);
   }
 }
