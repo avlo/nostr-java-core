@@ -60,6 +60,36 @@ public class FormulaEventTest {
             identifierTag,
             "-1").getFormula());
 
+    validateReturnedFormula(
+        new FormulaEvent(
+            identity,
+            identifierTag,
+            "+-1").getFormula());
+
+    validateReturnedFormula(
+        new FormulaEvent(
+            identity,
+            identifierTag,
+            "--1").getFormula());
+
+    validateReturnedFormula(
+        new FormulaEvent(
+            identity,
+            identifierTag,
+            "+(-1)").getFormula());
+
+    validateReturnedFormula(
+        new FormulaEvent(
+            identity,
+            identifierTag,
+            "-(-1)").getFormula());
+
+    validateReturnedFormula(
+        new FormulaEvent(
+            identity,
+            identifierTag,
+            "-(+1)").getFormula());
+    
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
         identifierTag,

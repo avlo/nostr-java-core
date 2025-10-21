@@ -19,6 +19,36 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull FormulaEvent formulaEvent) throws NostrException {
+    this(
+        identity,
+        identifierTag,
+        List.of(formulaEvent));
+  }
+
+  public BadgeDefinitionReputationEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull List<FormulaEvent> formulaEvents) throws NostrException {
+    this(
+        identity,
+        identifierTag,
+        formulaEvents,
+        List.of(),
+        defaultCommentFromFormulaOperators(identifierTag, formulaEvents));
+  }
+
+  private static String defaultCommentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
+    return String.format("%s == (previous)%s %s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
+  }
+
+  private static String operatorFormatDisplayIterator(List<FormulaEvent> formulaEvents) {
+    return formulaEvents.stream().map(FormulaEvent::getFormula).map(formula -> String.format(" %s", formula)).toString();
+  }
+
+  public BadgeDefinitionReputationEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
       @NonNull FormulaEvent formulaEvent,
       @NonNull String content) throws NostrException {
     this(
