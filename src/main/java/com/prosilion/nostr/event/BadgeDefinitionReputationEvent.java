@@ -35,15 +35,22 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
         identifierTag,
         formulaEvents,
         List.of(),
-        defaultCommentFromFormulaOperators(identifierTag, formulaEvents));
+        defaultContentFromFormulaOperators(identifierTag, formulaEvents));
   }
 
-  private static String defaultCommentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
-    return String.format("%s == (previous)%s %s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
+  private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
+    return String.format("%s == (previous)%s%s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
   }
 
   private static String operatorFormatDisplayIterator(List<FormulaEvent> formulaEvents) {
-    return formulaEvents.stream().map(FormulaEvent::getFormula).map(formula -> String.format(" %s", formula)).toString();
+    StringBuilder sb = new StringBuilder();
+    formulaEvents.forEach(formula -> sb
+        .append(" ")
+        .append(formula.getFormula())
+        .append("(")
+        .append(formula.getIdentifierTag().getUuid())
+        .append(")"));
+    return sb.toString();
   }
 
   public BadgeDefinitionReputationEvent(
