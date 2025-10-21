@@ -14,41 +14,17 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
-  @JsonIgnore @Getter List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvents;
+  @JsonIgnore @Getter List<FormulaEvent> formulaEvents;
 
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
-      @NonNull BadgeDefinitionReputationFormulaEvent badgeDefinitionReputationFormulaEvent) throws NostrException {
-    this(
-        identity,
-        identifierTag,
-        List.of(badgeDefinitionReputationFormulaEvent),
-        List.of(),
-        "");
-  }
-
-  public BadgeDefinitionReputationEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvent) throws NostrException {
-    this(
-        identity,
-        identifierTag,
-        badgeDefinitionReputationFormulaEvent,
-        List.of(),
-        "");
-  }
-
-  public BadgeDefinitionReputationEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull BadgeDefinitionReputationFormulaEvent badgeDefinitionReputationFormulaEvent,
+      @NonNull FormulaEvent formulaEvent,
       @NonNull String content) throws NostrException {
     this(
         identity,
         identifierTag,
-        List.of(badgeDefinitionReputationFormulaEvent),
+        List.of(formulaEvent),
         List.of(),
         content);
   }
@@ -56,12 +32,12 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
-      @NonNull List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvent,
+      @NonNull List<FormulaEvent> formulaEvent,
       @NonNull String content) throws NostrException {
     this(
         identity,
         identifierTag,
-        badgeDefinitionReputationFormulaEvent,
+        formulaEvent,
         List.of(),
         content);
   }
@@ -69,13 +45,13 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
-      @NonNull BadgeDefinitionReputationFormulaEvent badgeDefinitionReputationFormulaEvent,
+      @NonNull FormulaEvent formulaEvent,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     this(
         identity,
         identifierTag,
-        List.of(badgeDefinitionReputationFormulaEvent),
+        List.of(formulaEvent),
         baseTags,
         content);
   }
@@ -83,25 +59,25 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
-      @NonNull List<BadgeDefinitionReputationFormulaEvent> badgeDefinitionReputationFormulaEvents,
+      @NonNull List<FormulaEvent> formulaEvents,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     super(
         identity,
         identifierTag,
         Stream.concat(
-            badgeDefinitionReputationFormulaEvents.stream()
-                .map(BadgeDefinitionReputationFormulaEvent::getId)
+            formulaEvents.stream()
+                .map(FormulaEvent::getId)
                 .map(EventTag::new),
             baseTags.stream()).toList(),
         content);
-    this.badgeDefinitionReputationFormulaEvents = badgeDefinitionReputationFormulaEvents;
+    this.formulaEvents = formulaEvents;
   }
 
   @JsonIgnore
   public List<EventTag> getEventTags() {
-    return badgeDefinitionReputationFormulaEvents.stream()
-        .map(BadgeDefinitionReputationFormulaEvent::getId)
+    return formulaEvents.stream()
+        .map(FormulaEvent::getId)
         .map(EventTag::new).toList();
   }
 
@@ -128,8 +104,8 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
         event -> Map.of(event, getUuids(event));
 
     private static List<String> getUuids(BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
-      return badgeDefinitionReputationEvent.getBadgeDefinitionReputationFormulaEvents().stream()
-          .map(BadgeDefinitionReputationFormulaEvent::getIdentifierTag)
+      return badgeDefinitionReputationEvent.getFormulaEvents().stream()
+          .map(FormulaEvent::getIdentifierTag)
           .map(IdentifierTag::getUuid)
           .toList();
     }

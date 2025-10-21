@@ -2,14 +2,14 @@ package com.prosilion.nostr;
 
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.BadgeDefinitionReputationFormulaEvent;
+import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class BadgeDefinitionReputationFormulaEventTest {
+public class FormulaEventTest {
 
   @Test
   public void formulaValidationTestUnitAdd() throws ParseException {
@@ -49,38 +49,38 @@ public class BadgeDefinitionReputationFormulaEventTest {
     IdentifierTag identifierTag = new IdentifierTag("BadgeDefinitionReputation-UUID");
 
     validateReturnedFormula(
-        new BadgeDefinitionReputationFormulaEvent(
+        new FormulaEvent(
             identity,
             identifierTag,
             "+1").getFormula());
 
     validateReturnedFormula(
-        new BadgeDefinitionReputationFormulaEvent(
+        new FormulaEvent(
             identity,
             identifierTag,
             "-1").getFormula());
 
-    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
+    assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
         identifierTag,
         "a"));
 
-    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
+    assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
         identifierTag,
         ""));
 
-    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
+    assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
         identifierTag,
         " "));
 
-    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
+    assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
         identifierTag,
         " "));
 
-    assertThrows(ParseException.class, () -> new BadgeDefinitionReputationFormulaEvent(
+    assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
         identifierTag,
         "1"));
