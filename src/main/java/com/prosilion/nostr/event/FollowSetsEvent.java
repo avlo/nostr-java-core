@@ -19,46 +19,17 @@ import org.springframework.lang.NonNull;
 public class FollowSetsEvent extends BaseEvent {
   public FollowSetsEvent(
       @NonNull Identity identity,
-      @NonNull PublicKey publicKey,
-      @NonNull List<EventTagAddressTagPair> pairedTags,
-      @NonNull String content) throws NostrException {
-    super(
-        identity,
-        Kind.FOLLOW_SETS,
-        Stream.concat(
-                pairedTags.stream()
-                    .map(EventTagAddressTagPair::getTags)
-                    .flatMap(Collection::stream),
-                Stream.of(
-                    new PubKeyTag(publicKey)))
-            .collect(Collectors.toList()),
-        content);
-  }
-
-  public FollowSetsEvent(
-      @NonNull Identity identity,
-      @NonNull PublicKey publicKey,
+      @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull List<EventTagAddressTagPair> pairedTags,
       @NonNull String content) throws NostrException {
-    super(
-        identity,
-        Kind.FOLLOW_SETS,
-        Stream.concat(
-                Stream.concat(
-                    pairedTags.stream()
-                        .map(EventTagAddressTagPair::getTags)
-                        .flatMap(Collection::stream),
-                    Stream.of(
-                        new PubKeyTag(publicKey))),
-                Stream.of(identifierTag))
-            .collect(Collectors.toList()),
-        content);
+    this(identity, recipientPublicKey, identifierTag, pairedTags, List.of(), content);
   }
 
   public FollowSetsEvent(
       @NonNull Identity identity,
-      @NonNull PublicKey publicKey,
+      @NonNull PublicKey recipientPublicKey,
+      @NonNull IdentifierTag identifierTag,
       @NonNull List<EventTagAddressTagPair> pairedTags,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
@@ -67,11 +38,13 @@ public class FollowSetsEvent extends BaseEvent {
         Kind.FOLLOW_SETS,
         Stream.concat(
                 Stream.concat(
-                    pairedTags.stream()
-                        .map(EventTagAddressTagPair::getTags)
-                        .flatMap(Collection::stream),
-                    Stream.of(
-                        new PubKeyTag(publicKey))),
+                    Stream.concat(
+                        pairedTags.stream()
+                            .map(EventTagAddressTagPair::getTags)
+                            .flatMap(Collection::stream),
+                        Stream.of(
+                            new PubKeyTag(recipientPublicKey))),
+                    Stream.of(identifierTag)),
                 baseTags.stream()
                     .filter(Predicate.not(EventTag.class::isInstance))
                     .filter(Predicate.not(AddressTag.class::isInstance)))
@@ -79,6 +52,7 @@ public class FollowSetsEvent extends BaseEvent {
         content);
   }
 
+//  TODO: potentially replace w/ CurationSetsEvent, needs further investigation
   public record EventTagAddressTagPair(@NonNull EventTag eventTag, @NonNull AddressTag addressTag) {
     public List<BaseTag> getTags() {
       return List.of(eventTag, addressTag);
