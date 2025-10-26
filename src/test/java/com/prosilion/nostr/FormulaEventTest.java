@@ -14,6 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FormulaEventTest {
+  public final static String UNIT_REPUTATION = "UNIT_REPUTATION";
+  public final static String UNIT_UPVOTE = "UNIT_UPVOTE";
+  public final static String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
+
+  public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
+  public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
+
+  public final Identity identity = Identity.generateRandomIdentity();
+  public final BadgeDefinitionAwardEvent awardUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
+  public final BadgeDefinitionAwardEvent awardDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag);
 
   @Test
   public void formulaValidationTestUnitAdd() throws ParseException {
@@ -49,122 +59,131 @@ public class FormulaEventTest {
 
   @Test
   public void arbitraryCustomAppDataFormulaEventTest() throws ParseException {
-    Identity identity = Identity.generateRandomIdentity();
-    IdentifierTag identifierTag = new IdentifierTag("BadgeDefinitionReputation-UUID");
-
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            identifierTag,
+            awardUpvoteEvent,
             "+1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            identifierTag,
+            awardDownvoteEvent,
             "-1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            identifierTag,
+            awardDownvoteEvent,
             "+-1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            identifierTag,
+            awardDownvoteEvent,
             "--1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            identifierTag,
+            awardUpvoteEvent,
             "+(-1)").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            identifierTag,
+            awardDownvoteEvent,
             "-(-1)").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            identifierTag,
+            awardUpvoteEvent,
             "-(+1)").getFormula());
-    
+
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        identifierTag,
+        awardUpvoteEvent,
         "a"));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        identifierTag,
+        awardUpvoteEvent,
         ""));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        identifierTag,
+        awardUpvoteEvent,
         " "));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        identifierTag,
+        awardUpvoteEvent,
         " "));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        identifierTag,
+        awardUpvoteEvent,
         "1"));
   }
 
   @Test
   void consoleLogTest() throws ParseException {
-    String UNIT_REPUTATION = "UNIT_REPUTATION";
-    String UNIT_UPVOTE = "UNIT_UPVOTE";
-    String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
-    
-    IdentifierTag UPVOTE_IDENTIFIER_TAG = new IdentifierTag(UNIT_UPVOTE);
-    IdentifierTag DOWNVOTE_IDENTIFIER_TAG = new IdentifierTag(UNIT_DOWNVOTE);
-
     String PLUS_ONE_FORMULA = "+1";
     String MINUS_ONE_FORMULA = "-1";
-    
+
     Identity identity = Identity.generateRandomIdentity();
 
     assertEquals("UNIT_REPUTATION == (previous)UNIT_REPUTATION +1(UNIT_UPVOTE) -1(UNIT_DOWNVOTE)",
         new BadgeDefinitionReputationEvent(
-        identity,
-        new IdentifierTag(
-            UNIT_REPUTATION),
-        List.of(
-            new FormulaEvent(
-                identity,
-                UPVOTE_IDENTIFIER_TAG,
-                PLUS_ONE_FORMULA),
-            new FormulaEvent(
-                identity,
-                DOWNVOTE_IDENTIFIER_TAG,
-                MINUS_ONE_FORMULA))).getContent());
+            identity,
+            new IdentifierTag(
+                UNIT_REPUTATION),
+            List.of(
+                new FormulaEvent(
+                    identity,
+                    awardUpvoteEvent,
+                    PLUS_ONE_FORMULA),
+                new FormulaEvent(
+                    identity,
+                    awardDownvoteEvent,
+                    MINUS_ONE_FORMULA))).getContent());
 
-    assertEquals("UNIT_REPUTATION == (previous)UNIT_REPUTATION +1(UNIT_UPVOTE) +1(UNIT_UPVOTE)",
+    String UNIT_UPVOTE_UNIQUE = "UNIT_UPVOTE_UNIQUE";
+    IdentifierTag upvoteUniqueIdentifierTag = new IdentifierTag(UNIT_UPVOTE_UNIQUE);
+    BadgeDefinitionAwardEvent awardUniqueUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteUniqueIdentifierTag);
+
+    assertEquals("UNIT_REPUTATION == (previous)UNIT_REPUTATION +1(UNIT_UPVOTE) +1(UNIT_UPVOTE_UNIQUE)",
         new BadgeDefinitionReputationEvent(
-        identity,
-        new IdentifierTag(
-            UNIT_REPUTATION),
-        List.of(
-            new FormulaEvent(
-                identity,
-                UPVOTE_IDENTIFIER_TAG,
-                PLUS_ONE_FORMULA),
-            new FormulaEvent(
-                identity,
-                UPVOTE_IDENTIFIER_TAG,
-                PLUS_ONE_FORMULA))).getContent());
+            identity,
+            new IdentifierTag(
+                UNIT_REPUTATION),
+            List.of(
+                new FormulaEvent(
+                    identity,
+                    awardUpvoteEvent,
+                    PLUS_ONE_FORMULA),
+                new FormulaEvent(
+                    identity,
+                    awardUniqueUpvoteEvent,
+                    PLUS_ONE_FORMULA))).getContent());
+    
+    assertThrows(NostrException.class, () ->
+        new BadgeDefinitionReputationEvent(
+            identity,
+            new IdentifierTag(
+                UNIT_REPUTATION),
+            List.of(
+                new FormulaEvent(
+                    identity,
+                    awardUpvoteEvent,
+                    PLUS_ONE_FORMULA),
+                new FormulaEvent(
+                    identity,
+                    awardUpvoteEvent,
+                    PLUS_ONE_FORMULA))));
   }
-  
+
   private void validateReturnedFormula(String formula) throws ParseException {
     new Expression(
         String.format("%s %s", "validate", formula)

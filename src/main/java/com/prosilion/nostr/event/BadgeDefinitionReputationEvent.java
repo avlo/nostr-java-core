@@ -8,6 +8,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -39,6 +40,15 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
   }
 
   private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
+    List<IdentifierTag> identifierTags = formulaEvents.stream().map(FormulaEvent::getIdentifierTag).toList();
+
+    Optional.of(
+            identifierTags.stream().distinct().count() != formulaEvents.size())
+        .filter(Boolean::booleanValue)
+        .map(bool -> {
+          throw new NostrException(String.format("Matching formula events found in %s", identifierTags));
+        });
+
     return String.format("%s == (previous)%s%s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
   }
 
