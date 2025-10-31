@@ -26,9 +26,10 @@ public abstract class BadgeAwardAbstractEvent extends BaseEvent {
       @NonNull String content) throws NostrException {
     super(identity, Kind.BADGE_AWARD_EVENT,
         Stream.concat(
-                Stream.concat(tags.stream(), Stream.of(awardEvent.addressTag())),
-                awardEvent.pubkeyTags().stream())
-            .toList(),
+                Stream.concat(
+                    Stream.of(awardEvent.addressTag()),
+                    awardEvent.pubkeyTags().stream()),
+                tags.stream()).toList(),
         content);
   }
 }
