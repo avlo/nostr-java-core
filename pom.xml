@@ -6,7 +6,7 @@
 
     <groupId>com.prosilion</groupId>
     <artifactId>nostr-java-core</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <description>nostr-java-core</description>
     <packaging>jar</packaging>
 
