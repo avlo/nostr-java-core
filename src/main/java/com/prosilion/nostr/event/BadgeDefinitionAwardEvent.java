@@ -44,13 +44,9 @@ public class BadgeDefinitionAwardEvent extends UniqueIdentifierTagEvent {
 
     BadgeDefinitionAwardEvent that = (BadgeDefinitionAwardEvent) obj;
     return
-        Objects.equals(
-            this.getPublicKey(),
-            that.getPublicKey())
-            &&
-            Objects.equals(
-                this.getIdentifierTag(),
-                that.getIdentifierTag());
+        Objects.equals(this.getPublicKey(), that.getPublicKey()) &&
+        Objects.equals(this.getIdentifierTag(), that.getIdentifierTag()) &&
+        Objects.equals(this.getContent(), that.getContent());
   }
 
   public IdentifierTag getIdentifierTag() {
