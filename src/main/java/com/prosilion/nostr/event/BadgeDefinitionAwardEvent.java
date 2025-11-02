@@ -1,27 +1,22 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-public class BadgeDefinitionAwardEvent extends AddressableEvent {
-  @JsonIgnore @Getter IdentifierTag identifierTag;
-
+public class BadgeDefinitionAwardEvent extends UniqueIdentifierTagEvent {
   public BadgeDefinitionAwardEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag) throws NostrException {
-    this(identity, identifierTag, List.of(), "");
+    this(identity, identifierTag, "");
   }
-  
+
   public BadgeDefinitionAwardEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
@@ -37,21 +32,28 @@ public class BadgeDefinitionAwardEvent extends AddressableEvent {
     super(
         identity,
         Kind.BADGE_DEFINITION_EVENT,
-        Stream.concat(
-                Stream.of(identifierTag),
-                baseTags.stream())
-            .collect(Collectors.toList()),
+        identifierTag,
+        baseTags,
         content);
-    this.identifierTag = identifierTag;
   }
 
-  public boolean matches(@NonNull BadgeDefinitionAwardEvent that) {
-    if (!Objects.equals(
-            this.getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class),
-            that.getClass().isAssignableFrom(BadgeDefinitionAwardEvent.class)))
+  @Override
+  public boolean equals(Object obj) {
+    if (!obj.getClass().getSuperclass().isAssignableFrom(BadgeDefinitionAwardEvent.class))
       return false;
-    
-    return Objects.equals(this.getPublicKey(), that.getPublicKey()) &&
-        Objects.equals(this.identifierTag, that.identifierTag);
+
+    BadgeDefinitionAwardEvent that = (BadgeDefinitionAwardEvent) obj;
+    return
+        Objects.equals(
+            this.getPublicKey(),
+            that.getPublicKey())
+            &&
+            Objects.equals(
+                this.getIdentifierTag(),
+                that.getIdentifierTag());
+  }
+
+  public IdentifierTag getIdentifierTag() {
+    return Filterable.getTypeSpecificTagsStream(IdentifierTag.class, this).findFirst().orElseThrow();
   }
 }

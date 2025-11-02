@@ -1,5 +1,6 @@
 package com.prosilion.nostr.message;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,16 +28,18 @@ import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 public record EventMessage(
     @Getter @JsonPropertyDescription("EVENT") EventIF event,
     @Getter @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String subscriptionId) implements BaseMessage {
-  @JsonIgnore
 
-  public EventMessage(@JsonProperty GenericEventRecord event) {
+  @JsonIgnore
+  public EventMessage(GenericEventRecord event) {
     this(event, null);
   }
 
-  public EventMessage(@JsonProperty BaseEvent event) {
+  @JsonIgnore
+  public EventMessage(BaseEvent event) {
     this(event.getGenericEventRecord(), null);
   }
 
+  @JsonCreator
   public EventMessage(@JsonProperty EventIF event, @Nullable String subscriptionId) {
     this.event = event;
     this.subscriptionId = subscriptionId;

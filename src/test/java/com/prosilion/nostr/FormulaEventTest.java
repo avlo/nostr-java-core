@@ -3,18 +3,15 @@ package com.prosilion.nostr;
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FormulaEventTest {
-  public final static String UNIT_REPUTATION = "UNIT_REPUTATION";
   public final static String UNIT_UPVOTE = "UNIT_UPVOTE";
   public final static String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
 
@@ -128,60 +125,15 @@ public class FormulaEventTest {
   }
 
   @Test
-  void consoleLogTest() throws ParseException {
-    String PLUS_ONE_FORMULA = "+1";
-    String MINUS_ONE_FORMULA = "-1";
-
-    Identity identity = Identity.generateRandomIdentity();
-
-    assertEquals("UNIT_REPUTATION == (previous)UNIT_REPUTATION +1(UNIT_UPVOTE) -1(UNIT_DOWNVOTE)",
-        new BadgeDefinitionReputationEvent(
-            identity,
-            new IdentifierTag(
-                UNIT_REPUTATION),
-            List.of(
+  void testBlankFormulaEvent() {
+    assertTrue(
+        assertThrows(
+            ParseException.class, () ->
                 new FormulaEvent(
                     identity,
                     awardUpvoteEvent,
-                    PLUS_ONE_FORMULA),
-                new FormulaEvent(
-                    identity,
-                    awardDownvoteEvent,
-                    MINUS_ONE_FORMULA))).getContent());
-
-    String UNIT_UPVOTE_UNIQUE = "UNIT_UPVOTE_UNIQUE";
-    IdentifierTag upvoteUniqueIdentifierTag = new IdentifierTag(UNIT_UPVOTE_UNIQUE);
-    BadgeDefinitionAwardEvent awardUniqueUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteUniqueIdentifierTag);
-
-    assertEquals("UNIT_REPUTATION == (previous)UNIT_REPUTATION +1(UNIT_UPVOTE) +1(UNIT_UPVOTE_UNIQUE)",
-        new BadgeDefinitionReputationEvent(
-            identity,
-            new IdentifierTag(
-                UNIT_REPUTATION),
-            List.of(
-                new FormulaEvent(
-                    identity,
-                    awardUpvoteEvent,
-                    PLUS_ONE_FORMULA),
-                new FormulaEvent(
-                    identity,
-                    awardUniqueUpvoteEvent,
-                    PLUS_ONE_FORMULA))).getContent());
-    
-    assertThrows(NostrException.class, () ->
-        new BadgeDefinitionReputationEvent(
-            identity,
-            new IdentifierTag(
-                UNIT_REPUTATION),
-            List.of(
-                new FormulaEvent(
-                    identity,
-                    awardUpvoteEvent,
-                    PLUS_ONE_FORMULA),
-                new FormulaEvent(
-                    identity,
-                    awardUpvoteEvent,
-                    PLUS_ONE_FORMULA))));
+                    ""))
+            .getMessage().contains("supplied formula is blank"));
   }
 
   private void validateReturnedFormula(String formula) throws ParseException {
