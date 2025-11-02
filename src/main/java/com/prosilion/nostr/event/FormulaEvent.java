@@ -4,6 +4,7 @@ import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -12,23 +13,23 @@ import org.springframework.lang.NonNull;
 public class FormulaEvent extends ArbitraryCustomAppDataEvent {
   public FormulaEvent(
       @NonNull Identity identity,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
+      @NonNull IdentifierTag identifierTag,
       @NonNull String formula) throws NostrException, ParseException {
     this(
         identity,
-        badgeDefinitionAwardEvent,
+        identifierTag,
         List.of(),
         validate(formula));
   }
 
   public FormulaEvent(
       @NonNull Identity identity,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
+      @NonNull IdentifierTag identifierTag,
       @NonNull List<BaseTag> baseTags,
       @NonNull String formula) throws NostrException, ParseException {
     super(
         identity,
-        badgeDefinitionAwardEvent.getIdentifierTag(),
+        identifierTag,
         baseTags,
         validate(formula));
   }

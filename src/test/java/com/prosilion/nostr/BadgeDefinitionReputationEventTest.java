@@ -152,10 +152,8 @@ public class BadgeDefinitionReputationEventTest {
         .equals(
              new FormulaEvent(
                identity,
-               new BadgeDefinitionAwardEvent(
-                  identity,
-                  definitionIdentifierTag),
-       "+1")));
+               definitionIdentifierTag, 
+                 "+1")));
   }
 
   @Test
