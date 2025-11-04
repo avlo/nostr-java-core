@@ -73,7 +73,7 @@ public abstract class BaseEvent implements EventIF {
     return kind;
   }
 
-  public List<?> getTypeSpecificTags(Class<? extends BaseTag> baseTagClassDerivedType) {
+  public <T extends BaseTag> List<T> getTypeSpecificTags(Class<T> baseTagClassDerivedType) {
     return Filterable.getTypeSpecificTagsStream(baseTagClassDerivedType, this).toList();
   }
 }
