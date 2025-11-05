@@ -59,68 +59,68 @@ public class FormulaEventTest {
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            upvoteIdentifierTag,
+            awardUpvoteEvent,
             "+1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            downvoteIdentifierTag,
+            awardDownvoteEvent,
             "-1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            downvoteIdentifierTag,
+            awardDownvoteEvent,
             "+-1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            downvoteIdentifierTag,
+            awardDownvoteEvent,
             "--1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            upvoteIdentifierTag,
+            awardUpvoteEvent,
             "+(-1)").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            downvoteIdentifierTag,
+            awardDownvoteEvent,
             "-(-1)").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
-            upvoteIdentifierTag,
+            awardUpvoteEvent,
             "-(+1)").getFormula());
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        upvoteIdentifierTag,
+        awardUpvoteEvent,
         "a"));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        upvoteIdentifierTag,
+        awardUpvoteEvent,
         ""));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        upvoteIdentifierTag,
+        awardUpvoteEvent,
         " "));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        upvoteIdentifierTag,
+        awardUpvoteEvent,
         " "));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
-        upvoteIdentifierTag,
+        awardUpvoteEvent,
         "1"));
   }
 
@@ -131,7 +131,7 @@ public class FormulaEventTest {
             ParseException.class, () ->
                 new FormulaEvent(
                     identity,
-                    upvoteIdentifierTag,
+                    awardUpvoteEvent,
                     ""))
             .getMessage().contains("supplied formula is blank"));
   }

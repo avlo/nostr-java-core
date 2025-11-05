@@ -38,8 +38,12 @@ public abstract class UniqueIdentifierTagEvent extends AddressableEvent {
         validateSingleUniqueIdentifierTag(baseTags),
         content);
   }
+  
+  public IdentifierTag getIdentifierTag() {
+    return getTypeSpecificTags(IdentifierTag.class).getFirst();  
+  }
 
-  protected static List<BaseTag> validateSingleUniqueIdentifierTag(List<BaseTag> baseTags) {
+  private static List<BaseTag> validateSingleUniqueIdentifierTag(List<BaseTag> baseTags) {
     long count = baseTags.stream().filter(IdentifierTag.class::isInstance).count();
     long limit = 1L;
     assert Objects.equals(limit, count) : new NostrException(
