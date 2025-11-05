@@ -2,7 +2,6 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
@@ -39,17 +38,10 @@ public class BadgeDefinitionAwardEvent extends UniqueIdentifierTagEvent {
 
   @Override
   public boolean equals(Object obj) {
-    if (!obj.getClass().getSuperclass().isAssignableFrom(BadgeDefinitionAwardEvent.class))
+    if (!Objects.equals(this.getClass(), obj.getClass()))
       return false;
 
     BadgeDefinitionAwardEvent that = (BadgeDefinitionAwardEvent) obj;
-    return
-        Objects.equals(this.getPublicKey(), that.getPublicKey()) &&
-        Objects.equals(this.getIdentifierTag(), that.getIdentifierTag()) &&
-        Objects.equals(this.getContent(), that.getContent());
-  }
-
-  public IdentifierTag getIdentifierTag() {
-    return Filterable.getTypeSpecificTagsStream(IdentifierTag.class, this).findFirst().orElseThrow();
+    return super.equals(that);
   }
 }

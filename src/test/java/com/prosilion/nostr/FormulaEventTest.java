@@ -8,6 +8,8 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -52,6 +54,30 @@ public class FormulaEventTest {
     assertThrows(ParseException.class, () -> new Expression(
         String.format("%s %s", "validate", formula)
     ).validate());
+  }
+
+  @Test
+  public void testEquality() throws ParseException {
+    FormulaEvent upvoteFormulaEvent = new FormulaEvent(identity, awardUpvoteEvent, "+1");
+    FormulaEvent upvoteFormulaEventDuplicate = new FormulaEvent(identity, awardUpvoteEvent, "+1");
+
+    FormulaEvent upvoteFormulaEventTriplicate = new FormulaEvent(
+        identity,
+        new BadgeDefinitionAwardEvent(
+            identity,
+            upvoteIdentifierTag),
+        "+1");
+
+    assertEquals(upvoteFormulaEvent, upvoteFormulaEventTriplicate);
+    assertEquals(upvoteFormulaEventDuplicate, upvoteFormulaEventTriplicate);
+  }
+
+  @Test
+  void testInequality() throws ParseException {
+    FormulaEvent formulaEvent = new FormulaEvent(Identity.generateRandomIdentity(), awardUpvoteEvent, "+1");
+    FormulaEvent differentUpvoteFormula = new FormulaEvent(identity, awardUpvoteEvent, "+2");
+    assertNotEquals(formulaEvent, differentUpvoteFormula);
+    assertNotEquals(formulaEvent, awardDownvoteEvent);
   }
 
   @Test
