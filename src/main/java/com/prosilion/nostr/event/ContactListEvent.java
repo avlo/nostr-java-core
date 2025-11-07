@@ -11,4 +11,8 @@ public class ContactListEvent extends BaseEvent {
   public ContactListEvent(@NonNull Identity identity, @NonNull List<BaseTag> tags) throws NostrException {
     super(identity, Kind.CONTACT_LIST, tags);
   }
+
+  public ContactListEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }

@@ -29,6 +29,10 @@ public class CurationSetsEvent extends ReplaceableEvent {
         content);
   }
 
+  public CurationSetsEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   public record CurationSet(@NonNull EventTag eventTag, @NonNull AddressTag addressTag) {
     public List<BaseTag> getTags() {
       return List.of(eventTag, addressTag);

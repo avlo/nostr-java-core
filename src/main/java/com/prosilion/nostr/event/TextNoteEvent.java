@@ -16,4 +16,8 @@ public class TextNoteEvent extends BaseEvent {
   public TextNoteEvent(@NonNull Identity identity, @NonNull List<BaseTag> tags, @NonNull String content) throws NostrException {
     super(identity, Kind.TEXT_NOTE, tags, content);
   }
+
+  public TextNoteEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }

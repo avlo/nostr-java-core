@@ -34,6 +34,10 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent {
         validate(formula));
   }
 
+  public FormulaEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   public String getFormula() {
     return super.getContent();
   }

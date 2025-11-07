@@ -52,7 +52,11 @@ public class FollowSetsEvent extends BaseEvent {
         content);
   }
 
-//  TODO: potentially replace w/ CurationSetsEvent, needs further investigation
+  public FollowSetsEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
+  //  TODO: potentially replace w/ CurationSetsEvent, needs further investigation
   public record EventTagAddressTagPair(@NonNull EventTag eventTag, @NonNull AddressTag addressTag) {
     public List<BaseTag> getTags() {
       return List.of(eventTag, addressTag);

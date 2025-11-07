@@ -15,6 +15,10 @@ public class AddressableEvent extends BaseEvent {
     super(identity, validateKind(kind, intPredicate, errorMessage), baseTags, content);
   }
 
+  public AddressableEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
   private static final Function<Kind, String> errorMessage = kind -> String.format("Invalid kind [%s] is not between 30000 and 40000", kind);
 }

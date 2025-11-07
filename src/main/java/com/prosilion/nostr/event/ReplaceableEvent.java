@@ -15,6 +15,10 @@ public class ReplaceableEvent extends BaseEvent {
     super(identity, validateKind(kind, replaceableAddressableKindPredicate, errorMessage), tags, content);
   }
 
+  public ReplaceableEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   private static final IntPredicate replaceableAddressableKindPredicate = kindValue ->
       kindValue == 0 ||
           kindValue == 3 ||

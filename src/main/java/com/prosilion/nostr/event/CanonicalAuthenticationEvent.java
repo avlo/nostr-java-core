@@ -15,4 +15,8 @@ public class CanonicalAuthenticationEvent extends BaseEvent {
             GenericTag.create("challenge", challenge),
             GenericTag.create("relay", relay.getUrl())));
   }
+
+  public CanonicalAuthenticationEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }

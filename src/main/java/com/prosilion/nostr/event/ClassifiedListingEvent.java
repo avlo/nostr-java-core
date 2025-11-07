@@ -20,6 +20,10 @@ public class ClassifiedListingEvent extends AddressableEvent {
     super(identity, validateKind(kind, kindPredicate, errorMessage), Stream.concat(baseTags.stream(), Stream.of(classifiedListing.getPriceTag())).toList(), content);
   }
 
+  public ClassifiedListingEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   private static final IntPredicate kindPredicate = kindValue -> 30_402 == kindValue || kindValue == 30403;
   private static final Function<Kind, String> errorMessage = kind -> String.format("Invalid kind value [%s]. Classified Listing must be either 30402 or 30403 but was [%s]", kind, kind.getValue());
 }

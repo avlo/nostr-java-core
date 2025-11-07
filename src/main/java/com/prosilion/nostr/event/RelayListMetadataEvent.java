@@ -28,4 +28,8 @@ public class RelayListMetadataEvent extends ReplaceableEvent {
             .collect(Collectors.toList()),
         content);
   }
+
+  public RelayListMetadataEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }

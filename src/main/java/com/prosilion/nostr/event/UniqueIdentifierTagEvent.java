@@ -39,6 +39,10 @@ public abstract class UniqueIdentifierTagEvent extends AddressableEvent {
         content);
   }
 
+  public UniqueIdentifierTagEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
+    super(genericEventRecord);
+  }
+  
   public IdentifierTag getIdentifierTag() {
     return getTypeSpecificTags(IdentifierTag.class).getFirst();
   }

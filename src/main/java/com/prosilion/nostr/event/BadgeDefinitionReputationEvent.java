@@ -47,6 +47,10 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
         defaultContentFromFormulaOperators(identifierTag, formulaEvents));
   }
 
+  public BadgeDefinitionReputationEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
     List<IdentifierTag> identifierTags = formulaEvents.stream().map(FormulaEvent::getIdentifierTag).toList();
 

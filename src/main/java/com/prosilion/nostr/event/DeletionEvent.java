@@ -53,6 +53,10 @@ public class DeletionEvent extends BaseEvent {
                 DeletionEvent::validatePubkeyMatch)).collect(Collectors.toList()), content);
   }
 
+  public DeletionEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   private static final BiPredicate<AddressTag, PublicKey> addressTagPredicate = (addressTag, publicKey) ->
       addressTag.getPublicKey().equals(publicKey);
 

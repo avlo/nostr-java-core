@@ -36,6 +36,10 @@ public class BadgeDefinitionAwardEvent extends UniqueIdentifierTagEvent {
         content);
   }
 
+  public BadgeDefinitionAwardEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (!Objects.equals(this.getClass(), obj.getClass()))

@@ -33,6 +33,10 @@ public abstract class BaseEvent implements EventIF {
     this.genericEventRecord = GenericEventRecordFactory.createInstance(identity, kind, tags, content);
   }
 
+  public BaseEvent(@NonNull GenericEventRecord genericEventRecord) {
+    this.genericEventRecord = genericEventRecord;
+  }
+
   @Override
   public String getContent() {
     return genericEventRecord.getContent();

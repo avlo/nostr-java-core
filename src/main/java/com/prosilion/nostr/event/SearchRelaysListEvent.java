@@ -28,4 +28,8 @@ public class SearchRelaysListEvent extends ReplaceableEvent {
             .collect(Collectors.toList()),
         content);
   }
+
+  public SearchRelaysListEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }

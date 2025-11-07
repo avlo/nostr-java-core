@@ -30,11 +30,15 @@ public class ArbitraryCustomAppDataEvent extends UniqueIdentifierTagEvent {
         content);
   }
 
+  public ArbitraryCustomAppDataEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (!Objects.equals(this.getClass(), obj.getClass()))
       return false;
-    
+
     ArbitraryCustomAppDataEvent that = (ArbitraryCustomAppDataEvent) obj;
     return super.equals(that);
   }
