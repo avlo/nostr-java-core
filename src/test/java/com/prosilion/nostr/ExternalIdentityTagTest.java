@@ -13,22 +13,22 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExternalIdentityTagTest {
-  public final String platform = "afterimage";
-  public final String identity = "reputation";
-  public final String proof = "666";
+  public final static String PLATFORM = ExternalIdentityTagTest.class.getPackageName();
+  public final static String IDENTITY = ExternalIdentityTagTest.class.getSimpleName();
+  public final static String PROOF = String.valueOf(ExternalIdentityTagTest.class.hashCode());
 
   @Test
   void getSupportedFields() {
-    ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(platform, identity, proof);
+    ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
     List<Field> fields = externalIdentityTag.getSupportedFields();
     anyFieldNameMatch(fields, field -> field.getName().equals("platform"));
     anyFieldNameMatch(fields, field -> field.getName().equals("identity"));
     anyFieldNameMatch(fields, field -> field.getName().equals("proof"));
 
-    anyFieldValueMatch(fields, externalIdentityTag, fieldValue -> fieldValue.equals(platform));
-    anyFieldValueMatch(fields, externalIdentityTag, fieldValue -> fieldValue.equals(identity));
-    anyFieldValueMatch(fields, externalIdentityTag, fieldValue -> fieldValue.equals(proof));
+    anyFieldValueMatch(fields, externalIdentityTag, fieldValue -> fieldValue.equals(PLATFORM));
+    anyFieldValueMatch(fields, externalIdentityTag, fieldValue -> fieldValue.equals(IDENTITY));
+    anyFieldValueMatch(fields, externalIdentityTag, fieldValue -> fieldValue.equals(PROOF));
 
     assertFalse(fields.stream().anyMatch(field -> field.getName().equals("idEventXXX")));
 //        TODO: below needs failable stream
@@ -42,7 +42,7 @@ class ExternalIdentityTagTest {
               }
             })
             .anyMatch(fieldValue ->
-                fieldValue.equals(platform + "x")));
+                fieldValue.equals("platformx")));
 
     assertFalse(
         fields.stream().flatMap(field ->
@@ -54,7 +54,7 @@ class ExternalIdentityTagTest {
               }
             })
             .anyMatch(fieldValue ->
-                fieldValue.equals(identity + "x")));
+                fieldValue.equals("identityx")));
 
     assertFalse(
         fields.stream().flatMap(field ->
@@ -66,22 +66,22 @@ class ExternalIdentityTagTest {
               }
             })
             .anyMatch(fieldValue ->
-                fieldValue.equals(proof + "x")));
+                fieldValue.equals("proofx")));
   }
 
   @Test
   void equalityNonEqualityTests() {
-    ExternalIdentityTag one = new ExternalIdentityTag(platform, identity, proof);
-    ExternalIdentityTag two = new ExternalIdentityTag(platform, identity, proof);
+    ExternalIdentityTag one = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
+    ExternalIdentityTag two = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
     assertEquals(one, two);
 
-    ExternalIdentityTag three = new ExternalIdentityTag(platform + "x", identity, proof);
+    ExternalIdentityTag three = new ExternalIdentityTag(PLATFORM + "x", IDENTITY, PROOF);
     assertNotEquals(one, three);
 
-    ExternalIdentityTag four = new ExternalIdentityTag(platform, identity + "x", proof);
+    ExternalIdentityTag four = new ExternalIdentityTag(PLATFORM, IDENTITY + "x", PROOF);
     assertNotEquals(one, four);
 
-    ExternalIdentityTag five = new ExternalIdentityTag(platform, identity, proof + "x");
+    ExternalIdentityTag five = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF + "x");
     assertNotEquals(one, five);
 
     ExternalIdentityTagFilter atOne = new ExternalIdentityTagFilter(one);
