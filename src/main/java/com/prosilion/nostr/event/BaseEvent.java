@@ -8,6 +8,7 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import lombok.Getter;
@@ -79,5 +80,17 @@ public abstract class BaseEvent implements EventIF {
 
   public <T extends BaseTag> List<T> getTypeSpecificTags(Class<T> baseTagClassDerivedType) {
     return Filterable.getTypeSpecificTagsStream(baseTagClassDerivedType, this).toList();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    boolean equals = Objects.equals(genericEventRecord, ((BaseEvent) o).genericEventRecord);
+    return equals;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(genericEventRecord);
   }
 }

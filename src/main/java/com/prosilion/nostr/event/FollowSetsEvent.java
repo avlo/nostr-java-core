@@ -61,19 +61,5 @@ public class FollowSetsEvent extends BaseEvent {
     public List<BaseTag> getTags() {
       return List.of(eventTag, addressTag);
     }
-
-//    @Override
-//    public boolean equals(Object o) {
-//      if (o == null || getClass() != o.getClass()) return false;
-//      EventTagAddressTagPair that = (EventTagAddressTagPair) o;
-//      boolean equals = Objects.equals(eventTag, that.eventTag);
-//      boolean equals1 = Objects.equals(addressTag, that.addressTag);
-//      return equals && equals1;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//      return Objects.hash(eventTag, addressTag);
-//    }
   }
 }

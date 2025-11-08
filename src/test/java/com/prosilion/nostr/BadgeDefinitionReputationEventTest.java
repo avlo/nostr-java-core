@@ -4,7 +4,6 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
-import com.prosilion.nostr.event.UniqueIdentifierTagEvent;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
@@ -38,11 +37,11 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void testEquality() throws ParseException {
+  void testInequalityEventCopies() throws ParseException {
     BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
 
-    assertEquals(
+    assertNotEquals(
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
@@ -52,7 +51,7 @@ public class BadgeDefinitionReputationEventTest {
             reputationIdentifierTag,
             plusOneFormulaEvent));
 
-    assertEquals(
+    assertNotEquals(
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,

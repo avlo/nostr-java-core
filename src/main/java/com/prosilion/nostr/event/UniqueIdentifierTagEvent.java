@@ -42,7 +42,7 @@ public abstract class UniqueIdentifierTagEvent extends AddressableEvent {
   public UniqueIdentifierTagEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
     super(genericEventRecord);
   }
-  
+
   public IdentifierTag getIdentifierTag() {
     return getTypeSpecificTags(IdentifierTag.class).getFirst();
   }
@@ -53,17 +53,5 @@ public abstract class UniqueIdentifierTagEvent extends AddressableEvent {
     assert Objects.equals(limit, count) : new NostrException(
         String.format("%s List<BaseTag> should contain [%s] IdentifierTag but instead has [%s]: %s", UniqueIdentifierTagEvent.class.getName(), limit, count, baseTags));
     return baseTags;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (!Objects.equals(this.getClass(), obj.getClass()))
-      return false;
-
-    UniqueIdentifierTagEvent that = (UniqueIdentifierTagEvent) obj;
-    return
-        Objects.equals(this.getPublicKey(), that.getPublicKey()) &&
-            Objects.equals(this.getIdentifierTag(), that.getIdentifierTag()) &&
-            Objects.equals(this.getContent(), that.getContent());
   }
 }

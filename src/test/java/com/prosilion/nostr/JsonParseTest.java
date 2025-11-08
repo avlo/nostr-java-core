@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -726,13 +727,17 @@ public class JsonParseTest {
   public void testReqMessageExternalIdentifierTagDecoder() throws IOException {
     log.debug("testReqMessageExternalIdentifierTagDecoder");
 
+    String platform = "afterimage";
+    String identity = "reputation";
+    String proof = "666";
+
     String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
-    String externalIdentifierTag = "8:UNIT_UPVOTE:+1";
+    String platformAndIdentity = Strings.join(platform, identity).with(":");
     String reqJsonWithCustomTagQueryFilterToDecode =
         "[\"REQ\", " +
             "\"" + subscriptionId + "\", " +
             "{" +
-            "\"#i\": [\"" + externalIdentifierTag + "\"]" +
+            "\"#i\": [\"" + platformAndIdentity + "\",\"" + proof + "\"]" +
             "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
@@ -741,9 +746,7 @@ public class JsonParseTest {
         new Filters(
             new ExternalIdentityTagFilter(
                 new ExternalIdentityTag(
-                    Kind.BADGE_AWARD_EVENT,
-                    new IdentifierTag("UNIT_UPVOTE"),
-                    "+1"))));
+                    platform, identity, proof))));
 
     assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
     assertEquals(expectedReqMessage, decodedReqMessage);

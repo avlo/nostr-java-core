@@ -6,7 +6,6 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
@@ -73,14 +72,5 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
         .append(formula.getIdentifierTag().getUuid())
         .append(")"));
     return sb.toString();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (!Objects.equals(this.getClass(), obj.getClass()))
-      return false;
-
-    BadgeDefinitionReputationEvent that = (BadgeDefinitionReputationEvent) obj;
-    return super.equals(that);
   }
 }

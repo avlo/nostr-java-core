@@ -6,7 +6,6 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
@@ -48,14 +47,5 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent {
     new Expression(
         String.format("%s %s", "validate", formula)).validate();
     return formula;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (!Objects.equals(this.getClass(), obj.getClass()))
-      return false;
-
-    FormulaEvent that = (FormulaEvent) obj;
-    return super.equals(that);
   }
 }

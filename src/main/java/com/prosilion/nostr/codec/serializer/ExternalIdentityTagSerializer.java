@@ -12,10 +12,10 @@ public class ExternalIdentityTagSerializer extends JsonSerializer<ExternalIdenti
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("i");
     jsonGenerator.writeString(
-        value.getKind() + ":" +
-            value.getIdentifierTag().getUuid() + ":" +
-            value.getFormula()
+        value.platform() + ":" +
+            value.getIdentity()
     );
+    jsonGenerator.writeString(value.getProof());
     jsonGenerator.writeEndArray();
   }
 }

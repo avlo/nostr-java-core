@@ -8,7 +8,6 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -57,19 +56,16 @@ public class FormulaEventTest {
   }
 
   @Test
-  public void testEquality() throws ParseException {
-    FormulaEvent upvoteFormulaEvent = new FormulaEvent(identity, awardUpvoteEvent, "+1");
-    FormulaEvent upvoteFormulaEventDuplicate = new FormulaEvent(identity, awardUpvoteEvent, "+1");
-
-    FormulaEvent upvoteFormulaEventTriplicate = new FormulaEvent(
+  public void testInequalityEventCopies() throws NostrException, ParseException {
+    FormulaEvent formulaEvent = new FormulaEvent(identity, awardUpvoteEvent, "+1");
+    FormulaEvent upvoteFormulaEventDuplicate = new FormulaEvent(
         identity,
         new BadgeDefinitionAwardEvent(
             identity,
             upvoteIdentifierTag),
         "+1");
 
-    assertEquals(upvoteFormulaEvent, upvoteFormulaEventTriplicate);
-    assertEquals(upvoteFormulaEventDuplicate, upvoteFormulaEventTriplicate);
+    assertNotEquals(formulaEvent, upvoteFormulaEventDuplicate);
   }
 
   @Test

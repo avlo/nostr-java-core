@@ -38,9 +38,8 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
   @Override
   public String getFilterableValue() {
     String requiredAttributes = Stream.of(
-            getExternalIdentityTag().getKind(),
-            getExternalIdentityTag().getIdentifierTag().getUuid(),
-            getExternalIdentityTag().getFormula())
+            getExternalIdentityTag().getPlatform(),
+            getExternalIdentityTag().getIdentity())
         .map(Object::toString).collect(Collectors.joining(":"));
     return requiredAttributes;
   }
@@ -53,15 +52,7 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
       new ExternalIdentityTagFilter(createExternalIdentityTag(node));
 
   protected static ExternalIdentityTag createExternalIdentityTag(@NonNull JsonNode node) {
-    ArrayNode arrayNode = I_DECODER_MAPPER_AFTERBURNER.createArrayNode();
-    arrayNode.addAll(StreamSupport.stream(node.spliterator(), false).toList());
-    List<String> nodes = List.of(arrayNode.get(0).asText().split(":"));
-
-    ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(
-        Kind.valueOf(Integer.parseInt(nodes.get(0))),
-        new IdentifierTag(nodes.get(1)),
-        nodes.get(2));
-
-    return externalIdentityTag;
+    ExternalIdentityTag deserialize = ExternalIdentityTag.deserialize(node);
+    return deserialize;
   }
 }
