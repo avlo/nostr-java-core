@@ -25,4 +25,8 @@ public class ZapReceiptEvent extends BaseEvent {
                 Stream.of(GenericTag.create("descriptionSha256", zapReceipt.getDescriptionSha256())),
                 Stream.of(GenericTag.create("bolt11", zapReceipt.getBolt11())))).toList());
   }
+
+  public ZapReceiptEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }
