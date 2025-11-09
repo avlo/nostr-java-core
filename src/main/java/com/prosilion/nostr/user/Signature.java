@@ -1,31 +1,39 @@
 package com.prosilion.nostr.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.prosilion.nostr.crypto.NostrUtil;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Arrays;
+import java.util.Objects;
+import org.springframework.lang.NonNull;
 
-@Data
-@NoArgsConstructor
 public class Signature {
 
-    @JsonProperty("rawData")
-    private byte[] rawData;
+  @JsonProperty("rawData")
+  private byte[] rawData;
 
-    @JsonIgnore
-    private PublicKey pubKey;
+  public Signature(@NonNull String signatureString) {
+    this(NostrUtil.hex128ToBytes(signatureString));
+  }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return NostrUtil.bytesToHex(rawData);
-    }
+  public Signature(@NonNull byte[] rawData) {
+    this.rawData = rawData;
+  }
 
-    public static Signature fromString(String signatureString) {
-      Signature signature = new Signature();
-      signature.setRawData(NostrUtil.hex128ToBytes(signatureString));
-      return signature;
-    }
+  @JsonValue
+  @Override
+  public String toString() {
+    return NostrUtil.bytesToHex(rawData);
+  }
+
+  @Override
+  public boolean equals(@NonNull Object o) {
+    if (getClass() != o.getClass()) return false;
+    return Arrays.equals(this.rawData, ((Signature) o).rawData);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(Arrays.hashCode(rawData));
+  }
 }

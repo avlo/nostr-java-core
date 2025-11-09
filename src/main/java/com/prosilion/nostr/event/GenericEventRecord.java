@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.Getter;
+import org.springframework.lang.NonNull;
 
 public record GenericEventRecord(
     @Getter
@@ -67,15 +68,15 @@ public record GenericEventRecord(
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
+  public boolean equals(@NonNull Object o) {
+    if (getClass() != o.getClass()) return false;
     GenericEventRecord that = (GenericEventRecord) o;
     return
         // test tags first, also HashSet for fast list equality    
         new HashSet<>(tags).containsAll(that.tags) &&
             Objects.equals(id, that.id) &&
             Objects.equals(kind, that.kind) &&
-            Objects.equals(createdAt, that.createdAt) &&
+//            Objects.equals(createdAt, that.createdAt) &&
             Objects.equals(content, that.content) &&
             Objects.equals(publicKey, that.publicKey) &&
             Objects.equals(signature, that.signature);
@@ -83,7 +84,9 @@ public record GenericEventRecord(
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, publicKey, createdAt, kind,
+    return Objects.hash(id, publicKey,
+//        createdAt, 
+        kind,
         new HashSet<>(tags),
         content, signature);
   }

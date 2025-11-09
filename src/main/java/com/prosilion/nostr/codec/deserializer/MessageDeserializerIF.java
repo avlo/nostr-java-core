@@ -25,7 +25,7 @@ public interface MessageDeserializerIF {
                 node.path("tags"),
                 BaseTag[].class)),
         node.path("content").asText(),
-        Signature.fromString(
+        new Signature(
             node.path("sig").asText()));
   }
 }

@@ -4,17 +4,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.prosilion.nostr.crypto.NostrUtil;
 import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
+import org.springframework.lang.NonNull;
 
 public final class PublicKey {
 
   private final BaseKey baseKey;
 
-  public PublicKey(byte[] rawData) {
+  public PublicKey(@NonNull byte[] rawData) {
     baseKey = new BaseKey(KeyType.PUBLIC, rawData, Bech32Prefix.NPUB);
   }
 
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-  public PublicKey(String hexPubKey) {
+  public PublicKey(@NonNull String hexPubKey) {
     baseKey = new BaseKey(KeyType.PUBLIC, NostrUtil.hexToBytes(hexPubKey), Bech32Prefix.NPUB);
   }
 
@@ -31,7 +32,7 @@ public final class PublicKey {
   public String toBech32String() {
     return baseKey.toBech32String();
   }
-  
+
   public byte[] getRawData() {
     return baseKey.getRawData();
   }
@@ -42,18 +43,8 @@ public final class PublicKey {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-
-    // null check
-    if (o == null)
-      return false;
-
-    // type check and cast
-    if (getClass() != o.getClass())
-      return false;
-
+  public boolean equals(@NonNull Object o) {
+    if (getClass() != o.getClass()) return false;
     return baseKey.equals(((PublicKey) o).baseKey);
   }
 }

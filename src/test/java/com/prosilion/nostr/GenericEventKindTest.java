@@ -35,7 +35,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         null,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     EventIF secondEvent = new GenericEventRecord(
         eventId,
@@ -44,7 +44,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         null,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     assertEquals(firstEvent, secondEvent);
   }
@@ -60,7 +60,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         List.of(),
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     EventIF secondEvent = new GenericEventRecord(
         eventId,
@@ -69,7 +69,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         List.of(),
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     assertEquals(firstEvent, secondEvent);
   }
@@ -89,7 +89,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         tags,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     EventIF secondEvent = new GenericEventRecord(
         eventId,
@@ -98,7 +98,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         tags,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     assertEquals(firstEvent, secondEvent);
   }
@@ -118,7 +118,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         tags,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     EventIF secondEvent = new GenericEventRecord(
         eventId,
@@ -127,7 +127,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         tags,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     assertEquals(firstEvent, secondEvent);
   }
@@ -153,7 +153,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         tags1,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     EventIF secondEvent = new GenericEventRecord(
         eventId,
@@ -162,7 +162,7 @@ public class GenericEventKindTest {
         Kind.TEXT_NOTE,
         tags2,
         "content",
-        Signature.fromString(signature));
+        new Signature(signature));
 
     assertEquals(firstEvent, secondEvent);
   }

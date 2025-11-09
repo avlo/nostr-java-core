@@ -32,7 +32,7 @@ public class GenericEventRecordTest {
     this.publicKey = identity.getPublicKey();
     this.createdAt = System.currentTimeMillis();
     this.kind = Kind.TEXT_NOTE;
-    this.signature = Signature.fromString(id.concat(CONTENT));
+    this.signature = new Signature(id.concat(CONTENT));
   }
 
   @Test

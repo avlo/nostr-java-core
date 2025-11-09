@@ -83,10 +83,9 @@ public abstract class BaseEvent implements EventIF {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    boolean equals = Objects.equals(genericEventRecord, ((BaseEvent) o).genericEventRecord);
-    return equals;
+  public boolean equals(@NonNull Object o) {
+    if (getClass() != o.getClass()) return false;
+    return Objects.equals(genericEventRecord, ((BaseEvent) o).genericEventRecord);
   }
 
   @Override

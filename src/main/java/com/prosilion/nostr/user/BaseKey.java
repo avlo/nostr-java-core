@@ -44,20 +44,7 @@ final class BaseKey implements IKey {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
-      return true;
-
-    // null check
-    if (o == null)
-      return false;
-
-    // type check and cast
-    if (getClass() != o.getClass())
-      return false;
-
-    BaseKey baseKey = (BaseKey) o;
-
-    // field comparison
-    return Arrays.equals(rawData, baseKey.rawData);
+    if (o == null || getClass() != o.getClass()) return false;
+    return Arrays.equals(rawData, ((BaseKey) o).rawData);
   }
 }

@@ -44,14 +44,13 @@ public class Identity {
 
   @SneakyThrows
   public Signature sign(@NonNull ISignableEntity signable) {
-    final Signature signature = new Signature();
-    signature.setRawData(
-        Schnorr.sign(
-            NostrUtil.sha256(signable.getByteArraySupplier().get().array()),
-            this.getPrivateKey().getRawData(),
-            generateAuxRand()));
-    signature.setPubKey(getPublicKey());
-    return signature;
+    return
+        new Signature(
+            Schnorr.sign(
+                NostrUtil.sha256(signable.getByteArraySupplier().get().array()),
+                this.getPrivateKey().getRawData(),
+                generateAuxRand())
+        );
   }
 
   private byte[] generateAuxRand() {

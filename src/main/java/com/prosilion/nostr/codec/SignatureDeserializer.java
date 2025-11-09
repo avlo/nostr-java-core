@@ -9,11 +9,8 @@ import com.prosilion.nostr.user.Signature;
 import java.io.IOException;
 
 public class SignatureDeserializer extends JsonDeserializer<Signature> {
-
-    @Override
-    public Signature deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        Signature signature = new Signature();
-        signature.setRawData(NostrUtil.hex128ToBytes(jsonParser.getCodec().<JsonNode>readTree(jsonParser).asText()));
-        return signature;
-    }
+  @Override
+  public Signature deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    return new Signature(NostrUtil.hex128ToBytes(jsonParser.getCodec().<JsonNode>readTree(jsonParser).asText()));
+  }
 }

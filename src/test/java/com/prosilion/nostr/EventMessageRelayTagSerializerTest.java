@@ -43,7 +43,7 @@ public class EventMessageRelayTagSerializerTest {
             Kind.TEXT_NOTE,
             List.of(new RelayTag(new Relay("ws://localhost:5555"))),
             "relay tag test",
-            Signature.fromString("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
+            new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
   }
 
   @Test
