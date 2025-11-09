@@ -18,7 +18,7 @@ import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
 import java.util.Objects;
 import lombok.Getter;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;

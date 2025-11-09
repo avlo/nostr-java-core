@@ -7,7 +7,7 @@ import java.time.temporal.ValueRange;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 
 @Tag(code = "d")
 @JsonSerialize(using = IdentifierTagSerializer.class)

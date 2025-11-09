@@ -7,7 +7,7 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 
 public class AddressableEvent extends BaseEvent {
 

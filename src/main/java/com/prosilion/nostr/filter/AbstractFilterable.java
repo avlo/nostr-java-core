@@ -2,7 +2,7 @@ package com.prosilion.nostr.filter;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 
 @Getter
 @EqualsAndHashCode

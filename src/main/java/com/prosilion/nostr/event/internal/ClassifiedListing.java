@@ -7,13 +7,18 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-@EqualsAndHashCode(callSuper = false)
 public class ClassifiedListing {
+  @JsonProperty
   private final String title;
+
+  @JsonProperty
   private final String summary;
 
   @EqualsAndHashCode.Exclude
+  @JsonProperty
   private final Long publishedAt;
+  
+  @JsonProperty
   private String location;
 
   @JsonProperty("price")

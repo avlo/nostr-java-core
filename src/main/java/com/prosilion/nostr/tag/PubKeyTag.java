@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
 import lombok.Getter;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @Tag(code = "p")
@@ -16,15 +16,15 @@ public record PubKeyTag(
     @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) String mainRelayUrl,
     @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) String petName) implements BaseTag {
 
-  public PubKeyTag(PublicKey publicKey) {
+  public PubKeyTag(@NonNull PublicKey publicKey) {
     this(publicKey, null);
   }
 
-  public PubKeyTag(PublicKey publicKey, String mainRelayUrl) {
+  public PubKeyTag(@NonNull PublicKey publicKey, String mainRelayUrl) {
     this(publicKey, mainRelayUrl, null);
   }
 
-  public PubKeyTag(PublicKey publicKey, String mainRelayUrl, String petName) {
+  public PubKeyTag(@NonNull PublicKey publicKey, String mainRelayUrl, String petName) {
     this.publicKey = publicKey;
     this.mainRelayUrl = mainRelayUrl;
     this.petName = petName;

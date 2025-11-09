@@ -13,14 +13,13 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Supplier;
-import lombok.NonNull;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
+@Slf4j
 class GenericEventRecordFactory {
-  private static final Log log = LogFactory.getLog(GenericEventRecordFactory.class);
 
   protected static GenericEventRecord createInstance(
       @NonNull Identity identity,
