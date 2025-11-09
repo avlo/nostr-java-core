@@ -78,4 +78,8 @@ public class CalendarRsvpEvent extends AddressableEvent {
             Kind.CALENDAR_TIME_BASED_EVENT.getName())));
     return addressTag;
   }
+
+  public CalendarRsvpEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }

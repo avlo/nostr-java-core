@@ -13,7 +13,7 @@ public class CalendarDurationBaseEvent extends AddressableEvent {
   public CalendarDurationBaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull CalendarContent calendarContent, @NonNull String title) {
     this(identity, kind, calendarContent, title, "");
   }
-  
+
   public CalendarDurationBaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull CalendarContent calendarContent, @NonNull String title, @NonNull String content) {
     this(identity, kind, calendarContent, title, List.of(), content);
   }
@@ -21,7 +21,7 @@ public class CalendarDurationBaseEvent extends AddressableEvent {
   public CalendarDurationBaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull CalendarContent calendarContent, @NonNull String title, @NonNull List<BaseTag> baseTags) {
     this(identity, kind, calendarContent, title, baseTags, "");
   }
-  
+
   public CalendarDurationBaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull CalendarContent calendarContent, @NonNull String title, @NonNull List<BaseTag> baseTags, @NonNull String content) {
     super(
         identity,
@@ -32,5 +32,9 @@ public class CalendarDurationBaseEvent extends AddressableEvent {
                 Stream.of(calendarContent.getIdentifierTag()),
                 baseTags.stream())).toList(),
         content);
+  }
+
+  public CalendarDurationBaseEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
   }
 }

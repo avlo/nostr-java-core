@@ -23,4 +23,8 @@ public class CalendarDateBasedEvent extends CalendarDurationBaseEvent {
   public CalendarDateBasedEvent(@NonNull Identity identity, @NonNull CalendarContent calendarContent, @NonNull String title, @NonNull List<BaseTag> baseTags, @NonNull String content) {
     super(identity, Kind.CALENDAR_DATE_BASED_EVENT, calendarContent, title, baseTags, content);
   }
+
+  public CalendarDateBasedEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
 }
