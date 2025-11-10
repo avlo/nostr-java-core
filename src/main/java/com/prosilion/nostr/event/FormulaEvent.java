@@ -42,9 +42,9 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements EventTa
 
   public FormulaEvent(
       @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<EventTag, BadgeDefinitionAwardEvent> eventTagFormulaEventFunction) {
+      @NonNull Function<EventTag, BadgeDefinitionAwardEvent> fxn) {
     super(genericEventRecord);
-    this.badgeDefinitionAwardEvent = mapEventTagsToEvents(this, eventTagFormulaEventFunction).getFirst();
+    this.badgeDefinitionAwardEvent = mapEventTagsToEvents(this, fxn).getFirst();
   }
 
   public String getFormula() {
