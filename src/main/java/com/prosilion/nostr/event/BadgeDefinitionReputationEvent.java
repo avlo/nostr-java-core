@@ -64,7 +64,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<EventTag, FormulaEvent> eventTagFormulaEventFunction) {
     super(genericEventRecord);
-    this.formulaEvents = mapEventTagEvents(this, eventTagFormulaEventFunction);
+    this.formulaEvents = mapEventTagsToEvents(this, eventTagFormulaEventFunction);
   }
 
   public ExternalIdentityTag getExternalIdentityTag() {

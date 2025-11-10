@@ -4,12 +4,18 @@ import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
+import java.util.function.Function;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
-public class FormulaEvent extends ArbitraryCustomAppDataEvent {
+public class FormulaEvent extends ArbitraryCustomAppDataEvent implements EventTagsMappedEventsIF {
+  @Getter
+  private final BadgeDefinitionAwardEvent badgeDefinitionAwardEvent;
+
   public FormulaEvent(
       @NonNull Identity identity,
       @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
@@ -17,7 +23,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent {
     this(
         identity,
         badgeDefinitionAwardEvent,
-        List.of(),
+        List.of(new EventTag(badgeDefinitionAwardEvent.getId())),
         formula);
   }
 
@@ -31,10 +37,14 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent {
         badgeDefinitionAwardEvent.getIdentifierTag(),
         baseTags,
         validate(formula));
+    this.badgeDefinitionAwardEvent = badgeDefinitionAwardEvent;
   }
 
-  public FormulaEvent(@NonNull GenericEventRecord genericEventRecord) {
+  public FormulaEvent(
+      @NonNull GenericEventRecord genericEventRecord,
+      @NonNull Function<EventTag, BadgeDefinitionAwardEvent> eventTagFormulaEventFunction) {
     super(genericEventRecord);
+    this.badgeDefinitionAwardEvent = mapEventTagsToEvents(this, eventTagFormulaEventFunction).getFirst();
   }
 
   public String getFormula() {

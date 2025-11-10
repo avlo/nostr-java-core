@@ -4,10 +4,14 @@ import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,6 +26,24 @@ public class FormulaEventTest {
   public final Identity identity = Identity.generateRandomIdentity();
   public final BadgeDefinitionAwardEvent awardUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
   public final BadgeDefinitionAwardEvent awardDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag);
+
+  @Test
+  void testValidFormulaEventWithPopulatedBadgeDefinitionAwardEvent() throws ParseException {
+    FormulaEvent expected = new FormulaEvent(
+        identity,
+        awardUpvoteEvent,
+        "+1");
+
+    assertEquals(
+        expected.getBadgeDefinitionAwardEvent(),
+        new FormulaEvent(
+            expected.getGenericEventRecord(),
+            fxn).getBadgeDefinitionAwardEvent());
+  }
+
+  Function<EventTag, BadgeDefinitionAwardEvent> fxn = eventTag ->
+      Stream.of(awardUpvoteEvent).filter(formulaEvent ->
+          formulaEvent.getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow();
 
   @Test
   public void formulaValidationTestUnitAdd() throws ParseException {
