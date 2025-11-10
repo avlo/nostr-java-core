@@ -5,11 +5,14 @@ import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,16 +34,59 @@ public class BadgeDefinitionReputationEventTest {
   public final static String IDENTITY = BadgeDefinitionReputationEventTest.class.getSimpleName();
   public final static String PROOF = String.valueOf(BadgeDefinitionReputationEventTest.class.hashCode());
 
-  private final ExternalIdentityTag externalIdentityTag;
+  private final BadgeDefinitionAwardEvent badgeDefnUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
+  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
+  FormulaEvent minusOneFormulaEvent;
+  private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
-  public BadgeDefinitionReputationEventTest() {
-    this.externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
+  public BadgeDefinitionReputationEventTest() throws ParseException {
   }
 
   @Test
-  void testValidBadgeDefinitionReputationEvent() throws ParseException {
-    BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
+  void testValidBadgeDefinitionReputationEventWithPopulatedFormulaEvent() {
+    BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
+        identity,
+        reputationIdentifierTag,
+        externalIdentityTag,
+        plusOneFormulaEvent);
+
+    assertEquals(
+        expected.getFormulaEvents(),
+        new BadgeDefinitionReputationEvent(
+            expected.getGenericEventRecord(),
+            fxn).getFormulaEvents());
+  }
+
+  @Test
+  void testValidBadgeDefinitionReputationEventWithPopulatedFormulaEvents() throws ParseException {
+    this.minusOneFormulaEvent = new FormulaEvent(
+        identity,
+        new BadgeDefinitionAwardEvent(
+            identity,
+            new IdentifierTag("UNIT_DOWNVOTE")),
+        "-1");
+
+    BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
+        identity,
+        reputationIdentifierTag,
+        externalIdentityTag,
+        List.of(plusOneFormulaEvent, minusOneFormulaEvent));
+
+    List<FormulaEvent> expectedFormulaEvents = expected.getFormulaEvents();
+    List<FormulaEvent> actualFormulaEvents = new BadgeDefinitionReputationEvent(
+        expected.getGenericEventRecord(),
+        fxn).getFormulaEvents();
+    assertEquals(
+        expectedFormulaEvents,
+        actualFormulaEvents);
+  }
+
+  Function<EventTag, FormulaEvent> fxn = eventTag ->
+      Stream.of(plusOneFormulaEvent, minusOneFormulaEvent).filter(formulaEvent ->
+          formulaEvent.getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow();
+
+  @Test
+  void testValidBadgeDefinitionReputationEvent() {
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
         identity,
         reputationIdentifierTag,

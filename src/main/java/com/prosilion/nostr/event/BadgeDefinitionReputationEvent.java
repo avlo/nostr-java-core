@@ -8,10 +8,15 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
+import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
+public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements EventTagsMappedEventsIF {
+  @Getter
+  private final List<FormulaEvent> formulaEvents;
+
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
@@ -52,10 +57,14 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent {
                 Stream.of(externalIdentityTag),
                 baseTags.stream())).toList(),
         defaultContentFromFormulaOperators(identifierTag, formulaEvents));
+    this.formulaEvents = formulaEvents;
   }
 
-  public BadgeDefinitionReputationEvent(@NonNull GenericEventRecord genericEventRecord) {
+  public BadgeDefinitionReputationEvent(
+      @NonNull GenericEventRecord genericEventRecord,
+      @NonNull Function<EventTag, FormulaEvent> eventTagFormulaEventFunction) {
     super(genericEventRecord);
+    this.formulaEvents = mapEventTagEvents(this, eventTagFormulaEventFunction);
   }
 
   public ExternalIdentityTag getExternalIdentityTag() {
