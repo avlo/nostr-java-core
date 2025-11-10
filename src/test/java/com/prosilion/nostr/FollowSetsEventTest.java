@@ -1,7 +1,7 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.FollowSetsEvent.EventTagAddressTagPair;
+import com.prosilion.nostr.event.internal.EventTagAddressTagPair;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;

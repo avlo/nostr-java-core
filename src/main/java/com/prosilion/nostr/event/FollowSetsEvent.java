@@ -2,6 +2,7 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.EventTagAddressTagPair;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
@@ -54,12 +55,5 @@ public class FollowSetsEvent extends BaseEvent {
 
   public FollowSetsEvent(@NonNull GenericEventRecord genericEventRecord) {
     super(genericEventRecord);
-  }
-
-  //  TODO: potentially replace w/ CurationSetsEvent, needs further investigation
-  public record EventTagAddressTagPair(@NonNull EventTag eventTag, @NonNull AddressTag addressTag) {
-    public List<BaseTag> getTags() {
-      return List.of(eventTag, addressTag);
-    }
   }
 }
