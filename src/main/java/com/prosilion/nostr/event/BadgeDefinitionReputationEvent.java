@@ -1,6 +1,7 @@
 package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
@@ -20,11 +21,13 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
       @NonNull FormulaEvent formulaEvent) throws NostrException {
     this(
         identity,
         identifierTag,
+        relay,
         externalIdentityTag,
         List.of(formulaEvent));
   }
@@ -32,11 +35,13 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
       @NonNull List<FormulaEvent> formulaEvents) throws NostrException {
     this(
         identity,
         identifierTag,
+        relay,
         externalIdentityTag,
         formulaEvents,
         List.of());
@@ -45,14 +50,20 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
       @NonNull List<FormulaEvent> formulaEvents,
       @NonNull List<BaseTag> baseTags) throws NostrException {
     super(
         identity,
         identifierTag,
+        relay,
         Stream.concat(
-            formulaEvents.stream().map(FormulaEvent::getId).map(EventTag::new),
+            formulaEvents.stream()
+                .map(formulaEvent ->
+                    new EventTag(
+                        formulaEvent.getBadgeDefinitionAwardEvent().getId(),
+                        formulaEvent.getBadgeDefinitionAwardEvent().getRelayTagRelay().getUrl())),
             Stream.concat(
                 Stream.of(externalIdentityTag),
                 baseTags.stream())).toList(),

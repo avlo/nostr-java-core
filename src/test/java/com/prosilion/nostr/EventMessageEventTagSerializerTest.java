@@ -4,6 +4,7 @@ import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.TextNoteEvent;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.user.Identity;
@@ -28,9 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @JsonTest
 @ActiveProfiles("test")
 public class EventMessageEventTagSerializerTest {
+  public static final Relay relay = new Relay("ws://localhost:5555");
+
   private final JacksonTester<EventMessage> tester;
   private final EventMessage eventMessageWithUrl;
-  private final EventMessage eventMessageWithoutUrl;
 
   @Autowired
   public EventMessageEventTagSerializerTest(JacksonTester<EventMessage> tester) {
@@ -46,26 +48,12 @@ public class EventMessageEventTagSerializerTest {
                 "ws://localhost:5555")),
             "event tag test",
             new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
-
-    eventMessageWithoutUrl = new EventMessage(
-        new GenericEventRecord(
-            "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
-            new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-            1111111111111L,
-            Kind.BADGE_AWARD_EVENT,
-            List.of(new EventTag(
-                "494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346")),
-            "event tag test",
-            new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546")));
   }
 
   @Test
   void testEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
     checkWithoutExplicitJson(eventMessageWithUrl);
     checkWithExplicitJson(eventMessageWithUrl, explicitJsonNoSubscriberIdEncoder());
-
-    checkWithoutExplicitJson(eventMessageWithoutUrl);
-    checkWithExplicitJson(eventMessageWithoutUrl, explicitJsonEventEventTagNoUrlEncoder());
   }
 
   @Test

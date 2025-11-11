@@ -2,6 +2,7 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
@@ -19,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class GenericEventRecordTest {
   public static final String CONTENT = EventTagTest.generateRandomHex64String();
   public static final String EVENT_TAG_CONTENT = EventTagTest.generateRandomHex64String();
-  public final Identity identity = Identity.generateRandomIdentity();
+  public static final Identity identity = Identity.generateRandomIdentity();
+  public static final Relay relay = new Relay("ws://localhost:5555");
 
   private final String id;
   private final PublicKey publicKey;
@@ -74,14 +76,14 @@ public class GenericEventRecordTest {
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
             new IdentifierTag(EventMessageSerializerTest.UPVOTE)),
-        new EventTag(EVENT_TAG_CONTENT));
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl()));
 
     List<BaseTag> tags2 = List.of(
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
             new IdentifierTag(EventMessageSerializerTest.UPVOTE)),
-        new EventTag(EVENT_TAG_CONTENT));
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl()));
 
     GenericEventRecord firstRecord = new GenericEventRecord(
         id, publicKey, createdAt, kind, tags1, CONTENT, signature);
@@ -95,7 +97,7 @@ public class GenericEventRecordTest {
   @Test
   void testRearrangedIdenticalTags() {
     List<BaseTag> tags1 = List.of(
-        new EventTag(EVENT_TAG_CONTENT),
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl()),
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
@@ -107,7 +109,7 @@ public class GenericEventRecordTest {
             Kind.BADGE_DEFINITION_EVENT,
             publicKey,
             new IdentifierTag(EventMessageSerializerTest.UPVOTE)),
-        new EventTag(EVENT_TAG_CONTENT)
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl())
     );
 
     GenericEventRecord firstRecord = new GenericEventRecord(
@@ -122,13 +124,13 @@ public class GenericEventRecordTest {
   @Test
   void testRearrangedIdenticalTags2() {
     List<BaseTag> tags1 = List.of(
-        new EventTag(EVENT_TAG_CONTENT),
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl()),
         new PubKeyTag(publicKey)
     );
 
     List<BaseTag> tags2 = List.of(
         new PubKeyTag(publicKey),
-        new EventTag(EVENT_TAG_CONTENT)
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl())
     );
 
     GenericEventRecord firstRecord = new GenericEventRecord(
@@ -148,7 +150,7 @@ public class GenericEventRecordTest {
 
     List<BaseTag> tags2 = List.of(
         new PubKeyTag(publicKey),
-        new EventTag(EVENT_TAG_CONTENT)
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl())
     );
 
     GenericEventRecord firstRecord = new GenericEventRecord(
@@ -216,13 +218,13 @@ public class GenericEventRecordTest {
   @Test
   void testRearrangedIdenticalTagsHashCodeEquality() {
     List<BaseTag> tags1 = List.of(
-        new EventTag(EVENT_TAG_CONTENT),
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl()),
         new PubKeyTag(publicKey)
     );
 
     List<BaseTag> tags2 = List.of(
         new PubKeyTag(publicKey),
-        new EventTag(EVENT_TAG_CONTENT)
+        new EventTag(EVENT_TAG_CONTENT, relay.getUrl())
     );
 
     GenericEventRecord firstRecord = new GenericEventRecord(

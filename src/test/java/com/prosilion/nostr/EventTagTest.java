@@ -13,12 +13,10 @@ import org.springframework.web.util.InvalidUrlException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EventTagTest {
-
   public static final String BAD_WS_LOCALHOST_5555 = "ws:/localhost:5555";
   public static final String NONSENSE = "adsfasdf";
   public static final String EVENT_ID = generateRandomHex64String();
@@ -67,7 +65,6 @@ class EventTagTest {
   @Test
   void testBlankNullUrlsAsValidAttribute() {
     assertEquals("", new EventTag(EVENT_ID, "", Marker.REPLY).getRecommendedRelayUrl());
-    assertNull(new EventTag(EVENT_ID, null, Marker.REPLY).getRecommendedRelayUrl());
   }
 
   @Test

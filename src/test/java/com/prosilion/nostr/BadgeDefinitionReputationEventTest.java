@@ -4,14 +4,13 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BadgeDefinitionReputationEventTest {
-  public final static String REPUTATION = "REPUTATION";
-  public final static String UNIT_UPVOTE = "UNIT_UPVOTE";
+  public static final Relay relay = new Relay("ws://localhost:5555");
+  
+  public static final String REPUTATION = "REPUTATION";
+  public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
   public static final String PLUS_ONE_FORMULA = "+1";
 
   public final IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
@@ -30,13 +31,12 @@ public class BadgeDefinitionReputationEventTest {
 
   public final Identity identity = Identity.generateRandomIdentity();
 
-  public final static String PLATFORM = BadgeDefinitionReputationEventTest.class.getPackageName();
-  public final static String IDENTITY = BadgeDefinitionReputationEventTest.class.getSimpleName();
-  public final static String PROOF = String.valueOf(BadgeDefinitionReputationEventTest.class.hashCode());
+  public static final String PLATFORM = BadgeDefinitionReputationEventTest.class.getPackageName();
+  public static final String IDENTITY = BadgeDefinitionReputationEventTest.class.getSimpleName();
+  public static final String PROOF = String.valueOf(BadgeDefinitionReputationEventTest.class.hashCode());
 
-  private final BadgeDefinitionAwardEvent badgeDefnUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
+  private final BadgeDefinitionAwardEvent badgeDefnUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
   private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
-  FormulaEvent minusOneFormulaEvent;
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   public BadgeDefinitionReputationEventTest() throws ParseException {
@@ -47,6 +47,7 @@ public class BadgeDefinitionReputationEventTest {
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
         identity,
         reputationIdentifierTag,
+        relay,
         externalIdentityTag,
         plusOneFormulaEvent);
 
@@ -54,42 +55,45 @@ public class BadgeDefinitionReputationEventTest {
         expected.getFormulaEvents(),
         new BadgeDefinitionReputationEvent(
             expected.getGenericEventRecord(),
-            fxn).getFormulaEvents());
+            eventTag ->
+                Stream.of(plusOneFormulaEvent).filter(formulaEvent ->
+                    formulaEvent.getBadgeDefinitionAwardEvent().getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow()).getFormulaEvents());
   }
 
   @Test
   void testValidBadgeDefinitionReputationEventWithPopulatedFormulaEvents() throws ParseException {
-    this.minusOneFormulaEvent = new FormulaEvent(
+    FormulaEvent minusOneFormulaEvent = new FormulaEvent(
         identity,
         new BadgeDefinitionAwardEvent(
             identity,
-            new IdentifierTag("UNIT_DOWNVOTE")),
+            new IdentifierTag("UNIT_DOWNVOTE"),
+            relay),
         "-1");
 
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
         identity,
         reputationIdentifierTag,
+        relay,
         externalIdentityTag,
         List.of(plusOneFormulaEvent, minusOneFormulaEvent));
 
     List<FormulaEvent> expectedFormulaEvents = expected.getFormulaEvents();
     List<FormulaEvent> actualFormulaEvents = new BadgeDefinitionReputationEvent(
         expected.getGenericEventRecord(),
-        fxn).getFormulaEvents();
+        eventTag ->
+            Stream.of(plusOneFormulaEvent, minusOneFormulaEvent).filter(formulaEvent ->
+                formulaEvent.getBadgeDefinitionAwardEvent().getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow()).getFormulaEvents();
     assertEquals(
         expectedFormulaEvents,
         actualFormulaEvents);
   }
-
-  Function<EventTag, FormulaEvent> fxn = eventTag ->
-      Stream.of(plusOneFormulaEvent, minusOneFormulaEvent).filter(formulaEvent ->
-          formulaEvent.getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow();
 
   @Test
   void testValidBadgeDefinitionReputationEvent() {
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
         identity,
         reputationIdentifierTag,
+        relay,
         externalIdentityTag,
         plusOneFormulaEvent);
 
@@ -98,18 +102,20 @@ public class BadgeDefinitionReputationEventTest {
 
   @Test
   void testInequalityEventCopies() throws ParseException {
-    BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
+    BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
 
     assertNotEquals(
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             plusOneFormulaEvent),
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             plusOneFormulaEvent));
 
@@ -117,29 +123,33 @@ public class BadgeDefinitionReputationEventTest {
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             plusOneFormulaEvent),
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             new FormulaEvent(identity, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA)));
   }
 
   @Test
   void testInequality() throws ParseException {
-    BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
+    BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
 
     assertNotEquals(
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             plusOneFormulaEvent),
         new BadgeDefinitionReputationEvent(
             identity,
             new IdentifierTag("DIFFERENT_REPUTATION"),
+            relay,
             externalIdentityTag,
             plusOneFormulaEvent));
 
@@ -147,11 +157,13 @@ public class BadgeDefinitionReputationEventTest {
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             plusOneFormulaEvent),
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             new FormulaEvent(identity, badgeDefinitionUpvoteEvent, "+2")));
 
@@ -159,6 +171,7 @@ public class BadgeDefinitionReputationEventTest {
         new BadgeDefinitionReputationEvent(
             identity,
             reputationIdentifierTag,
+            relay,
             externalIdentityTag,
             plusOneFormulaEvent),
         plusOneFormulaEvent);
@@ -168,7 +181,7 @@ public class BadgeDefinitionReputationEventTest {
 
   @Test
   void nonSingularIdentifierTags() throws ParseException {
-    BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
+    BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
     List<BaseTag> baseTags = new ArrayList<>();
     baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
@@ -177,6 +190,7 @@ public class BadgeDefinitionReputationEventTest {
             new BadgeDefinitionReputationEvent(
                 identity,
                 reputationIdentifierTag,
+                relay,
                 externalIdentityTag,
                 List.of(plusOneFormulaEvent),
                 baseTags)).getMessage();
@@ -191,6 +205,6 @@ public class BadgeDefinitionReputationEventTest {
     assertEquals(1,
         new BadgeDefinitionAwardEvent(
             identity,
-            reputationIdentifierTag).getTypeSpecificTags(IdentifierTag.class).size());
+            reputationIdentifierTag, relay).getTypeSpecificTags(IdentifierTag.class).size());
   }
 }

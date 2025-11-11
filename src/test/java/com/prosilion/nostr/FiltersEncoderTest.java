@@ -38,7 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 public class FiltersEncoderTest {
-
+  public static final Relay relay = new Relay("ws://localhost:5555");
+  
   @Test
   public void emptyFiltersTest() {
     assertThrows(IllegalArgumentException.class, Filters::new);
@@ -207,7 +208,7 @@ public class FiltersEncoderTest {
 
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedEventFilter(new EventTag(eventId))));
+    String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedEventFilter(new EventTag(eventId, relay.getUrl()))));
 
     assertEquals("{\"#e\":[\"" + eventId + "\"]}", encodedFilters);
   }
@@ -221,8 +222,8 @@ public class FiltersEncoderTest {
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
         List.of(
-            new ReferencedEventFilter(new EventTag(eventId1)),
-            new ReferencedEventFilter(new EventTag(eventId2)))));
+            new ReferencedEventFilter(new EventTag(eventId1, relay.getUrl())),
+            new ReferencedEventFilter(new EventTag(eventId2, relay.getUrl())))));
 
 
     String eventIds = String.join("\",\"", eventId1, eventId2);

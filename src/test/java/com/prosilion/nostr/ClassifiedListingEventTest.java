@@ -3,6 +3,7 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.ClassifiedListingEvent;
 import com.prosilion.nostr.event.internal.ClassifiedListing;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.GeohashTag;
@@ -20,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ClassifiedListingEventTest {
+  public static final Relay relay = new Relay("ws://localhost:5555");
+  
   public final Identity identity;
   public final PublicKey senderPubkey;
   public static final String CLASSIFIED_LISTING_CONTENT = "classified listing content";
@@ -28,7 +31,7 @@ class ClassifiedListingEventTest {
   public static final String ETAG_HEX = "494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4347";
 
   public static final PubKeyTag P_TAG = new PubKeyTag(new PublicKey(PTAG_HEX));
-  public static final EventTag E_TAG = new EventTag(ETAG_HEX);
+  public static final EventTag E_TAG = new EventTag(ETAG_HEX, relay.getUrl());
 
   public static final String SUBJECT = "Classified Listing Test Subject Tag";
   public static final SubjectTag SUBJECT_TAG = new SubjectTag(SUBJECT);

@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
-import org.springframework.lang.NonNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdentityTag> {
@@ -41,9 +40,6 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
   }
 
   public static Function<JsonNode, Filterable> fxn = node ->
-      new ExternalIdentityTagFilter(createExternalIdentityTag(node));
-
-  protected static ExternalIdentityTag createExternalIdentityTag(@NonNull JsonNode node) {
-    return ExternalIdentityTag.deserialize(node);
-  }
+      new ExternalIdentityTagFilter(
+          ExternalIdentityTag.deserialize(node));
 }

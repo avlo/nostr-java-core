@@ -31,7 +31,7 @@ public class FilterableProvider {
     return switch (type) {
       case ReferencedPublicKeyFilter.FILTER_KEY -> getFilterable(node, ReferencedPublicKeyFilter.fxn);
       case ExternalIdentityTagFilter.FILTER_KEY -> getFilterableMulti(node, ExternalIdentityTagFilter.fxn);
-      case ReferencedEventFilter.FILTER_KEY -> getFilterable(node, ReferencedEventFilter.fxn);
+      case ReferencedEventFilter.FILTER_KEY -> getFilterableMulti(node, ReferencedEventFilter.fxn);
       case IdentifierTagFilter.FILTER_KEY -> getFilterable(node, IdentifierTagFilter.fxn);
       case AddressTagFilter.FILTER_KEY -> getFilterableMulti(node, AddressTagFilter.fxn);
       case ReferenceTagFilter.FILTER_KEY -> getFilterable(node, ReferenceTagFilter.fxn);

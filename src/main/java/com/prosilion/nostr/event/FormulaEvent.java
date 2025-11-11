@@ -36,7 +36,10 @@ public class FormulaEvent extends TextNoteEvent implements EventTagsMappedEvents
     super(
         identity,
         Stream.concat(
-            Stream.of(new EventTag(badgeDefinitionAwardEvent.getId())),
+            Stream.of(
+                new EventTag(
+                    badgeDefinitionAwardEvent.getId(),
+                    badgeDefinitionAwardEvent.getRelayTagRelay().getUrl())),
             baseTags.stream()).toList(),
         validate(formula));
     this.badgeDefinitionAwardEvent = badgeDefinitionAwardEvent;

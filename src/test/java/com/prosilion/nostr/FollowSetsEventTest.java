@@ -2,6 +2,7 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.EventTagAddressTagPair;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -14,18 +15,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class FollowSetsEventTest {
-  Kind kind = Kind.TEXT_NOTE;
-  Identity authorIdentity = Identity.generateRandomIdentity();
-  Identity upvotedUserIdentity = Identity.generateRandomIdentity();
-  PublicKey upvotedUserPublicKey = upvotedUserIdentity.getPublicKey();
-  IdentifierTag upvote = new IdentifierTag("UPVOTE");
-  IdentifierTag downvote = new IdentifierTag("DOWNVOTE");
-  String eventId = generateRandomHex64String();
+  public static final Kind kind = Kind.TEXT_NOTE;
+  public static final Relay relay = new Relay("ws://localhost:5555");
+  public static final Identity authorIdentity = Identity.generateRandomIdentity();
+  public static final Identity upvotedUserIdentity = Identity.generateRandomIdentity();
+  public static final PublicKey upvotedUserPublicKey = upvotedUserIdentity.getPublicKey();
+  public static final IdentifierTag upvote = new IdentifierTag("UPVOTE");
+  public static final IdentifierTag downvote = new IdentifierTag("DOWNVOTE");
+  public static final String eventId = generateRandomHex64String();
 
   @Test
   void testContainsFromIdenticalTags() {
     AddressTag addressTag = new AddressTag(kind, upvotedUserPublicKey, upvote);
-    EventTag eventTag = new EventTag(eventId);
+    EventTag eventTag = new EventTag(eventId, relay.getUrl());
 
     EventTagAddressTagPair eventTagAddressTagPair = new EventTagAddressTagPair(eventTag, addressTag);
     List<EventTagAddressTagPair> eventTagAddressTagList = List.of(eventTagAddressTagPair);
@@ -51,12 +53,12 @@ public class FollowSetsEventTest {
     List<EventTagAddressTagPair> eventTagAddressTagList =
         List.of(
             new EventTagAddressTagPair(
-                new EventTag(eventId),
+                new EventTag(eventId, relay.getUrl()),
                 new AddressTag(kind, upvotedUserPublicKey, upvote)));
 
     List<EventTagAddressTagPair> eventTagAddressTagPair2 =
         List.of(new EventTagAddressTagPair(
-            new EventTag(eventId),
+            new EventTag(eventId, relay.getUrl()),
             new AddressTag(kind, upvotedUserPublicKey, upvote)));
 
     List<EventTagAddressTagPair> nonMatches = eventTagAddressTagList.stream()

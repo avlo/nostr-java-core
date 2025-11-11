@@ -15,7 +15,7 @@ public class ClassifiedListingDecodeTest {
           "pubkey": "cccd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984",
           "created_at": 1726114798510,
           "tags": [
-            [ "e", "494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346" ],
+            [ "e", "494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346", "ws://localhost:5555" ],
             [ "g", "classified geo-tag-1" ],
             [ "t", "classified hash-tag-1111" ],
             [ "price", "271.00", "BTC", "1" ],

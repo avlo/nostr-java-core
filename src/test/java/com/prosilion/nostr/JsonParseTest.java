@@ -10,6 +10,7 @@ import com.prosilion.nostr.enums.Marker;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventId;
 import com.prosilion.nostr.event.internal.ElementAttribute;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.filter.Filters;
 import com.prosilion.nostr.filter.GenericTagQuery;
@@ -67,6 +68,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class JsonParseTest {
+  public static final Relay relay = new Relay("ws://localhost:5555");
 
   private final JsonComparator jsonComparator = (expectedJson, actualJson) -> JsonComparison.match();
 
@@ -159,12 +161,13 @@ public class JsonParseTest {
   public void testBaseMessageDecoderKindsAuthorsReferencedEvents() throws JsonProcessingException {
     log.debug("testBaseMessageDecoderKindsAuthorsReferencedEvents");
 
+    String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
     final String parseTarget =
         "[\"REQ\", " +
             "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
             "{\"kinds\": [1], " +
             "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
-            "\"#e\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
+            "\"#e\": [\"" + referencedEventId + "\",\"" + relay.getUrl() + "\"]}]";
 
     final var message = BaseMessageDecoder.decode(parseTarget);
 

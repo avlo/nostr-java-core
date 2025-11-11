@@ -34,5 +34,8 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
     return super.getFilterable();
   }
 
-  public static Function<JsonNode, Filterable> fxn = node -> new ReferencedEventFilter(new EventTag(node.asText()));
+  public static Function<JsonNode, Filterable> fxn = node ->
+      new ReferencedEventFilter(
+          new EventTag(
+              node.get(0).asText()));
 }

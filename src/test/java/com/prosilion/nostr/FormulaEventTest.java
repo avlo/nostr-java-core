@@ -4,6 +4,7 @@ import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
@@ -17,15 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FormulaEventTest {
-  public final static String UNIT_UPVOTE = "UNIT_UPVOTE";
-  public final static String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
+  public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
+  public static final String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
+  public static final Relay relay = new Relay("ws://localhost:5555");
 
   public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
   public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
 
   public final Identity identity = Identity.generateRandomIdentity();
-  public final BadgeDefinitionAwardEvent awardUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag);
-  public final BadgeDefinitionAwardEvent awardDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag);
+  public final BadgeDefinitionAwardEvent awardUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
+  public final BadgeDefinitionAwardEvent awardDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag, relay);
 
   @Test
   void testValidFormulaEventWithPopulatedBadgeDefinitionAwardEvent() throws ParseException {
@@ -84,7 +86,8 @@ public class FormulaEventTest {
         identity,
         new BadgeDefinitionAwardEvent(
             identity,
-            upvoteIdentifierTag),
+            upvoteIdentifierTag,
+            relay),
         "+1");
 
     assertNotEquals(formulaEvent, upvoteFormulaEventDuplicate);
