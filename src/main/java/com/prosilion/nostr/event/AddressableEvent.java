@@ -20,5 +20,5 @@ public class AddressableEvent extends BaseEvent {
   }
 
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
-  private static final Function<Kind, String> errorMessage = kind -> String.format("Invalid kind [%s] is not between 30000 and 40000", kind);
+  private static final Function<Kind, String> errorMessage = kind -> String.format("Intended AddressableEvent invalid kind [%s] value [%s] is not between 30000 and 40000", kind, kind.getValue());
 }

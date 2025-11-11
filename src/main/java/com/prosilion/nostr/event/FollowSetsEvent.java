@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
-public class FollowSetsEvent extends BaseEvent {
+public class FollowSetsEvent extends UniqueIdentifierTagEvent {
   public FollowSetsEvent(
       @NonNull Identity identity,
       @NonNull PublicKey recipientPublicKey,

@@ -72,7 +72,9 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   }
 
   private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
-    List<IdentifierTag> identifierTags = formulaEvents.stream().map(FormulaEvent::getIdentifierTag).toList();
+    List<IdentifierTag> identifierTags = formulaEvents.stream()
+        .map(FormulaEvent::getBadgeDefinitionAwardEvent)
+        .map(BadgeDefinitionAwardEvent::getIdentifierTag).toList();
 
     Optional.of(
             identifierTags.stream().distinct().count() != formulaEvents.size())
@@ -90,7 +92,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         .append(" ")
         .append(formula.getFormula())
         .append("(")
-        .append(formula.getIdentifierTag().getUuid())
+        .append(formula.getBadgeDefinitionAwardEvent().getIdentifierTag().getUuid())
         .append(")"));
     return sb.toString();
   }

@@ -8,11 +8,12 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
-public class FormulaEvent extends ArbitraryCustomAppDataEvent implements EventTagsMappedEventsIF {
+public class FormulaEvent extends TextNoteEvent implements EventTagsMappedEventsIF {
   @Getter
   private final BadgeDefinitionAwardEvent badgeDefinitionAwardEvent;
 
@@ -23,7 +24,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements EventTa
     this(
         identity,
         badgeDefinitionAwardEvent,
-        List.of(new EventTag(badgeDefinitionAwardEvent.getId())),
+        List.of(),
         formula);
   }
 
@@ -34,8 +35,9 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements EventTa
       @NonNull String formula) throws NostrException, ParseException {
     super(
         identity,
-        badgeDefinitionAwardEvent.getIdentifierTag(),
-        baseTags,
+        Stream.concat(
+            Stream.of(new EventTag(badgeDefinitionAwardEvent.getId())),
+            baseTags.stream()).toList(),
         validate(formula));
     this.badgeDefinitionAwardEvent = badgeDefinitionAwardEvent;
   }

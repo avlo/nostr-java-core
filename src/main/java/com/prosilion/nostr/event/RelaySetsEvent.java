@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
-public class RelaySetsEvent extends ReplaceableEvent {
+public class RelaySetsEvent extends AddressableEvent {
 
   public RelaySetsEvent(@NonNull Identity identity, @NonNull String content, @NonNull RelayTag... relayTags) throws NostrException {
     this(identity, List.of(relayTags), content);
