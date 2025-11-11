@@ -13,7 +13,7 @@ import org.springframework.lang.NonNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class RelayTagFilter extends AbstractFilterable<RelayTag> {
-  public final static String FILTER_KEY = "relay";
+  public static final String FILTER_KEY = "relay";
 
   public RelayTagFilter(@NonNull RelayTag relayTag) {
     super(relayTag, FILTER_KEY);

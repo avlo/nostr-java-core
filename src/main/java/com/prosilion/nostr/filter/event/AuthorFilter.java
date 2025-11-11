@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class AuthorFilter extends AbstractFilterable<PublicKey> {
-  public final static String FILTER_KEY = "authors";
+  public static final String FILTER_KEY = "authors";
 
   public AuthorFilter(PublicKey publicKey) {
     super(publicKey, FILTER_KEY);

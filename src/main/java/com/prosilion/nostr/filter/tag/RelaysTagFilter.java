@@ -13,7 +13,7 @@
 //
 //@EqualsAndHashCode(callSuper = true)
 //public class RelaysTagFilter extends AbstractFilterable<RelaysTag> {
-//  public final static String FILTER_KEY = "relays";
+//  public static final String FILTER_KEY = "relays";
 //
 //  public RelaysTagFilter(RelaysTag relaysTag) {
 //    super(relaysTag, FILTER_KEY);

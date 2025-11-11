@@ -12,7 +12,7 @@ import org.springframework.lang.NonNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class ReferenceTagFilter extends AbstractFilterable<ReferenceTag> {
-  public final static String FILTER_KEY = "#r";
+  public static final String FILTER_KEY = "#r";
 
   public ReferenceTagFilter(@NonNull ReferenceTag referencedPubKeyTag) {
     super(referencedPubKeyTag, FILTER_KEY);

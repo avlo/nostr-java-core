@@ -14,7 +14,7 @@ import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
 public class KindFilter extends AbstractFilterable<Kind> {
-  public final static String FILTER_KEY = "kinds";
+  public static final String FILTER_KEY = "kinds";
 
   public KindFilter(Kind kind) {
     super(kind, FILTER_KEY);

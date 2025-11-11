@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class RelayTagTest {
 
-  public final static String RELAY_KEY = "relay";
-  public final static String HOST_VALUE = "ws://localhost:5555";
+  public static final String RELAY_KEY = "relay";
+  public static final String HOST_VALUE = "ws://localhost:5555";
 
   @Test
   void testSerialize() throws JsonProcessingException {

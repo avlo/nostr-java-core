@@ -28,7 +28,7 @@ import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
 public class AddressTagFilter extends AbstractFilterable<AddressTag> {
-  public final static String FILTER_KEY = "#a";
+  public static final String FILTER_KEY = "#a";
 
   public AddressTagFilter(AddressTag addressTag) {
     super(addressTag, FILTER_KEY);

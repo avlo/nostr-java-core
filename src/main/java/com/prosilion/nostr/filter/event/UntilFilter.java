@@ -14,7 +14,7 @@ import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
 public class UntilFilter extends AbstractFilterable<Long> {
-  public final static String FILTER_KEY = "until";
+  public static final String FILTER_KEY = "until";
 
   public UntilFilter(Long until) {
     super(until, FILTER_KEY);

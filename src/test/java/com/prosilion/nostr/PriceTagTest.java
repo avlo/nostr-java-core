@@ -11,17 +11,17 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PriceTagTest {
-  private final static BigDecimal aVal = new BigDecimal(10.000);
-  private final static BigDecimal bVal = new BigDecimal(10.00);
-  private final static BigDecimal cVal = new BigDecimal(10.0);
-  private final static BigDecimal dVal = new BigDecimal(10.);
-  private final static BigDecimal eVal = new BigDecimal(10);
+  private static final BigDecimal aVal = new BigDecimal(10.000);
+  private static final BigDecimal bVal = new BigDecimal(10.00);
+  private static final BigDecimal cVal = new BigDecimal(10.0);
+  private static final BigDecimal dVal = new BigDecimal(10.);
+  private static final BigDecimal eVal = new BigDecimal(10);
 
-  private final static BigDecimal aString = new BigDecimal("10.000");
-  private final static BigDecimal bString = new BigDecimal("10.00");
-  private final static BigDecimal cString = new BigDecimal("10.0");
-  private final static BigDecimal dString = new BigDecimal("10.");
-  private final static BigDecimal eString = new BigDecimal("10");
+  private static final BigDecimal aString = new BigDecimal("10.000");
+  private static final BigDecimal bString = new BigDecimal("10.00");
+  private static final BigDecimal cString = new BigDecimal("10.0");
+  private static final BigDecimal dString = new BigDecimal("10.");
+  private static final BigDecimal eString = new BigDecimal("10");
 
   private static final String BTC = "BTC";
   private static final String freq = "femptosecond";

@@ -14,7 +14,7 @@ import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
 public class SinceFilter extends AbstractFilterable<Long> {
-  public final static String FILTER_KEY = "since";
+  public static final String FILTER_KEY = "since";
 
   public SinceFilter(Long since) {
     super(since, FILTER_KEY);

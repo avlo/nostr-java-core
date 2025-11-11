@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExternalIdentityTagTest {
-  public final static String PLATFORM = ExternalIdentityTagTest.class.getPackageName();
-  public final static String IDENTITY = ExternalIdentityTagTest.class.getSimpleName();
-  public final static String PROOF = String.valueOf(ExternalIdentityTagTest.class.hashCode());
+  public static final String PLATFORM = ExternalIdentityTagTest.class.getPackageName();
+  public static final String IDENTITY = ExternalIdentityTagTest.class.getSimpleName();
+  public static final String PROOF = String.valueOf(ExternalIdentityTagTest.class.hashCode());
 
   @Test
   void getSupportedFields() {

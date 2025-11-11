@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class ReferencedPublicKeyFilter extends AbstractFilterable<PubKeyTag> {
-  public final static String FILTER_KEY = "#p";
+  public static final String FILTER_KEY = "#p";
 
   public ReferencedPublicKeyFilter(PubKeyTag referencedPubKeyTag) {
     super(referencedPubKeyTag, FILTER_KEY);

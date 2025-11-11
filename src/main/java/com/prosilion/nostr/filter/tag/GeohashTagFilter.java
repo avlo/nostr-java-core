@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class GeohashTagFilter extends AbstractFilterable<GeohashTag> {
-  public final static String FILTER_KEY = "#g";
+  public static final String FILTER_KEY = "#g";
 
   public GeohashTagFilter(GeohashTag geohashTag) {
     super(geohashTag, FILTER_KEY);

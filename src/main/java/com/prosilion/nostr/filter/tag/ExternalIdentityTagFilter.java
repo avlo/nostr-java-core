@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdentityTag> {
-  public final static String FILTER_KEY = "#i";
+  public static final String FILTER_KEY = "#i";
 
   public ExternalIdentityTagFilter(ExternalIdentityTag externalIdentityTag) {
     super(externalIdentityTag, FILTER_KEY);

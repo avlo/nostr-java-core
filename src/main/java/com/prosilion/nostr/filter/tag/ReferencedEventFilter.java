@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
-  public final static String FILTER_KEY = "#e";
+  public static final String FILTER_KEY = "#e";
 
   public ReferencedEventFilter(EventTag referencedEventTag) {
     super(referencedEventTag, FILTER_KEY);

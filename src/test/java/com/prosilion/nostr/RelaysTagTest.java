@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RelaysTagTest {
 
-  public final static String RELAYS_KEY = "relays";
-  public final static String LOCALHOST_VALUE_5555 = "ws://localhost:5555";
-  public final static String LOCALHOST_VALUE_5432 = "ws://localhost:5432";
-  public final static String ANOTHERLOCALHOST_VALUE = "ws://anotherlocalhost:5432";
+  public static final String RELAYS_KEY = "relays";
+  public static final String LOCALHOST_VALUE_5555 = "ws://localhost:5555";
+  public static final String LOCALHOST_VALUE_5432 = "ws://localhost:5432";
+  public static final String ANOTHERLOCALHOST_VALUE = "ws://anotherlocalhost:5432";
 
   @Test
   void testSerialize() throws JsonProcessingException {

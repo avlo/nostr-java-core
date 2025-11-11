@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class IdentifierTagFilter extends AbstractFilterable<IdentifierTag> {
-  public final static String FILTER_KEY = "#d";
+  public static final String FILTER_KEY = "#d";
 
   public IdentifierTagFilter(IdentifierTag identifierTag) {
     super(identifierTag, FILTER_KEY);
