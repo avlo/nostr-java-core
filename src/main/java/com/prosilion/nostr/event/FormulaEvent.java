@@ -13,7 +13,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
-public class FormulaEvent extends TextNoteEvent implements EventTagsMappedEventsIF {
+public class FormulaEvent extends ArbitraryCustomAppDataEvent implements EventTagsMappedEventsIF {
   @Getter
   private final BadgeDefinitionAwardEvent badgeDefinitionAwardEvent;
 
