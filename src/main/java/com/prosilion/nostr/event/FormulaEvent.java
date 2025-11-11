@@ -56,6 +56,7 @@ public class FormulaEvent extends TextNoteEvent implements EventTagsMappedEvents
   private static String validate(String formula) throws ParseException {
     if (StringUtils.isBlank(formula))
       throw new ParseException(formula, "supplied formula is blank");
+//    TODO: store expression in global expression map
     new Expression(
         String.format("%s %s", "validate", formula)).validate();
     return formula;
