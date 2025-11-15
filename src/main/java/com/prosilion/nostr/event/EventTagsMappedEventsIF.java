@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.EventTag;
 import java.util.List;
 import java.util.function.Function;
@@ -13,4 +14,5 @@ public interface EventTagsMappedEventsIF {
         .stream()
         .map(eventTagFormulaEventFxn).toList();
   }
+  Kind getKind();
 }
