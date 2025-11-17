@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BadgeDefinitionReputationEventTest {
   public static final Relay relay = new Relay("ws://localhost:5555");
-  
+
   public static final String REPUTATION = "REPUTATION";
   public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
   public static final String PLUS_ONE_FORMULA = "+1";
@@ -57,7 +57,7 @@ public class BadgeDefinitionReputationEventTest {
             expected.getGenericEventRecord(),
             eventTag ->
                 Stream.of(plusOneFormulaEvent).filter(formulaEvent ->
-                    formulaEvent.getBadgeDefinitionAwardEvent().getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow()).getFormulaEvents());
+                    formulaEvent.getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow()).getFormulaEvents());
   }
 
   @Test
@@ -82,7 +82,7 @@ public class BadgeDefinitionReputationEventTest {
         expected.getGenericEventRecord(),
         eventTag ->
             Stream.of(plusOneFormulaEvent, minusOneFormulaEvent).filter(formulaEvent ->
-                formulaEvent.getBadgeDefinitionAwardEvent().getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow()).getFormulaEvents();
+                formulaEvent.getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow()).getFormulaEvents();
     assertEquals(
         expectedFormulaEvents,
         actualFormulaEvents);

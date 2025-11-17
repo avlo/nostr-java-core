@@ -14,5 +14,7 @@ public interface EventTagsMappedEventsIF {
         .stream()
         .map(eventTagFormulaEventFxn).toList();
   }
+  
+  String getId();
   Kind getKind();
 }

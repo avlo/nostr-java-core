@@ -62,7 +62,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
             formulaEvents.stream()
                 .map(formulaEvent ->
                     new EventTag(
-                        formulaEvent.getBadgeDefinitionAwardEvent().getId(),
+                        formulaEvent.getId(),
                         formulaEvent.getBadgeDefinitionAwardEvent().getRelayTagRelay().getUrl())),
             Stream.concat(
                 Stream.of(externalIdentityTag),
