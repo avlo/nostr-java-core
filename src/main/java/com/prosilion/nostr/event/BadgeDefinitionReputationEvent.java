@@ -12,9 +12,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.Getter;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements EventTagsMappedEventsIF {
+  public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found:";
+  public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
   @Getter
   private final List<FormulaEvent> formulaEvents;
 
@@ -91,7 +94,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
             identifierTags.stream().distinct().count() != formulaEvents.size())
         .filter(Boolean::booleanValue)
         .map(bool -> {
-          throw new NostrException(String.format("Matching formula events found in %s", identifierTags));
+          throw new NostrException(String.format(CONCAT, identifierTags));
         });
 
     return String.format("%s == (previous)%s%s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));

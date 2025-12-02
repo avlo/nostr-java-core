@@ -201,6 +201,24 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
+  void testDuplicateFormulaEventThrowsException() throws ParseException {
+    FormulaEvent duplicatePlusOneFormulaEvent = new FormulaEvent(identity, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
+    String message = assertThrows(
+        NostrException.class, () ->
+            new BadgeDefinitionReputationEvent(
+                identity,
+                reputationIdentifierTag,
+                relay,
+                externalIdentityTag,
+                List.of(plusOneFormulaEvent, duplicatePlusOneFormulaEvent))).getMessage();
+
+    assertTrue(
+        message.contains(
+            BadgeDefinitionReputationEvent.MATCHING_IDENTIFIER_TAGS_FOUND
+        ));
+  }
+
+  @Test
   void testGetTypeSpecificTags() {
     assertEquals(1,
         new BadgeDefinitionAwardEvent(
