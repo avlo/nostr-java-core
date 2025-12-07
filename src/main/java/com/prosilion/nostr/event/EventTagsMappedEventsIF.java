@@ -8,13 +8,15 @@ import org.springframework.lang.NonNull;
 
 public interface EventTagsMappedEventsIF {
   default <T extends BaseEvent> List<T> mapEventTagsToEvents(
-      @NonNull BaseEvent baseEvent, 
-      @NonNull Function<EventTag, T> eventTagFormulaEventFxn) {
+      @NonNull BaseEvent baseEvent,
+      @NonNull Function<EventTag, T> eventTagTFunction) {
     return baseEvent.getTypeSpecificTags(EventTag.class)
         .stream()
-        .map(eventTagFormulaEventFxn).toList();
+        .map(eventTagTFunction).toList();
   }
-  
+
+  List<EventTag> getContainedEventsAsEventTags();
+
   String getId();
   Kind getKind();
 }

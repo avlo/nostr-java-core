@@ -42,7 +42,7 @@ public class BadgeAwardUpvoteEvent extends BadgeAwardAbstractEvent implements Ad
   }
 
   @Override
-  public List<AddressTag> getBadgeDefinitionAwardEventsAsAddressTags() {
+  public List<AddressTag> getContainedEventsAsAddressTags() {
     return List.of(badgeDefinitionUpvoteEvent.asAddressTag());
   }
 }

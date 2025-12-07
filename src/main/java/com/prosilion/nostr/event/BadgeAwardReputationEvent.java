@@ -47,7 +47,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent implement
   }
 
   @Override
-  public List<AddressTag> getBadgeDefinitionAwardEventsAsAddressTags() {
-    return badgeDefinitionReputationEvent.getBadgeDefinitionAwardEventsAsAddressTags();
+  public List<AddressTag> getContainedEventsAsAddressTags() {
+    return badgeDefinitionReputationEvent.getContainedEventsAsAddressTags();
   }
 }

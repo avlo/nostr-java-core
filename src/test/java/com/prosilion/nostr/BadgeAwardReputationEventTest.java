@@ -67,7 +67,7 @@ public class BadgeAwardReputationEventTest {
 
     assertEquals(expected, badgeAwardReputationEvent);
     assertEquals(expected.getBadgeDefinitionReputationEvent(), badgeAwardReputationEvent.getBadgeDefinitionReputationEvent());
-    assertEquals(expected.getBadgeDefinitionAwardEventsAsAddressTags(), badgeAwardReputationEvent.getBadgeDefinitionAwardEventsAsAddressTags());
+    assertEquals(expected.getContainedEventsAsAddressTags(), badgeAwardReputationEvent.getContainedEventsAsAddressTags());
   }
 
   @Test
@@ -79,7 +79,7 @@ public class BadgeAwardReputationEventTest {
         List.of(badgeDefinitionReputationEvent.asAddressTag()),
         BigDecimal.ZERO);
 
-    assertEquals(1, badgeAwardReputationEvent.getBadgeDefinitionAwardEventsAsAddressTags().size());
+    assertEquals(1, badgeAwardReputationEvent.getContainedEventsAsAddressTags().size());
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(AddressTag.class).size());
     assertEquals(1, badgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getTypeSpecificTags(IdentifierTag.class).size());
   }

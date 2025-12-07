@@ -73,7 +73,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements Address
   }
 
   @Override
-  public List<AddressTag> getBadgeDefinitionAwardEventsAsAddressTags() {
+  public List<AddressTag> getContainedEventsAsAddressTags() {
     return List.of(badgeDefinitionAwardEvent.asAddressTag());
   }
 }

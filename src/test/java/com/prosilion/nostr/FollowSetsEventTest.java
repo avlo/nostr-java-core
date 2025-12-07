@@ -1,75 +1,112 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.internal.EventTagAddressTagPair;
+import com.prosilion.nostr.event.BadgeAwardAbstractEvent;
+import com.prosilion.nostr.event.BadgeAwardUpvoteEvent;
+import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FollowSetsEventTest {
-  public static final Kind kind = Kind.TEXT_NOTE;
   public static final Relay relay = new Relay("ws://localhost:5555");
   public static final Identity authorIdentity = Identity.generateRandomIdentity();
   public static final Identity upvotedUserIdentity = Identity.generateRandomIdentity();
   public static final PublicKey upvotedUserPublicKey = upvotedUserIdentity.getPublicKey();
-  public static final IdentifierTag upvote = new IdentifierTag("UPVOTE");
-  public static final IdentifierTag downvote = new IdentifierTag("DOWNVOTE");
-  public static final String eventId = generateRandomHex64String();
+  public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
+  public static final String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
+  public static final String SUPERFLUOUS_CONTENT = "superfluous";
+  public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
+  public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
 
-  @Test
-  void testContainsFromIdenticalTags() {
-    AddressTag addressTag = new AddressTag(kind, upvotedUserPublicKey, upvote);
-    EventTag eventTag = new EventTag(eventId, relay.getUrl());
+  public static final String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
+  public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
+  public final Identity aImgIdentity = Identity.generateRandomIdentity();
 
-    EventTagAddressTagPair eventTagAddressTagPair = new EventTagAddressTagPair(eventTag, addressTag);
-    List<EventTagAddressTagPair> eventTagAddressTagList = List.of(eventTagAddressTagPair);
+  BadgeAwardUpvoteEvent badgeAwardUpvoteEvent;
+  BadgeAwardUpvoteEvent badgeAwardDownvoteEvent;
 
-    EventTagAddressTagPair eventTagAddressTagPairDuplicate = new EventTagAddressTagPair(eventTag, addressTag);
+  public FollowSetsEventTest() {
+    this.badgeAwardUpvoteEvent = new BadgeAwardUpvoteEvent(
+        authorIdentity,
+        upvotedUserPublicKey,
+        new BadgeDefinitionAwardEvent(authorIdentity, upvoteIdentifierTag, relay));
 
-    List<EventTagAddressTagPair> eventTagAddressTagPairDuplicateList = List.of(eventTagAddressTagPairDuplicate);
-
-    List<EventTagAddressTagPair> nonMatches = eventTagAddressTagList.stream()
-        .filter(eventTagAddressTagPairDuplicateList::contains).toList();
-
-    assertFalse(nonMatches.isEmpty());
-
-    List<EventTagAddressTagPair> nonMatchesReverse = eventTagAddressTagPairDuplicateList.stream()
-        .filter(eventTagAddressTagPairDuplicateList::contains).toList();
-
-    assertFalse(nonMatchesReverse.isEmpty());
+    this.badgeAwardDownvoteEvent = new BadgeAwardUpvoteEvent(
+        authorIdentity,
+        upvotedUserPublicKey,
+        new BadgeDefinitionAwardEvent(authorIdentity, downvoteIdentifierTag, relay));
   }
 
   @Test
-  void testContainsFromDuplicateTags() {
+  void testValidFollowSetsEvent() {
+    new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
+        SUPERFLUOUS_CONTENT);
+  }
 
-    List<EventTagAddressTagPair> eventTagAddressTagList =
-        List.of(
-            new EventTagAddressTagPair(
-                new EventTag(eventId, relay.getUrl()),
-                new AddressTag(kind, upvotedUserPublicKey, upvote)));
+  @Test
+  void testFollowSetsEventEquality() {
+    List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+    FollowSetsEvent expected = new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        badgeAwardAbstractEvents,
+        SUPERFLUOUS_CONTENT);
 
-    List<EventTagAddressTagPair> eventTagAddressTagPair2 =
-        List.of(new EventTagAddressTagPair(
-            new EventTag(eventId, relay.getUrl()),
-            new AddressTag(kind, upvotedUserPublicKey, upvote)));
+    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
+        expected.getGenericEventRecord(),
+        eventTag ->
+            badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
+                new EventTag(badgeAwardAbstractEvent.getId()).equals(eventTag)).findFirst().orElseThrow());
 
-    List<EventTagAddressTagPair> nonMatches = eventTagAddressTagList.stream()
-        .filter(eventTagAddressTagPair2::contains).toList();
+    assertEquals(expected.getContainedEventsAsEventTags(), followSetsEvent.getContainedEventsAsEventTags());
+    assertEquals(expected, followSetsEvent);
+  }
 
-    assertFalse(nonMatches.isEmpty());
+  @Test
+  void testInvalidFollowSetsEventMultipleIdentifierTags() {
+    List<BaseTag> baseTags = new ArrayList<>();
+    baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
+    String message = assertThrows(
+        AssertionError.class, () ->
+            new FollowSetsEvent(
+                aImgIdentity,
+                upvotedUserPublicKey,
+                followSetsIdentifierTag,
+                List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
+                baseTags,
+                SUPERFLUOUS_CONTENT)).getMessage();
+    assertTrue(
+        message.contains(
+            "List<BaseTag> should contain [1] IdentifierTag but instead has [2]"
+        ));
+  }
 
-    List<EventTagAddressTagPair> nonMatchesReverse = eventTagAddressTagPair2.stream()
-        .filter(eventTagAddressTagPair2::contains).toList();
-
-    assertFalse(nonMatchesReverse.isEmpty());
+  @Test
+  void testEventTagCount() {
+    assertEquals(2, new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
+        List.of(new EventTag(generateRandomHex64String())),
+        SUPERFLUOUS_CONTENT).getTypeSpecificTags(EventTag.class).size());
   }
 
   public static String generateRandomHex64String() {

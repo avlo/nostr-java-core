@@ -62,4 +62,12 @@ public class FollowSetsEvent extends UniqueIdentifierTagEvent implements EventTa
     super(genericEventRecord);
     this.badgeAwardAbstractEvents = mapEventTagsToEvents(this, fxn);
   }
+
+  @Override
+  public List<EventTag> getContainedEventsAsEventTags() {
+    return badgeAwardAbstractEvents.stream()
+        .map(BadgeAwardAbstractEvent::getId)
+        .map(EventTag::new)
+        .toList();
+  }
 }

@@ -87,11 +87,14 @@ public class BadgeDefinitionReputationEventTest {
         plusOneMinusOneFormulaEvents);
 
     List<FormulaEvent> expectedFormulaEvents = expected.getFormulaEvents();
-    List<FormulaEvent> actualFormulaEvents = new BadgeDefinitionReputationEvent(
+    
+    BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
         expected.getGenericEventRecord(),
-        eventTag ->
+        addressTag ->
             Stream.of(plusOneFormulaEvent, minusOneFormulaEvent).filter(formulaEvent ->
-                formulaEvent.getBadgeDefinitionAwardEvent().asAddressTag().equals(eventTag)).findFirst().orElseThrow()).getFormulaEvents();
+                formulaEvent.getBadgeDefinitionAwardEvent().asAddressTag().equals(addressTag)).findFirst().orElseThrow());
+    
+    List<FormulaEvent> actualFormulaEvents = badgeDefinitionReputationEvent.getFormulaEvents();
 
     assertEquals(
         expectedFormulaEvents,

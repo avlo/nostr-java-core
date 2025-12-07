@@ -15,7 +15,7 @@ public interface AddressableTagsMappedEventsIF {
         .map(addressTagTFunction).toList();
   }
   
-  List<AddressTag> getBadgeDefinitionAwardEventsAsAddressTags();
+  List<AddressTag> getContainedEventsAsAddressTags();
 
   String getId();
   Kind getKind();

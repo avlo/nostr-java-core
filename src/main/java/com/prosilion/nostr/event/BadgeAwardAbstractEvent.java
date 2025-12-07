@@ -5,6 +5,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.AwardEvent;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Predicate;
@@ -32,7 +33,8 @@ public abstract class BadgeAwardAbstractEvent extends BaseEvent {
                 Stream.of(awardEvent.addressTag()),
                 awardEvent.pubkeyTags().stream()),
             tags.stream()
-                .filter(Predicate.not(AddressTag.class::isInstance))).toList(),
+                .filter(Predicate.not(AddressTag.class::isInstance))
+                .filter(Predicate.not(PubKeyTag.class::isInstance))).toList(),
         content);
   }
 
