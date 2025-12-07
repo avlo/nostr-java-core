@@ -5,7 +5,7 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.function.Function;
@@ -29,10 +29,17 @@ public class FormulaEventTest {
   public final BadgeDefinitionAwardEvent awardUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
   public final BadgeDefinitionAwardEvent awardDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag, relay);
 
+  public static final String FORMULA_PLUS_ONE = "FORMULA_PLUS_ONE";
+  private final IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_PLUS_ONE);
+
+  public static final String FORMULA_MINUS_ONE = "FORMULA_MINUS_ONE";
+  private final IdentifierTag formulaMinusOneIdentifierTag = new IdentifierTag(FORMULA_MINUS_ONE);
+
   @Test
   void testValidFormulaEventWithPopulatedBadgeDefinitionAwardEvent() throws ParseException {
     FormulaEvent expected = new FormulaEvent(
         identity,
+        formulaPlusOneIdentifierTag,
         awardUpvoteEvent,
         "+1");
 
@@ -43,9 +50,9 @@ public class FormulaEventTest {
             fxn).getBadgeDefinitionAwardEvent());
   }
 
-  Function<EventTag, BadgeDefinitionAwardEvent> fxn = eventTag ->
-      Stream.of(awardUpvoteEvent).filter(formulaEvent ->
-          formulaEvent.getId().equals(eventTag.getIdEvent())).findFirst().orElseThrow();
+  Function<AddressTag, BadgeDefinitionAwardEvent> fxn = addressTag ->
+      Stream.of(awardUpvoteEvent).filter(awardUpvoteEventIter ->
+          awardUpvoteEventIter.asAddressTag().equals(addressTag)).findFirst().orElseThrow();
 
   @Test
   public void formulaValidationTestUnitAdd() throws ParseException {
@@ -81,9 +88,10 @@ public class FormulaEventTest {
 
   @Test
   public void testInequalityEventCopies() throws NostrException, ParseException {
-    FormulaEvent formulaEvent = new FormulaEvent(identity, awardUpvoteEvent, "+1");
+    FormulaEvent formulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, awardUpvoteEvent, "+1");
     FormulaEvent upvoteFormulaEventDuplicate = new FormulaEvent(
         identity,
+        formulaPlusOneIdentifierTag,
         new BadgeDefinitionAwardEvent(
             identity,
             upvoteIdentifierTag,
@@ -95,8 +103,8 @@ public class FormulaEventTest {
 
   @Test
   void testInequality() throws ParseException {
-    FormulaEvent formulaEvent = new FormulaEvent(Identity.generateRandomIdentity(), awardUpvoteEvent, "+1");
-    FormulaEvent differentUpvoteFormula = new FormulaEvent(identity, awardUpvoteEvent, "+2");
+    FormulaEvent formulaEvent = new FormulaEvent(Identity.generateRandomIdentity(), formulaPlusOneIdentifierTag, awardUpvoteEvent, "+1");
+    FormulaEvent differentUpvoteFormula = new FormulaEvent(identity, formulaPlusOneIdentifierTag, awardUpvoteEvent, "+2");
     assertNotEquals(formulaEvent, differentUpvoteFormula);
     assertNotEquals(formulaEvent, awardDownvoteEvent);
   }
@@ -106,67 +114,79 @@ public class FormulaEventTest {
     validateReturnedFormula(
         new FormulaEvent(
             identity,
+            formulaPlusOneIdentifierTag,
             awardUpvoteEvent,
             "+1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
+            formulaMinusOneIdentifierTag,
             awardDownvoteEvent,
             "-1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
+            formulaPlusOneIdentifierTag,
             awardDownvoteEvent,
             "+-1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
+            formulaMinusOneIdentifierTag,
             awardDownvoteEvent,
             "--1").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
+            formulaMinusOneIdentifierTag,
             awardUpvoteEvent,
             "+(-1)").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
+            formulaPlusOneIdentifierTag,
             awardDownvoteEvent,
             "-(-1)").getFormula());
 
     validateReturnedFormula(
         new FormulaEvent(
             identity,
+            formulaMinusOneIdentifierTag,
             awardUpvoteEvent,
             "-(+1)").getFormula());
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
+        formulaPlusOneIdentifierTag,
         awardUpvoteEvent,
         "a"));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
+        formulaPlusOneIdentifierTag,
         awardUpvoteEvent,
         ""));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
+        formulaPlusOneIdentifierTag,
         awardUpvoteEvent,
         " "));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
+        formulaPlusOneIdentifierTag,
         awardUpvoteEvent,
         " "));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
         identity,
+        formulaPlusOneIdentifierTag,
         awardUpvoteEvent,
         "1"));
   }
@@ -178,6 +198,7 @@ public class FormulaEventTest {
             ParseException.class, () ->
                 new FormulaEvent(
                     identity,
+                    formulaPlusOneIdentifierTag,
                     awardUpvoteEvent,
                     ""))
             .getMessage().contains("supplied formula is blank"));

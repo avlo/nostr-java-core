@@ -2,8 +2,8 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
@@ -15,7 +15,7 @@ import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
-public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements EventTagsMappedEventsIF {
+public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements AddressableTagsMappedEventsIF {
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found:";
   public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
   @Getter
@@ -63,10 +63,8 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         relay,
         Stream.concat(
             formulaEvents.stream()
-                .map(formulaEvent ->
-                    new EventTag(
-                        formulaEvent.getId(),
-                        formulaEvent.getBadgeDefinitionAwardEvent().getRelayTagRelay().getUrl())),
+                .map(FormulaEvent::getBadgeDefinitionAwardEventsAsAddressTags)
+                .flatMap(List::stream),
             Stream.concat(
                 Stream.of(externalIdentityTag),
                 baseTags.stream())).toList(),
@@ -76,9 +74,9 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
 
   public BadgeDefinitionReputationEvent(
       @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<EventTag, FormulaEvent> eventTagFormulaEventFunction) {
+      @NonNull Function<AddressTag, FormulaEvent> eventTagFormulaEventFunction) {
     super(genericEventRecord);
-    this.formulaEvents = mapEventTagsToEvents(this, eventTagFormulaEventFunction);
+    this.formulaEvents = mapAddressableTagsToEvents(this, eventTagFormulaEventFunction);
   }
 
   public ExternalIdentityTag getExternalIdentityTag() {
@@ -109,5 +107,12 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         .append(formula.getBadgeDefinitionAwardEvent().getIdentifierTag().getUuid())
         .append(")"));
     return sb.toString();
+  }
+
+  @Override
+  public List<AddressTag> getBadgeDefinitionAwardEventsAsAddressTags() {
+    return formulaEvents.stream()
+        .map(FormulaEvent::getBadgeDefinitionAwardEventsAsAddressTags)
+        .flatMap(List::stream).toList();
   }
 }

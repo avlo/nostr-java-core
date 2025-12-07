@@ -3,6 +3,7 @@ package com.prosilion.nostr.event;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
@@ -53,5 +54,13 @@ public class BadgeDefinitionAwardEvent extends UniqueIdentifierTagEvent {
 
   public BadgeDefinitionAwardEvent(@NonNull GenericEventRecord genericEventRecord) {
     super(genericEventRecord);
+  }
+
+  public AddressTag asAddressTag() {
+    return new AddressTag(
+        getKind(),
+        getPublicKey(),
+        getIdentifierTag(),
+        getRelayTagRelay());
   }
 }

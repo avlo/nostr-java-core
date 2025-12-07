@@ -7,7 +7,7 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import org.springframework.lang.NonNull;
 
-public class ArbitraryCustomAppDataEvent extends AddressableEvent {
+public class ArbitraryCustomAppDataEvent extends UniqueIdentifierTagEvent {
   public ArbitraryCustomAppDataEvent(
       @NonNull Identity identity,
       @NonNull String content) throws NostrException {
