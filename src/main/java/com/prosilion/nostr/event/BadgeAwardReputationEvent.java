@@ -1,9 +1,6 @@
-package com.prosilion.util;
+package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.event.AddressableTagsMappedEventsIF;
-import com.prosilion.nostr.event.BadgeAwardAbstractEvent;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.internal.Reputation;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
@@ -51,6 +48,6 @@ public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent implement
 
   @Override
   public List<AddressTag> getBadgeDefinitionAwardEventsAsAddressTags() {
-    return List.of(badgeDefinitionReputationEvent.asAddressTag());
+    return badgeDefinitionReputationEvent.getBadgeDefinitionAwardEventsAsAddressTags();
   }
 }

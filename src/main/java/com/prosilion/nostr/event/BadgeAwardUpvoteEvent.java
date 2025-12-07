@@ -1,9 +1,6 @@
-package com.prosilion.util;
+package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.event.AddressableTagsMappedEventsIF;
-import com.prosilion.nostr.event.BadgeAwardAbstractEvent;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
-import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.internal.Vote;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
