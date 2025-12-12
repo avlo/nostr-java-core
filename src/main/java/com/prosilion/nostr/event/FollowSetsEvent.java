@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-public class FollowSetsEvent extends UniqueIdentifierTagEvent implements EventTagsMappedEventsIF {
+public class FollowSetsEvent extends UniqueIdentifierTagEvent implements TagMappedEventIF {
   @Getter
   private final List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents;
 
@@ -60,11 +60,11 @@ public class FollowSetsEvent extends UniqueIdentifierTagEvent implements EventTa
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<EventTag, BadgeAwardAbstractEvent> fxn) {
     super(genericEventRecord);
-    this.badgeAwardAbstractEvents = mapEventTagsToEvents(this, fxn);
+    this.badgeAwardAbstractEvents = mapTagsToEvents(this, fxn, EventTag.class);
   }
 
   @Override
-  public List<EventTag> getContainedEventsAsEventTags() {
+  public List<EventTag> getContainedEventsAsTags() {
     return badgeAwardAbstractEvents.stream()
         .map(BadgeAwardAbstractEvent::getId)
         .map(EventTag::new)

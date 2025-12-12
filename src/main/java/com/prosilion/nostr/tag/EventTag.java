@@ -17,7 +17,7 @@ import org.springframework.lang.Nullable;
 public record EventTag(
     @Getter @Key String idEvent,
     @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String recommendedRelayUrl,
-    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) Marker marker) implements BaseTag {
+    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) Marker marker) implements ReferencedEventTag {
 
   public EventTag(@NonNull String idEvent) {
     this(idEvent, null);
@@ -42,5 +42,10 @@ public record EventTag(
 
   private static String urlValidator(String url) {
     return Strings.isBlank(url) ? url : new Relay(url).getUrl();
+  }
+
+  @Override
+  public Relay getRelay() {
+    return new Relay(Optional.ofNullable(recommendedRelayUrl).orElseThrow());
   }
 }

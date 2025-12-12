@@ -29,7 +29,7 @@ public class CurationSetsEvent extends UniqueIdentifierTagEvent {
         content);
   }
 
-  public CurationSetsEvent(@NonNull GenericEventRecord genericEventRecord) {
+  public CurationSetsEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
     super(genericEventRecord);
   }
 

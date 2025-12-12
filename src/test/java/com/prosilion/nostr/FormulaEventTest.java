@@ -53,7 +53,7 @@ public class FormulaEventTest {
   Function<AddressTag, BadgeDefinitionAwardEvent> fxn = addressTag ->
       Stream.of(awardUpvoteEvent).filter(awardUpvoteEventIter ->
           awardUpvoteEventIter.asAddressTag().equals(addressTag)).findFirst().orElseThrow();
-
+  
   @Test
   public void formulaValidationTestUnitAdd() throws ParseException {
     String formula = "+1";

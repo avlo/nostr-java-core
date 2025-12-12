@@ -14,7 +14,7 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public abstract class BadgeAwardAbstractEvent extends BaseEvent {
+public abstract class BadgeAwardAbstractEvent extends UniqueIdentifierTagEvent {
   public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,

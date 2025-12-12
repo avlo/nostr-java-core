@@ -15,7 +15,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
-public class FormulaEvent extends ArbitraryCustomAppDataEvent implements AddressableTagsMappedEventsIF {
+public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {
   @Getter
   private final BadgeDefinitionAwardEvent badgeDefinitionAwardEvent;
 
@@ -56,7 +56,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements Address
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionAwardEvent> fxn) {
     super(genericEventRecord);
-    this.badgeDefinitionAwardEvent = mapAddressableTagsToEvents(this, fxn).getFirst();
+    this.badgeDefinitionAwardEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
   public String getFormula() {
@@ -73,7 +73,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements Address
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsAddressTags() {
+  public List<AddressTag> getContainedEventsAsTags() {
     return List.of(badgeDefinitionAwardEvent.asAddressTag());
   }
 }

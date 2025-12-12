@@ -75,7 +75,7 @@ public class FollowSetsEventTest {
             badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
                 new EventTag(badgeAwardAbstractEvent.getId()).equals(eventTag)).findFirst().orElseThrow());
 
-    assertEquals(expected.getContainedEventsAsEventTags(), followSetsEvent.getContainedEventsAsEventTags());
+    assertEquals(expected.getContainedEventsAsTags(), followSetsEvent.getContainedEventsAsTags());
     assertEquals(expected, followSetsEvent);
   }
 

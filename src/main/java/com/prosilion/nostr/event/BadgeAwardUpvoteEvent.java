@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import org.springframework.lang.NonNull;
 
-public class BadgeAwardUpvoteEvent extends BadgeAwardAbstractEvent implements AddressableTagsMappedEventsIF {
+public class BadgeAwardUpvoteEvent extends BadgeAwardAbstractEvent implements TagMappedEventIF {
   private final BadgeDefinitionAwardEvent badgeDefinitionUpvoteEvent;
 
   public BadgeAwardUpvoteEvent(
@@ -38,11 +38,11 @@ public class BadgeAwardUpvoteEvent extends BadgeAwardAbstractEvent implements Ad
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionAwardEvent> fxn) {
     super(genericEventRecord);
-    this.badgeDefinitionUpvoteEvent = mapAddressableTagsToEvents(this, fxn).getFirst();
+    this.badgeDefinitionUpvoteEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsAddressTags() {
+  public List<AddressTag> getContainedEventsAsTags() {
     return List.of(badgeDefinitionUpvoteEvent.asAddressTag());
   }
 }

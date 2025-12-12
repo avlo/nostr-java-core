@@ -15,7 +15,7 @@ import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
-public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements AddressableTagsMappedEventsIF {
+public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements TagMappedEventIF {
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found:";
   public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
   @Getter
@@ -63,7 +63,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         relay,
         Stream.concat(
             formulaEvents.stream()
-                .map(FormulaEvent::getContainedEventsAsAddressTags)
+                .map(FormulaEvent::getContainedEventsAsTags)
                 .flatMap(List::stream),
             Stream.concat(
                 Stream.of(externalIdentityTag),
@@ -76,7 +76,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, FormulaEvent> eventTagFormulaEventFunction) {
     super(genericEventRecord);
-    this.formulaEvents = mapAddressableTagsToEvents(this, eventTagFormulaEventFunction);
+    this.formulaEvents = mapTagsToEvents(this, eventTagFormulaEventFunction, AddressTag.class);
   }
 
   public ExternalIdentityTag getExternalIdentityTag() {
@@ -110,9 +110,9 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsAddressTags() {
+  public List<AddressTag> getContainedEventsAsTags() {
     return formulaEvents.stream()
-        .map(FormulaEvent::getContainedEventsAsAddressTags)
+        .map(FormulaEvent::getContainedEventsAsTags)
         .flatMap(List::stream).toList();
   }
 }

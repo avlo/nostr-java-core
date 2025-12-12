@@ -24,7 +24,7 @@ public record AddressTag(
     @Getter @Key Kind kind,
     @Getter @Key PublicKey publicKey,
     @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) IdentifierTag identifierTag,
-    @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) Relay relay) implements BaseTag {
+    @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) Relay relay) implements ReferencedAddressTag {
 
   public AddressTag(Kind kind, PublicKey publicKey) {
     this(kind, publicKey, null);

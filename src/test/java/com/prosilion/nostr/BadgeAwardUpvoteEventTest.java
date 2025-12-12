@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeAwardUpvoteEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -26,7 +25,7 @@ public class BadgeAwardUpvoteEventTest {
 
   BadgeAwardUpvoteEvent expected;
 
-  public BadgeAwardUpvoteEventTest() throws ParseException {
+  public BadgeAwardUpvoteEventTest() {
     this.expected = new BadgeAwardUpvoteEvent(
         identity,
         badgeReceiverPublicKey,
@@ -41,8 +40,8 @@ public class BadgeAwardUpvoteEventTest {
 
     assertEquals(expected, badgeAwardUpvoteEvent);
     assertEquals(
-        expected.getContainedEventsAsAddressTags(),
-        badgeAwardUpvoteEvent.getContainedEventsAsAddressTags());
+        expected.getContainedEventsAsTags(),
+        badgeAwardUpvoteEvent.getContainedEventsAsTags());
   }
 
   @Test
@@ -51,9 +50,9 @@ public class BadgeAwardUpvoteEventTest {
         identity,
         badgeReceiverPublicKey,
         badgeDefnUpvoteEvent,
-        Collections.unmodifiableList(expected.getContainedEventsAsAddressTags()));
+        Collections.unmodifiableList(expected.getContainedEventsAsTags()));
 
-    assertEquals(1, badgeAwardUpvoteEvent.getContainedEventsAsAddressTags().size());
+    assertEquals(1, badgeAwardUpvoteEvent.getContainedEventsAsTags().size());
     assertEquals(1, badgeAwardUpvoteEvent.getTypeSpecificTags(AddressTag.class).size());
   }
 }
