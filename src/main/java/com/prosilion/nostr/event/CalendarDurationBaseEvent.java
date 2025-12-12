@@ -26,11 +26,10 @@ public class CalendarDurationBaseEvent extends AddressableEvent {
     super(
         identity,
         kind,
+        calendarContent.getIdentifierTag(),
         Stream.concat(
             Stream.of(GenericTag.create("title", title)),
-            Stream.concat(
-                Stream.of(calendarContent.getIdentifierTag()),
-                baseTags.stream())).toList(),
+            baseTags.stream()).toList(),
         content);
   }
 

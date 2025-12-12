@@ -14,7 +14,7 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public abstract class BadgeAwardAbstractEvent extends UniqueIdentifierTagEvent {
+public abstract class BadgeAwardAbstractEvent extends UniqueAddressTagEvent {
   public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
@@ -27,11 +27,9 @@ public abstract class BadgeAwardAbstractEvent extends UniqueIdentifierTagEvent {
       @NonNull AwardEvent awardEvent,
       @NonNull List<BaseTag> tags,
       @NonNull String content) throws NostrException {
-    super(identity, Kind.BADGE_AWARD_EVENT,
+    super(identity, Kind.BADGE_AWARD_EVENT, awardEvent.addressTag(),
         Stream.concat(
-            Stream.concat(
-                Stream.of(awardEvent.addressTag()),
-                awardEvent.pubkeyTags().stream()),
+            Stream.of(awardEvent.pubkeyTag()),
             tags.stream()
                 .filter(Predicate.not(AddressTag.class::isInstance))
                 .filter(Predicate.not(PubKeyTag.class::isInstance))).toList(),

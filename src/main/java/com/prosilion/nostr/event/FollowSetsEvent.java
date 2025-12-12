@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-public class FollowSetsEvent extends UniqueIdentifierTagEvent implements TagMappedEventIF {
+public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
   @Getter
   private final List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents;
 
@@ -39,15 +39,14 @@ public class FollowSetsEvent extends UniqueIdentifierTagEvent implements TagMapp
     super(
         identity,
         Kind.FOLLOW_SETS,
+        identifierTag,
         Stream.concat(
                 Stream.concat(
-                    Stream.concat(
-                        badgeAwardAbstractEvents.stream()
-                            .map(BadgeAwardAbstractEvent::getId)
-                            .map(EventTag::new),
-                        Stream.of(
-                            new PubKeyTag(recipientPublicKey))),
-                    Stream.of(identifierTag)),
+                    badgeAwardAbstractEvents.stream()
+                        .map(BadgeAwardAbstractEvent::getId)
+                        .map(EventTag::new),
+                    Stream.of(
+                        new PubKeyTag(recipientPublicKey))),
                 baseTags.stream()
                     .filter(Predicate.not(EventTag.class::isInstance))
                     .filter(Predicate.not(PubKeyTag.class::isInstance)))

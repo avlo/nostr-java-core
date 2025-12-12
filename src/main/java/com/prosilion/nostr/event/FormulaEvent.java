@@ -40,11 +40,10 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
       @NonNull String formula) throws NostrException, ParseException {
     super(
         identity,
+        identifierTag,
         Stream.concat(
-                Stream.concat(
-                    Stream.of(
-                        badgeDefinitionAwardEvent.asAddressTag()),
-                    Stream.of(identifierTag)),
+                Stream.of(
+                    badgeDefinitionAwardEvent.asAddressTag()),
                 baseTags.stream()
                     .filter(Predicate.not(AddressTag.class::isInstance)))
             .toList(),

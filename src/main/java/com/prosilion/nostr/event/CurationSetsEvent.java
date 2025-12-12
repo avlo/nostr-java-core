@@ -14,11 +14,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
-public class CurationSetsEvent extends UniqueIdentifierTagEvent {
-  public CurationSetsEvent(@NonNull Identity identity, @NonNull PublicKey publicKey, @NonNull List<CurationSet> curationSets, @NonNull String content) throws NostrException {
+public class CurationSetsEvent extends AddressableEvent {
+  public CurationSetsEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull PublicKey publicKey,
+      @NonNull List<CurationSet> curationSets,
+      @NonNull String content) throws NostrException {
     super(
         identity,
         Kind.CURATION_SETS,
+        identifierTag,
         Stream.concat(
                 curationSets.stream()
                     .map(CurationSet::getTags)

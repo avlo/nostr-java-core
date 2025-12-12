@@ -56,10 +56,9 @@ public class CalendarRsvpEvent extends AddressableEvent {
     super(
         identity,
         Kind.CALENDAR_RSVP_EVENT,
+        identifierTag,
         Stream.concat(
-                Stream.concat(
-                    Stream.of(validateAddressTagKind(addressTag)),
-                    Stream.of(identifierTag)),
+                Stream.of(validateAddressTagKind(addressTag)),
                 Stream.concat(
                     Stream.concat(
                         Stream.of(GenericTag.create("title", title)),

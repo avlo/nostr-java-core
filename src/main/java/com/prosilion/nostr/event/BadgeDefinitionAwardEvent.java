@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
-public class BadgeDefinitionAwardEvent extends UniqueIdentifierTagEvent {
+public class BadgeDefinitionAwardEvent extends AddressableEvent {
   public static final String MISSING_RELAY = "BadgeDefinitionAwardEvent tags [%s} is missing a RelayTag";
 
   public BadgeDefinitionAwardEvent(

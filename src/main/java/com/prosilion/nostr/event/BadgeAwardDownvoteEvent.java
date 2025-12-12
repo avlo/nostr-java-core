@@ -7,9 +7,11 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.function.Function;
+import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public class BadgeAwardDownvoteEvent extends BadgeAwardAbstractEvent implements TagMappedEventIF {
+  @Getter
   private final BadgeDefinitionAwardEvent badgeDefinitionDownvoteEvent;
 
   public BadgeAwardDownvoteEvent(

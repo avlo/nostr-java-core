@@ -4,6 +4,7 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.ClassifiedListing;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Function;
@@ -12,12 +13,30 @@ import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 public class ClassifiedListingEvent extends AddressableEvent {
-  public ClassifiedListingEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull ClassifiedListing classifiedListing, @NonNull String content) throws NostrException {
-    this(identity, kind, classifiedListing, List.of(), content);
+  public ClassifiedListingEvent(
+      @NonNull Identity identity,
+      @NonNull Kind kind,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull ClassifiedListing classifiedListing,
+      @NonNull String content) throws NostrException {
+    this(identity, kind, identifierTag, classifiedListing, List.of(), content);
   }
 
-  public ClassifiedListingEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull ClassifiedListing classifiedListing, @NonNull List<BaseTag> baseTags, @NonNull String content) throws NostrException {
-    super(identity, validateKind(kind, kindPredicate, errorMessage), Stream.concat(baseTags.stream(), Stream.of(classifiedListing.getPriceTag())).toList(), content);
+  public ClassifiedListingEvent(
+      @NonNull Identity identity,
+      @NonNull Kind kind,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull ClassifiedListing classifiedListing,
+      @NonNull List<BaseTag> baseTags,
+      @NonNull String content) throws NostrException {
+    super(
+        identity,
+        validateKind(kind, kindPredicate, errorMessage),
+        identifierTag,
+        Stream.concat(
+            baseTags.stream(),
+            Stream.of(classifiedListing.getPriceTag())).toList(),
+        content);
   }
 
   public ClassifiedListingEvent(@NonNull GenericEventRecord genericEventRecord) {
