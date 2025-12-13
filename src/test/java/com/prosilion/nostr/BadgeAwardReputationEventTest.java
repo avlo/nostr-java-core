@@ -37,7 +37,7 @@ public class BadgeAwardReputationEventTest {
   private final IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_PLUS_ONE);
 
   public static final String PLUS_ONE_FORMULA = "+1";
-  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
+  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
@@ -67,7 +67,7 @@ public class BadgeAwardReputationEventTest {
 
     assertEquals(expected, badgeAwardReputationEvent);
     assertEquals(expected.getBadgeDefinitionReputationEvent(), badgeAwardReputationEvent.getBadgeDefinitionReputationEvent());
-    assertEquals(expected.getContainedEventsAsTags(), badgeAwardReputationEvent.getContainedEventsAsTags());
+    assertEquals(expected.getContainedEventsAsAddressTags(), badgeAwardReputationEvent.getContainedEventsAsAddressTags());
   }
 
   @Test
@@ -79,7 +79,7 @@ public class BadgeAwardReputationEventTest {
         List.of(badgeDefinitionReputationEvent.asAddressTag()),
         BigDecimal.ZERO);
 
-    assertEquals(1, badgeAwardReputationEvent.getContainedEventsAsTags().size());
+    assertEquals(1, badgeAwardReputationEvent.getContainedEventsAsAddressTags().size());
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(AddressTag.class).size());
     assertEquals(1, badgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getTypeSpecificTags(IdentifierTag.class).size());
   }

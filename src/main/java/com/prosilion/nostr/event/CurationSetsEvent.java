@@ -2,6 +2,7 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
@@ -18,6 +19,7 @@ public class CurationSetsEvent extends AddressableEvent {
   public CurationSetsEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull PublicKey publicKey,
       @NonNull List<CurationSet> curationSets,
       @NonNull String content) throws NostrException {
@@ -25,6 +27,7 @@ public class CurationSetsEvent extends AddressableEvent {
         identity,
         Kind.CURATION_SETS,
         identifierTag,
+        relay,
         Stream.concat(
                 curationSets.stream()
                     .map(CurationSet::getTags)

@@ -15,7 +15,7 @@ public interface TagMappedEventIF extends EventIF {
         .map(eventTagTFunction).toList();
   }
 
-  List<? extends ReferencedAbstractEventTag> getContainedEventsAsTags();
+  List<? extends ReferencedAbstractEventTag> getContainedEventsAsAddressTags();
 
   String getId();
   Kind getKind();

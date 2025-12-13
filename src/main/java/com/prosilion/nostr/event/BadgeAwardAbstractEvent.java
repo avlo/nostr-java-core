@@ -14,7 +14,7 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Getter
-public abstract class BadgeAwardAbstractEvent extends UniqueAddressTagEvent {
+public abstract class BadgeAwardAbstractEvent extends UniqueAddressTagEvent implements TagMappedEventIF {
   public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull AwardEvent awardEvent,
@@ -27,7 +27,10 @@ public abstract class BadgeAwardAbstractEvent extends UniqueAddressTagEvent {
       @NonNull AwardEvent awardEvent,
       @NonNull List<BaseTag> tags,
       @NonNull String content) throws NostrException {
-    super(identity, Kind.BADGE_AWARD_EVENT, awardEvent.addressTag(),
+    super(
+        identity,
+        Kind.BADGE_AWARD_EVENT,
+        awardEvent.addressTag(),
         Stream.concat(
             Stream.of(awardEvent.pubkeyTag()),
             tags.stream()

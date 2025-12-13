@@ -2,6 +2,7 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -24,15 +25,17 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
       @NonNull Identity identity,
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents,
       @NonNull String content) throws NostrException {
-    this(identity, recipientPublicKey, identifierTag, badgeAwardAbstractEvents, List.of(), content);
+    this(identity, recipientPublicKey, identifierTag, relay, badgeAwardAbstractEvents, List.of(), content);
   }
 
   public FollowSetsEvent(
       @NonNull Identity identity,
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
@@ -40,6 +43,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
         identity,
         Kind.FOLLOW_SETS,
         identifierTag,
+        relay,
         Stream.concat(
                 Stream.concat(
                     badgeAwardAbstractEvents.stream()
@@ -63,7 +67,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   }
 
   @Override
-  public List<EventTag> getContainedEventsAsTags() {
+  public List<EventTag> getContainedEventsAsAddressTags() {
     return badgeAwardAbstractEvents.stream()
         .map(BadgeAwardAbstractEvent::getId)
         .map(EventTag::new)

@@ -64,7 +64,7 @@ class ClassifiedListingEventTest {
 
     ClassifiedListing classifiedListing = new ClassifiedListing(
         CLASSIFIED_LISTING_TITLE, CLASSIFIED_LISTING_SUMMARY, PRICE_TAG, CLASSIFIED_LISTING_LOCATION);
-    instance = new ClassifiedListingEvent(identity, Kind.CLASSIFIED_LISTING, identifierTag, classifiedListing, tags, CLASSIFIED_LISTING_CONTENT);
+    instance = new ClassifiedListingEvent(identity, Kind.CLASSIFIED_LISTING, identifierTag, relay, classifiedListing, tags, CLASSIFIED_LISTING_CONTENT);
   }
 
   @Test

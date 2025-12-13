@@ -16,8 +16,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FollowSetsEventTest {
   public static final Relay relay = new Relay("ws://localhost:5555");
@@ -55,6 +53,7 @@ public class FollowSetsEventTest {
         aImgIdentity,
         upvotedUserPublicKey,
         followSetsIdentifierTag,
+        relay,
         List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
         SUPERFLUOUS_CONTENT);
   }
@@ -66,6 +65,7 @@ public class FollowSetsEventTest {
         aImgIdentity,
         upvotedUserPublicKey,
         followSetsIdentifierTag,
+        relay,
         badgeAwardAbstractEvents,
         SUPERFLUOUS_CONTENT);
 
@@ -75,7 +75,7 @@ public class FollowSetsEventTest {
             badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
                 new EventTag(badgeAwardAbstractEvent.getId()).equals(eventTag)).findFirst().orElseThrow());
 
-    assertEquals(expected.getContainedEventsAsTags(), followSetsEvent.getContainedEventsAsTags());
+    assertEquals(expected.getContainedEventsAsAddressTags(), followSetsEvent.getContainedEventsAsAddressTags());
     assertEquals(expected, followSetsEvent);
   }
 
@@ -83,19 +83,14 @@ public class FollowSetsEventTest {
   void testInvalidFollowSetsEventMultipleIdentifierTags() {
     List<BaseTag> baseTags = new ArrayList<>();
     baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
-    String message = assertThrows(
-        AssertionError.class, () ->
-            new FollowSetsEvent(
-                aImgIdentity,
-                upvotedUserPublicKey,
-                followSetsIdentifierTag,
-                List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
-                baseTags,
-                SUPERFLUOUS_CONTENT)).getMessage();
-    assertTrue(
-        message.contains(
-            "List<BaseTag> should contain [1] IdentifierTag but instead has [2]"
-        ));
+    new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        relay,
+        List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
+        baseTags,
+        SUPERFLUOUS_CONTENT);
   }
 
   @Test
@@ -104,6 +99,7 @@ public class FollowSetsEventTest {
         aImgIdentity,
         upvotedUserPublicKey,
         followSetsIdentifierTag,
+        relay,
         List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
         List.of(new EventTag(generateRandomHex64String())),
         SUPERFLUOUS_CONTENT).getTypeSpecificTags(EventTag.class).size());

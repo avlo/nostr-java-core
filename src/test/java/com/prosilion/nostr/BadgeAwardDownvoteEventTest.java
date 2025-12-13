@@ -40,8 +40,8 @@ public class BadgeAwardDownvoteEventTest {
 
     assertEquals(expected, badgeAwardDownvoteEvent);
     assertEquals(
-        expected.getContainedEventsAsTags(),
-        badgeAwardDownvoteEvent.getContainedEventsAsTags());
+        expected.getContainedEventsAsAddressTags(),
+        badgeAwardDownvoteEvent.getContainedEventsAsAddressTags());
   }
 
   @Test
@@ -50,9 +50,9 @@ public class BadgeAwardDownvoteEventTest {
         identity,
         badgeReceiverPublicKey,
         badgeDefnDownvoteEvent,
-        Collections.unmodifiableList(expected.getContainedEventsAsTags()));
+        Collections.unmodifiableList(expected.getContainedEventsAsAddressTags()));
 
-    assertEquals(1, badgeAwardDownvoteEvent.getContainedEventsAsTags().size());
+    assertEquals(1, badgeAwardDownvoteEvent.getContainedEventsAsAddressTags().size());
     assertEquals(1, badgeAwardDownvoteEvent.getTypeSpecificTags(AddressTag.class).size());
   }
 }

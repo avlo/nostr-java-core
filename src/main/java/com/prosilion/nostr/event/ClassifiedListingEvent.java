@@ -3,6 +3,7 @@ package com.prosilion.nostr.event;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.ClassifiedListing;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
@@ -17,15 +18,17 @@ public class ClassifiedListingEvent extends AddressableEvent {
       @NonNull Identity identity,
       @NonNull Kind kind,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull ClassifiedListing classifiedListing,
       @NonNull String content) throws NostrException {
-    this(identity, kind, identifierTag, classifiedListing, List.of(), content);
+    this(identity, kind, identifierTag, relay, classifiedListing, List.of(), content);
   }
 
   public ClassifiedListingEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull ClassifiedListing classifiedListing,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
@@ -33,6 +36,7 @@ public class ClassifiedListingEvent extends AddressableEvent {
         identity,
         validateKind(kind, kindPredicate, errorMessage),
         identifierTag,
+        relay,
         Stream.concat(
             baseTags.stream(),
             Stream.of(classifiedListing.getPriceTag())).toList(),

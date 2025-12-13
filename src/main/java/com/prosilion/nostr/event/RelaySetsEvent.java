@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
-public class RelaySetsEvent extends AddressableEvent {
+public class RelaySetsEvent extends BaseEvent {
 
   public RelaySetsEvent(@NonNull Identity identity, @NonNull IdentifierTag identifierTag, @NonNull String content, @NonNull RelayTag... relayTags) throws NostrException {
     this(identity, identifierTag, List.of(relayTags), content);
@@ -22,9 +22,13 @@ public class RelaySetsEvent extends AddressableEvent {
   }
 
   public RelaySetsEvent(@NonNull Identity identity, @NonNull IdentifierTag identifierTag, @NonNull List<RelayTag> relayTags, @NonNull List<BaseTag> tags, @NonNull String content) throws NostrException {
-    super(identity, Kind.RELAY_SETS, identifierTag,
+    super(
+        identity,
+        Kind.RELAY_SETS,
         Stream.concat(
-                relayTags.stream(),
+                Stream.concat(
+                    Stream.of(identifierTag),
+                    relayTags.stream()),
                 tags.stream())
             .collect(Collectors.toList()),
         content);

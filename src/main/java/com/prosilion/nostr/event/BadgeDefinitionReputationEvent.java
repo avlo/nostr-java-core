@@ -62,9 +62,9 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         identifierTag,
         relay,
         Stream.concat(
+//            TODO: refactor cleaner
             formulaEvents.stream()
-                .map(FormulaEvent::getContainedEventsAsTags)
-                .flatMap(List::stream),
+                .map(AddressableEvent::asAddressTag),
             Stream.concat(
                 Stream.of(externalIdentityTag),
                 baseTags.stream())).toList(),
@@ -110,9 +110,9 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsTags() {
+  public List<AddressTag> getContainedEventsAsAddressTags() {
     return formulaEvents.stream()
-        .map(FormulaEvent::getContainedEventsAsTags)
+        .map(FormulaEvent::getContainedEventsAsAddressTags)
         .flatMap(List::stream).toList();
   }
 }

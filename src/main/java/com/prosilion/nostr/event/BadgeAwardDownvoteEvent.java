@@ -10,7 +10,7 @@ import java.util.function.Function;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-public class BadgeAwardDownvoteEvent extends BadgeAwardAbstractEvent implements TagMappedEventIF {
+public class BadgeAwardDownvoteEvent extends BadgeAwardAbstractEvent {
   @Getter
   private final BadgeDefinitionAwardEvent badgeDefinitionDownvoteEvent;
 
@@ -44,7 +44,7 @@ public class BadgeAwardDownvoteEvent extends BadgeAwardAbstractEvent implements 
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsTags() {
+  public List<AddressTag> getContainedEventsAsAddressTags() {
     return List.of(badgeDefinitionDownvoteEvent.asAddressTag());
   }
 }

@@ -2,13 +2,18 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
@@ -22,6 +27,7 @@ public class AddressableEvent extends BaseEvent {
       @NonNull Identity identity,
       @NonNull Kind kind,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     super(
@@ -29,8 +35,12 @@ public class AddressableEvent extends BaseEvent {
         kind,
         validateSingleUniqueIdentifierTag(
             Stream.concat(
-                Stream.of(identifierTag),
-                baseTags.stream()).toList()),
+                Stream.concat(
+                    Stream.of(identifierTag),
+                    Stream.of(new RelayTag(relay))),
+                baseTags.stream()
+                    .filter(Predicate.not(RelayTag.class::isInstance))
+                    .filter(Predicate.not(IdentifierTag.class::isInstance))).toList()),
         content);
   }
 
@@ -40,6 +50,15 @@ public class AddressableEvent extends BaseEvent {
 
   public IdentifierTag getIdentifierTag() {
     return getTypeSpecificTags(IdentifierTag.class).getFirst();
+  }
+
+  public AddressTag asAddressTag() {
+    return new AddressTag(
+        getKind(),
+        getPublicKey(),
+        getIdentifierTag(),
+        Optional.of(getTypeSpecificTags(RelayTag.class)).orElseThrow(() ->
+            new NostrException(String.format("%s is missing a RelayTag", getClass().getSimpleName()))).getFirst().getRelay());
   }
 
   private static List<BaseTag> validateSingleUniqueIdentifierTag(List<BaseTag> baseTags) {

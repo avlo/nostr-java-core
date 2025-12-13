@@ -3,6 +3,7 @@ package com.prosilion.nostr.event;
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -22,11 +23,13 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   public FormulaEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
       @NonNull String formula) throws NostrException, ParseException {
     this(
         identity,
         identifierTag,
+        relay,
         badgeDefinitionAwardEvent,
         List.of(),
         formula);
@@ -35,12 +38,14 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   public FormulaEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
       @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
       @NonNull List<BaseTag> baseTags,
       @NonNull String formula) throws NostrException, ParseException {
     super(
         identity,
         identifierTag,
+        relay,
         Stream.concat(
                 Stream.of(
                     badgeDefinitionAwardEvent.asAddressTag()),
@@ -72,7 +77,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsTags() {
+  public List<AddressTag> getContainedEventsAsAddressTags() {
     return List.of(badgeDefinitionAwardEvent.asAddressTag());
   }
 }

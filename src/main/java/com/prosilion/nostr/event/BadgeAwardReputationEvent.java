@@ -11,7 +11,7 @@ import java.util.function.Function;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent implements TagMappedEventIF {
+public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent {
   @Getter
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
@@ -47,7 +47,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent implement
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsTags() {
-    return badgeDefinitionReputationEvent.getContainedEventsAsTags();
+  public List<AddressTag> getContainedEventsAsAddressTags() {
+    return badgeDefinitionReputationEvent.getContainedEventsAsAddressTags();
   }
 }
