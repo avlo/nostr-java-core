@@ -77,7 +77,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsAddressTags() {
+  public List<AddressTag> getContainedAddressableEvents() {
     return List.of(badgeDefinitionAwardEvent.asAddressTag());
   }
 }

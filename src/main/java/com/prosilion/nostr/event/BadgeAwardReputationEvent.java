@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.event.internal.Reputation;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
@@ -11,7 +10,7 @@ import java.util.function.Function;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent {
+public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent<BadgeDefinitionReputationEvent> {
   @Getter
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
@@ -31,9 +30,8 @@ public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent {
       @NonNull BigDecimal score) {
     super(
         aImgIdentity,
-        new Reputation(
-            badgeReceiverPubkey,
-            badgeDefinitionReputationEvent).getAwardEvent(),
+        badgeReceiverPubkey,
+        badgeDefinitionReputationEvent,
         tags,
         score.toString());
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
@@ -42,12 +40,12 @@ public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent {
   public BadgeAwardReputationEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxn) {
-    super(genericEventRecord);
+    super(genericEventRecord, fxn);
     this.badgeDefinitionReputationEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsAddressTags() {
-    return badgeDefinitionReputationEvent.getContainedEventsAsAddressTags();
+  public List<AddressTag> getContainedAddressableEvents() {
+    return badgeDefinitionReputationEvent.getContainedAddressableEvents();
   }
 }

@@ -18,15 +18,54 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
+  public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   @Getter
-  private final List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents;
+  private final List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents;
 
   public FollowSetsEvent(
       @NonNull Identity identity,
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents,
+      @NonNull BadgeAwardGenericVoteEvent badgeAwardAbstractEvents) {
+    this(identity, recipientPublicKey, identifierTag, relay, List.of(badgeAwardAbstractEvents), List.of(), DEFAULT_CONTENT);
+  }
+
+  public FollowSetsEvent(
+      @NonNull Identity identity,
+      @NonNull PublicKey recipientPublicKey,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
+      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents) {
+    this(identity, recipientPublicKey, identifierTag, relay, badgeAwardAbstractEvents, List.of(), DEFAULT_CONTENT);
+  }
+
+  public FollowSetsEvent(
+      @NonNull Identity identity,
+      @NonNull PublicKey recipientPublicKey,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
+      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents,
+      @NonNull List<BaseTag> baseTags) throws NostrException {
+    this(identity, recipientPublicKey, identifierTag, relay, badgeAwardAbstractEvents, baseTags, DEFAULT_CONTENT);
+  }
+
+  public FollowSetsEvent(
+      @NonNull Identity identity,
+      @NonNull PublicKey recipientPublicKey,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
+      @NonNull BadgeAwardGenericVoteEvent badgeAwardAbstractEvents,
+      @NonNull String content) throws NostrException {
+    this(identity, recipientPublicKey, identifierTag, relay, List.of(badgeAwardAbstractEvents), List.of(), content);
+  }
+
+  public FollowSetsEvent(
+      @NonNull Identity identity,
+      @NonNull PublicKey recipientPublicKey,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
+      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents,
       @NonNull String content) throws NostrException {
     this(identity, recipientPublicKey, identifierTag, relay, badgeAwardAbstractEvents, List.of(), content);
   }
@@ -36,7 +75,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents,
+      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     super(
@@ -47,7 +86,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
         Stream.concat(
                 Stream.concat(
                     badgeAwardAbstractEvents.stream()
-                        .map(BadgeAwardAbstractEvent::getId)
+                        .map(BadgeAwardGenericVoteEvent::getId)
                         .map(EventTag::new),
                     Stream.of(
                         new PubKeyTag(recipientPublicKey))),
@@ -61,15 +100,14 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   public FollowSetsEvent(
       @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<EventTag, BadgeAwardAbstractEvent> fxn) {
+      @NonNull Function<EventTag, BadgeAwardGenericVoteEvent> fxn) {
     super(genericEventRecord);
     this.badgeAwardAbstractEvents = mapTagsToEvents(this, fxn, EventTag.class);
   }
 
-  @Override
-  public List<EventTag> getContainedEventsAsAddressTags() {
+  public List<EventTag> getContainedAddressableEvents() {
     return badgeAwardAbstractEvents.stream()
-        .map(BadgeAwardAbstractEvent::getId)
+        .map(BadgeAwardGenericVoteEvent::getId)
         .map(EventTag::new)
         .toList();
   }

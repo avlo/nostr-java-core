@@ -1,6 +1,6 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.event.BadgeAwardUpvoteEvent;
+import com.prosilion.nostr.event.BadgeAwardGenericVoteEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -23,10 +23,10 @@ public class BadgeAwardUpvoteEventTest {
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardUpvoteEvent expected;
+  BadgeAwardGenericVoteEvent expected;
 
   public BadgeAwardUpvoteEventTest() {
-    this.expected = new BadgeAwardUpvoteEvent(
+    this.expected = new BadgeAwardGenericVoteEvent(
         identity,
         badgeReceiverPublicKey,
         badgeDefnUpvoteEvent);
@@ -34,25 +34,25 @@ public class BadgeAwardUpvoteEventTest {
 
   @Test
   void testValidBadgeAwardReputationEvent() {
-    BadgeAwardUpvoteEvent badgeAwardUpvoteEvent = new BadgeAwardUpvoteEvent(
+    BadgeAwardGenericVoteEvent badgeAwardUpvoteEvent = new BadgeAwardGenericVoteEvent(
         expected.getGenericEventRecord(),
         addressTag -> badgeDefnUpvoteEvent);
 
     assertEquals(expected, badgeAwardUpvoteEvent);
     assertEquals(
-        expected.getContainedEventsAsAddressTags(),
-        badgeAwardUpvoteEvent.getContainedEventsAsAddressTags());
+        expected.getContainedAddressableEvents(),
+        badgeAwardUpvoteEvent.getContainedAddressableEvents());
   }
 
   @Test
   void testSingularAddressTag() {
-    BadgeAwardUpvoteEvent badgeAwardUpvoteEvent = new BadgeAwardUpvoteEvent(
+    BadgeAwardGenericVoteEvent badgeAwardUpvoteEvent = new BadgeAwardGenericVoteEvent(
         identity,
         badgeReceiverPublicKey,
         badgeDefnUpvoteEvent,
-        Collections.unmodifiableList(expected.getContainedEventsAsAddressTags()));
+        Collections.unmodifiableList(expected.getContainedAddressableEvents()));
 
-    assertEquals(1, badgeAwardUpvoteEvent.getContainedEventsAsAddressTags().size());
+    assertEquals(1, badgeAwardUpvoteEvent.getContainedAddressableEvents().size());
     assertEquals(1, badgeAwardUpvoteEvent.getTypeSpecificTags(AddressTag.class).size());
   }
 }

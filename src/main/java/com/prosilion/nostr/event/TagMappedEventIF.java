@@ -6,16 +6,18 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface TagMappedEventIF extends EventIF {
-  default <T extends BaseEvent, U extends ReferencedAbstractEventTag> List<T> mapTagsToEvents(
+  default <T extends BaseEvent, U extends ReferencedAbstractEventTag>
+
+  List<T> mapTagsToEvents(
       BaseEvent baseEvent,
-      Function<U, T> eventTagTFunction,
+      Function<U, T> tagMappingFunction,
       Class<U> clazz) {
     return baseEvent.getTypeSpecificTags(clazz)
         .stream()
-        .map(eventTagTFunction).toList();
+        .map(tagMappingFunction).toList();
   }
 
-  List<? extends ReferencedAbstractEventTag> getContainedEventsAsAddressTags();
+  List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents();
 
   String getId();
   Kind getKind();

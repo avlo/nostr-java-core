@@ -21,7 +21,7 @@ public class Reputation {
         new AddressTag(
             Kind.BADGE_DEFINITION_EVENT,
             badgeDefinitionReputationEvent.getPublicKey(),
-            Filterable.getTypeSpecificTags(IdentifierTag.class, badgeDefinitionReputationEvent).getFirst()),
+            badgeDefinitionReputationEvent.getIdentifierTag()),
         new PubKeyTag(upvotedUser));
   }
 }

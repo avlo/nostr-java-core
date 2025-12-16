@@ -110,9 +110,9 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   }
 
   @Override
-  public List<AddressTag> getContainedEventsAsAddressTags() {
+  public List<AddressTag> getContainedAddressableEvents() {
     return formulaEvents.stream()
-        .map(FormulaEvent::getContainedEventsAsAddressTags)
+        .map(FormulaEvent::getContainedAddressableEvents)
         .flatMap(List::stream).toList();
   }
 }

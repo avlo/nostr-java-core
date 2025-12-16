@@ -1,6 +1,6 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.event.BadgeAwardDownvoteEvent;
+import com.prosilion.nostr.event.BadgeAwardGenericVoteEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -23,10 +23,10 @@ public class BadgeAwardDownvoteEventTest {
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardDownvoteEvent expected;
+  BadgeAwardGenericVoteEvent expected;
 
   public BadgeAwardDownvoteEventTest() {
-    this.expected = new BadgeAwardDownvoteEvent(
+    this.expected = new BadgeAwardGenericVoteEvent(
         identity,
         badgeReceiverPublicKey,
         badgeDefnDownvoteEvent);
@@ -34,25 +34,25 @@ public class BadgeAwardDownvoteEventTest {
 
   @Test
   void testValidBadgeAwardReputationEvent() {
-    BadgeAwardDownvoteEvent badgeAwardDownvoteEvent = new BadgeAwardDownvoteEvent(
+    BadgeAwardGenericVoteEvent badgeAwardDownvoteEvent = new BadgeAwardGenericVoteEvent(
         expected.getGenericEventRecord(),
         addressTag -> badgeDefnDownvoteEvent);
 
     assertEquals(expected, badgeAwardDownvoteEvent);
     assertEquals(
-        expected.getContainedEventsAsAddressTags(),
-        badgeAwardDownvoteEvent.getContainedEventsAsAddressTags());
+        expected.getContainedAddressableEvents(),
+        badgeAwardDownvoteEvent.getContainedAddressableEvents());
   }
 
   @Test
   void testSingularAddressTag() {
-    BadgeAwardDownvoteEvent badgeAwardDownvoteEvent = new BadgeAwardDownvoteEvent(
+    BadgeAwardGenericVoteEvent badgeAwardDownvoteEvent = new BadgeAwardGenericVoteEvent(
         identity,
         badgeReceiverPublicKey,
         badgeDefnDownvoteEvent,
-        Collections.unmodifiableList(expected.getContainedEventsAsAddressTags()));
+        Collections.unmodifiableList(expected.getContainedAddressableEvents()));
 
-    assertEquals(1, badgeAwardDownvoteEvent.getContainedEventsAsAddressTags().size());
+    assertEquals(1, badgeAwardDownvoteEvent.getContainedAddressableEvents().size());
     assertEquals(1, badgeAwardDownvoteEvent.getTypeSpecificTags(AddressTag.class).size());
   }
 }

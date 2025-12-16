@@ -1,7 +1,6 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.event.BadgeAwardAbstractEvent;
-import com.prosilion.nostr.event.BadgeAwardUpvoteEvent;
+import com.prosilion.nostr.event.BadgeAwardGenericVoteEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -24,7 +23,6 @@ public class FollowSetsEventTest {
   public static final PublicKey upvotedUserPublicKey = upvotedUserIdentity.getPublicKey();
   public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
   public static final String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
-  public static final String SUPERFLUOUS_CONTENT = "superfluous";
   public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
   public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
 
@@ -32,16 +30,16 @@ public class FollowSetsEventTest {
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
   public final Identity aImgIdentity = Identity.generateRandomIdentity();
 
-  BadgeAwardUpvoteEvent badgeAwardUpvoteEvent;
-  BadgeAwardUpvoteEvent badgeAwardDownvoteEvent;
+  BadgeAwardGenericVoteEvent badgeAwardUpvoteEvent;
+  BadgeAwardGenericVoteEvent badgeAwardDownvoteEvent;
 
   public FollowSetsEventTest() {
-    this.badgeAwardUpvoteEvent = new BadgeAwardUpvoteEvent(
+    this.badgeAwardUpvoteEvent = new BadgeAwardGenericVoteEvent(
         authorIdentity,
         upvotedUserPublicKey,
         new BadgeDefinitionAwardEvent(authorIdentity, upvoteIdentifierTag, relay));
 
-    this.badgeAwardDownvoteEvent = new BadgeAwardUpvoteEvent(
+    this.badgeAwardDownvoteEvent = new BadgeAwardGenericVoteEvent(
         authorIdentity,
         upvotedUserPublicKey,
         new BadgeDefinitionAwardEvent(authorIdentity, downvoteIdentifierTag, relay));
@@ -54,20 +52,18 @@ public class FollowSetsEventTest {
         upvotedUserPublicKey,
         followSetsIdentifierTag,
         relay,
-        List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
-        SUPERFLUOUS_CONTENT);
+        List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent));
   }
 
   @Test
   void testFollowSetsEventEquality() {
-    List<BadgeAwardAbstractEvent> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+    List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
     FollowSetsEvent expected = new FollowSetsEvent(
         aImgIdentity,
         upvotedUserPublicKey,
         followSetsIdentifierTag,
         relay,
-        badgeAwardAbstractEvents,
-        SUPERFLUOUS_CONTENT);
+        badgeAwardAbstractEvents);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
         expected.getGenericEventRecord(),
@@ -75,7 +71,7 @@ public class FollowSetsEventTest {
             badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
                 new EventTag(badgeAwardAbstractEvent.getId()).equals(eventTag)).findFirst().orElseThrow());
 
-    assertEquals(expected.getContainedEventsAsAddressTags(), followSetsEvent.getContainedEventsAsAddressTags());
+    assertEquals(expected.getContainedAddressableEvents(), followSetsEvent.getContainedAddressableEvents());
     assertEquals(expected, followSetsEvent);
   }
 
@@ -89,8 +85,7 @@ public class FollowSetsEventTest {
         followSetsIdentifierTag,
         relay,
         List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
-        baseTags,
-        SUPERFLUOUS_CONTENT);
+        baseTags);
   }
 
   @Test
@@ -101,8 +96,7 @@ public class FollowSetsEventTest {
         followSetsIdentifierTag,
         relay,
         List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
-        List.of(new EventTag(generateRandomHex64String())),
-        SUPERFLUOUS_CONTENT).getTypeSpecificTags(EventTag.class).size());
+        List.of(new EventTag(generateRandomHex64String()))).getTypeSpecificTags(EventTag.class).size());
   }
 
   public static String generateRandomHex64String() {
