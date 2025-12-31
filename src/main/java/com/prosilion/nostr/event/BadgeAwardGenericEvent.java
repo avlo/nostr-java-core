@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.function.Function;
 import org.springframework.lang.NonNull;
 
-public class BadgeAwardGenericVoteEvent extends BadgeAwardAbstractEvent<BadgeDefinitionAwardEvent> {
-  public BadgeAwardGenericVoteEvent(
+public class BadgeAwardGenericEvent extends BadgeAwardAbstractEvent<BadgeDefinitionAwardEvent> {
+  public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
       @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent) {
     this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericVoteEvent, "");
   }
 
-  public BadgeAwardGenericVoteEvent(
+  public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
       @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent,
@@ -29,7 +29,7 @@ public class BadgeAwardGenericVoteEvent extends BadgeAwardAbstractEvent<BadgeDef
         "");
   }
 
-  public BadgeAwardGenericVoteEvent(
+  public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
       @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent,
@@ -37,7 +37,7 @@ public class BadgeAwardGenericVoteEvent extends BadgeAwardAbstractEvent<BadgeDef
     this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericVoteEvent, List.of(), content);
   }
 
-  public BadgeAwardGenericVoteEvent(
+  public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
       @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent,
@@ -51,7 +51,7 @@ public class BadgeAwardGenericVoteEvent extends BadgeAwardAbstractEvent<BadgeDef
         content);
   }
 
-  public BadgeAwardGenericVoteEvent(
+  public BadgeAwardGenericEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionAwardEvent> fxn) {
     super(genericEventRecord, fxn);

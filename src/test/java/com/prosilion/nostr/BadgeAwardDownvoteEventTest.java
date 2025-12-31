@@ -1,6 +1,6 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.event.BadgeAwardGenericVoteEvent;
+import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -23,10 +23,10 @@ public class BadgeAwardDownvoteEventTest {
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardGenericVoteEvent expected;
+  BadgeAwardGenericEvent expected;
 
   public BadgeAwardDownvoteEventTest() {
-    this.expected = new BadgeAwardGenericVoteEvent(
+    this.expected = new BadgeAwardGenericEvent(
         identity,
         badgeReceiverPublicKey,
         badgeDefnDownvoteEvent);
@@ -34,7 +34,7 @@ public class BadgeAwardDownvoteEventTest {
 
   @Test
   void testValidBadgeAwardReputationEvent() {
-    BadgeAwardGenericVoteEvent badgeAwardDownvoteEvent = new BadgeAwardGenericVoteEvent(
+    BadgeAwardGenericEvent badgeAwardDownvoteEvent = new BadgeAwardGenericEvent(
         expected.getGenericEventRecord(),
         addressTag -> badgeDefnDownvoteEvent);
 
@@ -46,7 +46,7 @@ public class BadgeAwardDownvoteEventTest {
 
   @Test
   void testSingularAddressTag() {
-    BadgeAwardGenericVoteEvent badgeAwardDownvoteEvent = new BadgeAwardGenericVoteEvent(
+    BadgeAwardGenericEvent badgeAwardDownvoteEvent = new BadgeAwardGenericEvent(
         identity,
         badgeReceiverPublicKey,
         badgeDefnDownvoteEvent,

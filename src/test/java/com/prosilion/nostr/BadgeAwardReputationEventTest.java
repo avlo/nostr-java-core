@@ -58,6 +58,7 @@ public class BadgeAwardReputationEventTest {
     BadgeAwardReputationEvent expected = new BadgeAwardReputationEvent(
         identity,
         badgeReceiverPublicKey,
+        externalIdentityTag,
         badgeDefinitionReputationEvent,
         BigDecimal.ZERO);
 
@@ -75,6 +76,7 @@ public class BadgeAwardReputationEventTest {
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
         identity,
         badgeReceiverPublicKey,
+        externalIdentityTag,
         badgeDefinitionReputationEvent,
         List.of(badgeDefinitionReputationEvent.asAddressTag()),
         BigDecimal.ZERO);

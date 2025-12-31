@@ -1,6 +1,6 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.event.BadgeAwardGenericVoteEvent;
+import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -30,16 +30,16 @@ public class FollowSetsEventTest {
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
   public final Identity aImgIdentity = Identity.generateRandomIdentity();
 
-  BadgeAwardGenericVoteEvent badgeAwardUpvoteEvent;
-  BadgeAwardGenericVoteEvent badgeAwardDownvoteEvent;
+  BadgeAwardGenericEvent badgeAwardUpvoteEvent;
+  BadgeAwardGenericEvent badgeAwardDownvoteEvent;
 
   public FollowSetsEventTest() {
-    this.badgeAwardUpvoteEvent = new BadgeAwardGenericVoteEvent(
+    this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent(
         authorIdentity,
         upvotedUserPublicKey,
         new BadgeDefinitionAwardEvent(authorIdentity, upvoteIdentifierTag, relay));
 
-    this.badgeAwardDownvoteEvent = new BadgeAwardGenericVoteEvent(
+    this.badgeAwardDownvoteEvent = new BadgeAwardGenericEvent(
         authorIdentity,
         upvotedUserPublicKey,
         new BadgeDefinitionAwardEvent(authorIdentity, downvoteIdentifierTag, relay));
@@ -57,7 +57,7 @@ public class FollowSetsEventTest {
 
   @Test
   void testFollowSetsEventEquality() {
-    List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+    List<BadgeAwardGenericEvent> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
     FollowSetsEvent expected = new FollowSetsEvent(
         aImgIdentity,
         upvotedUserPublicKey,

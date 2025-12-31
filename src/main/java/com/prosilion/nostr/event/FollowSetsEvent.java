@@ -20,14 +20,14 @@ import org.springframework.lang.NonNull;
 public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   @Getter
-  private final List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents;
+  private final List<BadgeAwardGenericEvent> badgeAwardAbstractEvents;
 
   public FollowSetsEvent(
       @NonNull Identity identity,
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull BadgeAwardGenericVoteEvent badgeAwardAbstractEvents) {
+      @NonNull BadgeAwardGenericEvent badgeAwardAbstractEvents) {
     this(identity, recipientPublicKey, identifierTag, relay, List.of(badgeAwardAbstractEvents), List.of(), DEFAULT_CONTENT);
   }
 
@@ -36,7 +36,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents) {
+      @NonNull List<BadgeAwardGenericEvent> badgeAwardAbstractEvents) {
     this(identity, recipientPublicKey, identifierTag, relay, badgeAwardAbstractEvents, List.of(), DEFAULT_CONTENT);
   }
 
@@ -45,7 +45,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents,
+      @NonNull List<BadgeAwardGenericEvent> badgeAwardAbstractEvents,
       @NonNull List<BaseTag> baseTags) throws NostrException {
     this(identity, recipientPublicKey, identifierTag, relay, badgeAwardAbstractEvents, baseTags, DEFAULT_CONTENT);
   }
@@ -55,7 +55,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull BadgeAwardGenericVoteEvent badgeAwardAbstractEvents,
+      @NonNull BadgeAwardGenericEvent badgeAwardAbstractEvents,
       @NonNull String content) throws NostrException {
     this(identity, recipientPublicKey, identifierTag, relay, List.of(badgeAwardAbstractEvents), List.of(), content);
   }
@@ -65,7 +65,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents,
+      @NonNull List<BadgeAwardGenericEvent> badgeAwardAbstractEvents,
       @NonNull String content) throws NostrException {
     this(identity, recipientPublicKey, identifierTag, relay, badgeAwardAbstractEvents, List.of(), content);
   }
@@ -75,7 +75,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
       @NonNull PublicKey recipientPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericVoteEvent> badgeAwardAbstractEvents,
+      @NonNull List<BadgeAwardGenericEvent> badgeAwardAbstractEvents,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     super(
@@ -86,7 +86,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
         Stream.concat(
                 Stream.concat(
                     badgeAwardAbstractEvents.stream()
-                        .map(BadgeAwardGenericVoteEvent::getId)
+                        .map(BadgeAwardGenericEvent::getId)
                         .map(EventTag::new),
                     Stream.of(
                         new PubKeyTag(recipientPublicKey))),
@@ -100,14 +100,14 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   public FollowSetsEvent(
       @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<EventTag, BadgeAwardGenericVoteEvent> fxn) {
+      @NonNull Function<EventTag, BadgeAwardGenericEvent> fxn) {
     super(genericEventRecord);
     this.badgeAwardAbstractEvents = mapTagsToEvents(this, fxn, EventTag.class);
   }
 
   public List<EventTag> getContainedAddressableEvents() {
     return badgeAwardAbstractEvents.stream()
-        .map(BadgeAwardGenericVoteEvent::getId)
+        .map(BadgeAwardGenericEvent::getId)
         .map(EventTag::new)
         .toList();
   }
