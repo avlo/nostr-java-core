@@ -17,7 +17,7 @@ import org.springframework.lang.Nullable;
 public record EventTag(
     @Getter @Key String idEvent,
     @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String recommendedRelayUrl,
-    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) Marker marker) implements ReferencedEventTag {
+    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) Marker marker) implements ReferencedAbstractEventTag {
 
   public EventTag(@NonNull String idEvent) {
     this(idEvent, null);

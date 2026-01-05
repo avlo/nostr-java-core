@@ -12,19 +12,19 @@ public class BadgeAwardGenericEvent extends BadgeAwardAbstractEvent<BadgeDefinit
   public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent) {
-    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericVoteEvent, "");
+      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent) {
+    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionAwardEvent, "");
   }
 
   public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent,
+      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
       @NonNull List<BaseTag> tags) {
     super(
         authorIdentity,
         awardRecipientPublicKey,
-        badgeDefinitionGenericVoteEvent,
+        badgeDefinitionAwardEvent,
         tags,
         "");
   }
@@ -32,21 +32,21 @@ public class BadgeAwardGenericEvent extends BadgeAwardAbstractEvent<BadgeDefinit
   public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent,
+      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
       @NonNull String content) {
-    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericVoteEvent, List.of(), content);
+    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionAwardEvent, List.of(), content);
   }
 
   public BadgeAwardGenericEvent(
       @NonNull Identity authorIdentity,
       @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionGenericVoteEvent,
+      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
       @NonNull List<BaseTag> tags,
       @NonNull String content) {
     super(
         authorIdentity,
         awardRecipientPublicKey,
-        badgeDefinitionGenericVoteEvent,
+        badgeDefinitionAwardEvent,
         tags,
         content);
   }
@@ -55,5 +55,9 @@ public class BadgeAwardGenericEvent extends BadgeAwardAbstractEvent<BadgeDefinit
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionAwardEvent> fxn) {
     super(genericEventRecord, fxn);
+  }
+  
+  public BadgeDefinitionAwardEvent getBadgeDefinitionAwardEvent() {
+    return super.getAddressableEvent();
   }
 }

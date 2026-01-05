@@ -9,13 +9,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent<BadgeDefinitionReputationEvent> {
-  @Getter
-  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
-
   public BadgeAwardReputationEvent(
       @NonNull Identity aImgIdentity,
       @NonNull PublicKey badgeReceiverPubkey,
@@ -40,19 +36,16 @@ public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent<BadgeDefi
             Stream.of(externalIdentityTag),
             tags.stream()).toList(),
         score.toString());
-    this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
   }
 
   public BadgeAwardReputationEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxn) {
     super(genericEventRecord, fxn);
-    this.badgeDefinitionReputationEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
-  @Override
-  public List<AddressTag> getContainedAddressableEvents() {
-    return badgeDefinitionReputationEvent.getContainedAddressableEvents();
+  public BadgeDefinitionReputationEvent getBadgeDefinitionReputationEvent() {
+    return super.getAddressableEvent();
   }
 
   public ExternalIdentityTag getExternalIdentityTag() {
