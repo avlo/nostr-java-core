@@ -16,7 +16,10 @@ public record ExternalIdentityTag(
     @Getter @Key String proof) implements BaseTag {
 
   public static ExternalIdentityTag deserialize(@NonNull JsonNode node) {
-    List<String> platformAndIdentity = Arrays.stream(node.get(0).asText().split(":")).toList();
-    return new ExternalIdentityTag(platformAndIdentity.get(0), platformAndIdentity.get(1), node.get(1).asText());
+    List<String> platformAndIdentity = Arrays.stream(node.get(1).asText().split(":")).toList();
+    return new ExternalIdentityTag(
+        platformAndIdentity.get(0),
+        platformAndIdentity.get(1),
+        node.get(2).asText());
   }
 }

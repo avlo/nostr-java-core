@@ -16,10 +16,10 @@ class ExternalIdentityTagTest {
   public static final String PLATFORM = ExternalIdentityTagTest.class.getPackageName();
   public static final String IDENTITY = ExternalIdentityTagTest.class.getSimpleName();
   public static final String PROOF = String.valueOf(ExternalIdentityTagTest.class.hashCode());
+  public static final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   @Test
   void getSupportedFields() {
-    ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
     List<Field> fields = externalIdentityTag.getSupportedFields();
     anyFieldNameMatch(fields, field -> field.getName().equals("platform"));
