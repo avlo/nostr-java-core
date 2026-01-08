@@ -1,5 +1,6 @@
 package com.prosilion.nostr.tag;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prosilion.nostr.codec.serializer.ExternalIdentityTagSerializer;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 @Tag(code = "i")
+@JsonPropertyOrder({"platform", "identity", "proof"})
 @JsonSerialize(using = ExternalIdentityTagSerializer.class)
 public record ExternalIdentityTag(
     @Getter @Key String platform,

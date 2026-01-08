@@ -726,6 +726,47 @@ public class JsonParseTest {
   }
 
   @Test
+  public void testReqMessageFullAddressTagFilterDecoder() throws IOException {
+    log.debug("testReqMessageFullAddressTagFilterDecoder");
+
+    String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
+    Kind kind = Kind.TEXT_NOTE;
+    String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    String uuidValue1 = "UUID-1";
+    String relay = "ws://localhost:5555";
+
+    String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
+
+    String reqJsonWithCustomTagQueryFilterToDecode =
+        "[\"REQ\", " +
+            "\"" + subscriptionId + "\", " +
+            "{\"kinds\": [" + kind + "], " +
+            "\"authors\": [\"" + author + "\"]," +
+            "\"#e\": [\"" + referencedEventId + "\"]," +
+            "\"#a\": [\"" + addressableTag + "\",\"" + relay + "\"]," +
+            "\"#p\": [\"" + author + "\"]" +
+            "}]";
+
+    BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
+
+    AddressTag addressTag1 = new AddressTag(kind, new PublicKey(author), new IdentifierTag(uuidValue1), new Relay(relay));
+
+    ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
+        new Filters(
+            new KindFilter(Kind.TEXT_NOTE),
+            new AuthorFilter(new PublicKey(author)),
+            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
+            new AddressTagFilter(addressTag1)));
+
+    String encoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
+    String decoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage);
+    assertEquals(encoded, decoded);
+    assertEquals(expectedReqMessage, decodedReqMessage);
+  }
+  
+  @Test
   public void testReqMessagePopulatedListOfMultipleTypeFiltersListDecoder() throws IOException {
     log.debug("testReqMessagePopulatedListOfFiltersListDecoder");
 
@@ -761,9 +802,9 @@ public class JsonParseTest {
   public void testReqMessageExternalIdentifierTagDecoder() throws IOException {
     log.debug("testReqMessageExternalIdentifierTagDecoder");
 
-    String platform = "afterimage";
-    String identity = "reputation";
-    String proof = "666";
+    String platform = "platform";
+    String identity = "identity";
+    String proof = "proof";
 
     String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
     String platformAndIdentity = Strings.join(platform, identity).with(":");

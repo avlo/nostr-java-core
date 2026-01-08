@@ -12,6 +12,7 @@ import com.prosilion.nostr.filter.event.KindFilter;
 import com.prosilion.nostr.filter.event.SinceFilter;
 import com.prosilion.nostr.filter.event.UntilFilter;
 import com.prosilion.nostr.filter.tag.AddressTagFilter;
+import com.prosilion.nostr.filter.tag.ExternalIdentityTagFilter;
 import com.prosilion.nostr.filter.tag.GenericTagQueryFilter;
 import com.prosilion.nostr.filter.tag.GeohashTagFilter;
 import com.prosilion.nostr.filter.tag.HashtagTagFilter;
@@ -20,6 +21,7 @@ import com.prosilion.nostr.filter.tag.ReferencedEventFilter;
 import com.prosilion.nostr.filter.tag.ReferencedPublicKeyFilter;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.GeohashTag;
 import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -28,6 +30,7 @@ import com.prosilion.nostr.user.PublicKey;
 import java.time.Instant;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -390,5 +393,24 @@ public class FiltersDecoderTest {
     String expected = "{\"#a\":[\"" + malformedJoin + "\"]}";
 
     assertThrows(NumberFormatException.class, () -> FiltersDecoder.decode(expected));
+  }
+
+  @Test
+  public void testExternalIdentityTagDecoder() throws JsonProcessingException {
+    log.debug("testExternalIdentityTagDecoder");
+
+    String platform = "platform";
+    String identity = "identity";
+    String proof = "proof";
+    String platformAndIdentity = Strings.join(platform, identity).with(":");
+
+    String expected = "{\"#i\":[\"" + platformAndIdentity + "\",\"" + proof + "\"]}";
+    Filters decodedFilters = FiltersDecoder.decode(expected);
+
+    assertEquals(
+        new Filters(
+            new ExternalIdentityTagFilter(
+                new ExternalIdentityTag(platform, identity, proof))),
+        decodedFilters);
   }
 }
