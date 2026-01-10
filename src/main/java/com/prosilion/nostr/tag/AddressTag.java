@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -48,13 +47,8 @@ public record AddressTag(
         Kind.valueOf(Integer.parseInt(Optional.ofNullable(list.get(0)).orElseThrow())),
         new PublicKey(Optional.ofNullable(list.get(1)).orElseThrow()),
         Optional.ofNullable(list.get(2)).map(IdentifierTag::new).orElse(null),
-        Optional.ofNullable(node.get(2)).map(AddressTag::apply).orElse(null)
+        Optional.ofNullable(node.get(2)).map(n -> new Relay(n.asText())).orElse(null)
     );
-  }
-
-  @SneakyThrows
-  private static Relay apply(JsonNode n) {
-    return new Relay(n.asText());
   }
 
   @Override
