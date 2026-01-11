@@ -19,12 +19,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.stream.Streams;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
-import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
 public class AddressTagFilter extends AbstractFilterable<AddressTag> {
@@ -96,22 +94,4 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
 
     return addressTagAtomic.get();
   }
-
-  @Override
-  public void addToArrayNode(ArrayNode arrayNode) {
-    Optional.ofNullable(
-            getAddressTag().getRelay())
-        .map(relay ->
-            Streams.failableStream(relay)
-                .map(Relay::getUrl).stream()
-                .findFirst().orElseThrow().toString()).ifPresentOrElse(s ->
-            arrayNode.addAll(
-                MAPPER_AFTERBURNER.createArrayNode()
-                    .add(getFilterableValue())
-                    .add(s)), () ->
-            arrayNode.addAll(
-                MAPPER_AFTERBURNER.createArrayNode()
-                    .add(getFilterableValue())));
-  }
-
 }

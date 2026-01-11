@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Slf4j
 public class FiltersEncoderTest {
   public static final Relay relay = new Relay("ws://localhost:5555");
-  
+
   @Test
   public void emptyFiltersTest() {
     assertThrows(IllegalArgumentException.class, Filters::new);
@@ -74,12 +74,65 @@ public class FiltersEncoderTest {
   }
 
   @Test
-  public void testKindFiltersEncoder() {
+  public void testSingleKindFiltersEncoder() {
     log.info("testKindFiltersEncoder");
 
     Kind kind = Kind.valueOf(1);
     String encodedFilters = FiltersEncoder.encode(new Filters(new KindFilter(kind)));
-    assertEquals("{\"kinds\":[" + kind.toString() + "]}", encodedFilters);
+
+    String expected = "{\"kinds\":[" + kind + "]}";
+
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(encodedFilters);
+    assertEquals(expected, encodedFilters);
+  }
+
+  @Test
+  public void testMixedMultipleKindFiltersMultipleAuthorFiltersEncoder() {
+    log.info("testMixedMultipleKindFiltersMultipleAuthorFiltersEncoder");
+
+    String pubKeyString1 = "111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e01111";
+    String pubKeyString2 = "222219a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e02222";
+    Kind kind1 = Kind.valueOf(1);
+    Kind kind2 = Kind.valueOf(2);
+
+    String encodedFilters = FiltersEncoder.encode(new Filters(
+        List.of(
+            new AuthorFilter(new PublicKey(pubKeyString1)),
+            new AuthorFilter(new PublicKey(pubKeyString2)),
+            new KindFilter(kind1),
+            new KindFilter(kind2))));
+
+    String expected = "{\"kinds\":[1,2],\"authors\":[\"111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e01111\",\"222219a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e02222\"]}";
+
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(encodedFilters);
+
+    assertEquals(expected, encodedFilters);
+  }
+
+  @Test
+  public void testMultipleKindFiltersEncoder() {
+    log.info("testMultipleKindFiltersEncoder");
+
+    Kind kind1 = Kind.valueOf(1);
+    Kind kind2 = Kind.valueOf(2);
+
+    String encodedFilters = FiltersEncoder.encode(new Filters(
+        List.of(
+            new KindFilter(kind1),
+            new KindFilter(kind2))));
+
+    String kinds = String.join(",", kind1.toString(), kind2.toString());
+    String expected = "{\"kinds\":[" + kinds + "]}";
+
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(encodedFilters);
+
+    assertEquals(expected, encodedFilters);
   }
 
   @Test
@@ -88,7 +141,6 @@ public class FiltersEncoderTest {
 
     String pubKeyString = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String encodedFilters = FiltersEncoder.encode(new Filters(new AuthorFilter(new PublicKey(pubKeyString))));
-
 
     assertEquals("{\"authors\":[\"" + pubKeyString + "\"]}", encodedFilters);
   }
@@ -104,27 +156,9 @@ public class FiltersEncoderTest {
             new AuthorFilter(new PublicKey(pubKeyString1)),
             new AuthorFilter(new PublicKey(pubKeyString2)))));
 
+    String expected = "{\"authors\":[\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]}";
 
-    String authorPubKeys = String.join("\",\"", pubKeyString1, pubKeyString2);
-
-    assertEquals("{\"authors\":[\"" + authorPubKeys + "\"]}", encodedFilters);
-  }
-
-  @Test
-  public void testMultipleKindFiltersEncoder() {
-    log.info("testMultipleKindFiltersEncoder");
-
-    Kind kind1 = Kind.valueOf(1);
-    Kind kind2 = Kind.valueOf(2);
-
-    String encodedFilters = FiltersEncoder.encode(new Filters(
-        List.of(
-            new KindFilter(kind1),
-            new KindFilter(kind2))));
-
-
-    String kinds = String.join(",", kind1.toString(), kind2.toString());
-    assertEquals("{\"kinds\":[" + kinds + "]}", encodedFilters);
+    assertEquals(expected, encodedFilters);
   }
 
   @Test
@@ -137,41 +171,9 @@ public class FiltersEncoderTest {
     AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author));
 
     String encodedFilters = FiltersEncoder.encode(new Filters(new AddressTagFilter(addressTag)));
-
     String addressableTag = String.join(":", String.valueOf(kind), author) + ":";
 
     assertEquals("{\"#a\":[\"" + addressableTag + "\"]}", encodedFilters);
-  }
-
-  @Test
-  public void testAddressableTagWithRelayFilterEncoder() {
-    log.info("testAddressableTagWithRelayFilterEncoder");
-
-    Integer kind = 1;
-    String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
-    String uuidValue1 = "UUID-1";
-    String url = "ws://localhost:5555";
-    Relay relay = new Relay(url);
-
-    String actual = FiltersEncoder.encode(
-        new Filters(
-            new AddressTagFilter(
-                new AddressTag(
-                    Kind.TEXT_NOTE,
-                    new PublicKey(author),
-                    new IdentifierTag(uuidValue1),
-                    relay))));
-
-    String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
-    String joined = String.join("\",\"", addressableTag, url);
-
-    String expected = "{\"#a\":[\"" + joined + "\"]}";
-    System.out.println("000000000000000000000000000");
-    System.out.println(expected);
-    System.out.println("----------");
-    System.out.println(actual);
-    System.out.println("000000000000000000000000000");
-    assertEquals(expected, actual);
   }
 
   @Test
@@ -192,14 +194,13 @@ public class FiltersEncoderTest {
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(
-        List.of(
-            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
-            new IdentifierTagFilter(new IdentifierTag(uuidValue2)))));
+    String encodedFilters = FiltersEncoder.encode(
+        new Filters(
+            List.of(
+                new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+                new IdentifierTagFilter(new IdentifierTag(uuidValue2)))));
 
-
-    String dTags = String.join("\",\"", uuidValue1, uuidValue2);
-    assertEquals("{\"#d\":[\"" + dTags + "\"]}", encodedFilters);
+    assertEquals("{\"#d\":[\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]}", encodedFilters);
   }
 
   @Test
@@ -209,8 +210,13 @@ public class FiltersEncoderTest {
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
     String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedEventFilter(new EventTag(eventId, relay.getUrl()))));
+    String expected = "{\"#e\":[\"" + eventId + "\"]}";
 
-    assertEquals("{\"#e\":[\"" + eventId + "\"]}", encodedFilters);
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(encodedFilters);
+
+    assertEquals(expected, encodedFilters);
   }
 
   @Test
@@ -225,9 +231,12 @@ public class FiltersEncoderTest {
             new ReferencedEventFilter(new EventTag(eventId1, relay.getUrl())),
             new ReferencedEventFilter(new EventTag(eventId2, relay.getUrl())))));
 
+    String expected = String.join("\",\"", eventId1, eventId2);
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(encodedFilters);
 
-    String eventIds = String.join("\",\"", eventId1, eventId2);
-    assertEquals("{\"#e\":[\"" + eventIds + "\"]}", encodedFilters);
+    assertEquals("{\"#e\":[\"" + expected + "\"]}", encodedFilters);
   }
 
   @Test
@@ -237,8 +246,6 @@ public class FiltersEncoderTest {
     String pubKeyString = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
     String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(pubKeyString)))));
-
-
     assertEquals("{\"#p\":[\"" + pubKeyString + "\"]}", encodedFilters);
   }
 
@@ -252,7 +259,6 @@ public class FiltersEncoderTest {
     String encodedFilters = FiltersEncoder.encode(new Filters(
         new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(pubKeyString1))),
         new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(pubKeyString2)))));
-
 
     String pubKeyTags = String.join("\",\"", pubKeyString1, pubKeyString2);
     assertEquals("{\"#p\":[\"" + pubKeyTags + "\"]}", encodedFilters);
@@ -282,8 +288,7 @@ public class FiltersEncoderTest {
         new GeohashTagFilter(new GeohashTag(geohashValue1)),
         new GeohashTagFilter(new GeohashTag(geohashValue2))));
 
-
-    assertEquals("{\"#g\":[\"2vghde\",\"3abcde\"]}", encodedFilters);
+    assertEquals("{\"#g\":[\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]}", encodedFilters);
   }
 
   @Test
@@ -310,8 +315,7 @@ public class FiltersEncoderTest {
         new HashtagTagFilter(new HashtagTag(hashtagValue1)),
         new HashtagTagFilter(new HashtagTag(hashtagValue2))));
 
-
-    assertEquals("{\"#t\":[\"2vghde\",\"3abcde\"]}", encodedFilters);
+    assertEquals("{\"#t\":[\"" + hashtagValue1 + "\",\"" + hashtagValue2 + "\"]}", encodedFilters);
   }
 
   @Test
@@ -340,32 +344,87 @@ public class FiltersEncoderTest {
         new GenericTagQueryFilter(new GenericTagQuery(customKey, customValue1)),
         new GenericTagQueryFilter(new GenericTagQuery(customKey, customValue2))));
 
-
     assertEquals("{\"#b\":[\"2vghde\",\"3abcde\"]}", encodedFilters);
+  }
+
+  @Test
+  public void testAddressableTagWithRelayFilterEncoder() {
+    log.info("testAddressableTagWithRelayFilterEncoder");
+
+    Integer kind = 1;
+    String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String uuidValue1 = "UUID-1";
+    String url = "ws://localhost:5555";
+    Relay relay = new Relay(url);
+
+    String actual = FiltersEncoder.encode(
+        new Filters(
+            new AddressTagFilter(
+                new AddressTag(
+                    Kind.TEXT_NOTE,
+                    new PublicKey(author),
+                    new IdentifierTag(uuidValue1),
+                    relay))));
+
+    String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
+
+    String expected = "{\"#a\":[\"" + addressableTag + "\"]}";
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(actual);
+    assertEquals(expected, actual);
   }
 
   @Test
   public void testMultipleAddressableTagFilterEncoder() {
     log.info("testMultipleAddressableTagFilterEncoder");
 
-    Integer kind = 1;
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
 
-    String addressableTag1 = String.join(":", String.valueOf(kind), author, uuidValue1);
-    String addressableTag2 = String.join(":", String.valueOf(kind), author, uuidValue2);
-
     AddressTag addressTag1 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author), new IdentifierTag(uuidValue1));
-
     AddressTag addressTag2 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author), new IdentifierTag(uuidValue2));
 
     String encodedFilters = FiltersEncoder.encode(new Filters(
         new AddressTagFilter(addressTag1),
         new AddressTagFilter(addressTag2)));
 
-    String addressableTags = String.join("\",\"", addressableTag1, addressableTag2);
-    assertEquals("{\"#a\":[\"" + addressableTags + "\"]}", encodedFilters);
+    String expected = "{\"#a\":[\"1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1\",\"1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-2\"]}";
+
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(encodedFilters);
+
+    assertEquals(expected, encodedFilters);
+  }
+
+  @Test
+  public void testMultipleAddressableTagsWithRelaysFilterEncoder() {
+    log.info("testMultipleAddressableTagsWithRelaysFilterEncoder");
+
+    String author1 = "111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e11111";
+    String author2 = "222229a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e22222";
+    String uuidValue1 = "UUID-1";
+    String uuidValue2 = "UUID-2";
+
+    String url = "ws://localhost:5555";
+    Relay relay = new Relay(url);
+
+    AddressTag addressTag1 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author1), new IdentifierTag(uuidValue1), relay);
+    AddressTag addressTag2 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author2), new IdentifierTag(uuidValue2), relay);
+
+    String encodedFilters = FiltersEncoder.encode(new Filters(
+        new AddressTagFilter(addressTag1),
+        new AddressTagFilter(addressTag2)));
+
+    String expected = "{\"#a\":[\"1:111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e11111:UUID-1\",\"1:222229a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e22222:UUID-2\"]}";
+
+    System.out.println(expected);
+    System.out.println("----------");
+    System.out.println(encodedFilters);
+
+    assertEquals(expected, encodedFilters);
   }
 
   @Test

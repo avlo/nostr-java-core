@@ -76,13 +76,62 @@ public class FiltersDecoderTest {
   }
 
   @Test
+  public void testMultipleAddressTagNoRelaysFilters() throws JsonProcessingException {
+    log.debug("testMultipleAddressTagNoRelaysFilters");
+
+    String author1 = "111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e01111";
+    String author2 = "222219a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e02222";
+    String manualJoined1 = "1:111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e01111:UUID-1";
+    String manualJoined2 = "1:222219a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e02222:UUID-2";
+    AddressTag addressTag1 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author1), new IdentifierTag("UUID-1"));
+    AddressTag addressTag2 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author2), new IdentifierTag("UUID-2"));
+
+    String expected = "{\"#a\":[[\"" + manualJoined1 + "\"]," +
+        "[\"" + manualJoined2 + "\"]]}";
+
+    Filters decodedFilters = FiltersDecoder.decode(expected);
+
+    Filters expectedFilters = new Filters(
+        new AddressTagFilter(addressTag1),
+        new AddressTagFilter(addressTag2));
+
+    assertEquals(
+        expectedFilters,
+        decodedFilters);
+  }
+  
+  @Test
+  public void testMultipleAddressTagWithRelaysFilters() throws JsonProcessingException {
+    log.debug("testMultipleAddressTagWithRelaysFilters");
+
+    String author1 = "111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e01111";
+    String author2 = "222219a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e02222";
+    String manualJoined1 = "1:111119a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e01111:UUID-1";
+    String manualJoined2 = "1:222219a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e02222:UUID-2";
+    Relay relay = new Relay("ws://localhost:5555");
+    AddressTag addressTag1 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author1), new IdentifierTag("UUID-1"), relay);
+    AddressTag addressTag2 = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author2), new IdentifierTag("UUID-2"), relay);
+
+    String expected = "{\"#a\":[[\"" + manualJoined1 + "\",\"" + relay.getUrl() + "\"]," +
+        "[\"" + manualJoined2 + "\",\"" + relay.getUrl() + "\"]]}";
+
+    Filters decodedFilters = FiltersDecoder.decode(expected);
+
+    Filters expectedFilters = new Filters(
+        new AddressTagFilter(addressTag1),
+        new AddressTagFilter(addressTag2));
+    
+    assertEquals(
+        expectedFilters,
+        decodedFilters);
+  }
+
+  @Test
   public void testAddressTagFiltersKindPublicKey() throws JsonProcessingException {
     log.debug("testAddressTagFiltersKindPublicKey");
 
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
-
     String manualJoined = "1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:";
-
     AddressTag addressTag = new AddressTag(Kind.TEXT_NOTE, new PublicKey(author));
 
     String expected = "{\"#a\":[\"" + manualJoined + "\"]}";
@@ -215,24 +264,25 @@ public class FiltersDecoderTest {
     assertEquals(new Filters(new ReferencedEventFilter(new EventTag(eventId))), decodedFilters);
   }
 
-//  TODO: needs resolution
-//  @Test
-//  public void testMultipleReferencedEventFilterDecoder() throws JsonProcessingException {
-//    log.debug("testMultipleReferencedEventFilterDecoder");
-//
-//    String eventId1 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
-//    String eventId2 = "abcd19a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
-//
-//    String joined = String.join("\",\"", eventId1, eventId2);
-//    String expected = "{\"#e\":[\"" + joined + "\"]}";
-//    Filters decodedFilters = FiltersDecoder.decode(expected);
-//
-//    assertEquals(
-//        new Filters(
-//            new ReferencedEventFilter(new EventTag(eventId1)),
-//            new ReferencedEventFilter(new EventTag(eventId2))),
-//        decodedFilters);
-//  }
+  //  TODO: needs resolution
+  @Test
+  public void testMultipleReferencedEventFilterDecoder() throws JsonProcessingException {
+    log.debug("testMultipleReferencedEventFilterDecoder");
+
+    String eventId1 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String eventId2 = "abcd19a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+
+    String joined = String.join("\",\"", eventId1, eventId2);
+    String expected = "{\"#e\":[\"" + joined + "\"]}";
+
+    Filters decodedFilters = FiltersDecoder.decode(expected);
+
+    assertEquals(
+        new Filters(
+            new ReferencedEventFilter(new EventTag(eventId1)),
+            new ReferencedEventFilter(new EventTag(eventId2))),
+        decodedFilters);
+  }
 
   @Test
   public void testReferencedPublicKeyFilterDecofder() throws JsonProcessingException {
@@ -251,7 +301,7 @@ public class FiltersDecoderTest {
     log.debug("testMultipleReferencedPublicKeyFilterDecoder");
 
     String pubkeyString1 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
-    String pubkeyString2 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String pubkeyString2 = "abcd19a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
     String joined = String.join("\",\"", pubkeyString1, pubkeyString2);
     String expected = "{\"#p\":[\"" + joined + "\"]}";
@@ -411,6 +461,35 @@ public class FiltersDecoderTest {
         new Filters(
             new ExternalIdentityTagFilter(
                 new ExternalIdentityTag(platform, identity, proof))),
+        decodedFilters);
+  }
+
+  @Test
+  public void testMultipleExternalIdentityTagDecoder() throws JsonProcessingException {
+    log.debug("testMultipleExternalIdentityTagDecoder");
+
+    String platform1 = "platform1";
+    String identity1 = "identity1";
+    String proof1 = "proof1";
+
+    String platform2 = "platform2";
+    String identity2 = "identity2";
+    String proof2 = "proof2";
+
+    String platformAndIdentity1 = Strings.join(platform1, identity1).with(":");
+    String platformAndIdentity2 = Strings.join(platform2, identity2).with(":");
+
+    String expected = "{\"#i\":[[\"" + platformAndIdentity1 + "\",\"" + proof1 + "\"]," +
+        "[\"" + platformAndIdentity2 + "\",\"" + proof2 + "\"]]" +
+        "}";
+    Filters decodedFilters = FiltersDecoder.decode(expected);
+
+    assertEquals(
+        new Filters(
+            new ExternalIdentityTagFilter(
+                new ExternalIdentityTag(platform1, identity1, proof1)),
+            new ExternalIdentityTagFilter(
+                new ExternalIdentityTag(platform2, identity2, proof2))),
         decodedFilters);
   }
 }

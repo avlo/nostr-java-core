@@ -167,7 +167,7 @@ public class JsonParseTest {
             "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
             "{\"kinds\": [1], " +
             "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
-            "\"#e\": [\"" + referencedEventId + "\",\"" + relay.getUrl() + "\"]}]";
+            "\"#e\": [\"" + referencedEventId + "\"]}]";
 
     final var message = BaseMessageDecoder.decode(parseTarget);
 
@@ -188,11 +188,39 @@ public class JsonParseTest {
     List<Filterable> referencedEventFilters = filters.getFilterByType(ReferencedEventFilter.FILTER_KEY);
     assertEquals(1, referencedEventFilters.size());
     assertEquals(new ReferencedEventFilter(new EventTag("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712")), referencedEventFilters.getFirst());
+    assertEquals(new ReferencedEventFilter(new EventTag("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712", relay.getUrl())).getFilterable().getIdEvent(), ((ReferencedEventFilter) referencedEventFilters.getFirst()).getFilterable().getIdEvent());
   }
 
   @Test
-  public void testBaseReqMessageDecoder() throws IOException {
-    log.debug("testBaseReqMessageDecoder");
+  public void testBaseReqSingleKindMessageDecoder() throws IOException {
+    log.debug("testBaseReqSingleKindMessageDecoder");
+
+    var publicKey = Identity.generateRandomIdentity().getPublicKey();
+
+    ReqMessage expectedReqMessage = new ReqMessage(publicKey.toString(),
+        new Filters(
+            new KindFilter(Kind.TEXT_NOTE)));
+
+    String jsonMessage = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
+
+    String jsonMsg = jsonMessage.substring(1, jsonMessage.length() - 1);
+
+    System.out.printf("jsonMessage:\n  %s\n", jsonMessage);
+
+    String[] parts = jsonMsg.split(",");
+    assertEquals("\"REQ\"", parts[0]);
+    assertEquals("\"" + publicKey.toHexString() + "\"", parts[1]);
+    assertFalse(parts[2].startsWith("["));
+    assertFalse(parts[parts.length - 1].endsWith("]"));
+
+    BaseMessage actualMessage = BaseMessageDecoder.decode(jsonMessage);
+
+    assertEquals(expectedReqMessage, actualMessage);
+  }
+
+  @Test
+  public void testMultipleKindsWithAuthorBaseReqMessageDecoder() throws IOException {
+    log.debug("testMultipleKindsWithAuthorBaseReqMessageDecoder");
 
     var publicKey = Identity.generateRandomIdentity().getPublicKey();
 
@@ -208,7 +236,7 @@ public class JsonParseTest {
 
     String jsonMsg = jsonMessage.substring(1, jsonMessage.length() - 1);
 
-    System.out.println(jsonMessage);
+    System.out.printf("jsonMessage:\n  %s\n", jsonMessage);
 
     String[] parts = jsonMsg.split(",");
     assertEquals("\"REQ\"", parts[0]);
@@ -744,7 +772,7 @@ public class JsonParseTest {
             "{\"kinds\": [" + kind + "], " +
             "\"authors\": [\"" + author + "\"]," +
             "\"#e\": [\"" + referencedEventId + "\"]," +
-            "\"#a\": [\"" + addressableTag + "\",\"" + relay + "\"]," +
+            "\"#a\": [\"" + addressableTag + "\"]," +
             "\"#p\": [\"" + author + "\"]" +
             "}]";
 
@@ -765,7 +793,7 @@ public class JsonParseTest {
     assertEquals(encoded, decoded);
     assertEquals(expectedReqMessage, decodedReqMessage);
   }
-  
+
   @Test
   public void testReqMessagePopulatedListOfMultipleTypeFiltersListDecoder() throws IOException {
     log.debug("testReqMessagePopulatedListOfFiltersListDecoder");
@@ -828,8 +856,93 @@ public class JsonParseTest {
   }
 
   @Test
-  public void testGenericTagQueryListDecoder() throws IOException {
-    log.debug("testReqMessagePopulatedListOfFiltersListDecoder");
+  public void testVariousTagQueryListDecoderWFormalArrays() throws IOException {
+    log.debug("testVariousTagQueryListDecoderWFormalArrays");
+
+    String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
+    String kind = "1";
+    String kind2 = "2";
+    String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String author2 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    String geohashKey = "#g";
+    String geohashValue1 = "2vghde";
+    String geohashValue2 = "3abcde";
+    String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    String uuidKey = "#d";
+    String uuidValue1 = "UUID-1";
+    String uuidValue2 = "UUID-2";
+    String reqJsonWithCustomTagQueryFilterToDecode =
+        "[\"REQ\", " +
+            "\"" + subscriptionId + "\", " +
+            "{\"kinds\": [" + kind + "," + kind2 + "], " +
+            "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
+            "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
+            "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
+            "\"#e\": [\"" + referencedEventId + "\"]" +
+            "}]";
+
+    BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
+
+    ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
+        new Filters(
+            new KindFilter(Kind.TEXT_NOTE),
+            new KindFilter(Kind.RECOMMEND_SERVER),
+            new AuthorFilter(new PublicKey(author)),
+            new AuthorFilter(new PublicKey(author2)),
+            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new GeohashTagFilter(new GeohashTag(geohashValue1)),
+            new GeohashTagFilter(new GeohashTag(geohashValue2)),
+            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+            new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
+
+    assertEquals(expectedReqMessage, decodedReqMessage);
+
+    jsonComparator.compare(
+        MAPPER_AFTERBURNER.createArrayNode()
+            .add(MAPPER_AFTERBURNER.readTree(
+                ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
+            .toString(),
+        MAPPER_AFTERBURNER.createArrayNode()
+            .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
+            .toString());
+
+  }
+
+  @Test
+  public void testKindTagQueryListDecoderWInformalArrays() throws IOException {
+    log.debug("testKindTagQueryListDecoderWInformalArrays");
+
+    String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
+    String kind = "1";
+    String kind2 = "2";
+    String reqJsonWithCustomTagQueryFilterToDecode =
+        "[\"REQ\", " +
+            "\"" + subscriptionId + "\", " +
+            "{\"kinds\": [" + kind + ", " + kind2 + "]" +
+            "}]";
+
+    BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
+
+    ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
+        new Filters(
+            new KindFilter(Kind.TEXT_NOTE),
+            new KindFilter(Kind.RECOMMEND_SERVER)));
+
+    assertEquals(expectedReqMessage, decodedReqMessage);
+
+    jsonComparator.compare(
+        MAPPER_AFTERBURNER.createArrayNode()
+            .add(MAPPER_AFTERBURNER.readTree(
+                ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
+            .toString(),
+        MAPPER_AFTERBURNER.createArrayNode()
+            .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
+            .toString());
+  }
+
+  @Test
+  public void testVariousTagQueryListDecoderWInformalArrays() throws IOException {
+    log.debug("testVariousTagQueryListDecoderWInformalArrays");
 
     String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
     String kind = "1";
