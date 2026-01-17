@@ -33,15 +33,25 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
       @NonNull T badgeDefinitionAwardEvent,
       @NonNull List<BaseTag> tags,
       @NonNull String content) throws NostrException {
+    this(identity, awardRecipientPublicKey, badgeDefinitionAwardEvent, tags.stream(), content);
+  }
+
+  public BadgeAwardAbstractEvent(
+      @NonNull Identity identity,
+      @NonNull PublicKey awardRecipientPublicKey,
+      @NonNull T badgeDefinitionAwardEvent,
+      @NonNull Stream<BaseTag> tags,
+      @NonNull String content) throws NostrException {
     super(
         identity,
         Kind.BADGE_AWARD_EVENT,
         badgeDefinitionAwardEvent.asAddressTag(),
         Stream.concat(
             Stream.of(new PubKeyTag(awardRecipientPublicKey)),
-            tags.stream()
-                .filter(Predicate.not(AddressTag.class::isInstance))
-                .filter(Predicate.not(PubKeyTag.class::isInstance))).toList(),
+            tags
+                .filter(Predicate.not(AddressTag.class::isInstance)
+                    .or(
+                        Predicate.not(PubKeyTag.class::isInstance)))).toList(),
         content);
     this.addressableEvent = badgeDefinitionAwardEvent;
   }

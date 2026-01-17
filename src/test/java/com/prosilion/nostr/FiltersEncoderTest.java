@@ -1,7 +1,12 @@
 package com.prosilion.nostr;
 
+import com.ezylang.evalex.parser.ParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prosilion.nostr.codec.FiltersEncoder;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventId;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.Filters;
@@ -12,6 +17,7 @@ import com.prosilion.nostr.filter.event.KindFilter;
 import com.prosilion.nostr.filter.event.SinceFilter;
 import com.prosilion.nostr.filter.event.UntilFilter;
 import com.prosilion.nostr.filter.tag.AddressTagFilter;
+import com.prosilion.nostr.filter.tag.ExternalIdentityTagFilter;
 import com.prosilion.nostr.filter.tag.GenericTagQueryFilter;
 import com.prosilion.nostr.filter.tag.GeohashTagFilter;
 import com.prosilion.nostr.filter.tag.HashtagTagFilter;
@@ -21,10 +27,12 @@ import com.prosilion.nostr.filter.tag.ReferencedPublicKeyFilter;
 import com.prosilion.nostr.message.ReqMessage;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.GeohashTag;
 import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.time.Instant;
 import java.util.Date;
@@ -32,6 +40,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -459,11 +468,83 @@ public class FiltersEncoderTest {
 
   @Test
   public void testReqMessageCustomGenericTagFilter() {
-    log.info("testReqMessageEmptyFilterKey");
+    log.info("testReqMessageCustomGenericTagFilter");
     String subscriptionId = "npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9";
 
     assertDoesNotThrow(() ->
         new ReqMessage(subscriptionId, new Filters(
             new GenericTagQueryFilter(new GenericTagQuery("some-tag", "some-value")))));
+  }
+
+  @Test
+  public void testReqMessageExternalIdentityTagFilter() throws ParseException, JsonProcessingException {
+    log.info("testReqMessageExternalIdentityTagFilter");
+    String subscriberId = "npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9";
+    String author = "c13005ca7b0ec37e41d7304902c235cc24e3049724f5a3dd6b685c622c5ba353";
+
+    String PLATFORM = "afterimage";
+    String proof = "proof";
+    ExternalIdentityTag BADGE_DEFINITION_REPUTATION_EXTERNAL_IDENTITY_TAG = new ExternalIdentityTag(
+        PLATFORM,
+        "badge_definition_reputation",
+        proof);
+
+    String REPUTATION = "TEST_REPUTATION";
+    String UNIT_UPVOTE = "TEST_UNIT_UPVOTE";
+    String PLUS_ONE_FORMULA = "+1";
+
+    IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
+    IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
+    Identity definitionCreatorIdentity = Identity.generateRandomIdentity();
+
+    BadgeDefinitionAwardEvent awardUpvoteDefinitionEvent = new BadgeDefinitionAwardEvent(definitionCreatorIdentity, upvoteIdentifierTag, relay);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(definitionCreatorIdentity, upvoteIdentifierTag, relay, awardUpvoteDefinitionEvent, PLUS_ONE_FORMULA);
+
+    BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
+        definitionCreatorIdentity,
+        reputationIdentifierTag,
+        relay,
+        BADGE_DEFINITION_REPUTATION_EXTERNAL_IDENTITY_TAG,
+        plusOneFormulaEvent);
+
+    ReqMessage reqMessage = new ReqMessage(
+        subscriberId,
+        new Filters(
+            new ReferencedPublicKeyFilter(
+                new PubKeyTag(
+                    new PublicKey(author))),
+            new ExternalIdentityTagFilter(
+                badgeDefinitionReputationEventPlusOneFormula.getExternalIdentityTag())));
+
+    String actual = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(reqMessage);
+    System.out.println(actual);
+    String expected = "[\"REQ\",\"npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9\",{\"#i\":[[\"afterimage:badge_definition_reputation\\\",\\\"proof\"]],\"#p\":[\"c13005ca7b0ec37e41d7304902c235cc24e3049724f5a3dd6b685c622c5ba353\"]}]";
+
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testAddressableTagWithRelayReqMessage() throws JsonProcessingException {
+    log.info("testAddressableTagWithRelayReqMessage");
+    String subscriberId = "npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9";
+
+    String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String uuidValue1 = "UUID-1";
+    String url = "ws://localhost:5555";
+    Relay relay = new Relay(url);
+
+    ReqMessage reqMessage = new ReqMessage(
+        subscriberId,
+        new Filters(
+            new AddressTagFilter(
+                new AddressTag(
+                    Kind.TEXT_NOTE,
+                    new PublicKey(author),
+                    new IdentifierTag(uuidValue1),
+                    relay))));
+
+    String actual = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(reqMessage);
+    System.out.println(actual);
+//    assertEquals(expected, actual);
   }
 }

@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
-public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent<BadgeDefinitionReputationEvent> {
+public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefinitionReputationEvent> {
   public BadgeAwardReputationEvent(
       @NonNull Identity aImgIdentity,
       @NonNull PublicKey badgeReceiverPubkey,
@@ -34,7 +34,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardAbstractEvent<BadgeDefi
         badgeDefinitionReputationEvent,
         Stream.concat(
             Stream.of(externalIdentityTag),
-            tags.stream()).toList(),
+            tags.stream()),
         score.toString());
   }
 

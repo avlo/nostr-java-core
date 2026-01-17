@@ -11,7 +11,6 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
@@ -29,12 +28,11 @@ public class CurationSetsEvent extends AddressableEvent {
         identifierTag,
         relay,
         Stream.concat(
-                curationSets.stream()
-                    .map(CurationSet::getTags)
-                    .flatMap(Collection::stream),
-                Stream.of(
-                    new IdentifierTag(publicKey.toHexString())))
-            .collect(Collectors.toList()),
+            curationSets.stream()
+                .map(CurationSet::getTags)
+                .flatMap(Collection::stream),
+            Stream.of(
+                new IdentifierTag(publicKey.toHexString()))),
         content);
   }
 

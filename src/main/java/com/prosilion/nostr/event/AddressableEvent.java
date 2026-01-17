@@ -9,20 +9,14 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
 public class AddressableEvent extends BaseEvent {
-  public static final long IDENTIFIER_TAG_COUNT_LIMIT = 1L;
-  public static final String LIMIT = String.format("List<BaseTag> should contain [%s] IdentifierTag but instead has", IDENTIFIER_TAG_COUNT_LIMIT);
-  public static final String CONCAT = Strings.concat(LIMIT, " [%s]: %s");
-
   public AddressableEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
@@ -30,17 +24,27 @@ public class AddressableEvent extends BaseEvent {
       @NonNull Relay relay,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
+    this(identity, kind, identifierTag, relay, baseTags.stream(), content);
+  }
+
+  public AddressableEvent(
+      @NonNull Identity identity,
+      @NonNull Kind kind,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
+      @NonNull Stream<BaseTag> baseTags,
+      @NonNull String content) throws NostrException {
     super(
         identity,
         kind,
-        validateSingleUniqueIdentifierTag(
+        Stream.concat(
             Stream.concat(
-                Stream.concat(
-                    Stream.of(identifierTag),
-                    Stream.of(new RelayTag(relay))),
-                baseTags.stream()
-                    .filter(Predicate.not(RelayTag.class::isInstance))
-                    .filter(Predicate.not(IdentifierTag.class::isInstance))).toList()),
+                Stream.of(identifierTag),
+                Stream.of(new RelayTag(relay))),
+            baseTags
+                .filter(Predicate.not(RelayTag.class::isInstance)
+                    .or(
+                        Predicate.not(IdentifierTag.class::isInstance)))),
         content);
   }
 
@@ -59,13 +63,6 @@ public class AddressableEvent extends BaseEvent {
         getIdentifierTag(),
         Optional.of(getTypeSpecificTags(RelayTag.class)).orElseThrow(() ->
             new NostrException(String.format("%s is missing a RelayTag", getClass().getSimpleName()))).getFirst().getRelay());
-  }
-
-  private static List<BaseTag> validateSingleUniqueIdentifierTag(List<BaseTag> baseTags) {
-    long count = baseTags.stream().filter(IdentifierTag.class::isInstance).count();
-    assert Objects.equals(IDENTIFIER_TAG_COUNT_LIMIT, count) : new NostrException(
-        String.format(CONCAT, count, baseTags));
-    return baseTags;
   }
 
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);

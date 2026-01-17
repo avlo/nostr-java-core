@@ -7,11 +7,16 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
+import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 public class ReplaceableEvent extends BaseEvent {
 
   public ReplaceableEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull List<BaseTag> tags, @NonNull String content) throws NostrException {
+    super(identity, validateKind(kind, replaceableAddressableKindPredicate, errorMessage), tags, content);
+  }
+
+  public ReplaceableEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull Stream<BaseTag> tags, @NonNull String content) throws NostrException {
     super(identity, validateKind(kind, replaceableAddressableKindPredicate, errorMessage), tags, content);
   }
 

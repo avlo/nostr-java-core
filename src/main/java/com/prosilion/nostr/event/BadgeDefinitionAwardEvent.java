@@ -8,6 +8,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 public class BadgeDefinitionAwardEvent extends AddressableEvent {
@@ -34,13 +35,16 @@ public class BadgeDefinitionAwardEvent extends AddressableEvent {
       @NonNull Relay relay,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
-    super(
-        identity,
-        Kind.BADGE_DEFINITION_EVENT,
-        identifierTag,
-        relay,
-        baseTags,
-        content);
+    this(identity, identifierTag, relay, baseTags.stream(), content);
+  }
+
+  public BadgeDefinitionAwardEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
+      @NonNull Stream<BaseTag> baseTags,
+      @NonNull String content) throws NostrException {
+    super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag, relay, baseTags, content);
   }
 
   public Relay getRelayTagRelay() {

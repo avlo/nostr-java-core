@@ -19,14 +19,15 @@ public class BadgeAwardDownvoteEventTest {
   public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
 
   public final Identity identity = Identity.generateRandomIdentity();
-  private final BadgeDefinitionAwardEvent badgeDefnDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag, relay);
+  private final BadgeDefinitionAwardEvent badgeDefnDownvoteEvent;
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardGenericEvent expected;
+  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> expected;
 
   public BadgeAwardDownvoteEventTest() {
-    this.expected = new BadgeAwardGenericEvent(
+    this.badgeDefnDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag, relay);
+    this.expected = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
         badgeDefnDownvoteEvent);
@@ -34,7 +35,7 @@ public class BadgeAwardDownvoteEventTest {
 
   @Test
   void testValidBadgeAwardReputationEvent() {
-    BadgeAwardGenericEvent badgeAwardDownvoteEvent = new BadgeAwardGenericEvent(
+    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
         expected.getGenericEventRecord(),
         addressTag -> badgeDefnDownvoteEvent);
 
@@ -46,7 +47,7 @@ public class BadgeAwardDownvoteEventTest {
 
   @Test
   void testSingularAddressTag() {
-    BadgeAwardGenericEvent badgeAwardDownvoteEvent = new BadgeAwardGenericEvent(
+    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
         badgeDefnDownvoteEvent,

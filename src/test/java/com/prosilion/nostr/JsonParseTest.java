@@ -840,7 +840,7 @@ public class JsonParseTest {
         "[\"REQ\", " +
             "\"" + subscriptionId + "\", " +
             "{" +
-            "\"#i\": [\"" + platformAndIdentity + "\",\"" + proof + "\"]" +
+            "\"#i\": [\"" + platformAndIdentity + "\\\",\\\"" + proof + "\"]" +
             "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);

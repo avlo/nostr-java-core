@@ -39,7 +39,7 @@ public class ClassifiedListingEvent extends AddressableEvent {
         relay,
         Stream.concat(
             baseTags.stream(),
-            Stream.of(classifiedListing.getPriceTag())).toList(),
+            Stream.of(classifiedListing.getPriceTag())),
         content);
   }
 

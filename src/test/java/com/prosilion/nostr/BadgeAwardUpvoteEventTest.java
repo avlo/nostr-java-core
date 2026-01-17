@@ -23,10 +23,10 @@ public class BadgeAwardUpvoteEventTest {
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardGenericEvent expected;
+  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> expected;
 
   public BadgeAwardUpvoteEventTest() {
-    this.expected = new BadgeAwardGenericEvent(
+    this.expected = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
         badgeDefnUpvoteEvent);
@@ -34,7 +34,7 @@ public class BadgeAwardUpvoteEventTest {
 
   @Test
   void testValidBadgeAwardReputationEvent() {
-    BadgeAwardGenericEvent badgeAwardUpvoteEvent = new BadgeAwardGenericEvent(
+    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
         expected.getGenericEventRecord(),
         addressTag -> badgeDefnUpvoteEvent);
 
@@ -46,7 +46,7 @@ public class BadgeAwardUpvoteEventTest {
 
   @Test
   void testSingularAddressTag() {
-    BadgeAwardGenericEvent badgeAwardUpvoteEvent = new BadgeAwardGenericEvent(
+    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
         badgeDefnUpvoteEvent,

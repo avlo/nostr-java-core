@@ -6,6 +6,7 @@ import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -16,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
+import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
 public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdentityTag> {
@@ -35,10 +37,12 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
 
   @Override
   public String getFilterableValue() {
-    return Stream.of(
-            getExternalIdentityTag().getPlatform(),
-            getExternalIdentityTag().getIdentity())
-        .map(Object::toString).collect(Collectors.joining(":"));
+    return String.join("\",\"",
+        Stream.of(
+                getExternalIdentityTag().getPlatform(),
+                getExternalIdentityTag().getIdentity())
+            .map(Object::toString).collect(Collectors.joining(":")),
+        getExternalIdentityTag().getProof());
   }
 
   private ExternalIdentityTag getExternalIdentityTag() {
@@ -49,17 +53,32 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
       new ExternalIdentityTagFilter(
           createExternalIdentityTag(node));
 
-  private static ExternalIdentityTag createExternalIdentityTag(@NonNull JsonNode node) {
+  public static ExternalIdentityTag createExternalIdentityTag(@NonNull JsonNode node) {
     ArrayNode arrayNode = I_DECODER_MAPPER_AFTERBURNER.createArrayNode();
     arrayNode.addAll(StreamSupport.stream(node.spliterator(), false).toList());
+    List<String> nodes =
+        List.of(
+            StreamSupport.stream(arrayNode.spliterator(), false).toList()
+                .getFirst().asText().split(":"));
 
-    List<JsonNode> split = StreamSupport.stream(arrayNode.spliterator(), false).toList();
-    List<String> nodes = List.of(split.get(0).asText().split(":"));
+    String platform = nodes.get(0);
+
+    List<String> list = Arrays.stream(nodes.get(1).split("\",\"")).toList();
+    String identity = list.get(0);
+    String proof = list.get(1);
 
     return new ExternalIdentityTag(
-        nodes.get(0),
-        nodes.get(1),
-        split.get(1).asText()
+        platform,
+        identity,
+        proof);
+  }
+
+  @Override
+  public void addToArrayNode(ArrayNode arrayNode) {
+    arrayNode.add(
+        MAPPER_AFTERBURNER.createArrayNode()
+            .add(getFilterableValue())
+//            .add(getExternalIdentityTag().getProof())
     );
   }
 }

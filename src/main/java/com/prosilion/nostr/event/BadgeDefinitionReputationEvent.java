@@ -10,12 +10,14 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements TagMappedEventIF {
+  public static final String MESSAGE = "BadgeDefinitionReputationEvent ctor() is missing FormulaEvent(s) parameter";
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found:";
   public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
   @Getter
@@ -41,13 +43,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
       @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
       @NonNull List<FormulaEvent> formulaEvents) throws NostrException {
-    this(
-        identity,
-        identifierTag,
-        relay,
-        externalIdentityTag,
-        formulaEvents,
-        List.of());
+    this(identity, identifierTag, relay, externalIdentityTag, formulaEvents, List.of());
   }
 
   public BadgeDefinitionReputationEvent(
@@ -62,12 +58,11 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         identifierTag,
         relay,
         Stream.concat(
-//            TODO: refactor cleaner
-            formulaEvents.stream()
+            TagMappedEventIF.throwIfEmpty(formulaEvents, MESSAGE)
                 .map(AddressableEvent::asAddressTag),
             Stream.concat(
                 Stream.of(externalIdentityTag),
-                baseTags.stream())).toList(),
+                baseTags.stream().filter(Predicate.not(IdentifierTag.class::isInstance)))),
         defaultContentFromFormulaOperators(identifierTag, formulaEvents));
     this.formulaEvents = formulaEvents;
   }
@@ -84,15 +79,16 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
   }
 
   private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
-    List<IdentifierTag> identifierTags = formulaEvents.stream()
-        .map(FormulaEvent::getBadgeDefinitionAwardEvent)
-        .map(BadgeDefinitionAwardEvent::getIdentifierTag).toList();
-
-    Optional.of(
-            identifierTags.stream().distinct().count() != formulaEvents.size())
+    Optional
+        .of(
+            formulaEvents.stream()
+                .map(FormulaEvent::getBadgeDefinitionAwardEvent)
+                .map(BadgeDefinitionAwardEvent::getIdentifierTag).distinct().count() != formulaEvents.size())
         .filter(Boolean::booleanValue)
         .map(bool -> {
-          throw new NostrException(String.format(CONCAT, identifierTags));
+          throw new NostrException(String.format(CONCAT, formulaEvents.stream()
+              .map(FormulaEvent::getBadgeDefinitionAwardEvent)
+              .map(BadgeDefinitionAwardEvent::getIdentifierTag)));
         });
 
     return String.format("%s == (previous)%s%s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
@@ -109,7 +105,6 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
     return sb.toString();
   }
 
-  @Override
   public List<AddressTag> getContainedAddressableEvents() {
     return formulaEvents.stream()
         .map(FormulaEvent::getContainedAddressableEvents)

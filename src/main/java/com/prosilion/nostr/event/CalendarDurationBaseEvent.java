@@ -31,7 +31,7 @@ public class CalendarDurationBaseEvent extends AddressableEvent {
         relay,
         Stream.concat(
             Stream.of(GenericTag.create("title", title)),
-            baseTags.stream()).toList(),
+            baseTags.stream()),
         content);
   }
 

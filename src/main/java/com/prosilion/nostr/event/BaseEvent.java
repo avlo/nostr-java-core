@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
+import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
@@ -30,8 +31,16 @@ public abstract class BaseEvent implements EventIF {
     this(identity, kind, tags, "");
   }
 
+  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull Stream<BaseTag> tags) throws NostrException {
+    this(identity, kind, tags, "");
+  }
+
   public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, List<BaseTag> tags, String content) throws NostrException {
-    this.genericEventRecord = GenericEventRecordFactory.createInstance(identity, kind, tags, content);
+    this(identity, kind, tags.stream(), content);
+  }
+
+  public BaseEvent(@NonNull Identity identity, @NonNull Kind kind, Stream<BaseTag> tags, String content) throws NostrException {
+    this.genericEventRecord = GenericEventRecordFactory.createInstance(identity, kind, tags.distinct().toList(), content);
   }
 
   public BaseEvent(@NonNull GenericEventRecord genericEventRecord) {

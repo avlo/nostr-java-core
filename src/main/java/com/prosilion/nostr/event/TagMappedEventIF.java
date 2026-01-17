@@ -1,9 +1,11 @@
 package com.prosilion.nostr.event;
 
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public interface TagMappedEventIF extends EventIF {
   default <T extends BaseEvent, U extends ReferencedAbstractEventTag>
@@ -21,4 +23,11 @@ public interface TagMappedEventIF extends EventIF {
 
   String getId();
   Kind getKind();
+
+  static <T> Stream<T> throwIfEmpty(List<T> list, String message) {
+    if (list.isEmpty()) {
+      throw new NostrException(message);
+    }
+    return list.stream();
+  }
 }

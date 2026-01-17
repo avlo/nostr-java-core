@@ -4,9 +4,10 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
@@ -30,13 +31,21 @@ public abstract class UniqueAddressTagEvent extends BaseEvent {
       @NonNull AddressTag addressTag,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
+    this(identity, kind, addressTag, baseTags.stream(), content);
+  }
+
+  public UniqueAddressTagEvent(
+      @NonNull Identity identity,
+      @NonNull Kind kind,
+      @NonNull AddressTag addressTag,
+      @NonNull Stream<BaseTag> baseTags,
+      @NonNull String content) throws NostrException {
     super(
         identity,
         kind,
-        validateSingleUniqueAddressTag(
-            Stream.concat(
-                Stream.of(addressTag),
-                baseTags.stream()).toList()),
+        Stream.concat(
+            Stream.of(addressTag),
+            baseTags.filter(Predicate.not(RelayTag.class::isInstance))),
         content);
   }
 
@@ -46,12 +55,5 @@ public abstract class UniqueAddressTagEvent extends BaseEvent {
 
   public AddressTag getAddressTag() {
     return getTypeSpecificTags(AddressTag.class).getFirst();
-  }
-
-  private static List<BaseTag> validateSingleUniqueAddressTag(List<BaseTag> baseTags) {
-    long count = baseTags.stream().filter(AddressTag.class::isInstance).count();
-    assert Objects.equals(ADDRESS_TAG_COUNT_LIMIT, count) : new NostrException(
-        String.format(CONCAT, count, baseTags));
-    return baseTags;
   }
 }

@@ -23,7 +23,7 @@ public class ZapReceiptEvent extends BaseEvent {
             Stream.of((BaseTag) new PubKeyTag(zapReciepientPublicKey)),
             Stream.concat(
                 Stream.of(GenericTag.create("descriptionSha256", zapReceipt.getDescriptionSha256())),
-                Stream.of(GenericTag.create("bolt11", zapReceipt.getBolt11())))).toList());
+                Stream.of(GenericTag.create("bolt11", zapReceipt.getBolt11())))));
   }
 
   public ZapReceiptEvent(@NonNull GenericEventRecord genericEventRecord) {

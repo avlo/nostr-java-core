@@ -7,7 +7,6 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
@@ -26,11 +25,10 @@ public class RelaySetsEvent extends BaseEvent {
         identity,
         Kind.RELAY_SETS,
         Stream.concat(
-                Stream.concat(
-                    Stream.of(identifierTag),
-                    relayTags.stream()),
-                tags.stream())
-            .collect(Collectors.toList()),
+            Stream.concat(
+                Stream.of(identifierTag),
+                relayTags.stream()),
+            tags.stream()),
         content);
   }
 

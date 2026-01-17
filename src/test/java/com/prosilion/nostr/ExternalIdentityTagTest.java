@@ -1,12 +1,17 @@
 package com.prosilion.nostr;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.filter.tag.ExternalIdentityTagFilter;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 
+import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -90,6 +95,15 @@ class ExternalIdentityTagTest {
 
     ExternalIdentityTagFilter atThree = new ExternalIdentityTagFilter(three);
     assertNotEquals(atOne, atThree);
+  }
+
+  @Test
+  void testFxn() throws JsonProcessingException {
+    String json = "[ \"" + PLATFORM + ":" + IDENTITY + "\\\",\\\"" + PROOF + "\" ]";
+
+    assertEquals(
+        new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF),
+        ExternalIdentityTagFilter.createExternalIdentityTag(MAPPER_AFTERBURNER.readTree(json)));
   }
 
   private static void anyFieldNameMatch(List<Field> fields, Predicate<Field> predicate) {

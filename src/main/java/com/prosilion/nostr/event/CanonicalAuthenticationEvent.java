@@ -5,13 +5,13 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.GenericTag;
 import com.prosilion.nostr.user.Identity;
-import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 public class CanonicalAuthenticationEvent extends BaseEvent {
   public CanonicalAuthenticationEvent(@NonNull Identity identity, @NonNull String challenge, @NonNull Relay relay) throws NostrException {
     super(identity, Kind.CLIENT_AUTH,
-        List.of(
+        Stream.of(
             GenericTag.create("challenge", challenge),
             GenericTag.create("relay", relay.getUrl())));
   }

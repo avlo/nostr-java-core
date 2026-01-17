@@ -6,7 +6,6 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
@@ -23,9 +22,8 @@ public class RelayListMetadataEvent extends ReplaceableEvent {
   public RelayListMetadataEvent(@NonNull Identity identity, @NonNull List<ReferenceTag> referenceTag, @NonNull List<BaseTag> tags, @NonNull String content) throws NostrException {
     super(identity, Kind.RELAY_LIST_METADATA,
         Stream.concat(
-                referenceTag.stream(),
-                tags.stream())
-            .collect(Collectors.toList()),
+            referenceTag.stream(),
+            tags.stream()),
         content);
   }
 

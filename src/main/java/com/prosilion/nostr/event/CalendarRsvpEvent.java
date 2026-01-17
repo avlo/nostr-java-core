@@ -59,13 +59,12 @@ public class CalendarRsvpEvent extends AddressableEvent {
         identifierTag,
         Objects.requireNonNull(validateAddressTagKind(addressTag).relay()),
         Stream.concat(
-                Stream.of(validateAddressTagKind(addressTag)),
+            Stream.of(validateAddressTagKind(addressTag)),
+            Stream.concat(
                 Stream.concat(
-                    Stream.concat(
-                        Stream.of(GenericTag.create("title", title)),
-                        Stream.of(GenericTag.create("status", status.getStatus()))),
-                    baseTags.stream()))
-            .toList(),
+                    Stream.of(GenericTag.create("title", title)),
+                    Stream.of(GenericTag.create("status", status.getStatus()))),
+                baseTags.stream())),
         content);
   }
 

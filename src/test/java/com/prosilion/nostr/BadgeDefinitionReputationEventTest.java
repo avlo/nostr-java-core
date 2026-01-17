@@ -6,6 +6,7 @@ import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -200,13 +201,29 @@ public class BadgeDefinitionReputationEventTest {
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
     List<BaseTag> baseTags = new ArrayList<>();
     baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
-    new BadgeDefinitionReputationEvent(
+    BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
         identity,
         reputationIdentifierTag,
         relay,
         externalIdentityTag,
         List.of(plusOneFormulaEvent),
         baseTags);
+
+    assertEquals(1, Filterable.getTypeSpecificTags(IdentifierTag.class, badgeDefinitionReputationEvent).size());
+  }
+
+  @Test
+  void nonEmptyFormulaEventList() {
+    assertTrue(
+        assertThrows(
+            NostrException.class, () -> new BadgeDefinitionReputationEvent(
+                identity,
+                reputationIdentifierTag,
+                relay,
+                externalIdentityTag,
+                List.of(),
+                List.of(new IdentifierTag("DIFFERENT_REPUTATION")))
+        ).getMessage().contains(BadgeDefinitionReputationEvent.MESSAGE));
   }
 
   @Test

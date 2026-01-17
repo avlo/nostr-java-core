@@ -2,6 +2,7 @@ package com.prosilion.nostr;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prosilion.nostr.codec.FiltersDecoder;
+import com.prosilion.nostr.codec.FiltersEncoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.GenericEventId;
 import com.prosilion.nostr.event.internal.Relay;
@@ -120,7 +121,17 @@ public class FiltersDecoderTest {
     Filters expectedFilters = new Filters(
         new AddressTagFilter(addressTag1),
         new AddressTagFilter(addressTag2));
-    
+
+//    TODO: revisit below, diffs between AddressTag having/not having relay string/value
+    System.out.println("expected strings:");
+    System.out.println(expected);
+    System.out.println("-------");
+    System.out.println(FiltersEncoder.encode(decodedFilters));
+
+    System.out.println("expected filters:");
+    System.out.println(expectedFilters);
+    System.out.println("-------");
+    System.out.println(decodedFilters);
     assertEquals(
         expectedFilters,
         decodedFilters);
@@ -454,7 +465,7 @@ public class FiltersDecoderTest {
     String proof = "proof";
     String platformAndIdentity = Strings.join(platform, identity).with(":");
 
-    String expected = "{\"#i\":[\"" + platformAndIdentity + "\",\"" + proof + "\"]}";
+    String expected = "{\"#i\":[\"" + platformAndIdentity + "\\\",\\\"" + proof + "\"]}";
     Filters decodedFilters = FiltersDecoder.decode(expected);
 
     assertEquals(
@@ -479,9 +490,8 @@ public class FiltersDecoderTest {
     String platformAndIdentity1 = Strings.join(platform1, identity1).with(":");
     String platformAndIdentity2 = Strings.join(platform2, identity2).with(":");
 
-    String expected = "{\"#i\":[[\"" + platformAndIdentity1 + "\",\"" + proof1 + "\"]," +
-        "[\"" + platformAndIdentity2 + "\",\"" + proof2 + "\"]]" +
-        "}";
+    String expected = "{\"#i\":[[\"" + platformAndIdentity1 + "\\\",\\\"" + proof1 + "\"]," +
+        "[\"" + platformAndIdentity2 + "\\\",\\\"" + proof2 + "\"]]}";
     Filters decodedFilters = FiltersDecoder.decode(expected);
 
     assertEquals(

@@ -7,6 +7,7 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 public class ArbitraryCustomAppDataEvent extends AddressableEvent {
@@ -23,6 +24,15 @@ public class ArbitraryCustomAppDataEvent extends AddressableEvent {
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
       @NonNull List<BaseTag> baseTags,
+      @NonNull String content) throws NostrException {
+    this(identity, identifierTag, relay, baseTags.stream(), content);
+  }
+
+  public ArbitraryCustomAppDataEvent(
+      @NonNull Identity identity,
+      @NonNull IdentifierTag identifierTag,
+      @NonNull Relay relay,
+      @NonNull Stream<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     super(
         identity,

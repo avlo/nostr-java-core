@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
@@ -22,9 +21,9 @@ public class DeletionEvent extends BaseEvent {
   }
 
   public DeletionEvent(@NonNull Identity identity, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException {
-    super(identity, Kind.DELETION, new ArrayList<>(
-            addressTags.stream().map(
-                DeletionEvent::validatePubkeyMatch).toList()),
+    super(identity, Kind.DELETION,
+        addressTags.stream().map(
+            DeletionEvent::validatePubkeyMatch),
         content);
   }
 
@@ -32,7 +31,7 @@ public class DeletionEvent extends BaseEvent {
     super(identity, Kind.DELETION,
         Stream.concat(
             kindTags.stream(),
-            eventTags.stream()).collect(Collectors.toList()), content);
+            eventTags.stream()), content);
   }
 
   public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException {
@@ -40,7 +39,7 @@ public class DeletionEvent extends BaseEvent {
         Stream.concat(
             kindTags.stream(),
             addressTags.stream().map(
-                DeletionEvent::validatePubkeyMatch)).collect(Collectors.toList()), content);
+                DeletionEvent::validatePubkeyMatch)), content);
   }
 
   public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull List<EventTag> eventTags, @NonNull List<AddressTag> addressTags, @NonNull String content) throws NostrException {
@@ -50,7 +49,7 @@ public class DeletionEvent extends BaseEvent {
                 kindTags.stream(),
                 eventTags.stream()),
             addressTags.stream().map(
-                DeletionEvent::validatePubkeyMatch)).collect(Collectors.toList()), content);
+                DeletionEvent::validatePubkeyMatch)), content);
   }
 
   public DeletionEvent(@NonNull GenericEventRecord genericEventRecord) {

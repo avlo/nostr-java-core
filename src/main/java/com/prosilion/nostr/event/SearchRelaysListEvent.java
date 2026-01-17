@@ -24,8 +24,7 @@ public class SearchRelaysListEvent extends ReplaceableEvent {
     super(identity, Kind.SEARCH_RELAYS_LIST,
         Stream.concat(
                 relayTags.stream(),
-                tags.stream())
-            .collect(Collectors.toList()),
+                tags.stream()),
         content);
   }
 

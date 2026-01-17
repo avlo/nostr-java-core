@@ -4,6 +4,7 @@ import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -14,7 +15,10 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
+import static com.prosilion.nostr.event.FollowSetsEvent.MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FollowSetsEventTest {
   public static final Relay relay = new Relay("ws://localhost:5555");
@@ -30,16 +34,16 @@ public class FollowSetsEventTest {
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
   public final Identity aImgIdentity = Identity.generateRandomIdentity();
 
-  BadgeAwardGenericEvent badgeAwardUpvoteEvent;
-  BadgeAwardGenericEvent badgeAwardDownvoteEvent;
+  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardUpvoteEvent;
+  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardDownvoteEvent;
 
   public FollowSetsEventTest() {
-    this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent(
+    this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
         authorIdentity,
         upvotedUserPublicKey,
         new BadgeDefinitionAwardEvent(authorIdentity, upvoteIdentifierTag, relay));
 
-    this.badgeAwardDownvoteEvent = new BadgeAwardGenericEvent(
+    this.badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
         authorIdentity,
         upvotedUserPublicKey,
         new BadgeDefinitionAwardEvent(authorIdentity, downvoteIdentifierTag, relay));
@@ -57,7 +61,7 @@ public class FollowSetsEventTest {
 
   @Test
   void testFollowSetsEventEquality() {
-    List<BadgeAwardGenericEvent> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+    List<BadgeAwardGenericEvent<BadgeDefinitionAwardEvent>> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
     FollowSetsEvent expected = new FollowSetsEvent(
         aImgIdentity,
         upvotedUserPublicKey,
@@ -76,16 +80,85 @@ public class FollowSetsEventTest {
   }
 
   @Test
+  void eventTagCountTest() {
+    Identity authorIdentity = Identity.generateRandomIdentity();
+
+    BadgeDefinitionAwardEvent badgeDefinitionAwardEvent = new BadgeDefinitionAwardEvent(
+        authorIdentity,
+        upvoteIdentifierTag,
+        relay);
+
+    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+        authorIdentity,
+        upvotedUserPublicKey,
+        badgeDefinitionAwardEvent);
+
+    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        relay,
+        badgeAwardGenericEvent);
+
+    assertEquals(1, followSetsEvent.getContainedAddressableEvents().size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
+    assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
+    assertEquals(1, Filterable.getTypeSpecificTags(EventTag.class, followSetsEvent).size());
+  }
+
+  @Test
+  void eventTagCountAsListTest() {
+    Identity authorIdentity = Identity.generateRandomIdentity();
+
+    BadgeDefinitionAwardEvent badgeDefinitionAwardEvent = new BadgeDefinitionAwardEvent(
+        authorIdentity,
+        upvoteIdentifierTag,
+        relay);
+
+    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+        authorIdentity,
+        upvotedUserPublicKey,
+        badgeDefinitionAwardEvent);
+
+    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        relay,
+        List.of(badgeAwardGenericEvent),
+        FollowSetsEvent.class.getSimpleName());
+
+    assertEquals(1, followSetsEvent.getContainedAddressableEvents().size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
+    assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
+    assertEquals(1, Filterable.getTypeSpecificTags(EventTag.class, followSetsEvent).size());
+  }
+
+  @Test
   void testInvalidFollowSetsEventMultipleIdentifierTags() {
     List<BaseTag> baseTags = new ArrayList<>();
     baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
-    new FollowSetsEvent(
+    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
         aImgIdentity,
         upvotedUserPublicKey,
         followSetsIdentifierTag,
         relay,
         List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
         baseTags);
+    assertEquals(1, Filterable.getTypeSpecificTags(IdentifierTag.class, followSetsEvent).size());
+  }
+
+  @Test
+  void testInvalidEmptyBadgeAwardGenericEventsList() {
+    assertTrue(
+        assertThrows(
+            NostrException.class, () -> new FollowSetsEvent(
+                aImgIdentity,
+                upvotedUserPublicKey,
+                followSetsIdentifierTag,
+                relay,
+                List.of())
+        ).getMessage().contains(MESSAGE));
   }
 
   @Test
