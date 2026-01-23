@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.prosilion.nostr.event.FollowSetsEvent.MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -73,10 +74,36 @@ public class FollowSetsEventTest {
         expected.getGenericEventRecord(),
         eventTag ->
             badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
-                new EventTag(badgeAwardAbstractEvent.getId()).equals(eventTag)).findFirst().orElseThrow());
+                new EventTag(
+                    badgeAwardAbstractEvent.getId(),
+                    badgeAwardAbstractEvent.getAddressTag().getRelay().getUrl()).equals(eventTag)).findFirst().orElseThrow());
 
     assertEquals(expected.getContainedAddressableEvents(), followSetsEvent.getContainedAddressableEvents());
     assertEquals(expected, followSetsEvent);
+  }
+
+  @Test
+  void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {
+    List<BadgeAwardGenericEvent<BadgeDefinitionAwardEvent>> badgeAwardGenericEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+    FollowSetsEvent actual = new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        relay,
+        badgeAwardGenericEvents);
+
+    assertEquals(
+        badgeAwardGenericEvents.stream().map(badgeAwardGenericEvent ->
+            new EventTag(
+                badgeAwardGenericEvent.getId(),
+                badgeAwardGenericEvent.getAddressTag().getRelay().getUrl())).toList(),
+        actual.getContainedAddressableEvents());
+
+    assertNotEquals(
+        badgeAwardGenericEvents.stream().map(badgeAwardAbstractEvent ->
+            new EventTag(
+                badgeAwardAbstractEvent.getId())).toList(),
+        actual.getContainedAddressableEvents());
   }
 
   @Test

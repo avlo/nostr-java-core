@@ -87,8 +87,10 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
             Stream.concat(
                 TagMappedEventIF.throwIfEmpty(
                         badgeAwardGenericEvents, MESSAGE)
-                    .map(BadgeAwardGenericEvent::getId)
-                    .map(EventTag::new),
+                    .map(badgeAwardGenericEvent ->
+                        new EventTag(
+                            badgeAwardGenericEvent.getId(),
+                            badgeAwardGenericEvent.getAddressTag().getRelay().getUrl())),
                 Stream.of(
                     new PubKeyTag(recipientPublicKey))),
             baseTags.stream()
@@ -108,8 +110,10 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   public List<EventTag> getContainedAddressableEvents() {
     return badgeAwardGenericEvents.stream()
-        .map(BadgeAwardGenericEvent::getId)
-        .map(EventTag::new)
+        .map(badgeAwardGenericEvent ->
+            new EventTag(
+                badgeAwardGenericEvent.getId(),
+                badgeAwardGenericEvent.getAddressTag().getRelay().getUrl()))
         .toList();
   }
 }
