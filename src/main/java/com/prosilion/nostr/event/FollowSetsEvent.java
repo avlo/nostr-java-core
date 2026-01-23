@@ -10,6 +10,7 @@ import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -87,10 +88,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
             Stream.concat(
                 TagMappedEventIF.throwIfEmpty(
                         badgeAwardGenericEvents, MESSAGE)
-                    .map(badgeAwardGenericEvent ->
-                        new EventTag(
-                            badgeAwardGenericEvent.getId(),
-                            badgeAwardGenericEvent.getAddressTag().getRelay().getUrl())),
+                    .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag),
                 Stream.of(
                     new PubKeyTag(recipientPublicKey))),
             baseTags.stream()
@@ -110,10 +108,19 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   public List<EventTag> getContainedAddressableEvents() {
     return badgeAwardGenericEvents.stream()
-        .map(badgeAwardGenericEvent ->
-            new EventTag(
-                badgeAwardGenericEvent.getId(),
-                badgeAwardGenericEvent.getAddressTag().getRelay().getUrl()))
+        .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag)
         .toList();
+  }
+
+  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent) {
+    return new EventTag(
+        badgeAwardGenericEvent.getId(),
+        Optional.ofNullable(
+                badgeAwardGenericEvent.getAddressTag().getRelay())
+            .orElseThrow(() ->
+                new NostrException(
+                    String.format(
+                        "FollowSetsEvent BadgeAwardGenericEvent / AddressTag [%s] is missing a relay url", badgeAwardGenericEvent)))
+            .getUrl());
   }
 }

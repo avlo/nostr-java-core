@@ -74,9 +74,7 @@ public class FollowSetsEventTest {
         expected.getGenericEventRecord(),
         eventTag ->
             badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
-                new EventTag(
-                    badgeAwardAbstractEvent.getId(),
-                    badgeAwardAbstractEvent.getAddressTag().getRelay().getUrl()).equals(eventTag)).findFirst().orElseThrow());
+                FollowSetsEvent.badgeAwardGenericEventAsEventTag(badgeAwardAbstractEvent).equals(eventTag)).findFirst().orElseThrow());
 
     assertEquals(expected.getContainedAddressableEvents(), followSetsEvent.getContainedAddressableEvents());
     assertEquals(expected, followSetsEvent);
@@ -93,10 +91,9 @@ public class FollowSetsEventTest {
         badgeAwardGenericEvents);
 
     assertEquals(
-        badgeAwardGenericEvents.stream().map(badgeAwardGenericEvent ->
-            new EventTag(
-                badgeAwardGenericEvent.getId(),
-                badgeAwardGenericEvent.getAddressTag().getRelay().getUrl())).toList(),
+        badgeAwardGenericEvents.stream()
+            .map(
+                FollowSetsEvent::badgeAwardGenericEventAsEventTag).toList(),
         actual.getContainedAddressableEvents());
 
     assertNotEquals(
