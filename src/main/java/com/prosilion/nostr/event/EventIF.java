@@ -9,6 +9,7 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
@@ -43,4 +44,18 @@ public interface EventIF extends Serializable {
   String getContent();
 
   Signature getSignature();
+
+  default GenericEventRecord asGenericEventRecord() {
+    return asGenericEventRecord.apply(this);
+  }
+
+  Function<EventIF, GenericEventRecord> asGenericEventRecord = eventIF ->
+      new GenericEventRecord(
+          eventIF.getId(),
+          eventIF.getPublicKey(),
+          eventIF.getCreatedAt(),
+          eventIF.getKind(),
+          eventIF.getTags(),
+          eventIF.getContent(),
+          eventIF.getSignature());
 }

@@ -1,7 +1,11 @@
 package com.prosilion.nostr;
 
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.EventIF;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -23,10 +27,10 @@ public class BadgeAwardUpvoteEventTest {
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> expected;
+  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent;
 
   public BadgeAwardUpvoteEventTest() {
-    this.expected = new BadgeAwardGenericEvent<>(
+    this.badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
         badgeDefnUpvoteEvent);
@@ -35,12 +39,12 @@ public class BadgeAwardUpvoteEventTest {
   @Test
   void testValidBadgeAwardReputationEvent() {
     BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
-        expected.getGenericEventRecord(),
+        badgeAwardGenericEvent.getGenericEventRecord(),
         addressTag -> badgeDefnUpvoteEvent);
 
-    assertEquals(expected, badgeAwardUpvoteEvent);
+    assertEquals(badgeAwardGenericEvent, badgeAwardUpvoteEvent);
     assertEquals(
-        expected.getContainedAddressableEvents(),
+        badgeAwardGenericEvent.getContainedAddressableEvents(),
         badgeAwardUpvoteEvent.getContainedAddressableEvents());
   }
 
@@ -50,9 +54,31 @@ public class BadgeAwardUpvoteEventTest {
         identity,
         badgeReceiverPublicKey,
         badgeDefnUpvoteEvent,
-        Collections.unmodifiableList(expected.getContainedAddressableEvents()));
+        Collections.unmodifiableList(badgeAwardGenericEvent.getContainedAddressableEvents()));
 
     assertEquals(1, badgeAwardUpvoteEvent.getContainedAddressableEvents().size());
     assertEquals(1, badgeAwardUpvoteEvent.getTypeSpecificTags(AddressTag.class).size());
+  }
+
+  @Test
+  void testEventIFAsGenericEventRecord() {
+    EventIF badgeAwardGenericEventAsEventIF = badgeAwardGenericEvent;
+    assertEquals(
+        badgeAwardGenericEventAsEventIF.asGenericEventRecord(),
+        badgeAwardGenericEvent.asGenericEventRecord());
+    
+    assertEquals_VariantDemonstration(
+        ((Supplier<GenericEventRecord>) badgeAwardGenericEvent::asGenericEventRecord).get());
+
+    assertEquals_VariantDemonstration(
+        EventIF.asGenericEventRecord.apply(badgeAwardGenericEvent));
+
+    Function<EventIF, GenericEventRecord> interfaceMethodGenericEventRecord = EventIF::asGenericEventRecord;
+    assertEquals_VariantDemonstration(
+        interfaceMethodGenericEventRecord.apply(badgeAwardGenericEvent));
+  }
+
+  private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {
+    assertEquals(badgeAwardGenericEvent.asGenericEventRecord(), genericEventRecordVariant);
   }
 }
