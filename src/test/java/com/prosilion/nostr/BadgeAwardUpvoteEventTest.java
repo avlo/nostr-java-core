@@ -66,6 +66,9 @@ public class BadgeAwardUpvoteEventTest {
     assertEquals(
         badgeAwardGenericEventAsEventIF.asGenericEventRecord(),
         badgeAwardGenericEvent.asGenericEventRecord());
+
+    assertEquals_VariantDemonstration(
+        ((Supplier<GenericEventRecord>) badgeAwardGenericEventAsEventIF::asGenericEventRecord).get());
     
     assertEquals_VariantDemonstration(
         ((Supplier<GenericEventRecord>) badgeAwardGenericEvent::asGenericEventRecord).get());
@@ -73,9 +76,9 @@ public class BadgeAwardUpvoteEventTest {
     assertEquals_VariantDemonstration(
         EventIF.asGenericEventRecord.apply(badgeAwardGenericEvent));
 
-    Function<EventIF, GenericEventRecord> interfaceMethodGenericEventRecord = EventIF::asGenericEventRecord;
+    Function<EventIF, GenericEventRecord> methodInstance_AsGenericEventRecord = EventIF::asGenericEventRecord;
     assertEquals_VariantDemonstration(
-        interfaceMethodGenericEventRecord.apply(badgeAwardGenericEvent));
+        methodInstance_AsGenericEventRecord.apply(badgeAwardGenericEvent));
   }
 
   private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {
