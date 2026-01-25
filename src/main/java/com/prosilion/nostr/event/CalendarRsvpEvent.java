@@ -10,7 +10,6 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
@@ -69,12 +68,13 @@ public class CalendarRsvpEvent extends AddressableEvent {
   }
 
   private static AddressTag validateAddressTagKind(AddressTag addressTag) {
-    Optional.of(Objects.equals(addressTag.getKind(), Kind.CALENDAR_DATE_BASED_EVENT) ||
-        Objects.equals(addressTag.getKind(), Kind.CALENDAR_TIME_BASED_EVENT)).orElseThrow(() ->
-        new NostrException(String.format("CalendarRsvpEvent %s must be of either type %s or %s",
+    NostrException.testBoolean(
+        Objects.equals(addressTag.getKind(), Kind.CALENDAR_DATE_BASED_EVENT) ||
+            Objects.equals(addressTag.getKind(), Kind.CALENDAR_TIME_BASED_EVENT),
+        String.format("CalendarRsvpEvent %s must be of either type %s or %s",
             addressTag.getClass().getSimpleName(),
             Kind.CALENDAR_DATE_BASED_EVENT.getName(),
-            Kind.CALENDAR_TIME_BASED_EVENT.getName())));
+            Kind.CALENDAR_TIME_BASED_EVENT.getName()));
     return addressTag;
   }
 

@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
@@ -47,13 +48,14 @@ public class BadgeDefinitionAwardEvent extends AddressableEvent {
     super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag, relay, baseTags, content);
   }
 
+  public BadgeDefinitionAwardEvent(@NonNull GenericEventRecord genericEventRecord) {
+    super(genericEventRecord);
+  }
+
+  @JsonIgnore
   public Relay getRelayTagRelay() {
     return getTypeSpecificTags(RelayTag.class).stream().map(RelayTag::getRelay).findFirst().orElseThrow(() ->
         new NostrException(
             String.format(MISSING_RELAY, getTags())));
-  }
-
-  public BadgeDefinitionAwardEvent(@NonNull GenericEventRecord genericEventRecord) {
-    super(genericEventRecord);
   }
 }

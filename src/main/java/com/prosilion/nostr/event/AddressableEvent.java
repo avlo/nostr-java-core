@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
@@ -36,7 +37,7 @@ public class AddressableEvent extends BaseEvent {
       @NonNull String content) throws NostrException {
     super(
         identity,
-        kind,
+        validateKind(kind, intPredicate, errorMessage),
         Stream.concat(
             Stream.concat(
                 Stream.of(identifierTag),
@@ -52,10 +53,12 @@ public class AddressableEvent extends BaseEvent {
     super(genericEventRecord);
   }
 
+  @JsonIgnore
   public IdentifierTag getIdentifierTag() {
     return getTypeSpecificTags(IdentifierTag.class).getFirst();
   }
 
+  @JsonIgnore
   public AddressTag asAddressTag() {
     return new AddressTag(
         getKind(),

@@ -26,8 +26,13 @@ public record UserProfile(
 
   public UserProfile {
     var strNameArr = nip05.split("@");
-    assert strNameArr.length == 2 : new AssertionError("Invalid nip05 profile, missing '@': " + nip05);
-    assert strNameArr[0].matches(NAME_PATTERN) : new AssertionError("Invalid nip05 profile pattern: " + nip05);
+    NostrException.testBoolean(
+        Objects.equals(2, strNameArr.length),
+        String.format("Invalid nip05 profile, missing '@': %s", nip05));
+
+    NostrException.testBoolean(
+        strNameArr[0].matches(NAME_PATTERN),
+        String.format("Invalid nip05 profile pattern: %s", nip05));
   }
 
   @Override

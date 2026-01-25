@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
@@ -106,12 +107,14 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
     this.badgeAwardGenericEvents = mapTagsToEvents(this, fxn, EventTag.class);
   }
 
+  @JsonIgnore
   public List<EventTag> getContainedAddressableEvents() {
     return badgeAwardGenericEvents.stream()
         .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag)
         .toList();
   }
 
+  @JsonIgnore
   public static EventTag badgeAwardGenericEventAsEventTag(@NonNull BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent) {
     return new EventTag(
         badgeAwardGenericEvent.getId(),

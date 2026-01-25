@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
@@ -44,10 +45,12 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
     super(genericEventRecord, fxn);
   }
 
+  @JsonIgnore
   public BadgeDefinitionReputationEvent getBadgeDefinitionReputationEvent() {
     return super.getAddressableEvent();
   }
 
+  @JsonIgnore
   public ExternalIdentityTag getExternalIdentityTag() {
     return getTypeSpecificTags(ExternalIdentityTag.class).getFirst();
   }

@@ -83,7 +83,9 @@ public abstract class BaseEvent implements EventIF {
   }
 
   protected static Kind validateKind(@NonNull Kind kind, @NonNull IntPredicate intPredicate, @NonNull Function<Kind, String> errorMessage) {
-    assert intPredicate.test(kind.getValue()) : errorMessage.apply(kind);
+    NostrException.testBoolean(
+        intPredicate.test(kind.getValue()),
+        errorMessage.apply(kind));
     return kind;
   }
 

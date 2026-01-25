@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.AddressTag;
@@ -53,6 +54,7 @@ public abstract class UniqueAddressTagEvent extends BaseEvent {
     super(genericEventRecord);
   }
 
+  @JsonIgnore
   public AddressTag getAddressTag() {
     return getTypeSpecificTags(AddressTag.class).getFirst();
   }

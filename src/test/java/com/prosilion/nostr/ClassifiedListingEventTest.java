@@ -20,6 +20,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ClassifiedListingEventTest {
   public static final Relay relay = new Relay("ws://localhost:5555");
@@ -77,5 +78,22 @@ class ClassifiedListingEventTest {
     assertEquals(senderPubkey.toBech32String(), instance.getPublicKey().toBech32String());
     assertEquals(senderPubkey.toHexString(), instance.getPublicKey().toHexString());
     assertEquals(CLASSIFIED_LISTING_CONTENT, instance.getContent());
+  }
+
+  @Test
+  void testInvalidKind() {
+    assertThrows(
+        NostrException.class, () -> new ClassifiedListingEvent(
+            identity,
+            Kind.TEXT_NOTE,
+            identifierTag,
+            relay,
+            new ClassifiedListing(
+                CLASSIFIED_LISTING_TITLE,
+                CLASSIFIED_LISTING_SUMMARY,
+                PRICE_TAG,
+                CLASSIFIED_LISTING_LOCATION),
+            List.of(),
+            CLASSIFIED_LISTING_CONTENT));
   }
 }

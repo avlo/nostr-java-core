@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -8,7 +9,7 @@ import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -74,22 +75,24 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
     this.formulaEvents = mapTagsToEvents(this, eventTagFormulaEventFunction, AddressTag.class);
   }
 
+  @JsonIgnore
   public ExternalIdentityTag getExternalIdentityTag() {
     return getTypeSpecificTags(ExternalIdentityTag.class).getFirst();
   }
 
   private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
-    Optional
-        .of(
-            formulaEvents.stream()
-                .map(FormulaEvent::getBadgeDefinitionAwardEvent)
-                .map(BadgeDefinitionAwardEvent::getIdentifierTag).distinct().count() != formulaEvents.size())
-        .filter(Boolean::booleanValue)
-        .map(bool -> {
-          throw new NostrException(String.format(CONCAT, formulaEvents.stream()
-              .map(FormulaEvent::getBadgeDefinitionAwardEvent)
-              .map(BadgeDefinitionAwardEvent::getIdentifierTag)));
-        });
+    NostrException.testBoolean(
+        Objects.equals(
+            Long.valueOf(
+                formulaEvents.stream()
+                    .map(FormulaEvent::getBadgeDefinitionAwardEvent)
+                    .map(BadgeDefinitionAwardEvent::getIdentifierTag)
+                    .distinct().count()).intValue(),
+            formulaEvents.size()),
+        String.format(CONCAT, formulaEvents.stream()
+            .map(FormulaEvent::getBadgeDefinitionAwardEvent)
+            .map(BadgeDefinitionAwardEvent::getIdentifierTag)
+            .toList()));
 
     return String.format("%s == (previous)%s%s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
   }
@@ -105,6 +108,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
     return sb.toString();
   }
 
+  @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return formulaEvents.stream()
         .map(FormulaEvent::getContainedAddressableEvents)

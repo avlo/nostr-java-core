@@ -1,5 +1,6 @@
 package com.prosilion.nostr.crypto;
 
+import com.prosilion.nostr.NostrException;
 import java.math.BigInteger;
 import org.springframework.lang.NonNull;
 
@@ -46,12 +47,14 @@ public class Point {
   }
 
   public static BigInteger getX(Point P) {
-    assert !P.isInfinite();
+    NostrException.testBoolean(
+        !P.isInfinite(), "Point X is infinite");
     return P.getX();
   }
 
   public static BigInteger getY(Point P) {
-    assert !P.isInfinite();
+    NostrException.testBoolean(
+        !P.isInfinite(), "Point Y is infinite");
     return P.getY();
   }
 
@@ -130,7 +133,8 @@ public class Point {
   }
 
   public static boolean hasSquareY(Point P) {
-    assert !isInfinite(P);
+    NostrException.testBoolean(
+        !isInfinite(P), "Point P does not have Square Y");
     return isSquare(P.getY());
   }
 

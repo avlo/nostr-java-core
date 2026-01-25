@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
@@ -19,6 +20,7 @@ public interface TagMappedEventIF extends EventIF {
         .map(tagMappingFunction).toList();
   }
 
+  @JsonIgnore
   List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents();
 
   String getId();
