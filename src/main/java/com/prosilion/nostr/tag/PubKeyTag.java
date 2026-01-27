@@ -3,6 +3,8 @@ package com.prosilion.nostr.tag;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.prosilion.nostr.codec.serializer.PubKeyTagSerializer;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
 import lombok.Getter;
@@ -10,7 +12,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @Tag(code = "p")
-@JsonPropertyOrder({"pubKey", "mainRelayUrl", "petName"})
+@JsonPropertyOrder({"publicKey", "mainRelayUrl", "petName"})
+@JsonSerialize(using = PubKeyTagSerializer.class)
 public record PubKeyTag(
     @Getter @Key PublicKey publicKey,
     @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) String mainRelayUrl,

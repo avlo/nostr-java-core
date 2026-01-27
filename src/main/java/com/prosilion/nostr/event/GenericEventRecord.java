@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.crypto.HexStringValidator;
@@ -108,6 +109,7 @@ public record GenericEventRecord(
   }
 
   @Override
+  @JsonIgnore
   public List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents() {
     return tags.stream()
         .filter(ReferencedAbstractEventTag.class::isInstance)

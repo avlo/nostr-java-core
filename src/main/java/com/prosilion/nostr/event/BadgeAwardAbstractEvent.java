@@ -17,7 +17,7 @@ import org.springframework.lang.NonNull;
 
 @Getter
 public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extends UniqueAddressTagEvent implements TagMappedEventIF {
-  @Getter
+  @JsonIgnore
   private final T addressableEvent;
 
   public BadgeAwardAbstractEvent(
@@ -57,6 +57,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
     this.addressableEvent = badgeDefinitionAwardEvent;
   }
 
+  @JsonIgnore
   public BadgeAwardAbstractEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, T> fxn) {
@@ -64,7 +65,6 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
     this.addressableEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
-  @Override
   @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return List.of(addressableEvent.asAddressTag());

@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.NostrException;
@@ -20,7 +21,7 @@ import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
 @Slf4j
 class GenericEventRecordFactory {
-
+  @JsonIgnore
   protected static GenericEventRecord createInstance(
       @NonNull Identity identity,
       @NonNull Kind kind,

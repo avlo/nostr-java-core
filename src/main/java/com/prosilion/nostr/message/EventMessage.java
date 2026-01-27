@@ -18,6 +18,7 @@ import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
 import java.util.Objects;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -25,6 +26,7 @@ import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
 @JsonSerialize(using = EventMessageSerializer.class)
 @JsonDeserialize(using = EventMessageDeserializer.class)
+@Slf4j
 public record EventMessage(
     @Getter @JsonPropertyDescription("EVENT") EventIF event,
     @Getter @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String subscriptionId) implements BaseMessage {
@@ -47,11 +49,16 @@ public record EventMessage(
 
   @Override
   public String encode() throws JsonProcessingException, NostrException {
-    return IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(this);
+    String encodedString = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(this);
+    log.debug("EventMessage encode() encoded string: \n  {}", encodedString);
+    return encodedString;
   }
 
   public static BaseMessage decode(@NonNull String json) throws JsonProcessingException {
-    return ENCODER_MAPPED_AFTERBURNER.readValue(json, EventMessage.class);
+    log.debug("EventMessage decode() decoding incoming json: \n  {}", json);
+    EventMessage eventMessage = ENCODER_MAPPED_AFTERBURNER.readValue(json, EventMessage.class);
+    log.debug("EventMessage decode() returning decoded EventMessage: \n  {}", eventMessage);
+    return eventMessage;
   }
 
   @Override

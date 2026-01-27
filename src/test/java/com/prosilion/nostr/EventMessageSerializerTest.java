@@ -105,12 +105,15 @@ public class EventMessageSerializerTest {
             new IdentifierTag(UPVOTE))),
         "matching kind, author, identity-tag filter test",
         new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
-    TextNoteEvent content = new TextNoteEvent(genericEventRecord1);
+    TextNoteEvent textNoteEvent = new TextNoteEvent(genericEventRecord1);
 //    GenericEventRecord genericEventRecord = content.getGenericEventRecord();
     EventMessage eventMessageContainingSubscriberId = new EventMessage(
-        content,
+        textNoteEvent,
         "subscriberId");
 
+    String afterBurnerEncodedJson = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessageContainingSubscriberId);
+    String eventMessageEncodedJson = eventMessageContainingSubscriberId.encode();
+    assertEquals(afterBurnerEncodedJson, eventMessageEncodedJson);
     checkWithoutExplicitJson(eventMessageContainingSubscriberId);
   }
   

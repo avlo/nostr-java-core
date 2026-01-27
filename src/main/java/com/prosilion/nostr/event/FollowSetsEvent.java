@@ -18,10 +18,11 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
+@Getter
 public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   public static final String MESSAGE = "FollowSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
-  @Getter
+  @JsonIgnore
   private final List<BadgeAwardGenericEvent<BadgeDefinitionAwardEvent>> badgeAwardGenericEvents;
 
   public FollowSetsEvent(

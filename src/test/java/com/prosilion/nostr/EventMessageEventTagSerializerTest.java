@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.json.JsonComparator;
 import org.springframework.test.json.JsonComparison;
 
+import static com.prosilion.nostr.FollowSetsEventTest.generateRandomHex64String;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -64,6 +65,9 @@ public class EventMessageEventTagSerializerTest {
         content,
         "subscriberId");
 
+//    EventMessage eventMessageContainingSubscriberId = new EventMessage(
+//        content);
+
     checkWithoutExplicitJson(eventMessageContainingSubscriberId);
   }
 
@@ -75,6 +79,7 @@ public class EventMessageEventTagSerializerTest {
     String eventMessageEncodedJson = eventMessage.encode();
     String testWriterEventMessageJson = testWriterEventMessage.getJson();
 
+    logDebug(0);
     log.debug("\nafterBurnerEncodedJson:");
     log.debug(afterBurnerEncodedJson);
     log.debug("--- testWriterEventMessage.toString() ----");
@@ -134,5 +139,11 @@ public class EventMessageEventTagSerializerTest {
 
   private String explicitJsonEventEventTagNoUrlEncoder() {
     return "[\"EVENT\",{\"id\":\"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001\",\"pubkey\":\"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\",\"created_at\":1111111111111,\"kind\":8,\"tags\":[[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\"]],\"content\":\"event tag test\",\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\"}]";
+  }
+
+  private void logDebug(int s) {
+    String newString = String.valueOf(s).repeat(10);
+    log.debug(newString);
+    log.debug(newString);
   }
 }

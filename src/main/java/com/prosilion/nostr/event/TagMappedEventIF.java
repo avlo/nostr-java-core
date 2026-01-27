@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 public interface TagMappedEventIF extends EventIF {
   default <T extends BaseEvent, U extends ReferencedAbstractEventTag>
-
   List<T> mapTagsToEvents(
       BaseEvent baseEvent,
       Function<U, T> tagMappingFunction,

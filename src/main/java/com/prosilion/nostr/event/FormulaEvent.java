@@ -2,6 +2,7 @@ package com.prosilion.nostr.event;
 
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -18,6 +19,7 @@ import org.springframework.lang.NonNull;
 
 public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {
   @Getter
+  @JsonIgnore
   private final BadgeDefinitionAwardEvent badgeDefinitionAwardEvent;
 
   public FormulaEvent(
@@ -62,6 +64,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
     this.badgeDefinitionAwardEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
+  @JsonIgnore
   public String getFormula() {
     return super.getContent();
   }
@@ -76,6 +79,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   }
 
   @Override
+  @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return List.of(badgeDefinitionAwardEvent.asAddressTag());
   }

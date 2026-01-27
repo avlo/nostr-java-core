@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.filter.Filterable;
@@ -43,6 +44,7 @@ public abstract class BaseEvent implements EventIF {
     this.genericEventRecord = GenericEventRecordFactory.createInstance(identity, kind, tags.distinct().toList(), content);
   }
 
+  @JsonIgnore
   public BaseEvent(@NonNull GenericEventRecord genericEventRecord) {
     this.genericEventRecord = genericEventRecord;
   }
