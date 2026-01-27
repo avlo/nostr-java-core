@@ -17,12 +17,12 @@ import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
+@Getter
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements TagMappedEventIF {
   public static final String MESSAGE = "BadgeDefinitionReputationEvent ctor() is missing FormulaEvent(s) parameter";
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found:";
   public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
 
-  @Getter
   @JsonIgnore
   private final List<FormulaEvent> formulaEvents;
 
@@ -70,7 +70,6 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
     this.formulaEvents = formulaEvents;
   }
 
-  @JsonIgnore
   public BadgeDefinitionReputationEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, FormulaEvent> eventTagFormulaEventFunction) {
@@ -111,6 +110,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
     return sb.toString();
   }
 
+  @Override
   @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return formulaEvents.stream()

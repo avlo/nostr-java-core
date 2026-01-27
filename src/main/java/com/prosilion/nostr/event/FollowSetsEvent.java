@@ -108,6 +108,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
     this.badgeAwardGenericEvents = mapTagsToEvents(this, fxn, EventTag.class);
   }
 
+  @Override
   @JsonIgnore
   public List<EventTag> getContainedAddressableEvents() {
     return badgeAwardGenericEvents.stream()
@@ -115,7 +116,6 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
         .toList();
   }
 
-  @JsonIgnore
   public static EventTag badgeAwardGenericEventAsEventTag(@NonNull BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent) {
     return new EventTag(
         badgeAwardGenericEvent.getId(),

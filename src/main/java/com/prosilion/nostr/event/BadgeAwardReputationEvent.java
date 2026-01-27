@@ -39,7 +39,6 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
         score.toString());
   }
   
-  @JsonIgnore
   public BadgeAwardReputationEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxn) {

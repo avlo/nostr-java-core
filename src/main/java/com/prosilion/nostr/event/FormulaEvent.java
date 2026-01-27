@@ -17,8 +17,8 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
+@Getter
 public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {
-  @Getter
   @JsonIgnore
   private final BadgeDefinitionAwardEvent badgeDefinitionAwardEvent;
 

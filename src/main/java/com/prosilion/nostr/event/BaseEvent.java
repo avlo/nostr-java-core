@@ -44,7 +44,6 @@ public abstract class BaseEvent implements EventIF {
     this.genericEventRecord = GenericEventRecordFactory.createInstance(identity, kind, tags.distinct().toList(), content);
   }
 
-  @JsonIgnore
   public BaseEvent(@NonNull GenericEventRecord genericEventRecord) {
     this.genericEventRecord = genericEventRecord;
   }

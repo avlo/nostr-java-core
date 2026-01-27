@@ -48,7 +48,6 @@ public class BadgeDefinitionAwardEvent extends AddressableEvent {
     super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag, relay, baseTags, content);
   }
 
-  @JsonIgnore
   public BadgeDefinitionAwardEvent(@NonNull GenericEventRecord genericEventRecord) {
     super(genericEventRecord);
   }

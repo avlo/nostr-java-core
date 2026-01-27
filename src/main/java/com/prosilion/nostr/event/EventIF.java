@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.NostrException;
@@ -46,12 +45,10 @@ public interface EventIF extends Serializable {
 
   Signature getSignature();
 
-  @JsonIgnore
   default GenericEventRecord asGenericEventRecord() {
     return asGenericEventRecord.apply(this);
   }
 
-  @JsonIgnore
   Function<EventIF, GenericEventRecord> asGenericEventRecord = eventIF ->
       new GenericEventRecord(
           eventIF.getId(),

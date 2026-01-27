@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
-public class UniqueAddressTagEvent extends BaseEvent {
+public abstract class UniqueAddressTagEvent extends BaseEvent {
   public static final long ADDRESS_TAG_COUNT_LIMIT = 1L;
   public static final String LIMIT = String.format("List<BaseTag> should contain [%s] AddressTag but instead has", ADDRESS_TAG_COUNT_LIMIT);
   public static final String CONCAT = Strings.concat(LIMIT, " [%s]: %s");

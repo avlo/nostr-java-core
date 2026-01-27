@@ -1,6 +1,5 @@
 package com.prosilion.nostr.codec.deserializer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -12,7 +11,6 @@ import java.util.Arrays;
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
 public interface MessageDeserializerIF {
-  @JsonIgnore
   default GenericEventRecord getEvent(JsonNode node) {
     return new GenericEventRecord(
         node.path("id").asText(),

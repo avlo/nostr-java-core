@@ -63,6 +63,7 @@ public class BadgeAwardGenericEvent<T extends BadgeDefinitionAwardEvent> extends
     return super.getAddressableEvent();
   }
 
+  @Override
   @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return List.of(getBadgeDefinitionAwardEvent().asAddressTag());

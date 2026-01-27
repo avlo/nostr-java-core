@@ -57,7 +57,6 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
     this.addressableEvent = badgeDefinitionAwardEvent;
   }
 
-  @JsonIgnore
   public BadgeAwardAbstractEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, T> fxn) {
@@ -65,6 +64,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
     this.addressableEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
+  @Override
   @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return List.of(addressableEvent.asAddressTag());

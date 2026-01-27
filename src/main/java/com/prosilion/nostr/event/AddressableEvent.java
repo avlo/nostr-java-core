@@ -49,7 +49,6 @@ public class AddressableEvent extends BaseEvent {
         content);
   }
 
-  @JsonIgnore
   public AddressableEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
     super(genericEventRecord);
   }

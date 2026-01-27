@@ -1,7 +1,6 @@
 
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.ZapReceipt;
 import com.prosilion.nostr.tag.BaseTag;
@@ -27,7 +26,6 @@ public class ZapReceiptEvent extends BaseEvent {
                 Stream.of(GenericTag.create("bolt11", zapReceipt.getBolt11())))));
   }
 
-  @JsonIgnore
   public ZapReceiptEvent(@NonNull GenericEventRecord genericEventRecord) {
     super(genericEventRecord);
   }
