@@ -22,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.json.JsonComparator;
 import org.springframework.test.json.JsonComparison;
 
-import static com.prosilion.nostr.FollowSetsEventTest.generateRandomHex64String;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,9 +51,13 @@ public class EventMessageEventTagSerializerTest {
   }
 
   @Test
-  void testEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
-    checkWithoutExplicitJson(eventMessageWithUrl);
+  void testWithEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
     checkWithExplicitJson(eventMessageWithUrl, explicitJsonNoSubscriberIdEncoder());
+  }
+
+  @Test
+  void testNonExplicitJsonEventMessageNoSubscriberIdEncoder() throws IOException, NostrException {
+    checkWithoutExplicitJson(eventMessageWithUrl);
   }
 
   @Test
@@ -75,7 +78,8 @@ public class EventMessageEventTagSerializerTest {
     JsonContent<EventMessage> testWriterEventMessage = tester.write(eventMessage);
     JsonComparator jsonComparator = (expectedJson, actualJson) -> JsonComparison.match();
 
-    String afterBurnerEncodedJson = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage);
+    String afterBurnerEncodedJson =
+        IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(eventMessage);
     String eventMessageEncodedJson = eventMessage.encode();
     String testWriterEventMessageJson = testWriterEventMessage.getJson();
 
@@ -97,10 +101,11 @@ public class EventMessageEventTagSerializerTest {
     log.debug("eventMessageEncodedJson, testWriterEventMessageJson:\n  {}",
         jsonComparator.compare(eventMessageEncodedJson, testWriterEventMessageJson).getResult());
 
-    assertThat(testWriterEventMessage).isEqualToJson(afterBurnerEncodedJson);
-    assertThat(testWriterEventMessage).isEqualToJson(eventMessageEncodedJson);
-//
+//    assertThat(testWriterEventMessage).isEqualToJson(afterBurnerEncodedJson, JSONCompareMode.LENIENT);
+//    assertThat(testWriterEventMessage).isEqualToJson(eventMessageEncodedJson, JSONCompareMode.LENIENT);
+////
     assertEquals(afterBurnerEncodedJson, eventMessageEncodedJson);
+    assertEquals(afterBurnerEncodedJson, testWriterEventMessageJson);
   }
 
   private void checkWithExplicitJson(EventMessage eventMessage, String explicitJson) throws IOException, NostrException {
@@ -145,5 +150,11 @@ public class EventMessageEventTagSerializerTest {
     String newString = String.valueOf(s).repeat(10);
     log.debug(newString);
     log.debug(newString);
+  }
+
+  private String replaceWhiteSpace(String s) {
+    String allWhiteSpace = "\\s+";
+    String allNonQuotesWhitespace = "\\s+(?=((\\\\[\\\\\"]|[^\\\\\"])*\"(\\\\[\\\\\"]|[^\\\\\"])*\")*(\\\\[\\\\\"]|[^\\\\\"])*$)";
+    return s.replaceAll(allWhiteSpace, allNonQuotesWhitespace);
   }
 }

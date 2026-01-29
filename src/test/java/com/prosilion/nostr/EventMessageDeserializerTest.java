@@ -1,5 +1,6 @@
 package com.prosilion.nostr;
 
+import com.google.common.base.Supplier;
 import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.message.BaseMessage;
@@ -43,13 +44,14 @@ public class EventMessageDeserializerTest {
         + "}]";
 
     EventMessage expected = tester.parseObject(json);
+
     BaseMessage message = BaseMessageDecoder.decode(json);
     assertEquals(expected, message);
 
     String encoded = message.encode();
     log.debug("");
     log.debug("testing testEventMessageNoSubscriberIdDecoder\n");
-    log.debug(json);
+    expected.debug();
     log.debug("------");
     log.debug(encoded);
     log.debug("");
@@ -124,7 +126,7 @@ public class EventMessageDeserializerTest {
 
     String encodedEventMessage = eventMessage.encode();
     assertEquals(encodedEventMessage, encodedBaseMessage);
-    
+
     assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encodedBaseMessage).getResult());
     assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encodedEventMessage).getResult());
   }
