@@ -59,7 +59,7 @@ class GenericEventRecordFactory {
       return () -> ByteBuffer.wrap(serializedEvent);
     }
 
-    public String serialize() throws NostrException {
+    private String serialize() throws NostrException {
       var arrayNode = JsonNodeFactory.instance.arrayNode();
 
       try {

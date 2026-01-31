@@ -11,10 +11,13 @@ import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.message.NoticeMessage;
 import com.prosilion.nostr.message.OkMessage;
 import com.prosilion.nostr.message.ReqMessage;
+import com.prosilion.nostr.util.Util;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
+@Slf4j
 public class BaseMessageDecoder {
   public static final int COMMAND_INDEX = 0;
   public static final int ARG_INDEX = 1;
@@ -50,9 +53,11 @@ public class BaseMessageDecoder {
   }
 
   private static ValidNostrJsonStructure validateProperlyFormedJson(@NonNull String jsonString) throws JsonProcessingException {
-    return new ValidNostrJsonStructure(
+    ValidNostrJsonStructure validNostrJsonStructure = new ValidNostrJsonStructure(
         I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(COMMAND_INDEX).asText(),
         I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(ARG_INDEX).asText());
+    log.debug("{} decode(String jsonString) validated incoming json:\n{}", BaseMessageDecoder.class, Util.prettyFormatJson(jsonString));
+    return validNostrJsonStructure;
   }
 
   private record ValidNostrJsonStructure(

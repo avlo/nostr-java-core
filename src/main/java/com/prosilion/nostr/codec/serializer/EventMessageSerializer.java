@@ -14,11 +14,10 @@ public class EventMessageSerializer extends StdSerializer<EventMessage> {
   }
 
   public void serialize(EventMessage eventMessage, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-    log.debug("EventMessageSerializer serialize() called with input EventMessage:");
-    eventMessage.debug();
     gen.writeStartArray();
     gen.writePOJO(eventMessage.getCommand().getName());
     gen.writePOJO(eventMessage.getEvent().asGenericEventRecord());
+//    log.debug(EventIF.createPrettyPrintJson(genericEventRecord));
     gen.writeEndArray();
   }
 }

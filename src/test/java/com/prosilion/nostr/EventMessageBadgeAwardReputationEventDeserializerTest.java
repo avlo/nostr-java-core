@@ -47,7 +47,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     BaseMessage message = BaseMessageDecoder.decode(json);
     assertEquals(expected, message);
 
-    String encoded = message.encode();
+    String encoded = expected.encode();
     log.debug("");
     log.debug("testing testEventMessageNoSubscriberIdDecoder\n");
     log.debug(json);

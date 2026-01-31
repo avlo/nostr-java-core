@@ -2,6 +2,8 @@ package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.crypto.HexStringValidator;
 import com.prosilion.nostr.crypto.bech32.Bech32;
@@ -23,6 +25,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
+
+import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
 public record GenericEventRecord(
     @Getter
@@ -67,6 +71,24 @@ public record GenericEventRecord(
   public Supplier<ByteBuffer> getByteArraySupplier() throws NostrException {
     byte[] serializedEvent = serialize().getBytes(StandardCharsets.UTF_8);
     return () -> ByteBuffer.wrap(serializedEvent);
+  }
+
+  private String serialize() throws NostrException {
+    var arrayNode = JsonNodeFactory.instance.arrayNode();
+
+    try {
+      arrayNode.add(0);
+      arrayNode.add(getPublicKey().toString());
+      arrayNode.add(getCreatedAt());
+      arrayNode.add(getKind().getValue());
+      arrayNode.add(ENCODER_MAPPED_AFTERBURNER.valueToTree(getTags()));
+      arrayNode.add(getContent());
+
+      String s = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(arrayNode);
+      return s;
+    } catch (JsonProcessingException e) {
+      throw new NostrException(e);
+    }
   }
 
   @Override
