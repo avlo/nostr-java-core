@@ -3,9 +3,11 @@ package com.prosilion.nostr.event;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -23,38 +25,47 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull T badgeDefinitionAwardEvent,
+      @NonNull Relay relay,
+      @NonNull T badgeDefinitionGenericEvent,
       @NonNull String content) throws NostrException {
-    this(identity, awardRecipientPublicKey, badgeDefinitionAwardEvent, List.of(), content);
+    this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, List.of(), content);
   }
 
   public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull T badgeDefinitionAwardEvent,
+      @NonNull Relay relay,
+      @NonNull T badgeDefinitionGenericEvent,
       @NonNull List<BaseTag> tags,
       @NonNull String content) throws NostrException {
-    this(identity, awardRecipientPublicKey, badgeDefinitionAwardEvent, tags.stream(), content);
+    this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, tags.stream(), content);
   }
 
   public BadgeAwardAbstractEvent(
       @NonNull Identity identity,
       @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull T badgeDefinitionAwardEvent,
+      @NonNull Relay relay,
+      @NonNull T badgeDefinitionGenericEvent,
       @NonNull Stream<BaseTag> tags,
       @NonNull String content) throws NostrException {
     super(
         identity,
         Kind.BADGE_AWARD_EVENT,
-        badgeDefinitionAwardEvent.asAddressTag(),
+        badgeDefinitionGenericEvent.asAddressTag(),
         Stream.concat(
-            Stream.of(new PubKeyTag(awardRecipientPublicKey)),
-            tags
-                .filter(Predicate.not(AddressTag.class::isInstance)
-                    .or(
-                        Predicate.not(PubKeyTag.class::isInstance)))).toList(),
+                Stream.concat(
+                    Stream.of(new PubKeyTag(awardRecipientPublicKey)),
+                    Stream.of(new RelayTag(relay))),
+                tags
+                    .filter(
+                        Predicate.not(AddressTag.class::isInstance)
+                            .or(
+                                Predicate.not(PubKeyTag.class::isInstance)
+                                    .or(
+                                        Predicate.not(RelayTag.class::isInstance)))))
+            .toList(),
         content);
-    this.addressableEvent = badgeDefinitionAwardEvent;
+    this.addressableEvent = badgeDefinitionGenericEvent;
   }
 
   public BadgeAwardAbstractEvent(
@@ -68,5 +79,10 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return List.of(addressableEvent.asAddressTag());
+  }
+
+  @Override
+  public Relay getRelayTagRelay() {
+    return getTypeSpecificTags(RelayTag.class).getFirst().getRelay();
   }
 }

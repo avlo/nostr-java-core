@@ -4,7 +4,7 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.event.BadgeAwardReputationEvent;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -17,7 +17,6 @@ import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.util.Factory;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Test;
@@ -77,7 +76,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     String FORMULA_PLUS_ONE = "+1";
     IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_PLUS_ONE);
 
-    BadgeDefinitionAwardEvent badgeDefnUpvoteEvent = new BadgeDefinitionAwardEvent(platformIdentity, reputationIdentifierTag, relay);
+    BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(platformIdentity, reputationIdentifierTag, relay);
 
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(authorIdentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, FORMULA_PLUS_ONE);
 
@@ -91,6 +90,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     BadgeAwardReputationEvent actualBadgeAwardReputationEvent = new BadgeAwardReputationEvent(
         platformIdentity,
         recipientPubkey,
+        relay,
         externalIdentityTag,
         badgeDefinitionReputationEvent,
         new BigDecimal("+1"));
@@ -99,7 +99,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     String authorPubkey = actualBadgeAwardReputationEvent.getPublicKey().toHexString();
     String createdAt = actualBadgeAwardReputationEvent.getCreatedAt().toString();
     String badgeCreatorPubkey = actualBadgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getPublicKey().toHexString();
-    String uuid = actualBadgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getFormulaEvents().getFirst().getBadgeDefinitionAwardEvent().getIdentifierTag().getUuid();
+    String uuid = actualBadgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getFormulaEvents().getFirst().getBadgeDefinitionGenericEvent().getIdentifierTag().getUuid();
     String content = "1";
     String signature = actualBadgeAwardReputationEvent.getSignature().toString();
 

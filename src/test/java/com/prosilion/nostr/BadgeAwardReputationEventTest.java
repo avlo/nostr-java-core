@@ -2,7 +2,7 @@ package com.prosilion.nostr;
 
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeAwardReputationEvent;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -27,7 +27,7 @@ public class BadgeAwardReputationEventTest {
   public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
 
   public final Identity identity = Identity.generateRandomIdentity();
-  private final BadgeDefinitionAwardEvent badgeDefnUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
+  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(identity, upvoteIdentifierTag, relay);
 
   public static final String PLATFORM = BadgeAwardReputationEventTest.class.getPackageName();
   public static final String IDENTITY = BadgeAwardReputationEventTest.class.getSimpleName();
@@ -58,6 +58,7 @@ public class BadgeAwardReputationEventTest {
     BadgeAwardReputationEvent expected = new BadgeAwardReputationEvent(
         identity,
         badgeReceiverPublicKey,
+        relay,
         externalIdentityTag,
         badgeDefinitionReputationEvent,
         BigDecimal.ZERO);
@@ -76,6 +77,7 @@ public class BadgeAwardReputationEventTest {
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
         identity,
         badgeReceiverPublicKey,
+        relay,
         externalIdentityTag,
         badgeDefinitionReputationEvent,
         List.of(badgeDefinitionReputationEvent.asAddressTag()),

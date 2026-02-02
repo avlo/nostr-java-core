@@ -20,19 +20,19 @@ import org.springframework.lang.NonNull;
 @Getter
 public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {
   @JsonIgnore
-  private final BadgeDefinitionAwardEvent badgeDefinitionAwardEvent;
+  private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent;
 
   public FormulaEvent(
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
+      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
       @NonNull String formula) throws NostrException, ParseException {
     this(
         identity,
         identifierTag,
         relay,
-        badgeDefinitionAwardEvent,
+        badgeDefinitionGenericEvent,
         List.of(),
         formula);
   }
@@ -41,7 +41,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
       @NonNull Identity identity,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
-      @NonNull BadgeDefinitionAwardEvent badgeDefinitionAwardEvent,
+      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
       @NonNull List<BaseTag> baseTags,
       @NonNull String formula) throws NostrException, ParseException {
     super(
@@ -50,18 +50,18 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
         relay,
         Stream.concat(
             Stream.of(
-                badgeDefinitionAwardEvent.asAddressTag()),
+                badgeDefinitionGenericEvent.asAddressTag()),
             baseTags.stream()
                 .filter(Predicate.not(AddressTag.class::isInstance))),
         validate(formula));
-    this.badgeDefinitionAwardEvent = badgeDefinitionAwardEvent;
+    this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
   }
 
   public FormulaEvent(
       @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<AddressTag, BadgeDefinitionAwardEvent> fxn) {
+      @NonNull Function<AddressTag, BadgeDefinitionGenericEvent> fxn) {
     super(genericEventRecord);
-    this.badgeDefinitionAwardEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
+    this.badgeDefinitionGenericEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
   @JsonIgnore
@@ -81,6 +81,6 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   @Override
   @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
-    return List.of(badgeDefinitionAwardEvent.asAddressTag());
+    return List.of(badgeDefinitionGenericEvent.asAddressTag());
   }
 }

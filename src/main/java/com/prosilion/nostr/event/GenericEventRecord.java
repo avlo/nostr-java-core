@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -10,7 +9,6 @@ import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import com.prosilion.nostr.user.ISignableEntity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
@@ -49,7 +47,10 @@ public record GenericEventRecord(
     String content,
 
     @JsonProperty("sig")
-    Signature signature) implements TagMappedEventIF, IEvent, ISignableEntity {
+    Signature signature) implements
+//    TagMappedEventIF,
+    EventIF,
+    IEvent, ISignableEntity {
 
   public GenericEventRecord {
     id = HexStringValidator.validateHex(id, 64);
@@ -130,11 +131,19 @@ public record GenericEventRecord(
     return signature;
   }
 
-  @Override
-  @JsonIgnore
-  public List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents() {
-    return tags.stream()
-        .filter(ReferencedAbstractEventTag.class::isInstance)
-        .map(ReferencedAbstractEventTag.class::cast).toList();
-  }
+//  @Override
+//  @JsonIgnore
+//  public List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents() {
+//    return tags.stream()
+//        .filter(ReferencedAbstractEventTag.class::isInstance)
+//        .map(ReferencedAbstractEventTag.class::cast).toList();
+//  }
+
+//  @Override
+//  public Relay getRelayTagRelay() {
+//    return tags.stream()
+//        .filter(RelayTag.class::isInstance)
+//        .map(RelayTag.class::cast)
+//        .map(RelayTag::getRelay).findAny().orElseThrow();
+//  }
 }

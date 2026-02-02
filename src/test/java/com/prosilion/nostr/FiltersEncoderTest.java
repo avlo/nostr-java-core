@@ -4,7 +4,7 @@ import com.ezylang.evalex.parser.ParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prosilion.nostr.codec.FiltersEncoder;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventId;
@@ -497,7 +497,7 @@ public class FiltersEncoderTest {
     IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
     Identity definitionCreatorIdentity = Identity.generateRandomIdentity();
 
-    BadgeDefinitionAwardEvent awardUpvoteDefinitionEvent = new BadgeDefinitionAwardEvent(definitionCreatorIdentity, upvoteIdentifierTag, relay);
+    BadgeDefinitionGenericEvent awardUpvoteDefinitionEvent = new BadgeDefinitionGenericEvent(definitionCreatorIdentity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(definitionCreatorIdentity, upvoteIdentifierTag, relay, awardUpvoteDefinitionEvent, PLUS_ONE_FORMULA);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(

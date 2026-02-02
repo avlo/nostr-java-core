@@ -2,7 +2,7 @@ package com.prosilion.nostr;
 
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -26,8 +26,8 @@ public class FormulaEventTest {
   public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
 
   public final Identity identity = Identity.generateRandomIdentity();
-  public final BadgeDefinitionAwardEvent awardUpvoteEvent = new BadgeDefinitionAwardEvent(identity, upvoteIdentifierTag, relay);
-  public final BadgeDefinitionAwardEvent awardDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag, relay);
+  public final BadgeDefinitionGenericEvent awardUpvoteEvent = new BadgeDefinitionGenericEvent(identity, upvoteIdentifierTag, relay);
+  public final BadgeDefinitionGenericEvent awardDownvoteEvent = new BadgeDefinitionGenericEvent(identity, downvoteIdentifierTag, relay);
 
   public static final String FORMULA_PLUS_ONE = "FORMULA_PLUS_ONE";
   private final IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_PLUS_ONE);
@@ -45,13 +45,13 @@ public class FormulaEventTest {
         "+1");
 
     assertEquals(
-        expected.getBadgeDefinitionAwardEvent(),
+        expected.getBadgeDefinitionGenericEvent(),
         new FormulaEvent(
             expected.getGenericEventRecord(),
-            fxn).getBadgeDefinitionAwardEvent());
+            fxn).getBadgeDefinitionGenericEvent());
   }
 
-  Function<AddressTag, BadgeDefinitionAwardEvent> fxn = addressTag ->
+  Function<AddressTag, BadgeDefinitionGenericEvent> fxn = addressTag ->
       Stream.of(awardUpvoteEvent).filter(awardUpvoteEventIter ->
           awardUpvoteEventIter.asAddressTag().equals(addressTag)).findFirst().orElseThrow();
 
@@ -94,7 +94,7 @@ public class FormulaEventTest {
         identity,
         formulaPlusOneIdentifierTag,
         relay,
-        new BadgeDefinitionAwardEvent(
+        new BadgeDefinitionGenericEvent(
             identity,
             upvoteIdentifierTag,
             relay),

@@ -18,7 +18,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
 @Getter
-public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent implements TagMappedEventIF {
+public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent implements TagMappedEventIF {
   public static final String MESSAGE = "BadgeDefinitionReputationEvent ctor() is missing FormulaEvent(s) parameter";
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found:";
   public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
@@ -87,13 +87,13 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         Objects.equals(
             Long.valueOf(
                 formulaEvents.stream()
-                    .map(FormulaEvent::getBadgeDefinitionAwardEvent)
-                    .map(BadgeDefinitionAwardEvent::getIdentifierTag)
+                    .map(FormulaEvent::getBadgeDefinitionGenericEvent)
+                    .map(BadgeDefinitionGenericEvent::getIdentifierTag)
                     .distinct().count()).intValue(),
             formulaEvents.size()),
         String.format(CONCAT, formulaEvents.stream()
-            .map(FormulaEvent::getBadgeDefinitionAwardEvent)
-            .map(BadgeDefinitionAwardEvent::getIdentifierTag)
+            .map(FormulaEvent::getBadgeDefinitionGenericEvent)
+            .map(BadgeDefinitionGenericEvent::getIdentifierTag)
             .toList()));
 
     return String.format("%s == (previous)%s%s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
@@ -105,7 +105,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionAwardEvent im
         .append(" ")
         .append(formula.getFormula())
         .append("(")
-        .append(formula.getBadgeDefinitionAwardEvent().getIdentifierTag().getUuid())
+        .append(formula.getBadgeDefinitionGenericEvent().getIdentifierTag().getUuid())
         .append(")"));
     return sb.toString();
   }

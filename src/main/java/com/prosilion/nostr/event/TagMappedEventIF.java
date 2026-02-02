@@ -3,6 +3,7 @@ package com.prosilion.nostr.event;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import java.util.List;
 import java.util.function.Function;
@@ -31,4 +32,6 @@ public interface TagMappedEventIF extends EventIF {
     }
     return list.stream();
   }
+
+  Relay getRelayTagRelay();
 }

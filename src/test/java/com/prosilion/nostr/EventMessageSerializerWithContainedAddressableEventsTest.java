@@ -3,7 +3,7 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
@@ -41,15 +41,15 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
   private final Identity platformIdentity = Identity.generateRandomIdentity();
   private final Identity authorIdentity = Identity.generateRandomIdentity();
 
-  private final BadgeDefinitionAwardEvent badgeDefnUpvoteEvent;
-  private final BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEventWithAddressTag;
+  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent;
+  private final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEventWithAddressTag;
 
   private final PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
   private final static String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
   private final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
 
-  private final BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardUpvoteEvent;
+  private final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent;
   private final FollowSetsEvent followSetsEvent;
 
   private final String badgeAwardGenericEventWithAddressTagEventId;
@@ -88,10 +88,11 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
         "matching kind, author, identity-tag filter test",
         new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
 
-    this.badgeDefnUpvoteEvent = new BadgeDefinitionAwardEvent(platformIdentity, upvoteIdentifierTag, relay);
+    this.badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(platformIdentity, upvoteIdentifierTag, relay);
     this.badgeAwardGenericEventWithAddressTag = new BadgeAwardGenericEvent<>(
         platformIdentity,
         badgeReceiverPublicKey,
+        relay,
         badgeDefnUpvoteEvent);
 
     this.badgeAwardGenericEventWithAddressTagEventId = badgeAwardGenericEventWithAddressTag.getId();
@@ -103,7 +104,8 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
     this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
         platformIdentity,
         badgeReceiverPublicKey,
-        new BadgeDefinitionAwardEvent(authorIdentity, upvoteIdentifierTag, relay));
+        relay,
+        new BadgeDefinitionGenericEvent(authorIdentity, upvoteIdentifierTag, relay));
 
     this.followSetsAsGenericEventEventWithEventTag = new GenericEventRecord(
         "09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50",
@@ -135,7 +137,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
   void testStringEventMessageAddressTagGenericEventRecordEncoder() throws IOException, NostrException {
     getStringEquals(
         new EventMessage(
-            genericEventRecordWithAddressTag.asGenericEventRecord()),
+            genericEventRecordWithAddressTag),
         expectedStringEventMessageAddressTagGenericEventRecord());
   }
 
@@ -167,7 +169,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
   void testJsonEventMessageAddressTagGenericEventKindEncoder() throws IOException, NostrException {
     getJsonEquals(
         new EventMessage(
-            genericEventRecordWithAddressTag.asGenericEventRecord()),
+            genericEventRecordWithAddressTag),
         expectedStringEventMessageAddressTagGenericEventRecord());
   }
 
@@ -175,7 +177,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
   void testStringEventMessageEventTagGenericEventKindEncoder() throws IOException, NostrException {
     getStringEquals(
         new EventMessage(
-            genericEventRecordWithEventTag.asGenericEventRecord()),
+            genericEventRecordWithEventTag),
         expectedStringWithEventTagShouldMatch());
   }
 
@@ -183,7 +185,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
   void testJsonEventMessageEventTagGenericEventKindEncoder() throws IOException, NostrException {
     getJsonEquals(
         new EventMessage(
-            genericEventRecordWithEventTag.asGenericEventRecord()),
+            genericEventRecordWithEventTag),
         expectedStringWithEventTagShouldMatch());
   }
 

@@ -1,7 +1,7 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -19,23 +19,24 @@ public class BadgeAwardDownvoteEventTest {
   public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
 
   public final Identity identity = Identity.generateRandomIdentity();
-  private final BadgeDefinitionAwardEvent badgeDefnDownvoteEvent;
+  private final BadgeDefinitionGenericEvent badgeDefnDownvoteEvent;
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> expected;
+  BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> expected;
 
   public BadgeAwardDownvoteEventTest() {
-    this.badgeDefnDownvoteEvent = new BadgeDefinitionAwardEvent(identity, downvoteIdentifierTag, relay);
+    this.badgeDefnDownvoteEvent = new BadgeDefinitionGenericEvent(identity, downvoteIdentifierTag, relay);
     this.expected = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
+        relay,
         badgeDefnDownvoteEvent);
   }
 
   @Test
   void testValidBadgeAwardReputationEvent() {
-    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
         expected.getGenericEventRecord(),
         addressTag -> badgeDefnDownvoteEvent);
 
@@ -47,9 +48,10 @@ public class BadgeAwardDownvoteEventTest {
 
   @Test
   void testSingularAddressTag() {
-    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
+        relay,
         badgeDefnDownvoteEvent,
         Collections.unmodifiableList(expected.getContainedAddressableEvents()));
 

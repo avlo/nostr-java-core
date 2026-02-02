@@ -1,6 +1,7 @@
 package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
@@ -16,15 +17,17 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
   public BadgeAwardReputationEvent(
       @NonNull Identity aImgIdentity,
       @NonNull PublicKey badgeReceiverPubkey,
+      @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
       @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
       @NonNull BigDecimal score) {
-    this(aImgIdentity, badgeReceiverPubkey, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score);
+    this(aImgIdentity, badgeReceiverPubkey, relay, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score);
   }
 
   public BadgeAwardReputationEvent(
       @NonNull Identity aImgIdentity,
       @NonNull PublicKey badgeReceiverPubkey,
+      @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
       @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
       @NonNull List<BaseTag> tags,
@@ -32,6 +35,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
     super(
         aImgIdentity,
         badgeReceiverPubkey,
+        relay,
         badgeDefinitionReputationEvent,
         Stream.concat(
             Stream.of(externalIdentityTag),

@@ -3,7 +3,7 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
@@ -37,30 +37,32 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelay {
   private final Identity platformIdentity = Identity.generateRandomIdentity();
   private final Identity authorIdentity = Identity.generateRandomIdentity();
 
-  private final BadgeDefinitionAwardEvent badgeDefnUpvoteEvent;
-  private final BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEventWithAddressTag;
+  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent;
+  private final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEventWithAddressTag;
 
   private final PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
   private final static String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
   private final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
 
-  private final BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardUpvoteEvent;
+  private final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent;
   private final FollowSetsEvent followSetsEvent;
 
   private final GenericEventRecord followSetsAsGenericEventEventWithEventTag;
 
   public EventMessageSerializerWithPubKeyTagsContainingRelay() {
-    this.badgeDefnUpvoteEvent = new BadgeDefinitionAwardEvent(platformIdentity, upvoteIdentifierTag, relay);
+    this.badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(platformIdentity, upvoteIdentifierTag, relay);
     this.badgeAwardGenericEventWithAddressTag = new BadgeAwardGenericEvent<>(
         platformIdentity,
         badgeReceiverPublicKey,
+        relay,
         badgeDefnUpvoteEvent);
 
     this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
         platformIdentity,
         badgeReceiverPublicKey,
-        new BadgeDefinitionAwardEvent(authorIdentity, upvoteIdentifierTag, relay));
+        relay,
+        new BadgeDefinitionGenericEvent(authorIdentity, upvoteIdentifierTag, relay));
 
     this.followSetsAsGenericEventEventWithEventTag = new GenericEventRecord(
         "09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50",
@@ -97,7 +99,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelay {
   void testStringEventMessageFollowSetsEventTagGenericEventRecordEncoderWithPubKeyTagContaingRelay() throws IOException, NostrException {
     getStringEquals(
         new EventMessage(
-            followSetsAsGenericEventEventWithEventTag.asGenericEventRecord()),
+            followSetsAsGenericEventEventWithEventTag),
         expectedStringFollowSetsEventMessageAddressTagGenericEventRecordWithPubKeyTagContainingRelay());
   }
 
@@ -113,7 +115,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelay {
   void testJsonEventMessageAddressTagGenericEventKindEncoderGenericEventRecord() throws IOException, NostrException {
     getJsonEquals(
         new EventMessage(
-            followSetsAsGenericEventEventWithEventTag.asGenericEventRecord()),
+            followSetsAsGenericEventEventWithEventTag),
         expectedStringFollowSetsEventMessageAddressTagGenericEventRecordWithPubKeyTagContainingRelay());
   }
 

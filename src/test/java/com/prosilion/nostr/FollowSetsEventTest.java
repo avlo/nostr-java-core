@@ -1,7 +1,7 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionAwardEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.Filterable;
@@ -35,19 +35,21 @@ public class FollowSetsEventTest {
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
   public final Identity aImgIdentity = Identity.generateRandomIdentity();
 
-  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardUpvoteEvent;
-  BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardDownvoteEvent;
+  BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent;
+  BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardDownvoteEvent;
 
   public FollowSetsEventTest() {
     this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
         authorIdentity,
         upvotedUserPublicKey,
-        new BadgeDefinitionAwardEvent(authorIdentity, upvoteIdentifierTag, relay));
+        relay,
+        new BadgeDefinitionGenericEvent(authorIdentity, upvoteIdentifierTag, relay));
 
     this.badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
         authorIdentity,
         upvotedUserPublicKey,
-        new BadgeDefinitionAwardEvent(authorIdentity, downvoteIdentifierTag, relay));
+        relay,
+        new BadgeDefinitionGenericEvent(authorIdentity, downvoteIdentifierTag, relay));
   }
 
   @Test
@@ -62,7 +64,7 @@ public class FollowSetsEventTest {
 
   @Test
   void testFollowSetsEventEquality() {
-    List<BadgeAwardGenericEvent<BadgeDefinitionAwardEvent>> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+    List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
     FollowSetsEvent expected = new FollowSetsEvent(
         aImgIdentity,
         upvotedUserPublicKey,
@@ -82,7 +84,7 @@ public class FollowSetsEventTest {
 
   @Test
   void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {
-    List<BadgeAwardGenericEvent<BadgeDefinitionAwardEvent>> badgeAwardGenericEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+    List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
     FollowSetsEvent actual = new FollowSetsEvent(
         aImgIdentity,
         upvotedUserPublicKey,
@@ -107,15 +109,16 @@ public class FollowSetsEventTest {
   void eventTagCountTest() {
     Identity authorIdentity = Identity.generateRandomIdentity();
 
-    BadgeDefinitionAwardEvent badgeDefinitionAwardEvent = new BadgeDefinitionAwardEvent(
+    BadgeDefinitionGenericEvent badgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(
         authorIdentity,
         upvoteIdentifierTag,
         relay);
 
-    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
         authorIdentity,
         upvotedUserPublicKey,
-        badgeDefinitionAwardEvent);
+        relay,
+        badgeDefinitionGenericEvent);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
         aImgIdentity,
@@ -134,15 +137,16 @@ public class FollowSetsEventTest {
   void eventTagCountAsListTest() {
     Identity authorIdentity = Identity.generateRandomIdentity();
 
-    BadgeDefinitionAwardEvent badgeDefinitionAwardEvent = new BadgeDefinitionAwardEvent(
+    BadgeDefinitionGenericEvent badgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(
         authorIdentity,
         upvoteIdentifierTag,
         relay);
 
-    BadgeAwardGenericEvent<BadgeDefinitionAwardEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
         authorIdentity,
         upvotedUserPublicKey,
-        badgeDefinitionAwardEvent);
+        relay,
+        badgeDefinitionGenericEvent);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
         aImgIdentity,

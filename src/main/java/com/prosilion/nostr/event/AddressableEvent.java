@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 public class AddressableEvent extends BaseEvent {
+  public static final String MISSING_RELAY = "AddressableEvent tags [%s} is missing a RelayTag";
+  
   public AddressableEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
@@ -66,6 +68,13 @@ public class AddressableEvent extends BaseEvent {
         getIdentifierTag(),
         Optional.of(getTypeSpecificTags(RelayTag.class)).orElseThrow(() ->
             new NostrException(String.format("%s is missing a RelayTag", getClass().getSimpleName()))).getFirst().getRelay());
+  }
+
+  @JsonIgnore
+  public Relay getRelayTagRelay() {
+    return getTypeSpecificTags(RelayTag.class).stream().map(RelayTag::getRelay).findFirst().orElseThrow(() ->
+        new NostrException(
+            String.format(MISSING_RELAY, getTags())));
   }
 
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
