@@ -227,7 +227,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
   }
 
   private String expectedStringEventMessageAddressTagBadgeAwardGenericEvent() {
-    return "[\"EVENT\",{\"id\":\"" + badgeAwardGenericEventWithAddressTagEventId + "\",\"pubkey\":\"" + authorPubKey + "\",\"created_at\":" + badgeAwardGenericEventWithAddressTagCreatedAt + ",\"kind\":8,\"tags\":[[\"a\",\"30009:" + authorPubKey + ":UNIT_UPVOTE\",\"ws://localhost:5555\"],[\"p\",\"" + upvotedUserPubkey + "\"]],\"content\":\"\",\"sig\":\"" + badgeAwardGenericEventWithAddressTagSignature + "\"}]";
+    return "[\"EVENT\",{\"id\":\"" + badgeAwardGenericEventWithAddressTagEventId + "\",\"pubkey\":\"" + authorPubKey + "\",\"created_at\":" + badgeAwardGenericEventWithAddressTagCreatedAt + ",\"kind\":8,\"tags\":[[\"a\",\"30009:" + authorPubKey + ":UNIT_UPVOTE\",\"ws://localhost:5555\"],[\"p\",\"" + upvotedUserPubkey + "\"],[\"relay\",\"ws://localhost:5555\"]],\"content\":\"\",\"sig\":\"" + badgeAwardGenericEventWithAddressTagSignature + "\"}]";
   }
 
   private String expectedStringFollowSetsEventMessageAddressTagGenericEventRecord() {

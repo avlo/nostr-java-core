@@ -106,6 +106,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     String json = "[\"EVENT\",{\"id\":\"" + eventId + "\",\"pubkey\":\"" + authorPubkey + "\",\"created_at\":" + createdAt + ",\"kind\":8,\"tags\":[" +
         "[\"a\",\"30009:" + badgeCreatorPubkey + ":" + uuid + "\",\"" + url + "\"]," +
         "[\"p\",\"" + recipientPubkey + "\"]," +
+        "[\"relay\",\"" + relay.getUrl() + "\"]," +
         "[\"i\",\"platform:identity\",\"proof\"]" +
         "],\"content\":\"" + content + "\",\"sig\":\"" + signature + "\"}]";
 

@@ -8,6 +8,7 @@ import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class FollowSetsEventTest {
   }
 
   @Test
-  void eventTagCountTest() {
+  void tagCountTest() {
     Identity authorIdentity = Identity.generateRandomIdentity();
 
     BadgeDefinitionGenericEvent badgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(
@@ -120,7 +121,8 @@ public class FollowSetsEventTest {
         relay,
         badgeDefinitionGenericEvent);
 
-    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
+    FollowSetsEvent followSetsEvent = new
+        FollowSetsEvent(
         aImgIdentity,
         upvotedUserPublicKey,
         followSetsIdentifierTag,
@@ -131,6 +133,11 @@ public class FollowSetsEventTest {
     assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
     assertEquals(1, Filterable.getTypeSpecificTags(EventTag.class, followSetsEvent).size());
+
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(RelayTag.class).size());
+    assertEquals(1, followSetsEvent.getTags().stream().filter(RelayTag.class::isInstance).toList().size());
+    assertEquals(1, Filterable.getTypeSpecificTags(RelayTag.class, followSetsEvent).size());
+    assertEquals(relay, followSetsEvent.getRelayTagRelay());
   }
 
   @Test
@@ -160,6 +167,34 @@ public class FollowSetsEventTest {
     assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
     assertEquals(1, Filterable.getTypeSpecificTags(EventTag.class, followSetsEvent).size());
+  }
+
+  @Test
+  void relayTagCountTest() {
+    Relay followSetsEventRelay = new Relay("ws://localhost:5555");
+    Relay badgeAwardGenericEventRelay = new Relay("ws://localhost:5554");
+    Relay badgeDefinitionGenericEventRelay = new Relay("ws://localhost:5553");
+    
+    FollowSetsEvent followSetsEventWithBaseTags = new FollowSetsEvent(
+        aImgIdentity,
+        upvotedUserPublicKey,
+        followSetsIdentifierTag,
+        followSetsEventRelay,
+        List.of(new BadgeAwardGenericEvent<>(
+            authorIdentity,
+            upvotedUserPublicKey,
+            badgeAwardGenericEventRelay,
+            new BadgeDefinitionGenericEvent(
+                authorIdentity,
+                upvoteIdentifierTag,
+                badgeDefinitionGenericEventRelay))),
+        List.of(new RelayTag(relay)),
+        FollowSetsEvent.class.getSimpleName());
+
+    assertEquals(1, followSetsEventWithBaseTags.getTypeSpecificTags(RelayTag.class).size());
+    assertEquals(1, followSetsEventWithBaseTags.getTags().stream().filter(RelayTag.class::isInstance).toList().size());
+    assertEquals(1, Filterable.getTypeSpecificTags(RelayTag.class, followSetsEventWithBaseTags).size());
+    assertEquals(followSetsEventRelay, followSetsEventWithBaseTags.getRelayTagRelay());
   }
 
   @Test

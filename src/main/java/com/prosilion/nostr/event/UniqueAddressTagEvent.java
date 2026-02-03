@@ -5,7 +5,6 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Predicate;
@@ -46,7 +45,8 @@ public abstract class UniqueAddressTagEvent extends BaseEvent {
         kind,
         Stream.concat(
             Stream.of(addressTag),
-            baseTags.filter(Predicate.not(RelayTag.class::isInstance))),
+            baseTags
+                .filter(Predicate.not(AddressTag.class::isInstance))),
         content);
   }
 

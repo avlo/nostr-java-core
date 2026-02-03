@@ -57,12 +57,9 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
                     Stream.of(new PubKeyTag(awardRecipientPublicKey)),
                     Stream.of(new RelayTag(relay))),
                 tags
-                    .filter(
-                        Predicate.not(AddressTag.class::isInstance)
-                            .or(
-                                Predicate.not(PubKeyTag.class::isInstance)
-                                    .or(
-                                        Predicate.not(RelayTag.class::isInstance)))))
+                    .filter(Predicate.not(AddressTag.class::isInstance))
+                    .filter(Predicate.not(PubKeyTag.class::isInstance))
+                    .filter(Predicate.not(RelayTag.class::isInstance)))
             .toList(),
         content);
     this.addressableEvent = badgeDefinitionGenericEvent;
