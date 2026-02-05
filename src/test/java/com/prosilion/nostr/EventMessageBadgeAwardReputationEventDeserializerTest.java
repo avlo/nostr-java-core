@@ -98,8 +98,8 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     String eventId = actualBadgeAwardReputationEvent.getId();
     String authorPubkey = actualBadgeAwardReputationEvent.getPublicKey().toHexString();
     String createdAt = actualBadgeAwardReputationEvent.getCreatedAt().toString();
-    String badgeCreatorPubkey = actualBadgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getPublicKey().toHexString();
-    String uuid = actualBadgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getFormulaEvents().getFirst().getBadgeDefinitionGenericEvent().getIdentifierTag().getUuid();
+    String badgeCreatorPubkey = actualBadgeAwardReputationEvent.getBadgeDefinitionGenericEvent().getPublicKey().toHexString();
+    String uuid = actualBadgeAwardReputationEvent.getBadgeDefinitionGenericEvent().getFormulaEvents().getFirst().getBadgeDefinitionGenericEvent().getIdentifierTag().getUuid();
     String content = "1";
     String signature = actualBadgeAwardReputationEvent.getSignature().toString();
 

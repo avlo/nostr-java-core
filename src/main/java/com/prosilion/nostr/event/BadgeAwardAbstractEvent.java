@@ -82,4 +82,6 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public Relay getRelayTagRelay() {
     return getTypeSpecificTags(RelayTag.class).getFirst().getRelay();
   }
+  
+  public abstract T getBadgeDefinitionGenericEvent();
 }

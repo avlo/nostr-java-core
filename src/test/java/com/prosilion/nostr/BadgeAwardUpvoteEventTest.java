@@ -7,7 +7,10 @@ import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Collections;
@@ -43,9 +46,10 @@ public class BadgeAwardUpvoteEventTest {
         addressTag -> badgeDefnUpvoteEvent);
 
     assertEquals(badgeAwardGenericEvent, badgeAwardUpvoteEvent);
-    assertEquals(
-        badgeAwardGenericEvent.getContainedAddressableEvents(),
-        badgeAwardUpvoteEvent.getContainedAddressableEvents());
+    assertEquals(badgeAwardGenericEvent.getBadgeDefinitionGenericEvent(), badgeAwardUpvoteEvent.getBadgeDefinitionGenericEvent());
+    assertEquals(badgeAwardGenericEvent.getContainedAddressableEvents(), badgeAwardUpvoteEvent.getContainedAddressableEvents());
+    assertEquals(badgeAwardGenericEvent.getRelayTagRelay(), badgeAwardUpvoteEvent.getRelayTagRelay());
+    assertEquals(badgeAwardGenericEvent.getContainedAddressableEvents(), badgeAwardUpvoteEvent.getContainedAddressableEvents());
   }
 
   @Test
@@ -59,6 +63,11 @@ public class BadgeAwardUpvoteEventTest {
 
     assertEquals(1, badgeAwardUpvoteEvent.getContainedAddressableEvents().size());
     assertEquals(1, badgeAwardUpvoteEvent.getTypeSpecificTags(AddressTag.class).size());
+
+    assertEquals(1, badgeAwardUpvoteEvent.getBadgeDefinitionGenericEvent().getTypeSpecificTags(IdentifierTag.class).size());
+
+    assertEquals(1, badgeAwardUpvoteEvent.getTypeSpecificTags(PubKeyTag.class).size());
+    assertEquals(1, badgeAwardUpvoteEvent.getTypeSpecificTags(RelayTag.class).size());
   }
 
   @Test

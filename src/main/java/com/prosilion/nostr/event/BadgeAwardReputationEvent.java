@@ -42,7 +42,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
             tags.stream()),
         score.toString());
   }
-  
+
   public BadgeAwardReputationEvent(
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxn) {
@@ -50,7 +50,8 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
   }
 
   @JsonIgnore
-  public BadgeDefinitionReputationEvent getBadgeDefinitionReputationEvent() {
+  @Override
+  public BadgeDefinitionReputationEvent getBadgeDefinitionGenericEvent() {
     return super.getAddressableEvent();
   }
 

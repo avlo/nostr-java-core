@@ -9,6 +9,8 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.math.BigDecimal;
@@ -68,8 +70,10 @@ public class BadgeAwardReputationEventTest {
         addressTag -> badgeDefinitionReputationEvent);
 
     assertEquals(expected, badgeAwardReputationEvent);
-    assertEquals(expected.getBadgeDefinitionReputationEvent(), badgeAwardReputationEvent.getBadgeDefinitionReputationEvent());
+    assertEquals(expected.getBadgeDefinitionGenericEvent(), badgeAwardReputationEvent.getBadgeDefinitionGenericEvent());
     assertEquals(expected.getContainedAddressableEvents(), badgeAwardReputationEvent.getContainedAddressableEvents());
+    assertEquals(expected.getExternalIdentityTag(), badgeAwardReputationEvent.getExternalIdentityTag());
+    assertEquals(expected.getRelayTagRelay(), badgeAwardReputationEvent.getRelayTagRelay());
   }
 
   @Test
@@ -85,6 +89,10 @@ public class BadgeAwardReputationEventTest {
 
     assertEquals(1, badgeAwardReputationEvent.getContainedAddressableEvents().size());
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(AddressTag.class).size());
-    assertEquals(1, badgeAwardReputationEvent.getBadgeDefinitionReputationEvent().getTypeSpecificTags(IdentifierTag.class).size());
+    assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(ExternalIdentityTag.class).size());
+    assertEquals(1, badgeAwardReputationEvent.getBadgeDefinitionGenericEvent().getTypeSpecificTags(IdentifierTag.class).size());
+
+    assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(PubKeyTag.class).size());
+    assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(RelayTag.class).size());
   }
 }
