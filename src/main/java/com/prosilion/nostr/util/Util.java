@@ -1,13 +1,16 @@
 package com.prosilion.nostr.util;
 
+import org.springframework.lang.NonNull;
+
 public interface Util {
-  String EMPTY_TAGS_REGEX = "\\[\\s+\\]";
+  String EMPTY_TAGS_VARIANTS_REGEX = "\\[\\s+]";
   String EMPTY_TAGS_SUBSTITUTION = "[ ]";
-  static String prettyFormatJson(final String json_str) {
+  
+  static String prettyFormatJson(@NonNull String json_str) {
     return prettyFormatJson(json_str, 0);
   }
 
-  static String prettyFormatJson(final String json_str, int indent_width) {
+  static String prettyFormatJson(@NonNull String json_str, int indent_width) {
     indent_width = Math.max(indent_width, 2);
     final char[] chars = json_str.toCharArray();
     final String newline = System.lineSeparator();
@@ -49,7 +52,7 @@ public interface Util {
     }
 
     return ret.toString().replaceAll(
-        EMPTY_TAGS_REGEX,
+        EMPTY_TAGS_VARIANTS_REGEX,
         EMPTY_TAGS_SUBSTITUTION);
   }
 }
