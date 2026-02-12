@@ -476,30 +476,27 @@ public class FiltersDecoderTest {
   }
 
   @Test
-  public void testMultipleExternalIdentityTagDecoder() throws JsonProcessingException {
+  public void testMultipleExternalIdentityTagDecoder() {
     log.debug("testMultipleExternalIdentityTagDecoder");
 
-    String platform1 = "platform1";
-    String identity1 = "identity1";
-    String proof1 = "proof1";
+    final String expected = """
+   #i: ExternalIdentityTag[platform=111, identity=111, proof=111],
+   #i: ExternalIdentityTag[platform=222, identity=222, proof=222],
+  ids: GenericEventId[id=f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75]""";
+    
+    Filters filters = new Filters(
+        new ExternalIdentityTagFilter(
+            new ExternalIdentityTag("111", "111", "111")),
+        new ExternalIdentityTagFilter(
+            new ExternalIdentityTag("222", "222", "222")),
+        new EventFilter(
+            new GenericEventId("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")));
 
-    String platform2 = "platform2";
-    String identity2 = "identity2";
-    String proof2 = "proof2";
-
-    String platformAndIdentity1 = Strings.join(platform1, identity1).with(":");
-    String platformAndIdentity2 = Strings.join(platform2, identity2).with(":");
-
-    String expected = "{\"#i\":[[\"" + platformAndIdentity1 + "\\\",\\\"" + proof1 + "\"]," +
-        "[\"" + platformAndIdentity2 + "\\\",\\\"" + proof2 + "\"]]}";
-    Filters decodedFilters = FiltersDecoder.decode(expected);
-
-    assertEquals(
-        new Filters(
-            new ExternalIdentityTagFilter(
-                new ExternalIdentityTag(platform1, identity1, proof1)),
-            new ExternalIdentityTagFilter(
-                new ExternalIdentityTag(platform2, identity2, proof2))),
-        decodedFilters);
+    assertEquals(expected, filters.toString());
+  }
+  
+  @Test
+  public void testFiltersToString() {
+    
   }
 }

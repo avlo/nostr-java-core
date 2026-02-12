@@ -1,10 +1,12 @@
 package com.prosilion.nostr.filter;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -59,12 +61,12 @@ public record Filters(
 
   @Override
   public @NonNull String toString() {
+    int padding = Math.max(filtersMap.keySet().stream().map(String::length).max(Comparator.naturalOrder()).orElse(3), 3);
     return filtersMap.entrySet().stream()
-        .map(entry ->
-            entry.getKey() +
-                ": " +
-                entry.getValue().stream()
-                    .map(Filterable::getFilterableValue)
-                    .map(Object::toString).collect(Collectors.joining(","))).collect(Collectors.joining(","));
+        .flatMap(entry ->
+            entry.getValue().stream()
+                .map(value ->
+                    String.format("%s: %s", StringUtils.leftPad(entry.getKey(), padding), value.getFilterable().toString())))
+        .collect(Collectors.joining(",\n"));
   }
 }
