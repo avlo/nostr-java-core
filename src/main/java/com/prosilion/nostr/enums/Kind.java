@@ -42,7 +42,7 @@ public enum Kind {
   CURATION_SETS(30_004, "curation_sets"),
   ARBITRARY_CUSTOM_APP_DATA(30_078, "arbitrary_custom_app_data"), 
   RELAY_DISCOVERY(30_166, "relay_discovery"),
-  CLASSIFIED_LISTING(30_402, "classified_listing_active"),
+  CLASSIFIED_LISTING_ACTIVE(30_402, "classified_listing_active"),
   CLASSIFIED_LISTING_INACTIVE(30_403, "classified_listing_inactive"),
   CLASSIFIED_LISTING_DRAFT(30_403, "classified_listing_draft"),
   CALENDAR_DATE_BASED_EVENT(31_922, "calendar_date_based_event"),

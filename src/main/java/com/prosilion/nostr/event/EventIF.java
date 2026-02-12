@@ -83,7 +83,7 @@ public interface EventIF extends Serializable {
   }
 
   static String createPrettyPrintJson(@NonNull GenericEventRecord genericEventRecord) {
-    return Util.prettyFormatJson(serialize(genericEventRecord));
+    return Util.prettyFormatJson(serialize(genericEventRecord), 2);
   }
 
   default String createPrettyPrintJson() {

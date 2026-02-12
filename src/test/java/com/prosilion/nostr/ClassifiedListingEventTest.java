@@ -65,7 +65,7 @@ class ClassifiedListingEventTest {
 
     ClassifiedListing classifiedListing = new ClassifiedListing(
         CLASSIFIED_LISTING_TITLE, CLASSIFIED_LISTING_SUMMARY, PRICE_TAG, CLASSIFIED_LISTING_LOCATION);
-    instance = new ClassifiedListingEvent(identity, Kind.CLASSIFIED_LISTING, identifierTag, relay, classifiedListing, tags, CLASSIFIED_LISTING_CONTENT);
+    instance = new ClassifiedListingEvent(identity, Kind.CLASSIFIED_LISTING_ACTIVE, identifierTag, relay, classifiedListing, tags, CLASSIFIED_LISTING_CONTENT);
   }
 
   @Test
@@ -73,7 +73,7 @@ class ClassifiedListingEventTest {
     System.out.println("testConstructClassifiedListingEvent");
 
     assertEquals(CLASSIFIED_LISTING_CONTENT, instance.getContent());
-    assertEquals(Kind.CLASSIFIED_LISTING, instance.getKind());
+    assertEquals(Kind.CLASSIFIED_LISTING_ACTIVE, instance.getKind());
     assertEquals(senderPubkey.toString(), instance.getPublicKey().toString());
     assertEquals(senderPubkey.toBech32String(), instance.getPublicKey().toBech32String());
     assertEquals(senderPubkey.toHexString(), instance.getPublicKey().toHexString());

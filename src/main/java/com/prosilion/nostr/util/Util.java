@@ -1,8 +1,14 @@
 package com.prosilion.nostr.util;
 
 public interface Util {
+  String EMPTY_TAGS_REGEX = "\\[\\s+\\]";
+  String EMPTY_TAGS_SUBSTITUTION = "[ ]";
   static String prettyFormatJson(final String json_str) {
-    int indent_width = 2;
+    return prettyFormatJson(json_str, 0);
+  }
+
+  static String prettyFormatJson(final String json_str, int indent_width) {
+    indent_width = Math.max(indent_width, 2);
     final char[] chars = json_str.toCharArray();
     final String newline = System.lineSeparator();
 
@@ -42,6 +48,8 @@ public interface Util {
       ret.append(c).append(c == '\\' ? "" + chars[++i] : "");
     }
 
-    return ret.toString();
+    return ret.toString().replaceAll(
+        EMPTY_TAGS_REGEX,
+        EMPTY_TAGS_SUBSTITUTION);
   }
 }

@@ -56,7 +56,7 @@ public class BaseMessageDecoder {
     ValidNostrJsonStructure validNostrJsonStructure = new ValidNostrJsonStructure(
         I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(COMMAND_INDEX).asText(),
         I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(ARG_INDEX).asText());
-    log.debug("{} decode(String jsonString) validated incoming json:\n{}", BaseMessageDecoder.class, Util.prettyFormatJson(jsonString));
+    log.debug("{} decode(String jsonString) validated incoming json:\n{}", BaseMessageDecoder.class, Util.prettyFormatJson(jsonString, 2));
     return validNostrJsonStructure;
   }
 

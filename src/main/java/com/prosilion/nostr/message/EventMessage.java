@@ -52,7 +52,7 @@ public record EventMessage(
   @Override
   public String encode() throws JsonProcessingException, NostrException {
     String encodedString = IDecoder.I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(this);
-    log.debug("EventMessage encode() encoded string:\n{}", Util.prettyFormatJson(encodedString));
+    log.debug("EventMessage encode() encoded string:\n{}", Util.prettyFormatJson(encodedString, 2));
     return encodedString;
   }
 
