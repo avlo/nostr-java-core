@@ -61,12 +61,20 @@ public record Filters(
 
   @Override
   public @NonNull String toString() {
-    int padding = Math.max(filtersMap.keySet().stream().map(String::length).max(Comparator.naturalOrder()).orElse(3), 3);
+    return toStringWithPadding(0);
+  }
+
+  public @NonNull String toString(int padding) {
+    return toStringWithPadding(
+        Math.max(filtersMap.keySet().stream().map(String::length).max(Comparator.naturalOrder()).orElse(padding), padding));
+  }
+
+  private String toStringWithPadding(int maxPadding) {
     return filtersMap.entrySet().stream()
         .flatMap(entry ->
             entry.getValue().stream()
                 .map(value ->
-                    String.format("%s: %s", StringUtils.leftPad(entry.getKey(), padding), value.getFilterable().toString())))
+                    String.format("%s: %s", StringUtils.leftPad(entry.getKey(), maxPadding), value.getFilterable().toString())))
         .collect(Collectors.joining(",\n"));
   }
 }

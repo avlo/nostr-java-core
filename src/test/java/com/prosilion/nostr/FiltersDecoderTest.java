@@ -476,13 +476,13 @@ public class FiltersDecoderTest {
   }
 
   @Test
-  public void testMultipleExternalIdentityTagDecoder() {
-    log.debug("testMultipleExternalIdentityTagDecoder");
+  public void testToStringPaddingDefault() {
+    log.debug("testToStringPaddingDefault");
 
     final String expected = """
-   #i: ExternalIdentityTag[platform=111, identity=111, proof=111],
-   #i: ExternalIdentityTag[platform=222, identity=222, proof=222],
-  ids: GenericEventId[id=f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75]""";
+#i: ExternalIdentityTag[platform=111, identity=111, proof=111],
+#i: ExternalIdentityTag[platform=222, identity=222, proof=222],
+ids: GenericEventId[id=f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75]""";
     
     Filters filters = new Filters(
         new ExternalIdentityTagFilter(
@@ -494,9 +494,24 @@ public class FiltersDecoderTest {
 
     assertEquals(expected, filters.toString());
   }
-  
+
   @Test
-  public void testFiltersToString() {
-    
+  public void testToStringPaddingCustom() {
+    log.debug("testToStringPaddingCustom");
+
+    final String expected = """
+   #i: ExternalIdentityTag[platform=111, identity=111, proof=111],
+   #i: ExternalIdentityTag[platform=222, identity=222, proof=222],
+  ids: GenericEventId[id=f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75]""";
+
+    Filters filters = new Filters(
+        new ExternalIdentityTagFilter(
+            new ExternalIdentityTag("111", "111", "111")),
+        new ExternalIdentityTagFilter(
+            new ExternalIdentityTag("222", "222", "222")),
+        new EventFilter(
+            new GenericEventId("f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75")));
+
+    assertEquals(expected, filters.toString(3));
   }
 }
