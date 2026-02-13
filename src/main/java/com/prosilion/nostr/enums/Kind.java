@@ -59,9 +59,9 @@ public enum Kind {
 
   private final String name;
 
-  Kind(int i, String textNote) {
+  Kind(int i, String name) {
     this.value = i;
-    this.name = textNote;
+    this.name = name;
   }
 
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
