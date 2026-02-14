@@ -19,7 +19,7 @@ import org.springframework.lang.NonNull;
 
 public class AddressableEvent extends BaseEvent {
   public static final String MISSING_RELAY = "AddressableEvent tags [%s} is missing a RelayTag";
-  
+
   public AddressableEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
@@ -45,9 +45,8 @@ public class AddressableEvent extends BaseEvent {
                 Stream.of(identifierTag),
                 Stream.of(new RelayTag(relay))),
             baseTags
-                .filter(Predicate.not(RelayTag.class::isInstance)
-                    .or(
-                        Predicate.not(IdentifierTag.class::isInstance)))),
+                .filter(Predicate.not(RelayTag.class::isInstance))
+                .filter(Predicate.not(IdentifierTag.class::isInstance))),
         content);
   }
 

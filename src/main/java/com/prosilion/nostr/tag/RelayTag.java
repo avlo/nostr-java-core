@@ -8,6 +8,11 @@ import java.net.MalformedURLException;
 import java.util.Optional;
 import lombok.Getter;
 
+/**
+ *  RelayTag (this class) refers to relay bound to an event
+ *      whereas
+ *  @see RelaysTag is used to refer to other relay(s)
+ */
 @Tag(code = "relay")
 @JsonSerialize(using = RelayTagSerializer.class)
 public record RelayTag(@Getter Relay relay) implements BaseTag {

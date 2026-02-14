@@ -10,6 +10,12 @@ import java.util.Optional;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
+/**
+ *  RelaysTag (this class) is used to refer to other relay(s)
+ *    whereas
+ *  @see RelayTag refers to relay bound to an event
+ *
+ */
 @Tag(code = "relays")
 @JsonSerialize(using = RelaysTagSerializer.class)
 public record RelaysTag(@Getter List<Relay> relays) implements BaseTag {
