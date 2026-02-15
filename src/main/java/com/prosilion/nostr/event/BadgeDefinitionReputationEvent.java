@@ -96,7 +96,21 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
             .map(BadgeDefinitionGenericEvent::getIdentifierTag)
             .toList()));
 
-    return String.format("%s == (previous)%s%s", identifierTag.getUuid(), identifierTag.getUuid(), operatorFormatDisplayIterator(formulaEvents));
+//  TODO (potentially): to accommodate both (necessary) formula as well as (optional) user-defined comment/text,
+//   introduce "summary"/"description" tag as per:    
+/*
+  ["summary", "<brief description of the event>"],
+  https://github.com/nostr-protocol/nips/blob/master/52.md
+  
+  ["description", "Awarded to users demonstrating bravery"],
+  A description tag whose value contain meaning behind the badge, or the reason of its issuance.
+  https://github.com/nostr-protocol/nips/blob/master/58.md    
+*/
+    return String.format("%s: %s == (previous)%s%s",
+        "SuperConductor BadgeDefinitionReputationEvent, default content from FormulaEvent(s) operator(s)",
+        identifierTag.getUuid(),
+        identifierTag.getUuid(),
+        operatorFormatDisplayIterator(formulaEvents));
   }
 
   private static String operatorFormatDisplayIterator(List<FormulaEvent> formulaEvents) {
