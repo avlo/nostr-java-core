@@ -92,6 +92,7 @@ public class EventMessageDeserializerTest {
 
   @Test
   void testEventMessageGenericEventKindTypeEncoder() throws IOException, NostrException {
+    log.debug("testing testEventMessageGenericEventKindTypeEncoder\n");
     final String json = "["
         + "\"EVENT\","
         + "{"
@@ -117,12 +118,6 @@ public class EventMessageDeserializerTest {
         baseMessage);
 
     String encodedBaseMessage = baseMessage.encode();
-    log.debug("");
-    log.debug("testing testEventMessageGenericEventKindTypeEncoder\n");
-    log.debug(json);
-    log.debug("------");
-    log.debug(encodedBaseMessage);
-    log.debug("");
 
     String encodedEventMessage = eventMessage.encode();
     assertEquals(encodedEventMessage, encodedBaseMessage);

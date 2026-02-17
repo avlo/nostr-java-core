@@ -12,10 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 public class CanonicalAuthenticationMessageDeserializer extends JsonDeserializer<CanonicalAuthenticationMessage> implements MessageDeserializerIF {
   public static final int NODE_POSITION_AFTER_AUTH_LABEL = 1;
 
-  public CanonicalAuthenticationMessageDeserializer() {
-    log.info("{} default Ctor() [{}]", getClass().getSimpleName(), this);
-  }
-
   @Override
   public CanonicalAuthenticationMessage deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);

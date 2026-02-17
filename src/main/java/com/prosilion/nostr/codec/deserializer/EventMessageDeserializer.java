@@ -14,10 +14,6 @@ public class EventMessageDeserializer extends JsonDeserializer<EventMessage> imp
   public static final int NODE_POSITION_AFTER_EVENT_LABEL = 1;
   public static final int CANONICAL_NODE_LENGTH = 2;
 
-  public EventMessageDeserializer() {
-    log.info("EventMessageDeserializer default Ctor() [{}]", this);
-  }
-
   @Override
   public EventMessage deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);

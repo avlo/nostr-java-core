@@ -41,8 +41,7 @@ class GenericEventRecordFactory {
         content,
         identity.sign(flux));
 
-    log.debug("\nGenericEventRecord created:");
-    EventIF.createPrettyPrintJson(genericEventRecord);
+    log.debug("GenericEventRecordFactory.createInstance(...) created GenericEventRecord:\n{}", genericEventRecord.createPrettyPrintJson());
 
     return genericEventRecord;
   }
