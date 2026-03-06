@@ -268,23 +268,26 @@ public class FiltersDecoderTest {
     log.debug("testReferencedEventFilterDecoder");
 
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
-
-    String expected = "{\"#e\":[\"" + eventId + "\"]}";
+    Relay relay = new Relay("ws://localhost:5555");
+    
+    String expected = "{\"#e\":[[\"" + String.join("\\\",\\\"", eventId, relay.getUrl()) + "\"]]}";
     Filters decodedFilters = FiltersDecoder.decode(expected);
 
     assertEquals(new Filters(new ReferencedEventFilter(new EventTag(eventId))), decodedFilters);
   }
 
-  //  TODO: needs resolution
   @Test
   public void testMultipleReferencedEventFilterDecoder() throws JsonProcessingException {
     log.debug("testMultipleReferencedEventFilterDecoder");
 
     String eventId1 = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String eventId2 = "abcd19a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    Relay relay = new Relay("ws://localhost:5555");
 
-    String joined = String.join("\",\"", eventId1, eventId2);
-    String expected = "{\"#e\":[\"" + joined + "\"]}";
+    String event1 = String.join("\\\",\\\"", eventId1, relay.getUrl());
+    String event2 = String.join("\\\",\\\"", eventId2, relay.getUrl());
+    
+    String expected = "{\"#e\":[[\"" + String.join("\"],[\"", event1, event2) + "\"]]}";
 
     Filters decodedFilters = FiltersDecoder.decode(expected);
 

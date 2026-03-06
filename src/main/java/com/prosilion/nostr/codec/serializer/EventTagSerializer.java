@@ -1,0 +1,21 @@
+package com.prosilion.nostr.codec.serializer;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.prosilion.nostr.tag.EventTag;
+import java.io.IOException;
+
+public class EventTagSerializer extends JsonSerializer<EventTag> {
+  @Override
+  public void serialize(EventTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
+    jsonGenerator.writeStartArray();
+    jsonGenerator.writeString("e");
+    jsonGenerator.writeString(value.getIdEvent());
+
+    if (value.getRelay() != null) {
+      jsonGenerator.writeString(value.getRelay().getUrl());
+    }
+    jsonGenerator.writeEndArray();
+  }
+}

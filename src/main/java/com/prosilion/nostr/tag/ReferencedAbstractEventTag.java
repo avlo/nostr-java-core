@@ -1,7 +1,18 @@
 package com.prosilion.nostr.tag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.internal.Relay;
+import java.util.Optional;
 
 public interface ReferencedAbstractEventTag extends BaseTag {
-  Relay getRelay();
+  @JsonIgnore
+  Optional<Relay> getAbstractEventRelay();
+
+  @JsonIgnore
+  default Relay getRelay() {
+    return getAbstractEventRelay().orElseThrow(() ->
+        new NostrException(
+            String.format("AbstractEventTag [%s] does not contain a (valid) Relay", this)));
+  }
 }

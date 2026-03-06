@@ -15,23 +15,41 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class RelayTagTest {
 
   public static final String RELAY_KEY = "relay";
-  public static final String HOST_VALUE = "ws://localhost:5555";
+  public static final String LOCALHOST_VALUE = "ws://localhost:5555";
+  public static final String ZERO_LOCALHOST_VALUE = "ws://0.0.0.0:5555";
 
   @Test
-  void testSerialize() throws JsonProcessingException {
+  void testSerializeLocalhost() throws JsonProcessingException {
     final String expected = "[\"relay\",\"ws://localhost:5555\"]";
-    RelayTag relayTag = new RelayTag(new Relay(HOST_VALUE));
+    RelayTag relayTag = new RelayTag(new Relay(LOCALHOST_VALUE));
     String s = I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(relayTag);
     assertEquals(expected, s);
   }
 
   @Test
-  void testDeserialize() throws JsonProcessingException, MalformedURLException {
+  void testSerializeZeros() throws JsonProcessingException {
+    final String expected = "[\"relay\",\"ws://0.0.0.0:5555\"]";
+    RelayTag relayTag = new RelayTag(new Relay(ZERO_LOCALHOST_VALUE));
+    String s = I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(relayTag);
+    assertEquals(expected, s);
+  }
+
+  @Test
+  void testDeserializeLocalhost() throws JsonProcessingException, MalformedURLException {
     final String EXPECTED = "[\"relay\",\"ws://localhost:5555\"]";
     JsonNode node = MAPPER_AFTERBURNER.readTree(EXPECTED);
     RelayTag deserialize = (RelayTag) RelayTag.deserialize(node);
     assertEquals(RELAY_KEY, deserialize.getCode());
-    assertEquals(HOST_VALUE, deserialize.getRelay().getUrl());
+    assertEquals(LOCALHOST_VALUE, deserialize.getRelay().getUrl());
+  }
+
+  @Test
+  void testDeserializeZeros() throws JsonProcessingException, MalformedURLException {
+    final String EXPECTED = "[\"relay\",\"ws://0.0.0.0:5555\"]";
+    JsonNode node = MAPPER_AFTERBURNER.readTree(EXPECTED);
+    RelayTag deserialize = (RelayTag) RelayTag.deserialize(node);
+    assertEquals(RELAY_KEY, deserialize.getCode());
+    assertEquals(ZERO_LOCALHOST_VALUE, deserialize.getRelay().getUrl());
   }
 
   @Test

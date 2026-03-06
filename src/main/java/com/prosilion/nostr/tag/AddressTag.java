@@ -1,5 +1,6 @@
 package com.prosilion.nostr.tag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -67,5 +68,11 @@ public record AddressTag(
   @Override
   public int hashCode() {
     return Objects.hash(kind, publicKey, identifierTag, relay);
+  }
+
+  @JsonIgnore
+  @Override
+  public Optional<Relay> getAbstractEventRelay() {
+    return Optional.ofNullable(relay);
   }
 }

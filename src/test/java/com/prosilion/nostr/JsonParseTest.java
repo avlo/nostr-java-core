@@ -162,12 +162,15 @@ public class JsonParseTest {
     log.debug("testBaseMessageDecoderKindsAuthorsReferencedEvents");
 
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+
+    String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     final String parseTarget =
         "[\"REQ\", " +
             "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
             "{\"kinds\": [1], " +
             "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]}]";
+            "\"#e\": [[\"" + event + "\"]]}]";
 
     final var message = BaseMessageDecoder.decode(parseTarget);
 
@@ -648,13 +651,15 @@ public class JsonParseTest {
     String geohashValue1 = "2vghde";
     String geohashValue2 = "3abcde";
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+    String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String reqJsonWithCustomTagQueryFilterToDecode =
         "[\"REQ\", " +
             "\"" + subscriptionId + "\", " +
             "{\"kinds\": [" + kind + "], " +
             "\"authors\": [\"" + author + "\"]," +
             "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]," +
+            "\"#e\": [[\"" + event + "\"]]," +
             "\"#p\": [\"" + author + "\"]" +
             "}]";
 
@@ -686,6 +691,8 @@ public class JsonParseTest {
     String geohashValue1 = "2vghde";
     String geohashValue2 = "3abcde";
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+    String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String uuidKey = "#d";
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
@@ -696,7 +703,7 @@ public class JsonParseTest {
             "\"authors\": [\"" + author + "\"]," +
             "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
             "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]}]";
+            "\"#e\": [[\"" + event + "\"]]}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
@@ -721,6 +728,8 @@ public class JsonParseTest {
     Kind kind = Kind.TEXT_NOTE;
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+    String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String uuidValue1 = "UUID-1";
 
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
@@ -730,7 +739,7 @@ public class JsonParseTest {
             "\"" + subscriptionId + "\", " +
             "{\"kinds\": [" + kind + "], " +
             "\"authors\": [\"" + author + "\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]," +
+            "\"#e\": [[\"" + event + "\"]]," +
             "\"#a\": [\"" + addressableTag + "\"]," +
             "\"#p\": [\"" + author + "\"]" +
             "}]";
@@ -743,7 +752,7 @@ public class JsonParseTest {
         new Filters(
             new KindFilter(Kind.TEXT_NOTE),
             new AuthorFilter(new PublicKey(author)),
-            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
             new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
             new AddressTagFilter(addressTag1)));
 
@@ -763,6 +772,7 @@ public class JsonParseTest {
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
     String uuidValue1 = "UUID-1";
     String relay = "ws://localhost:5555";
+    String event = String.join("\\\",\\\"", referencedEventId, relay);
 
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
 
@@ -771,7 +781,7 @@ public class JsonParseTest {
             "\"" + subscriptionId + "\", " +
             "{\"kinds\": [" + kind + "], " +
             "\"authors\": [\"" + author + "\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]," +
+            "\"#e\": [[\"" + event + "\"]]," +
             "\"#a\": [\"" + addressableTag + "\"]," +
             "\"#p\": [\"" + author + "\"]" +
             "}]";
@@ -784,7 +794,7 @@ public class JsonParseTest {
         new Filters(
             new KindFilter(Kind.TEXT_NOTE),
             new AuthorFilter(new PublicKey(author)),
-            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new ReferencedEventFilter(new EventTag(referencedEventId, relay)),
             new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
             new AddressTagFilter(addressTag1)));
 
@@ -804,12 +814,14 @@ public class JsonParseTest {
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String author2 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+    String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String reqJsonWithCustomTagQueryFilterToDecode =
         "[\"REQ\", " +
             "\"" + subscriptionId + "\", " +
             "{\"kinds\": [" + kind + ", " + kind2 + "], " +
             "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]" +
+            "\"#e\": [[\"" + event + "\"]]" +
             "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
@@ -820,7 +832,7 @@ public class JsonParseTest {
             new KindFilter(Kind.RECOMMEND_SERVER),
             new AuthorFilter(new PublicKey(author)),
             new AuthorFilter(new PublicKey(author2)),
-            new ReferencedEventFilter(new EventTag(referencedEventId))));
+            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl()))));
 
     assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
     assertEquals(expectedReqMessage, decodedReqMessage);
@@ -868,6 +880,8 @@ public class JsonParseTest {
     String geohashValue1 = "2vghde";
     String geohashValue2 = "3abcde";
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+    String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String uuidKey = "#d";
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
@@ -878,7 +892,7 @@ public class JsonParseTest {
             "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
             "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
             "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]" +
+            "\"#e\": [[\"" + event + "\"]]" +
             "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
@@ -889,7 +903,7 @@ public class JsonParseTest {
             new KindFilter(Kind.RECOMMEND_SERVER),
             new AuthorFilter(new PublicKey(author)),
             new AuthorFilter(new PublicKey(author2)),
-            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
             new GeohashTagFilter(new GeohashTag(geohashValue1)),
             new GeohashTagFilter(new GeohashTag(geohashValue2)),
             new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
@@ -953,6 +967,8 @@ public class JsonParseTest {
     String geohashValue1 = "2vghde";
     String geohashValue2 = "3abcde";
     String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+    String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String uuidKey = "#d";
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
@@ -963,7 +979,7 @@ public class JsonParseTest {
             "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
             "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
             "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
-            "\"#e\": [\"" + referencedEventId + "\"]" +
+            "\"#e\": [[\"" + event + "\"]]" +
             "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
@@ -974,7 +990,7 @@ public class JsonParseTest {
             new KindFilter(Kind.RECOMMEND_SERVER),
             new AuthorFilter(new PublicKey(author)),
             new AuthorFilter(new PublicKey(author2)),
-            new ReferencedEventFilter(new EventTag(referencedEventId)),
+            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
             new GeohashTagFilter(new GeohashTag(geohashValue1)),
             new GeohashTagFilter(new GeohashTag(geohashValue2)),
             new IdentifierTagFilter(new IdentifierTag(uuidValue1)),

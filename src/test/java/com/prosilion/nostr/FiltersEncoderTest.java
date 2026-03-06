@@ -218,8 +218,11 @@ public class FiltersEncoderTest {
 
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
 
-    String encodedFilters = FiltersEncoder.encode(new Filters(new ReferencedEventFilter(new EventTag(eventId, relay.getUrl()))));
-    String expected = "{\"#e\":[\"" + eventId + "\"]}";
+    String encodedFilters = FiltersEncoder.encode(
+        new Filters(
+            new ReferencedEventFilter(
+                new EventTag(eventId, relay.getUrl()))));
+    String expected = "{\"#e\":[[\"" + String.join("\\\",\\\"", eventId, relay.getUrl()) + "\"]]}";
 
     System.out.println(expected);
     System.out.println("----------");
@@ -240,12 +243,15 @@ public class FiltersEncoderTest {
             new ReferencedEventFilter(new EventTag(eventId1, relay.getUrl())),
             new ReferencedEventFilter(new EventTag(eventId2, relay.getUrl())))));
 
-    String expected = String.join("\",\"", eventId1, eventId2);
+    String event1 = String.join("\\\",\\\"", eventId1, relay.getUrl());
+    String event2 = String.join("\\\",\\\"", eventId2, relay.getUrl());
+
+    String expected = "{\"#e\":[[\"" + String.join("\"],[\"", event1, event2) + "\"]]}";
     System.out.println(expected);
     System.out.println("----------");
     System.out.println(encodedFilters);
 
-    assertEquals("{\"#e\":[\"" + expected + "\"]}", encodedFilters);
+    assertEquals(expected, encodedFilters);
   }
 
   @Test
@@ -524,13 +530,38 @@ public class FiltersEncoderTest {
   }
 
   @Test
-  public void testAddressableTagWithRelayReqMessage() throws JsonProcessingException {
+  public void testAddressableTagWithRelayReqMessageLocalhost() throws JsonProcessingException {
     log.info("testAddressableTagWithRelayReqMessage");
     String subscriberId = "npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9";
 
     String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     String uuidValue1 = "UUID-1";
     String url = "ws://localhost:5555";
+    Relay relay = new Relay(url);
+
+    ReqMessage reqMessage = new ReqMessage(
+        subscriberId,
+        new Filters(
+            new AddressTagFilter(
+                new AddressTag(
+                    Kind.TEXT_NOTE,
+                    new PublicKey(author),
+                    new IdentifierTag(uuidValue1),
+                    relay))));
+
+    String actual = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(reqMessage);
+    System.out.println(actual);
+//    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testAddressableTagWithRelayReqMessageZeros() throws JsonProcessingException {
+    log.info("testAddressableTagWithRelayReqMessage");
+    String subscriberId = "npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9";
+
+    String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String uuidValue1 = "UUID-1";
+    String url = "ws://0.0.0.0:5555";
     Relay relay = new Relay(url);
 
     ReqMessage reqMessage = new ReqMessage(

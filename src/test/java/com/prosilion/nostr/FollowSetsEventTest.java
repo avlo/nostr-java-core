@@ -99,7 +99,7 @@ public class FollowSetsEventTest {
                 FollowSetsEvent::badgeAwardGenericEventAsEventTag).toList(),
         actual.getContainedAddressableEvents());
 
-    assertNotEquals(
+    assertEquals(
         badgeAwardGenericEvents.stream().map(badgeAwardAbstractEvent ->
             new EventTag(
                 badgeAwardAbstractEvent.getId())).toList(),

@@ -5,9 +5,12 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -49,6 +52,25 @@ public class FormulaEventTest {
         new FormulaEvent(
             expected.getGenericEventRecord(),
             fxn).getBadgeDefinitionGenericEvent());
+  }
+
+  @Test
+  void testFormulaEventDoesNotFilterRelayTag() throws ParseException {
+    IdentifierTag filteredIdentifierTag = new IdentifierTag("IDENTIFIER_SHOULD_GET_FILTERED");
+
+    FormulaEvent expected = new FormulaEvent(
+        identity,
+        formulaPlusOneIdentifierTag,
+        relay,
+        awardUpvoteEvent,
+        List.of(filteredIdentifierTag),
+        "+1");
+
+    assertEquals(1, Filterable.getTypeSpecificTags(RelayTag.class, expected).size());
+    assertEquals(1, Filterable.getTypeSpecificTags(IdentifierTag.class, expected).size());
+    assertEquals(0,
+        Filterable.getTypeSpecificTagsStream(IdentifierTag.class, expected)
+            .filter(filteredIdentifierTag::equals).toList().size());
   }
 
   Function<AddressTag, BadgeDefinitionGenericEvent> fxn = addressTag ->
