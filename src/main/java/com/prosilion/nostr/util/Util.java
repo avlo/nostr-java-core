@@ -1,11 +1,12 @@
 package com.prosilion.nostr.util;
 
+import java.util.UUID;
 import org.springframework.lang.NonNull;
 
 public interface Util {
   String EMPTY_TAGS_VARIANTS_REGEX = "\\[\\s+]";
   String EMPTY_TAGS_SUBSTITUTION = "[ ]";
-  
+
   static String prettyFormatJson(@NonNull String json_str) {
     return prettyFormatJson(json_str, 0);
   }
@@ -54,5 +55,9 @@ public interface Util {
     return ret.toString().replaceAll(
         EMPTY_TAGS_VARIANTS_REGEX,
         EMPTY_TAGS_SUBSTITUTION);
+  }
+
+  static String generateRandomHex64String() {
+    return UUID.randomUUID().toString().concat(UUID.randomUUID().toString()).replaceAll("[^A-Za-z0-9]", "");
   }
 }

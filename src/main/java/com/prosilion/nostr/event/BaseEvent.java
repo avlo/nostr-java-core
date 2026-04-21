@@ -96,7 +96,7 @@ public abstract class BaseEvent implements EventIF {
 
   @Override
   public boolean equals(@NonNull Object o) {
-    if (getClass() != o.getClass()) return false;
+    if (!o.getClass().isAssignableFrom(this.getClass())) return false;
     return Objects.equals(genericEventRecord, ((BaseEvent) o).genericEventRecord);
   }
 

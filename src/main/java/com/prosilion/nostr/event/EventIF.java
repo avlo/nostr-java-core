@@ -36,7 +36,7 @@ public interface EventIF extends Serializable {
       String s = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(arrayNode);
       return s;
     } catch (JsonProcessingException e) {
-      throw new NostrException(e);
+      throw new NostrException("serialize(GenericEventRecord genericEventRecord) failed with JsonProcessingException:", e);
     }
   }
 
@@ -83,7 +83,12 @@ public interface EventIF extends Serializable {
   }
 
   static String createPrettyPrintJson(@NonNull GenericEventRecord genericEventRecord) {
-    return Util.prettyFormatJson(serialize(genericEventRecord), 2);
+    try {
+      return Util.prettyFormatJson(serialize(genericEventRecord), 2);  
+    } catch (NostrException e) {
+      String message = "prettyPrint serialization failed.  since cosmetic only for debugs, just return genericEventRecord.toString():\n  ";
+      return message.concat(genericEventRecord.toString());
+    }
   }
 
   default String createPrettyPrintJson() {

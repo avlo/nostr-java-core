@@ -1,9 +1,14 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.event.BaseEvent;
+import com.prosilion.nostr.event.RelaySetsEvent;
 import com.prosilion.nostr.event.TextNoteEvent;
+import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.message.EventMessage;
+import com.prosilion.nostr.tag.RelaysTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +24,19 @@ public class IdentityTest {
     PublicKey publicKey = identity.getPublicKey();
     BaseEvent instance = new TextNoteEvent(identity, "some content");
     Assertions.assertNotNull(instance.getSignature());
+  }
+  
+  @Test
+  @SneakyThrows
+  void testRelaySetsEvent() {
+    RelaySetsEvent relaySetsEvent = new RelaySetsEvent(
+        Identity.generateRandomIdentity(),
+        new RelaysTag(
+            new Relay("ws://localhost:5555")
+        ),
+        "Kind.RELAY_SETS");
+    EventMessage eventMessage = new EventMessage(relaySetsEvent);
+    System.out.println(eventMessage.encode());
   }
 
 //  @Test
