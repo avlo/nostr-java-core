@@ -6,6 +6,7 @@ import com.prosilion.nostr.filter.tag.AddressTagFilter;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.util.Util;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Predicate;
@@ -107,6 +108,15 @@ class AddressTagTest {
 //    assertNotEquals(atSix, atEight);
   }
 
+  @Test
+  void utilPrettyPrintTest() {
+    AddressTag one = new AddressTag(kind, publicKey, identifierTag);
+    AddressTag two = new AddressTag(kind, publicKey);
+    System.out.println(Util.prettyPrintAddressTags(one));
+    System.out.println(Util.prettyPrintAddressTags(one, two));
+    System.out.println(Util.prettyPrintAddressTags(List.of(one, two)));
+  }
+  
   private static void anyFieldNameMatch(List<Field> fields, Predicate<Field> predicate) {
     assertTrue(fields.stream().anyMatch(predicate));
   }

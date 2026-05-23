@@ -2,6 +2,7 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.enums.Marker;
 import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.util.Util;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -83,6 +84,15 @@ class EventTagTest {
     anyFieldValueMatch(fields, eventTag, fieldValue -> fieldValue.equals(recommendedRelayUrl));
 
     assertFalse(fields.stream().anyMatch(field -> field.getName().equals("idEventXXX")));
+  }
+
+  @Test
+  void utilPrettyPrintTest() {
+    EventTag one = new EventTag(EVENT_ID, "ws://localhost:5555");
+    EventTag two = new EventTag(EVENT_ID, "ws://localhost");
+//    System.out.println(Util.prettyPrintEventTags(one));
+//    System.out.println(Util.prettyPrintEventTags(one, two));
+//    System.out.println(Util.prettyPrintEventTags(List.of(one, two)));
   }
 
   private static void anyFieldNameMatch(List<Field> fields, Predicate<Field> predicate) {

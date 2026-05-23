@@ -1,6 +1,12 @@
 package com.prosilion.nostr.util;
 
+import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.lang.NonNull;
 
 public interface Util {
@@ -59,5 +65,50 @@ public interface Util {
 
   static String generateRandomHex64String() {
     return UUID.randomUUID().toString().concat(UUID.randomUUID().toString()).replaceAll("[^A-Za-z0-9]", "");
+  }
+
+  static String prettyPrintGenericEventRecords(@NonNull GenericEventRecord... genericEventRecords) {
+    return prettyPrintGenericEventRecords(List.of(genericEventRecords));
+  }
+
+  static String prettyPrintGenericEventRecords(@NonNull List<GenericEventRecord> genericEventRecords) {
+    return genericEventRecords.stream().map(GenericEventRecord::createPrettyPrintJson).collect(Collectors.joining(",\n  "));
+  }
+
+  static String prettyPrintEventTags(@NonNull EventTag... eventTag) {
+    return prettyPrintEventTags(List.of(eventTag));
+  }
+
+  static String prettyPrintEventTags(@NonNull List<EventTag> eventTags) {
+    return prettyPrintReferencedAbstractEventTags(eventTags, "EventTag.*idEvent", "\nEventTag[\n  idEvent");
+  }
+
+  static String prettyPrintAddressTags(@NonNull AddressTag... addressTag) {
+    return prettyPrintAddressTags(List.of(addressTag));
+  }
+
+  static String prettyPrintAddressTags(@NonNull List<AddressTag> addressTags) {
+    return prettyPrintReferencedAbstractEventTags(addressTags, "AddressTag.*kind", "\nAddressTag[\n  kind");
+  }
+
+  static String prettyPrintReferencedAbstractEventTag(@NonNull ReferencedAbstractEventTag abstractTag) {
+    return (abstractTag instanceof AddressTag) ?
+        prettyPrintAddressTags((AddressTag) abstractTag) :
+        prettyPrintEventTags((EventTag) abstractTag);
+  }
+
+  static String prettyPrintReferencedAbstractEventTags(@NonNull List<? extends ReferencedAbstractEventTag> abstractTags) {
+    return abstractTags.stream().map(Util::prettyPrintReferencedAbstractEventTag).collect(Collectors.joining());
+  }
+
+  static String prettyPrintReferencedAbstractEventTags(@NonNull List<? extends ReferencedAbstractEventTag> addressTags, final String regex, final String delimiter) {
+    return addressTags.stream().map(ReferencedAbstractEventTag::toString)
+        .map(s ->
+            String.join("\n  ",
+                s.split(", ")))
+        .map(addressTagLiteral ->
+            String.join(delimiter,
+                addressTagLiteral.split(regex)))
+        .collect(Collectors.joining(","));
   }
 }

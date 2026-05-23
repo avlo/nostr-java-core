@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
@@ -34,6 +35,14 @@ public record Filters(
   public Filters(@NonNull Map<String, List<Filterable>> filtersMap, Integer limit) {
     this.filtersMap = validateFiltersMap(filtersMap);
     this.limit = limit;
+  }
+
+  public void add(@NonNull Filterable... filterablesByDefaultType) {
+    filtersMap.putAll(
+        validateFiltersMap(
+            Stream.of(filterablesByDefaultType)
+                .collect(
+                    groupingBy(Filterable::getFilterKey))));
   }
 
   public List<Filterable> getFilterByType(@NonNull String type) {
