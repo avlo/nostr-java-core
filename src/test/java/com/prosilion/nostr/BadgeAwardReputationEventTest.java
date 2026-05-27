@@ -28,9 +28,12 @@ public class BadgeAwardReputationEventTest {
   public final IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
   public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
 
-  public final Identity identity = Identity.generateRandomIdentity();
-  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(identity, upvoteIdentifierTag, relay);
+  public final Identity aImgidentity = Identity.generateRandomIdentity();
+  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
 
+  private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
+      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
+  
   public static final String PLATFORM = BadgeAwardReputationEventTest.class.getPackageName();
   public static final String IDENTITY = BadgeAwardReputationEventTest.class.getSimpleName();
   public static final String PROOF = String.valueOf(BadgeAwardReputationEventTest.class.hashCode());
@@ -39,7 +42,8 @@ public class BadgeAwardReputationEventTest {
   private final IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_PLUS_ONE);
 
   public static final String PLUS_ONE_FORMULA = "+1";
-  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
+  public static final String MINUS_ONE_FORMULA = "-1";
+  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
@@ -48,7 +52,8 @@ public class BadgeAwardReputationEventTest {
 
   public BadgeAwardReputationEventTest() throws ParseException {
     this.badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
-        identity,
+        aImgidentity,
+        definitionCreatorPublicKey,
         reputationIdentifierTag,
         relay,
         externalIdentityTag,
@@ -58,7 +63,7 @@ public class BadgeAwardReputationEventTest {
   @Test
   void testValidBadgeAwardReputationEvent() {
     BadgeAwardReputationEvent expected = new BadgeAwardReputationEvent(
-        identity,
+        aImgidentity,
         badgeReceiverPublicKey,
         relay,
         externalIdentityTag,
@@ -79,7 +84,7 @@ public class BadgeAwardReputationEventTest {
   @Test
   void testSingularAddressTag() {
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
-        identity,
+        aImgidentity,
         badgeReceiverPublicKey,
         relay,
         externalIdentityTag,

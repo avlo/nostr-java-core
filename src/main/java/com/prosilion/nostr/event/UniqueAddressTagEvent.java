@@ -7,53 +7,69 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.NonNull;
 
-public abstract class UniqueAddressTagEvent extends BaseEvent {
+public abstract class UniqueAddressTagEvent<T extends AddressableEvent> extends BaseEvent implements TagMappedEventIF {
   public static final long ADDRESS_TAG_COUNT_LIMIT = 1L;
   public static final String LIMIT = String.format("List<BaseTag> should contain [%s] AddressTag but instead has", ADDRESS_TAG_COUNT_LIMIT);
   public static final String CONCAT = Strings.concat(LIMIT, " [%s]: %s");
 
+  @Getter
+  @JsonIgnore
+  private final T addressableEvent;
+
   public UniqueAddressTagEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
-      @NonNull AddressTag addressTag,
+      @NonNull T addressableEvent,
       @NonNull String content) throws NostrException {
-    this(identity, kind, addressTag, List.of(), content);
+    this(identity, kind, addressableEvent, List.of(), content);
   }
 
   public UniqueAddressTagEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
-      @NonNull AddressTag addressTag,
+      @NonNull T addressableEvent,
       @NonNull List<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
-    this(identity, kind, addressTag, baseTags.stream(), content);
+    this(identity, kind, addressableEvent, baseTags.stream(), content);
   }
 
   public UniqueAddressTagEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
-      @NonNull AddressTag addressTag,
+      @NonNull T addressableEvent,
       @NonNull Stream<BaseTag> baseTags,
       @NonNull String content) throws NostrException {
     super(
         identity,
         kind,
         Stream.concat(
-            Stream.of(addressTag),
+            Stream.of(addressableEvent.asAddressTag()),
             baseTags
                 .filter(Predicate.not(AddressTag.class::isInstance))),
         content);
+    this.addressableEvent = addressableEvent;
   }
 
-  public UniqueAddressTagEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
+  public UniqueAddressTagEvent(
+      @NonNull GenericEventRecord genericEventRecord,
+      @NonNull Function<AddressTag, T> fxn) {
     super(genericEventRecord);
+    this.addressableEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
+  @Override
+  @JsonIgnore
+  public List<AddressTag> getContainedAddressableEvents() {
+    return List.of(addressableEvent.asAddressTag());
+  }
+  
   @JsonIgnore
   public AddressTag getAddressTag() {
     return getTypeSpecificTags(AddressTag.class).getFirst();

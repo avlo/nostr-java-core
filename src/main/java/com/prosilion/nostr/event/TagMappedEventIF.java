@@ -2,7 +2,6 @@ package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
-import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import java.util.List;
@@ -15,16 +14,12 @@ public interface TagMappedEventIF extends EventIF {
       BaseEvent baseEvent,
       Function<U, T> tagMappingFunction,
       Class<U> clazz) {
-    return baseEvent.getTypeSpecificTags(clazz)
-        .stream()
+    return baseEvent.getTypeSpecificTagStream(clazz)
         .map(tagMappingFunction).toList();
   }
 
   @JsonIgnore
   List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents();
-
-  String getId();
-  Kind getKind();
 
   static <T> Stream<T> throwIfEmpty(List<T> list, String message) {
     if (list.isEmpty()) {

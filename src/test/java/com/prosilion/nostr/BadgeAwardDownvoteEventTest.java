@@ -7,6 +7,7 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.util.Util;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,12 @@ public class BadgeAwardDownvoteEventTest {
         addressTag -> badgeDefnDownvoteEvent);
 
     assertEquals(expected, badgeAwardDownvoteEvent);
+    assertEquals(
+        expected.getAddressableEvent().asAddressTag(),
+        badgeAwardDownvoteEvent.getAddressableEvent().asAddressTag());
+
+    System.out.println(Util.prettyPrintAddressTags(expected.getAddressableEvent().asAddressTag()));
+    System.out.println(Util.prettyPrintAddressTags(expected.getContainedAddressableEvents()));
     assertEquals(
         expected.getContainedAddressableEvents(),
         badgeAwardDownvoteEvent.getContainedAddressableEvents());

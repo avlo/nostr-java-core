@@ -10,16 +10,21 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
+/**
+ * AddressableEvent def'n: an event containing, minimally:
+ *    1 (of 2): a single IdentifierTag (UUID)
+ *    2 (of 2): a single RelayTag (URL)
+ *    
+ * such that it may be referred to by other events via:
+ *    ["a", "KIND:EVENT_CREATOR_PUBKEY:UUID", "URL"]
+ */
 public class AddressableEvent extends BaseEvent {
-  public static final String MISSING_RELAY = "AddressableEvent tags [%s} is missing a RelayTag";
-
   public AddressableEvent(
       @NonNull Identity identity,
       @NonNull Kind kind,
@@ -51,7 +56,7 @@ public class AddressableEvent extends BaseEvent {
   }
 
   public AddressableEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
-    super(genericEventRecord);
+    super(validateIdentifierTagRelayTag(genericEventRecord));
   }
 
   @JsonIgnore
@@ -65,17 +70,33 @@ public class AddressableEvent extends BaseEvent {
         getKind(),
         getPublicKey(),
         getIdentifierTag(),
-        Optional.of(getTypeSpecificTags(RelayTag.class)).orElseThrow(() ->
-            new NostrException(String.format("%s is missing a RelayTag", getClass().getSimpleName()))).getFirst().getRelay());
+        getRelayTagRelay());
   }
 
   @JsonIgnore
   public Relay getRelayTagRelay() {
-    return getTypeSpecificTags(RelayTag.class).stream().map(RelayTag::getRelay).findFirst().orElseThrow(() ->
-        new NostrException(
-            String.format(MISSING_RELAY, getTags())));
+    return getTypeSpecificTags(RelayTag.class).getFirst().getRelay();
   }
 
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
   private static final Function<Kind, String> errorMessage = kind -> String.format("Intended AddressableEvent invalid kind [%s] value [%s] is not between 30000 and 40000", kind, kind.getValue());
+
+  private static final String MISSING_TAG = "ctor() genericEventRecord parameter:\n%s\nis missing required [%s]";
+  private static final String MULTIPLE_TAG = "ctor() genericEventRecord parameter:\n%s\nhas multiple [%s]";
+
+  public static GenericEventRecord validateIdentifierTagRelayTag(@NonNull GenericEventRecord genericEventRecord) {
+    List<IdentifierTag> identifierTags = genericEventRecord.getTypeSpecificTagStream(IdentifierTag.class).toList();
+    if (identifierTags.isEmpty()) throw exceptionMessage(MISSING_TAG, genericEventRecord, "IdentifierTag");
+    if (identifierTags.size() > 1) throw exceptionMessage(MULTIPLE_TAG, genericEventRecord, "IdentifierTag");
+
+    List<RelayTag> relayTags = genericEventRecord.getTypeSpecificTagStream(RelayTag.class).toList();
+    if (relayTags.isEmpty()) throw exceptionMessage(MISSING_TAG, genericEventRecord, "RelayTag");
+    if (relayTags.size() > 1) throw exceptionMessage(MULTIPLE_TAG, genericEventRecord, "RelayTag");
+
+    return genericEventRecord;
+  }
+
+  private static NostrException exceptionMessage(String s, GenericEventRecord ger, String tag) {
+    return new NostrException(String.format(s, ger.createPrettyPrintJson(), tag));
+  }
 }

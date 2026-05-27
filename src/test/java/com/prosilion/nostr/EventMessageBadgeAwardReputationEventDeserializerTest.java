@@ -18,11 +18,11 @@ import com.prosilion.util.Factory;
 import java.io.IOException;
 import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.json.JsonComparator;
 import org.springframework.test.json.JsonComparison;
@@ -33,6 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @JsonTest
 @ActiveProfiles("test")
 public class EventMessageBadgeAwardReputationEventDeserializerTest {
+  private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
+      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
+  
   private final JsonComparator jsonComparator = (expected, actual) -> JsonComparison.match();
   @Autowired
   JacksonTester<EventMessage> tester;
@@ -68,7 +71,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     IdentifierTag upvoteIdentifierTag = new IdentifierTag(TEST_UNIT_UPVOTE);
 
     Identity platformIdentity = Identity.generateRandomIdentity();
-    Identity authorIdentity = Identity.generateRandomIdentity();
+    Identity aImgIdentity = Identity.generateRandomIdentity();
     Identity recipient = Identity.generateRandomIdentity();
     PublicKey recipientPubkey = recipient.getPublicKey();
 
@@ -78,10 +81,11 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
 
     BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(platformIdentity, reputationIdentifierTag, relay);
 
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(authorIdentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, FORMULA_PLUS_ONE);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgIdentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, FORMULA_PLUS_ONE);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
-        authorIdentity,
+        aImgIdentity,
+        definitionCreatorPublicKey,
         reputationIdentifierTag,
         relay,
         externalIdentityTag,

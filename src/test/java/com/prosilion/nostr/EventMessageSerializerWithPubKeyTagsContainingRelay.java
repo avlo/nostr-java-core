@@ -1,14 +1,18 @@
 package com.prosilion.nostr;
 
+import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
+import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
@@ -23,6 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.json.JsonComparator;
 import org.springframework.test.json.JsonComparison;
 
+import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
@@ -50,7 +55,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelay {
 
   private final GenericEventRecord followSetsAsGenericEventEventWithEventTag;
 
-  public EventMessageSerializerWithPubKeyTagsContainingRelay() {
+  public EventMessageSerializerWithPubKeyTagsContainingRelay() throws ParseException {
     this.badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(platformIdentity, upvoteIdentifierTag, relay);
     this.badgeAwardGenericEventWithAddressTag = new BadgeAwardGenericEvent<>(
         platformIdentity,
@@ -63,6 +68,21 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelay {
         badgeReceiverPublicKey,
         relay,
         new BadgeDefinitionGenericEvent(authorIdentity, upvoteIdentifierTag, relay));
+
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(
+        authorIdentity,
+        upvoteIdentifierTag,
+        relay,
+        badgeDefnUpvoteEvent,
+        PLUS_ONE_FORMULA);
+
+    BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
+        platformIdentity,
+        authorIdentity.getPublicKey(),
+        FollowSetsEvent.defaultIdentifierTag,
+        relay,
+        new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
+        plusOneFormulaEvent);
 
     this.followSetsAsGenericEventEventWithEventTag = new GenericEventRecord(
         "09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50",
@@ -81,8 +101,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelay {
 
     this.followSetsEvent = new FollowSetsEvent(
         platformIdentity,
-        badgeReceiverPublicKey,
-        followSetsIdentifierTag,
+        badgeDefinitionReputationEventPlusOneFormula,
         relay,
         List.of(badgeAwardUpvoteEvent));
   }

@@ -47,6 +47,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 public class FiltersEncoderTest {
+  private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
+      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
+  
   public static final Relay relay = new Relay("ws://localhost:5555");
 
   @Test
@@ -501,13 +504,14 @@ public class FiltersEncoderTest {
 
     IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
     IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-    Identity definitionCreatorIdentity = Identity.generateRandomIdentity();
+    Identity aImgIdentity = Identity.generateRandomIdentity();
 
-    BadgeDefinitionGenericEvent awardUpvoteDefinitionEvent = new BadgeDefinitionGenericEvent(definitionCreatorIdentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(definitionCreatorIdentity, upvoteIdentifierTag, relay, awardUpvoteDefinitionEvent, PLUS_ONE_FORMULA);
+    BadgeDefinitionGenericEvent awardUpvoteDefinitionEvent = new BadgeDefinitionGenericEvent(aImgIdentity, upvoteIdentifierTag, relay);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgIdentity, upvoteIdentifierTag, relay, awardUpvoteDefinitionEvent, PLUS_ONE_FORMULA);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
-        definitionCreatorIdentity,
+        aImgIdentity,
+        definitionCreatorPublicKey,
         reputationIdentifierTag,
         relay,
         BADGE_DEFINITION_REPUTATION_EXTERNAL_IDENTITY_TAG,

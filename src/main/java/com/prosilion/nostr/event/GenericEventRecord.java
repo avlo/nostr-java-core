@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -8,6 +9,7 @@ import com.prosilion.nostr.crypto.HexStringValidator;
 import com.prosilion.nostr.crypto.bech32.Bech32;
 import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.ISignableEntity;
 import com.prosilion.nostr.user.PublicKey;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
@@ -131,6 +134,15 @@ public record GenericEventRecord(
     return signature;
   }
 
+  @JsonIgnore
+  public <T extends BaseTag> List<T> getTypeSpecificTags(Class<T> baseTagClassDerivedType) {
+    return getTypeSpecificTagStream(baseTagClassDerivedType).toList();
+  }
+
+  @JsonIgnore
+  public <T extends BaseTag> Stream<T> getTypeSpecificTagStream(Class<T> baseTagClassDerivedType) {
+    return Filterable.getTypeSpecificTagsStream(baseTagClassDerivedType, this);
+  }
 //  @Override
 //  @JsonIgnore
 //  public List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents() {

@@ -7,7 +7,9 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -28,12 +30,14 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
 
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
+      @NonNull PublicKey reputationDefinitionCreatorPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
-      @NonNull FormulaEvent formulaEvent) throws NostrException {
+      @NonNull FormulaEvent... formulaEvent) throws NostrException {
     this(
         identity,
+        reputationDefinitionCreatorPublicKey,
         identifierTag,
         relay,
         externalIdentityTag,
@@ -42,15 +46,17 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
 
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
+      @NonNull PublicKey reputationDefinitionCreatorPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
       @NonNull List<FormulaEvent> formulaEvents) throws NostrException {
-    this(identity, identifierTag, relay, externalIdentityTag, formulaEvents, List.of());
+    this(identity, reputationDefinitionCreatorPublicKey, identifierTag, relay, externalIdentityTag, formulaEvents, List.of());
   }
 
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,
+      @NonNull PublicKey reputationDefinitionCreatorPublicKey,
       @NonNull IdentifierTag identifierTag,
       @NonNull Relay relay,
       @NonNull ExternalIdentityTag externalIdentityTag,
@@ -61,11 +67,16 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
         identifierTag,
         relay,
         Stream.concat(
-            TagMappedEventIF.throwIfEmpty(formulaEvents, MESSAGE)
-                .map(AddressableEvent::asAddressTag),
+            Stream.concat(
+                TagMappedEventIF.throwIfEmpty(formulaEvents, MESSAGE)
+                    .map(AddressableEvent::asAddressTag),
+                Stream.of(new PubKeyTag(reputationDefinitionCreatorPublicKey))),
             Stream.concat(
                 Stream.of(externalIdentityTag),
-                baseTags.stream().filter(Predicate.not(IdentifierTag.class::isInstance)))),
+                baseTags.stream()
+                    .filter(Predicate.not(IdentifierTag.class::isInstance))
+                    .filter(Predicate.not(AddressTag.class::isInstance))
+                    .filter(Predicate.not(PubKeyTag.class::isInstance)))),
         defaultContentFromFormulaOperators(identifierTag, formulaEvents));
     this.formulaEvents = formulaEvents;
   }
@@ -128,7 +139,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   @JsonIgnore
   public List<AddressTag> getContainedAddressableEvents() {
     return formulaEvents.stream()
-        .map(FormulaEvent::getContainedAddressableEvents)
-        .flatMap(List::stream).toList();
+        .map(FormulaEvent::asAddressTag)
+        .toList();
   }
 }

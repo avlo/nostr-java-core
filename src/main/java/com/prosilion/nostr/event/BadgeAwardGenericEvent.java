@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
@@ -62,16 +61,5 @@ public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> exten
       @NonNull GenericEventRecord genericEventRecord,
       @NonNull Function<AddressTag, T> fxn) {
     super(genericEventRecord, fxn);
-  }
-
-  @JsonIgnore
-  public T getBadgeDefinitionGenericEvent() {
-    return super.getAddressableEvent();
-  }
-
-  @Override
-  @JsonIgnore
-  public List<AddressTag> getContainedAddressableEvents() {
-    return List.of(getBadgeDefinitionGenericEvent().asAddressTag());
   }
 }

@@ -10,6 +10,7 @@ import com.prosilion.nostr.user.PublicKey;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
@@ -38,8 +39,10 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
         relay,
         badgeDefinitionReputationEvent,
         Stream.concat(
-            Stream.of(externalIdentityTag),
-            tags.stream()),
+            Stream.of(
+                externalIdentityTag),
+            tags.stream()
+                .filter(Predicate.not(ExternalIdentityTag.class::isInstance))),
         score.toString());
   }
 
@@ -52,7 +55,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
   @JsonIgnore
   @Override
   public BadgeDefinitionReputationEvent getBadgeDefinitionGenericEvent() {
-    return super.getAddressableEvent();
+    return super.getBadgeDefinitionGenericEvent();
   }
 
   @JsonIgnore
