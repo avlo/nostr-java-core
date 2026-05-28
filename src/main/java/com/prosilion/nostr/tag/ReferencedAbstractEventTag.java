@@ -7,11 +7,10 @@ import java.util.Optional;
 
 public interface ReferencedAbstractEventTag extends BaseTag {
   @JsonIgnore
-  Optional<Relay> getAbstractEventRelay();
+  Optional<Relay> findRelay();
 
-  @JsonIgnore
   default Relay getRelay() {
-    return getAbstractEventRelay().orElseThrow(() ->
+    return findRelay().orElseThrow(() ->
         new NostrException(
             String.format("AbstractEventTag [%s] does not contain a (valid) Relay", this)));
   }

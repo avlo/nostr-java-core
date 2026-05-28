@@ -75,10 +75,10 @@ public class BadgeAwardReputationEventTest {
         addressTag -> badgeDefinitionReputationEvent);
 
     assertEquals(expected, badgeAwardReputationEvent);
-    assertEquals(expected.getBadgeDefinitionGenericEvent(), badgeAwardReputationEvent.getBadgeDefinitionGenericEvent());
-    assertEquals(expected.getContainedAddressableEvents(), badgeAwardReputationEvent.getContainedAddressableEvents());
+    assertEquals(expected.getBadgeDefinitionEvent(), badgeAwardReputationEvent.getBadgeDefinitionEvent());
+    assertEquals(List.of(expected.getAddressableEvent().asAddressableEventAddressTag()), List.of(badgeAwardReputationEvent.getAddressableEvent().asAddressableEventAddressTag()));
     assertEquals(expected.getExternalIdentityTag(), badgeAwardReputationEvent.getExternalIdentityTag());
-    assertEquals(expected.getRelayTagRelay(), badgeAwardReputationEvent.getRelayTagRelay());
+    assertEquals(expected.getEventOriginRelay(), badgeAwardReputationEvent.getEventOriginRelay());
   }
 
   @Test
@@ -89,13 +89,13 @@ public class BadgeAwardReputationEventTest {
         relay,
         externalIdentityTag,
         badgeDefinitionReputationEvent,
-        List.of(badgeDefinitionReputationEvent.asAddressTag()),
+        List.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag()),
         BigDecimal.ZERO);
 
-    assertEquals(1, badgeAwardReputationEvent.getContainedAddressableEvents().size());
+    assertEquals(1, List.of(badgeAwardReputationEvent.getAddressableEvent().asAddressableEventAddressTag()).size());
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(AddressTag.class).size());
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(ExternalIdentityTag.class).size());
-    assertEquals(1, badgeAwardReputationEvent.getBadgeDefinitionGenericEvent().getTypeSpecificTags(IdentifierTag.class).size());
+    assertEquals(1, badgeAwardReputationEvent.getBadgeDefinitionEvent().getTypeSpecificTags(IdentifierTag.class).size());
 
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(PubKeyTag.class).size());
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(RelayTag.class).size());

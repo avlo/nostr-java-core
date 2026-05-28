@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.BaseTag;
@@ -87,16 +86,6 @@ public abstract class BaseEvent implements EventIF {
         intPredicate.test(kind.getValue()),
         errorMessage.apply(kind));
     return kind;
-  }
-
-  @JsonIgnore
-  public <T extends BaseTag> List<T> getTypeSpecificTags(Class<T> baseTagClassDerivedType) {
-    return genericEventRecord.getTypeSpecificTags(baseTagClassDerivedType);
-  }
-
-  @JsonIgnore
-  public <T extends BaseTag> Stream<T> getTypeSpecificTagStream(Class<T> baseTagClassDerivedType) {
-    return genericEventRecord.getTypeSpecificTagStream(baseTagClassDerivedType);
   }
 
   @Override

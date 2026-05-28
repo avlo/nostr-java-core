@@ -72,7 +72,7 @@ public record AddressTag(
 
   @JsonIgnore
   @Override
-  public Optional<Relay> getAbstractEventRelay() {
+  public Optional<Relay> findRelay() {
     return Optional.ofNullable(relay);
   }
 }

@@ -10,11 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 import lombok.EqualsAndHashCode;
 import org.springframework.lang.NonNull;
 
-import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 
 @EqualsAndHashCode(callSuper = true)
@@ -27,10 +25,7 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(EventTag.class, genericEvent)
-            .anyMatch(eventTag ->
-                eventTag.equals(getReferencedEventTag()));
+    return getPredicate(EventTag.class, getReferencedEventTag());
   }
 
   @Override

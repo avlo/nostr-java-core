@@ -34,10 +34,7 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(AddressTag.class, genericEvent)
-            .anyMatch(addressTag ->
-                addressTag.equals(getAddressTag()));
+    return getPredicate(AddressTag.class, getAddressTag());
   }
 
   @Override

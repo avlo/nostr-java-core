@@ -29,10 +29,7 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(ExternalIdentityTag.class, genericEvent)
-            .anyMatch(externalIdentityTag ->
-                externalIdentityTag.equals(getExternalIdentityTag()));
+    return getPredicate(ExternalIdentityTag.class, getExternalIdentityTag());
   }
 
   @Override

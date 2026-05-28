@@ -18,11 +18,11 @@ import org.springframework.lang.NonNull;
 
 /**
  * AddressableEvent def'n: an event containing, minimally:
- *    1 (of 2): a single IdentifierTag (UUID)
- *    2 (of 2): a single RelayTag (URL)
- *    
+ * 1 (of 2): a single IdentifierTag (UUID)
+ * 2 (of 2): a single RelayTag (URL)
+ * <p>
  * such that it may be referred to by other events via:
- *    ["a", "KIND:EVENT_CREATOR_PUBKEY:UUID", "URL"]
+ * ["a", "KIND:EVENT_CREATOR_PUBKEY:UUID", "URL"]
  */
 public class AddressableEvent extends BaseEvent {
   public AddressableEvent(
@@ -61,21 +61,21 @@ public class AddressableEvent extends BaseEvent {
 
   @JsonIgnore
   public IdentifierTag getIdentifierTag() {
-    return getTypeSpecificTags(IdentifierTag.class).getFirst();
+    return requireFirstTag(IdentifierTag.class);
   }
 
   @JsonIgnore
-  public AddressTag asAddressTag() {
+  public AddressTag asAddressableEventAddressTag() {
     return new AddressTag(
         getKind(),
         getPublicKey(),
         getIdentifierTag(),
-        getRelayTagRelay());
+        getEventOriginRelay());
   }
 
   @JsonIgnore
-  public Relay getRelayTagRelay() {
-    return getTypeSpecificTags(RelayTag.class).getFirst().getRelay();
+  public Relay getEventOriginRelay() {
+    return getRelayTag().getRelay();
   }
 
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
@@ -85,11 +85,11 @@ public class AddressableEvent extends BaseEvent {
   private static final String MULTIPLE_TAG = "ctor() genericEventRecord parameter:\n%s\nhas multiple [%s]";
 
   public static GenericEventRecord validateIdentifierTagRelayTag(@NonNull GenericEventRecord genericEventRecord) {
-    List<IdentifierTag> identifierTags = genericEventRecord.getTypeSpecificTagStream(IdentifierTag.class).toList();
+    List<IdentifierTag> identifierTags = genericEventRecord.getTypeSpecificTags(IdentifierTag.class);
     if (identifierTags.isEmpty()) throw exceptionMessage(MISSING_TAG, genericEventRecord, "IdentifierTag");
     if (identifierTags.size() > 1) throw exceptionMessage(MULTIPLE_TAG, genericEventRecord, "IdentifierTag");
 
-    List<RelayTag> relayTags = genericEventRecord.getTypeSpecificTagStream(RelayTag.class).toList();
+    List<RelayTag> relayTags = genericEventRecord.getTypeSpecificTags(RelayTag.class);
     if (relayTags.isEmpty()) throw exceptionMessage(MISSING_TAG, genericEventRecord, "RelayTag");
     if (relayTags.size() > 1) throw exceptionMessage(MULTIPLE_TAG, genericEventRecord, "RelayTag");
 

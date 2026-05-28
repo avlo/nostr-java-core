@@ -21,10 +21,7 @@ public class RelayTagFilter extends AbstractFilterable<RelayTag> {
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(RelayTag.class, genericEvent)
-            .anyMatch(relayTag ->
-                relayTag.getRelay().equals(getFilterableValue()));
+    return getPredicate(RelayTag.class, getReferenceTag());
   }
 
   @Override

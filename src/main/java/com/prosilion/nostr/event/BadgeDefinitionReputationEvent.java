@@ -69,7 +69,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
         Stream.concat(
             Stream.concat(
                 TagMappedEventIF.throwIfEmpty(formulaEvents, MESSAGE)
-                    .map(AddressableEvent::asAddressTag),
+                    .map(AddressableEvent::asAddressableEventAddressTag),
                 Stream.of(new PubKeyTag(reputationDefinitionCreatorPublicKey))),
             Stream.concat(
                 Stream.of(externalIdentityTag),
@@ -90,7 +90,12 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
 
   @JsonIgnore
   public ExternalIdentityTag getExternalIdentityTag() {
-    return getTypeSpecificTags(ExternalIdentityTag.class).getFirst();
+    return requireFirstTag(ExternalIdentityTag.class);
+  }
+
+  @JsonIgnore
+  public PublicKey getReputationDefinitionCreatorPublicKey() {
+    return requireFirstTag(PubKeyTag.class).publicKey();
   }
 
   private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
@@ -133,13 +138,5 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
         .append(formula.getBadgeDefinitionGenericEvent().getIdentifierTag().getUuid())
         .append(")"));
     return sb.toString();
-  }
-
-  @Override
-  @JsonIgnore
-  public List<AddressTag> getContainedAddressableEvents() {
-    return formulaEvents.stream()
-        .map(FormulaEvent::asAddressTag)
-        .toList();
   }
 }

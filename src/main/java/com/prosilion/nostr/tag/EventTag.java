@@ -51,7 +51,7 @@ public record EventTag(
 
   @JsonIgnore
   @Override
-  public Optional<Relay> getAbstractEventRelay() {
+  public Optional<Relay> findRelay() {
     return Optional.ofNullable(recommendedRelayUrl).map(Relay::new);
   }
 

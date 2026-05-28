@@ -67,17 +67,17 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
 
   @Override
   @JsonIgnore
-  public Relay getRelayTagRelay() {
-    return getTypeSpecificTags(RelayTag.class).getFirst().getRelay();
+  public Relay getEventOriginRelay() {
+    return getRelayTag().getRelay();
   }
 
   @JsonIgnore
-  public PublicKey getPubKeyTagPublicKey() {
-    return getTypeSpecificTags(PubKeyTag.class).getFirst().getPublicKey();
+  public PublicKey getAwardRecipientPublicKey() {
+    return requireFirstTag(PubKeyTag.class).getPublicKey();
   }
 
   @JsonIgnore
-  public T getBadgeDefinitionGenericEvent() {
+  public T getBadgeDefinitionEvent() {
     return getAddressableEvent();
-  }
+  } 
 }

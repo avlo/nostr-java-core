@@ -53,13 +53,12 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
   }
 
   @JsonIgnore
-  @Override
-  public BadgeDefinitionReputationEvent getBadgeDefinitionGenericEvent() {
-    return super.getBadgeDefinitionGenericEvent();
+  public ExternalIdentityTag getExternalIdentityTag() {
+    return requireFirstTag(ExternalIdentityTag.class);
   }
 
   @JsonIgnore
-  public ExternalIdentityTag getExternalIdentityTag() {
-    return getTypeSpecificTags(ExternalIdentityTag.class).getFirst();
+  public String getScore() {
+    return getContent();
   }
 }

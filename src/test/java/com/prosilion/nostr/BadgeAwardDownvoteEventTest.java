@@ -7,8 +7,7 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.util.Util;
-import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,14 +42,8 @@ public class BadgeAwardDownvoteEventTest {
 
     assertEquals(expected, badgeAwardDownvoteEvent);
     assertEquals(
-        expected.getAddressableEvent().asAddressTag(),
-        badgeAwardDownvoteEvent.getAddressableEvent().asAddressTag());
-
-    System.out.println(Util.prettyPrintAddressTags(expected.getAddressableEvent().asAddressTag()));
-    System.out.println(Util.prettyPrintAddressTags(expected.getContainedAddressableEvents()));
-    assertEquals(
-        expected.getContainedAddressableEvents(),
-        badgeAwardDownvoteEvent.getContainedAddressableEvents());
+        expected.getAddressableEvent().asAddressableEventAddressTag(),
+        badgeAwardDownvoteEvent.getAddressableEvent().asAddressableEventAddressTag());
   }
 
   @Test
@@ -60,9 +53,9 @@ public class BadgeAwardDownvoteEventTest {
         badgeReceiverPublicKey,
         relay,
         badgeDefnDownvoteEvent,
-        Collections.unmodifiableList(expected.getContainedAddressableEvents()));
+        List.of(expected.getAddressableEvent().asAddressableEventAddressTag()));
 
-    assertEquals(1, badgeAwardDownvoteEvent.getContainedAddressableEvents().size());
+    assertEquals(1, List.of(badgeAwardDownvoteEvent.getAddressableEvent().asAddressableEventAddressTag()).size());
     assertEquals(1, badgeAwardDownvoteEvent.getTypeSpecificTags(AddressTag.class).size());
   }
 }

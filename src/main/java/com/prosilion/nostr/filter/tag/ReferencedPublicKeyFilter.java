@@ -20,10 +20,7 @@ public class ReferencedPublicKeyFilter extends AbstractFilterable<PubKeyTag> {
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(PubKeyTag.class, genericEvent)
-            .anyMatch(pubKeyTag ->
-                pubKeyTag.getPublicKey().toHexString().equals(getFilterableValue()));
+    return getPredicate(PubKeyTag.class, getReferencedPublicKey());
   }
 
   @Override

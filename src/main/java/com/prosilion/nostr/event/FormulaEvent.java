@@ -50,7 +50,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
         relay,
         Stream.concat(
             Stream.of(
-                badgeDefinitionGenericEvent.asAddressTag()),
+                badgeDefinitionGenericEvent.asAddressableEventAddressTag()),
             baseTags.stream()
                 .filter(Predicate.not(AddressTag.class::isInstance))),
         validate(formula));
@@ -69,7 +69,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
     return super.getContent();
   }
 
-//  TODO (potentially): to accommodate both (necessary) formula as well as (optional) user-defined comment/text,
+  //  TODO (potentially): to accommodate both (necessary) formula as well as (optional) user-defined comment/text,
 //   introduce "summary"/"description" tag as per:
 /*
   ["summary", "<brief description of the event>"],
@@ -78,7 +78,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   ["description", "Awarded to users demonstrating bravery"],
   A description tag whose value contain meaning behind the badge, or the reason of its issuance.
   https://github.com/nostr-protocol/nips/blob/master/58.md    
-*/  
+*/
   private static String validate(String formula) throws ParseException {
     if (StringUtils.isBlank(formula))
       throw new ParseException(formula, "supplied formula is blank");
@@ -86,11 +86,5 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
     new Expression(
         String.format("%s %s", "validate", formula)).validate();
     return formula;
-  }
-
-  @Override
-  @JsonIgnore
-  public List<AddressTag> getContainedAddressableEvents() {
-    return List.of(badgeDefinitionGenericEvent.asAddressTag());
   }
 }

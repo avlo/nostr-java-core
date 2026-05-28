@@ -19,9 +19,7 @@ public class GeohashTagFilter extends AbstractFilterable<GeohashTag> {
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(GeohashTag.class, genericEvent).anyMatch(geoHashTag ->
-            geoHashTag.getLocation().equals(getFilterableValue()));
+    return getPredicate(GeohashTag.class, getGeoHashTag());
   }
 
   @Override

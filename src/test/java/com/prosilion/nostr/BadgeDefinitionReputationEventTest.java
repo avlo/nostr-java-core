@@ -6,7 +6,6 @@ import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -101,13 +100,13 @@ public class BadgeDefinitionReputationEventTest {
         expected.getGenericEventRecord(),
         addressTag ->
             Stream.of(plusOneFormulaEvent, minusOneFormulaEvent).filter(formulaEvent ->
-                formulaEvent.asAddressTag().equals(addressTag)).findFirst().orElseThrow());
+                formulaEvent.asAddressableEventAddressTag().equals(addressTag)).findFirst().orElseThrow());
 
     List<FormulaEvent> actualFormulaEvents = badgeDefinitionReputationEvent.getFormulaEvents();
 
     assertTrue(expectedFormulaEvents.stream()
-        .map(AddressableEvent::asAddressTag).toList()
-        .containsAll(actualFormulaEvents.stream().map(AddressableEvent::asAddressTag).toList()));
+        .map(AddressableEvent::asAddressableEventAddressTag).toList()
+        .containsAll(actualFormulaEvents.stream().map(AddressableEvent::asAddressableEventAddressTag).toList()));
   }
 
   @Test
@@ -226,7 +225,7 @@ public class BadgeDefinitionReputationEventTest {
         List.of(plusOneFormulaEvent),
         baseTags);
 
-    assertEquals(1, Filterable.getTypeSpecificTags(IdentifierTag.class, badgeDefinitionReputationEvent).size());
+    assertEquals(1, badgeDefinitionReputationEvent.getTypeSpecificTags(IdentifierTag.class).size());
   }
 
   @Test

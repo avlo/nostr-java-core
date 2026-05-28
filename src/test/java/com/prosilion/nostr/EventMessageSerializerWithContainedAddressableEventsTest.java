@@ -52,8 +52,8 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
 
   private final PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  private final static String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
-  private final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
+  private final static String FOLLOW_SETS_EVENT_UUID = "PROSILION_FOLLOW_SETS_EVENT";
+  private final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT_UUID);
 
   private final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent;
   private final FollowSetsEvent followSetsEvent;
@@ -252,12 +252,12 @@ public class EventMessageSerializerWithContainedAddressableEventsTest {
 
   private String expectedStringFollowSetsEventMessageAddressTagGenericEventRecord() {
     return """
-        ["EVENT",{"id":"09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50","pubkey":"703c164e01d6ba4632d440af596f21ff51e8e01f04283e1e2797de04127f91cc","created_at":1769322511594,"kind":30000,"tags":[["d","FOLLOW_SETS_EVENT"],["relay","ws://localhost:5555"],["e","2e0864780d99e270cf9c1d9f124d8efd18e9e8be7e2b8c6537c79f34ef2ed445","ws://localhost:5555"],["p","fd320dfb0433681cf5a4244cbc18f82b19407beec2867fc03d8109902ecc6d0c"]],"content":"AfterImage generated FollowSetsEvent","sig":"27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"}]""";
+        ["EVENT",{"id":"09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50","pubkey":"703c164e01d6ba4632d440af596f21ff51e8e01f04283e1e2797de04127f91cc","created_at":1769322511594,"kind":30000,"tags":[["d","PROSILION_FOLLOW_SETS_EVENT"],["relay","ws://localhost:5555"],["e","2e0864780d99e270cf9c1d9f124d8efd18e9e8be7e2b8c6537c79f34ef2ed445","ws://localhost:5555"],["p","fd320dfb0433681cf5a4244cbc18f82b19407beec2867fc03d8109902ecc6d0c"]],"content":"AfterImage generated FollowSetsEvent","sig":"27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"}]""";
   }
 
   private String expectedStringEventMessageAddressTagFollowSetsEvent() {
-    String somethin = followSetsEvent.getAddressableAddressTag().getPublicKey().toHexString();
+    String somethin = followSetsEvent.getAddressTag().getPublicKey().toHexString();
     
-    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"FOLLOW_SETS_EVENT\"],[\"relay\",\"ws://localhost:5555\"],[\"e\",\"" + followSetsEventReferencedEventId + "\",\"ws://localhost:5555\"],[\"p\",\"" + badgeReceiverPublicKey + "\"],[\"a\",\"30009:" + somethin + ":FOLLOW_SETS_EVENT\",\"ws://localhost:5555\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
+    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"],[\"relay\",\"ws://localhost:5555\"],[\"e\",\"" + followSetsEventReferencedEventId + "\",\"ws://localhost:5555\"],[\"p\",\"" + badgeReceiverPublicKey + "\"],[\"a\",\"30009:" + somethin + ":PROSILION_FOLLOW_SETS_EVENT\",\"ws://localhost:5555\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
   }
 }

@@ -9,7 +9,6 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
-import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -23,7 +22,7 @@ import org.springframework.lang.NonNull;
 
 @Getter
 public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
-  public static final String DEFAULT_IDENTIFIER = "FOLLOW_SETS_EVENT";
+  public static final String DEFAULT_IDENTIFIER = "PROSILION_FOLLOW_SETS_EVENT";
   public static final IdentifierTag defaultIdentifierTag = new IdentifierTag(DEFAULT_IDENTIFIER);
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   public static final String MESSAGE = "FollowSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
@@ -95,7 +94,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
                         .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag),
                     Stream.of(
                         validateIdenticalBadgeAwardGenericEventsPublicKeys(badgeAwardGenericEvents))),
-                Stream.of(badgeDefinitionReputationEvent.asAddressTag())),
+                Stream.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag())),
             baseTags.stream()
                 .filter(Predicate.not(EventTag.class::isInstance))
                 .filter(Predicate.not(PubKeyTag.class::isInstance))
@@ -114,28 +113,21 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
     this.badgeDefinitionReputationEvent = mapTagsToEvents(this, fxnAddressTag, AddressTag.class).getFirst();
   }
 
-  @Override
   @JsonIgnore
-  public List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents() {
-    return Stream.concat(
-        ((List<? extends ReferencedAbstractEventTag>) getAddressableEventTags()).stream(),
-        Stream.of(((ReferencedAbstractEventTag) getAddressableAddressTag()))).toList();
-  }
-
-
-  public List<EventTag> getAddressableEventTags() {
+  public List<EventTag> getEventTags() {
     return badgeAwardGenericEvents.stream()
         .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag)
         .toList();
   }
 
-  public AddressTag getAddressableAddressTag() {
-    return getTypeSpecificTags(AddressTag.class).getFirst();
+  @JsonIgnore
+  public AddressTag getAddressTag() {
+    return requireFirstTag(AddressTag.class);
   }
 
   @JsonIgnore
-  public PublicKey getPubKeyTagPublicKey() {
-    return badgeAwardGenericEvents.getFirst().getPubKeyTagPublicKey();
+  public PublicKey getAwardRecipientPulicKey() {
+    return requireFirstTag(PubKeyTag.class).publicKey();
   }
 
   public static EventTag badgeAwardGenericEventAsEventTag(@NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent) {
@@ -151,7 +143,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   }
 
   public static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents) {
-    List<PublicKey> distinctPublicKeys = badgeAwardGenericEvents.stream().map(BadgeAwardAbstractEvent::getPubKeyTagPublicKey).distinct().toList();
+    List<PublicKey> distinctPublicKeys = badgeAwardGenericEvents.stream().map(BadgeAwardAbstractEvent::getAwardRecipientPublicKey).distinct().toList();
     if (distinctPublicKeys.size() != 1)
       throw new NostrException(
           String.format(

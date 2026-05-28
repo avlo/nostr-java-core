@@ -50,7 +50,7 @@ public abstract class UniqueAddressTagEvent<T extends AddressableEvent> extends 
         identity,
         kind,
         Stream.concat(
-            Stream.of(addressableEvent.asAddressTag()),
+            Stream.of(addressableEvent.asAddressableEventAddressTag()),
             baseTags
                 .filter(Predicate.not(AddressTag.class::isInstance))),
         content);
@@ -64,14 +64,8 @@ public abstract class UniqueAddressTagEvent<T extends AddressableEvent> extends 
     this.addressableEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
-  @Override
-  @JsonIgnore
-  public List<AddressTag> getContainedAddressableEvents() {
-    return List.of(addressableEvent.asAddressTag());
-  }
-  
   @JsonIgnore
   public AddressTag getAddressTag() {
-    return getTypeSpecificTags(AddressTag.class).getFirst();
+    return requireFirstTag(AddressTag.class);
   }
 }

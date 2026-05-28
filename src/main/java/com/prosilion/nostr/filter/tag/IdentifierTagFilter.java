@@ -19,10 +19,7 @@ public class IdentifierTagFilter extends AbstractFilterable<IdentifierTag> {
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(IdentifierTag.class, genericEvent)
-            .anyMatch(genericEventIdentifierTag ->
-                genericEventIdentifierTag.getUuid().equals(getFilterableValue()));
+    return getPredicate(IdentifierTag.class, getIdentifierTag());
   }
 
   @Override

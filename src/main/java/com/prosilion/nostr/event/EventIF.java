@@ -1,15 +1,20 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import com.prosilion.nostr.util.Util;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,6 +73,54 @@ public interface EventIF extends Serializable {
           eventIF.getContent(),
           eventIF.getSignature());
 
+  /**
+   * (common) speed optimized tag-getting variants
+   */
+  @JsonIgnore
+  default <T extends BaseTag> List<T> getTypeSpecificTags(@NonNull Class<T> tagClass) {
+    var tags = this.getTags();
+    var result = new ArrayList<T>(Math.min(tags.size(), 4));
+    for (var tag : tags) {
+      if (tagClass.isInstance(tag)) {
+        result.add(tagClass.cast(tag));
+      }
+    }
+    return result;
+  }
+
+  @JsonIgnore
+  default RelayTag getRelayTag() {
+    return requireFirstTag(RelayTag.class);
+  }
+
+  @JsonIgnore
+  String MISSING_RELAY_TAG_URL = "RelayTag: [%s] missing required url";
+  
+  @JsonIgnore
+  default String getRelayTagUrl() {
+    Relay relay = getRelayTag().getRelay();
+    if (relay == null || relay.getUrl() == null) {
+      throw new NostrException(String.format(
+          MISSING_RELAY_TAG_URL, this.createPrettyPrintJson()));
+    }
+    return relay.getUrl();
+  }
+
+  default <T extends BaseTag> Optional<T> findFirstTag(@NonNull Class<T> clazz) {
+    for (BaseTag tag : this.getTags()) {
+      if (clazz.isInstance(tag)) {
+        return Optional.of(clazz.cast(tag));
+      }
+    }
+    return Optional.empty();
+  }
+
+  default <T extends BaseTag> T requireFirstTag(@NonNull Class<T> clazz) {
+    return findFirstTag(clazz).orElseThrow(() ->
+        new NostrException(String.format("eventIF:\n%s\nis missing required [%s] tag",
+            this.createPrettyPrintJson(),
+            clazz.getSimpleName())));
+  }
 
   default void debug(@NonNull Logger logger) {
     Stream.of(this)
@@ -84,7 +137,7 @@ public interface EventIF extends Serializable {
 
   static String createPrettyPrintJson(@NonNull GenericEventRecord genericEventRecord) {
     try {
-      return Util.prettyFormatJson(serialize(genericEventRecord), 2);  
+      return Util.prettyFormatJson(serialize(genericEventRecord), 2);
     } catch (NostrException e) {
       String message = "prettyPrint serialization failed.  since cosmetic only for debugs, just return genericEventRecord.toString():\n  ";
       return message.concat(genericEventRecord.toString());

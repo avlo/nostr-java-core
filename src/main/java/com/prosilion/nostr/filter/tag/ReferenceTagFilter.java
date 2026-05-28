@@ -20,10 +20,7 @@ public class ReferenceTagFilter extends AbstractFilterable<ReferenceTag> {
 
   @Override
   public Predicate<EventIF> getPredicate() {
-    return (genericEvent) ->
-        Filterable.getTypeSpecificTagsStream(ReferenceTag.class, genericEvent)
-            .anyMatch(referenceTag ->
-                referenceTag.getUrl().equals(getFilterableValue()));
+    return getPredicate(ReferenceTag.class, getReferenceTag());
   }
 
   @Override

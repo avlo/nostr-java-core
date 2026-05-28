@@ -101,8 +101,8 @@ public interface Util {
     return abstractTags.stream().map(Util::prettyPrintReferencedAbstractEventTag).collect(Collectors.joining());
   }
 
-  static String prettyPrintReferencedAbstractEventTags(@NonNull List<? extends ReferencedAbstractEventTag> addressTags, final String regex, final String delimiter) {
-    return addressTags.stream().map(ReferencedAbstractEventTag::toString)
+  static String prettyPrintReferencedAbstractEventTags(@NonNull List<? extends ReferencedAbstractEventTag> abstractTags, final String regex, final String delimiter) {
+    return abstractTags.stream().map(ReferencedAbstractEventTag::toString)
         .map(s ->
             String.join("\n  ",
                 s.split(", ")))

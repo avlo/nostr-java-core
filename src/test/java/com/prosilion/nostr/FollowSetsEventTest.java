@@ -7,7 +7,6 @@ import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
@@ -15,6 +14,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -129,7 +129,7 @@ public class FollowSetsEventTest {
                 FollowSetsEvent.badgeAwardGenericEventAsEventTag(badgeAwardAbstractEvent).equals(eventTag)).findFirst().orElseThrow(),
         addressTag -> badgeDefinitionReputationEventPlusOneFormula);
 
-    assertEquals(expected.getContainedAddressableEvents(), followSetsEvent.getContainedAddressableEvents());
+    assertEquals(expected.getAddressTag(), followSetsEvent.getAddressTag());
     assertEquals(expected.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
     assertEquals(expected, followSetsEvent);
   }
@@ -147,13 +147,13 @@ public class FollowSetsEventTest {
         badgeAwardGenericEvents.stream()
             .map(
                 FollowSetsEvent::badgeAwardGenericEventAsEventTag).toList(),
-        actual.getAddressableEventTags());
+        actual.getEventTags());
 
     assertEquals(
         badgeAwardGenericEvents.stream().map(badgeAwardAbstractEvent ->
             new EventTag(
                 badgeAwardAbstractEvent.getId())).toList(),
-        actual.getAddressableEventTags());
+        actual.getEventTags());
   }
 
   @Test
@@ -178,15 +178,15 @@ public class FollowSetsEventTest {
         relay,
         badgeAwardGenericEvent);
 
-    assertEquals(2, followSetsEvent.getContainedAddressableEvents().size());
+    assertEquals(1, followSetsEvent.getEventTags().size());
     assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
-    assertEquals(1, Filterable.getTypeSpecificTags(EventTag.class, followSetsEvent).size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
 
     assertEquals(1, followSetsEvent.getTypeSpecificTags(RelayTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(RelayTag.class::isInstance).toList().size());
-    assertEquals(1, Filterable.getTypeSpecificTags(RelayTag.class, followSetsEvent).size());
-    assertEquals(relay, followSetsEvent.getRelayTagRelay());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(RelayTag.class).size());
+    assertEquals(relay, followSetsEvent.getEventOriginRelay());
   }
 
   @Test
@@ -211,10 +211,10 @@ public class FollowSetsEventTest {
         List.of(badgeAwardGenericEvent),
         FollowSetsEvent.class.getSimpleName());
 
-    assertEquals(2, followSetsEvent.getContainedAddressableEvents().size());
+    assertEquals(1, followSetsEvent.getEventTags().size());
     assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
-    assertEquals(1, Filterable.getTypeSpecificTags(EventTag.class, followSetsEvent).size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
   }
 
   @Test
@@ -240,8 +240,8 @@ public class FollowSetsEventTest {
 
     assertEquals(1, followSetsEventWithBaseTags.getTypeSpecificTags(RelayTag.class).size());
     assertEquals(1, followSetsEventWithBaseTags.getTags().stream().filter(RelayTag.class::isInstance).toList().size());
-    assertEquals(1, Filterable.getTypeSpecificTags(RelayTag.class, followSetsEventWithBaseTags).size());
-    assertEquals(followSetsEventRelay, followSetsEventWithBaseTags.getRelayTagRelay());
+    assertEquals(1, followSetsEventWithBaseTags.getTypeSpecificTags(RelayTag.class).size());
+    assertEquals(followSetsEventRelay, followSetsEventWithBaseTags.getEventOriginRelay());
   }
 
   @Test
@@ -254,7 +254,7 @@ public class FollowSetsEventTest {
         relay,
         List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent),
         baseTags);
-    assertEquals(1, Filterable.getTypeSpecificTags(IdentifierTag.class, followSetsEvent).size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(IdentifierTag.class).size());
   }
 
   @Test

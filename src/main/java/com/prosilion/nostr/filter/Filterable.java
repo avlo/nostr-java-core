@@ -4,11 +4,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.tag.BaseTag;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.lang.NonNull;
 
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
@@ -19,14 +16,11 @@ public interface Filterable {
   Object getFilterableValue();
   String getFilterKey();
 
-  static <T extends BaseTag> List<T> getTypeSpecificTags(@NonNull Class<T> tagClass, @NonNull EventIF event) {
-    return getTypeSpecificTagsStream(tagClass, event).collect(Collectors.toList());
-  }
-
-  static <T extends BaseTag> Stream<T> getTypeSpecificTagsStream(@NonNull Class<T> tagClass, @NonNull EventIF event) {
-    return event.getTags().stream()
-        .filter(tagClass::isInstance)
-        .map(tagClass::cast);
+  default Predicate<EventIF> getPredicate(@NonNull Class<? extends BaseTag> clazz, @NonNull BaseTag baseTag) {
+    return (eventIF) ->
+        eventIF.findFirstTag(clazz)
+            .map(baseTag::equals)
+            .orElse(false);
   }
 
   default ObjectNode toObjectNode(ObjectNode objectNode) {

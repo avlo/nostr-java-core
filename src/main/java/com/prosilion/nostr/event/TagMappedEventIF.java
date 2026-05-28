@@ -14,12 +14,9 @@ public interface TagMappedEventIF extends EventIF {
       BaseEvent baseEvent,
       Function<U, T> tagMappingFunction,
       Class<U> clazz) {
-    return baseEvent.getTypeSpecificTagStream(clazz)
+    return baseEvent.getTypeSpecificTags(clazz).stream()
         .map(tagMappingFunction).toList();
   }
-
-  @JsonIgnore
-  List<? extends ReferencedAbstractEventTag> getContainedAddressableEvents();
 
   static <T> Stream<T> throwIfEmpty(List<T> list, String message) {
     if (list.isEmpty()) {
@@ -28,5 +25,6 @@ public interface TagMappedEventIF extends EventIF {
     return list.stream();
   }
 
-  Relay getRelayTagRelay();
+  @JsonIgnore
+  Relay getEventOriginRelay();
 }
