@@ -9,6 +9,7 @@ import com.prosilion.nostr.codec.serializer.AddressTagSerializer;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.util.Util;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -74,5 +75,10 @@ public record AddressTag(
   @Override
   public Optional<Relay> findRelay() {
     return Optional.ofNullable(relay);
+  }
+
+  @JsonIgnore
+  public @NonNull String toStringPrettyPrint() {
+    return Util.prettyPrintAddressTags(this);
   }
 }

@@ -21,7 +21,7 @@ public abstract class UniqueAddressTagEvent<T extends AddressableEvent> extends 
 
   @Getter
   @JsonIgnore
-  private final T addressableEvent;
+  private final T addressableEvent; // aTag
 
   public UniqueAddressTagEvent(
       @NonNull Identity identity,

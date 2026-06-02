@@ -26,7 +26,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
 
   @JsonIgnore
-  private final List<FormulaEvent> formulaEvents;
+  private final List<FormulaEvent> formulaEvents; // aTags
 
   public BadgeDefinitionReputationEvent(
       @NonNull Identity identity,

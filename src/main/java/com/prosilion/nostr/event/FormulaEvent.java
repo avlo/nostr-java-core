@@ -20,7 +20,7 @@ import org.springframework.lang.NonNull;
 @Getter
 public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {
   @JsonIgnore
-  private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent;
+  private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent; // aTag
 
   public FormulaEvent(
       @NonNull Identity identity,

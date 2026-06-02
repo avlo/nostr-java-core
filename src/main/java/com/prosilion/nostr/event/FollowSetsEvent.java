@@ -27,9 +27,9 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   public static final String MESSAGE = "FollowSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
   @JsonIgnore
-  private final List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents;
+  private final List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents; // eTags
   @JsonIgnore
-  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
+  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent; // aTag
 
   public FollowSetsEvent(
       @NonNull Identity identity,

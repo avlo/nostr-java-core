@@ -80,7 +80,7 @@ public interface Util {
   }
 
   static String prettyPrintEventTags(@NonNull List<EventTag> eventTags) {
-    return prettyPrintReferencedAbstractEventTags(eventTags, "EventTag.*idEvent", "\nEventTag[\n  idEvent");
+    return prettyPrintReferencedAbstractEventTags(eventTags, "EventTag.*idEvent", "EventTag[\n  idEvent");
   }
 
   static String prettyPrintAddressTags(@NonNull AddressTag... addressTag) {
@@ -88,7 +88,7 @@ public interface Util {
   }
 
   static String prettyPrintAddressTags(@NonNull List<AddressTag> addressTags) {
-    return prettyPrintReferencedAbstractEventTags(addressTags, "AddressTag.*kind", "\nAddressTag[\n  kind");
+    return prettyPrintReferencedAbstractEventTags(addressTags, "AddressTag.*kind", "AddressTag[\n  kind");
   }
 
   static String prettyPrintReferencedAbstractEventTag(@NonNull ReferencedAbstractEventTag abstractTag) {
@@ -109,6 +109,6 @@ public interface Util {
         .map(addressTagLiteral ->
             String.join(delimiter,
                 addressTagLiteral.split(regex)))
-        .collect(Collectors.joining(","));
+        .collect(Collectors.joining(",\n"));
   }
 }
