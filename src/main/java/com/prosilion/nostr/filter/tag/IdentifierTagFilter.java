@@ -8,12 +8,13 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
+import org.springframework.lang.NonNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class IdentifierTagFilter extends AbstractFilterable<IdentifierTag> {
   public static final String FILTER_KEY = "#d";
 
-  public IdentifierTagFilter(IdentifierTag identifierTag) {
+  public IdentifierTagFilter(@NonNull IdentifierTag identifierTag) {
     super(identifierTag, FILTER_KEY);
   }
 
