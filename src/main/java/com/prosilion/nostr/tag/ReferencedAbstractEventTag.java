@@ -9,7 +9,7 @@ public interface ReferencedAbstractEventTag extends BaseTag {
   @JsonIgnore
   Optional<Relay> findRelay();
 
-  default Relay getRelay() {
+  default Relay requireRelay() {
     return findRelay().orElseThrow(() ->
         new NostrException(
             String.format("AbstractEventTag [%s] does not contain a (valid) Relay", this)));

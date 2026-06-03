@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AddressTagTest {
@@ -142,6 +143,12 @@ class AddressTagTest {
     assertEquals(
         expectedJoinedSecondPair,
         Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",\n")));
+  }
+
+  @Test
+  void getRelayReturnsNostrException() {
+    AddressTag addressTagSansRelay = new AddressTag(kind, publicKey, identifierTag);
+    assertThrows(NostrException.class, addressTagSansRelay::requireRelay);
   }
 
   private static void anyFieldNameMatch(List<Field> fields, Predicate<Field> predicate) {
