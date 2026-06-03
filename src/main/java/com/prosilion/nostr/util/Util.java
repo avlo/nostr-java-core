@@ -80,7 +80,7 @@ public interface Util {
   }
 
   static String prettyPrintEventTags(@NonNull List<EventTag> eventTags) {
-    return prettyPrintReferencedAbstractEventTags(eventTags, "EventTag.*idEvent", "EventTag[\n  idEvent");
+    return prettyPrintReferencedAbstractEventTags(eventTags, "EventTag.*idEvent", "\nEventTag[\n  idEvent");
   }
 
   static String prettyPrintAddressTags(@NonNull AddressTag... addressTag) {
@@ -88,7 +88,7 @@ public interface Util {
   }
 
   static String prettyPrintAddressTags(@NonNull List<AddressTag> addressTags) {
-    return prettyPrintReferencedAbstractEventTags(addressTags, "AddressTag.*kind", "AddressTag[\n  kind");
+    return prettyPrintReferencedAbstractEventTags(addressTags, "AddressTag.*kind", "\nAddressTag[\n  kind");
   }
 
   static String prettyPrintReferencedAbstractEventTag(@NonNull ReferencedAbstractEventTag abstractTag) {
@@ -103,12 +103,12 @@ public interface Util {
 
   static String prettyPrintReferencedAbstractEventTags(@NonNull List<? extends ReferencedAbstractEventTag> abstractTags, final String regex, final String delimiter) {
     return abstractTags.stream().map(ReferencedAbstractEventTag::toString)
-        .map(s ->
+        .map(tagProperty ->
             String.join("\n  ",
-                s.split(", ")))
+                tagProperty.split(", ")))
         .map(addressTagLiteral ->
             String.join(delimiter,
                 addressTagLiteral.split(regex)))
-        .collect(Collectors.joining(",\n"));
+        .collect(Collectors.joining(","));
   }
 }
