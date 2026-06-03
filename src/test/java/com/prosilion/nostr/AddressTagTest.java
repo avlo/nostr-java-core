@@ -119,20 +119,20 @@ class AddressTagTest {
     assertEquals(addressTagSansRelay.toStringPrettyPrint(), actual);
 
     AddressTag addressTagSansRelaySansIdentifierTag = new AddressTag(kind, publicKey);
-    String expectedJoinedFirstPair = String.join(",",
+    String expectedJoinedFirstPair = String.join(",\n",
         expectedAddressTagPrettyPrint(addressTagSansRelay),
         expectedAddressTagPrettyPrint(addressTagSansRelaySansIdentifierTag));
+
     assertEquals(
         expectedJoinedFirstPair,
         Util.prettyPrintAddressTags(List.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag)));
     assertEquals(
         expectedJoinedFirstPair,
-        Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",")));
-
+        Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",\n")));
 
     AddressTag properAddressTag = new AddressTag(kind, publicKey, identifierTag, relay);
     assertEquals(expectedAddressTagPrettyPrint(properAddressTag), Util.prettyPrintAddressTags(properAddressTag));
-    String expectedJoinedSecondPair = String.join(",",
+    String expectedJoinedSecondPair = String.join(",\n",
         expectedJoinedFirstPair,
         expectedAddressTagPrettyPrint(properAddressTag));
 
@@ -141,8 +141,7 @@ class AddressTagTest {
         Util.prettyPrintAddressTags(List.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag)));
     assertEquals(
         expectedJoinedSecondPair,
-        Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",")));
-
+        Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",\n")));
   }
 
   private static void anyFieldNameMatch(List<Field> fields, Predicate<Field> predicate) {
@@ -161,7 +160,7 @@ class AddressTagTest {
   }
 
   private String expectedAddressTagPrettyPrint(AddressTag addressTag) {
-    return "\nAddressTag[\n" +
+    return "AddressTag[\n" +
         "  kind=" + addressTag.getKind().getValue() + "\n" +
         "  publicKey=" + addressTag.getPublicKey().toString() + "\n" +
         "  identifierTag=" + Optional.ofNullable(addressTag.getIdentifierTag()).map(identifierTag ->
