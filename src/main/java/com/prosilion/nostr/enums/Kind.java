@@ -67,7 +67,7 @@ public enum Kind {
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
   public static Kind valueOf(int value) {
     if (!ValueRange.of(0, 65_535).isValidIntValue(value)) {
-      throw new IllegalArgumentException(String.format("Kind must be between 0 and 65535 but was [%d]", value));
+      throw new IllegalArgumentException(String.format("Kind [%d] must be between 0 and 65535", value));
     }
     for (Kind k : values()) {
       if (k.getValue() == value) {
