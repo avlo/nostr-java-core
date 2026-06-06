@@ -4,6 +4,7 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.AddressableEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.BaseEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
@@ -261,27 +262,26 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void testDuplicateFormulaEventContentThrowsException() throws ParseException {
-    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent =
-        new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(
-        aImgidentity,
-        new IdentifierTag(FORMULA_PLUS_ONE),
-        relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
-
-    FormulaEvent anotherPlusOneFormulaEvent = new FormulaEvent(aImgidentity, new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
-    assertTrue(
-        assertThrows(
-            NostrException.class, () ->
-                new BadgeDefinitionReputationEvent(
+  void testDifferentFormulaUuidsWithDuplicateFormulaContentsDoNotThrowException() throws ParseException {
+    BadgeDefinitionReputationEvent event = new BadgeDefinitionReputationEvent(
+        aImgidentity, definitionCreatorPublicKey, reputationIdentifierTag, relay, externalIdentityTag,
+        List.of(
+            new FormulaEvent(
+                aImgidentity, new IdentifierTag(FORMULA_PLUS_ONE), relay,
+                new BadgeDefinitionGenericEvent(
                     aImgidentity,
-                    definitionCreatorPublicKey,
-                    reputationIdentifierTag,
-                    relay,
-                    externalIdentityTag,
-                    List.of(plusOneFormulaEvent, anotherPlusOneFormulaEvent))
-        ).getMessage().contains(BadgeDefinitionReputationEvent.INVALID_MATCHING_FORMULAS));
+                    upvoteIdentifierTag,
+                    relay),
+                PLUS_ONE_FORMULA),
+            new FormulaEvent(aImgidentity, new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), relay,
+                new BadgeDefinitionGenericEvent(
+                    aImgidentity,
+                    new IdentifierTag(UNIT_UPVOTE + "_AGAIN"),
+                    relay),
+                PLUS_ONE_FORMULA)));
+
+    assertEquals(2, event.getFormulaEvents().size());
+    assertTrue(event.getFormulaEvents().stream().map(BaseEvent::getContent).allMatch("+1"::equals));
   }
 
   @Test
