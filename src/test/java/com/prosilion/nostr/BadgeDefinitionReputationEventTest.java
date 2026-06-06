@@ -211,7 +211,7 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void nonSingularIdentifierTags() throws ParseException {
+  void uniqueIdentifierTags() throws ParseException {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
     List<BaseTag> baseTags = new ArrayList<>();
@@ -240,26 +240,48 @@ public class BadgeDefinitionReputationEventTest {
                 externalIdentityTag,
                 List.of(),
                 List.of(new IdentifierTag("DIFFERENT_REPUTATION")))
-        ).getMessage().contains(BadgeDefinitionReputationEvent.MESSAGE));
+        ).getMessage().contains(BadgeDefinitionReputationEvent.MISSING_FORMULA_EVENTS));
   }
 
   @Test
-  void testDuplicateFormulaEventThrowsException() throws ParseException {
-    FormulaEvent duplicatePlusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
-    String message = assertThrows(
-        NostrException.class, () ->
-            new BadgeDefinitionReputationEvent(
-                aImgidentity,
-                definitionCreatorPublicKey,
-                reputationIdentifierTag,
-                relay,
-                externalIdentityTag,
-                List.of(plusOneFormulaEvent, duplicatePlusOneFormulaEvent))).getMessage();
+  void testDuplicateFormulaEventIdentifierTagsThrowsException() throws ParseException {
+    FormulaEvent duplicatePlusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, "+2");
 
     assertTrue(
-        message.contains(
-            BadgeDefinitionReputationEvent.MATCHING_IDENTIFIER_TAGS_FOUND
-        ));
+        assertThrows(
+            NostrException.class, () ->
+                new BadgeDefinitionReputationEvent(
+                    aImgidentity,
+                    definitionCreatorPublicKey,
+                    reputationIdentifierTag,
+                    relay,
+                    externalIdentityTag,
+                    List.of(plusOneFormulaEvent, duplicatePlusOneFormulaEvent))).getMessage().contains(
+            BadgeDefinitionReputationEvent.MATCHING_IDENTIFIER_TAGS_FOUND));
+  }
+
+  @Test
+  void testDuplicateFormulaEventContentThrowsException() throws ParseException {
+    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent =
+        new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
+
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(
+        aImgidentity,
+        new IdentifierTag(FORMULA_PLUS_ONE),
+        relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
+
+    FormulaEvent anotherPlusOneFormulaEvent = new FormulaEvent(aImgidentity, new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
+    assertTrue(
+        assertThrows(
+            NostrException.class, () ->
+                new BadgeDefinitionReputationEvent(
+                    aImgidentity,
+                    definitionCreatorPublicKey,
+                    reputationIdentifierTag,
+                    relay,
+                    externalIdentityTag,
+                    List.of(plusOneFormulaEvent, anotherPlusOneFormulaEvent))
+        ).getMessage().contains(BadgeDefinitionReputationEvent.INVALID_MATCHING_FORMULAS));
   }
 
   @Test

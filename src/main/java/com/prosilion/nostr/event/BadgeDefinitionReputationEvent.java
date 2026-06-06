@@ -10,8 +10,10 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -21,9 +23,11 @@ import org.springframework.lang.NonNull;
 
 @Getter
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent implements TagMappedEventIF {
-  public static final String MESSAGE = "BadgeDefinitionReputationEvent ctor() is missing FormulaEvent(s) parameter";
+  public static final String MISSING_FORMULA_EVENTS = "BadgeDefinitionReputationEvent ctor() is missing FormulaEvent(s) parameter";
+  public static final String INVALID_MATCHING_FORMULAS = "BadgeDefinitionReputationEvent FormulaEvents contain duplicate formulas";
+  public static final String CONCAT_INVALID_MATCHING_FORMULAS = INVALID_MATCHING_FORMULAS + ":\n  [%s]\n  [%s] ";
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found:";
-  public static final String CONCAT = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
+  public static final String CONCAT_INVALID_MATCHING_TAGS = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " [%s]");
 
   @JsonIgnore
   private final List<FormulaEvent> formulaEvents; // aTags
@@ -68,7 +72,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
         relay,
         Stream.concat(
             Stream.concat(
-                TagMappedEventIF.throwIfEmpty(formulaEvents, MESSAGE)
+                TagMappedEventIF.throwIfEmpty(formulaEvents, MISSING_FORMULA_EVENTS)
                     .map(AddressableEvent::asAddressableEventAddressTag),
                 Stream.of(new PubKeyTag(reputationDefinitionCreatorPublicKey))),
             Stream.concat(
@@ -99,15 +103,24 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   }
 
   private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
+    final Set<FormulaEvent> distinctFormulaEvents = new HashSet<>(formulaEvents);
+    final List<String> distinctFormulas = distinctFormulaEvents.stream().map(BaseEvent::getContent).distinct().toList();
+    NostrException.testBoolean(
+        Objects.equals(
+            distinctFormulas.size(),
+            formulaEvents.size()),
+        String.format(CONCAT_INVALID_MATCHING_FORMULAS,
+            String.join("], [", distinctFormulas),
+            distinctFormulaEvents.stream().map(EventIF::createPrettyPrintJson)));
     NostrException.testBoolean(
         Objects.equals(
             Long.valueOf(
-                formulaEvents.stream()
+                distinctFormulaEvents.stream()
                     .map(FormulaEvent::getBadgeDefinitionGenericEvent)
                     .map(BadgeDefinitionGenericEvent::getIdentifierTag)
                     .distinct().count()).intValue(),
             formulaEvents.size()),
-        String.format(CONCAT, formulaEvents.stream()
+        String.format(CONCAT_INVALID_MATCHING_TAGS, distinctFormulaEvents.stream()
             .map(FormulaEvent::getBadgeDefinitionGenericEvent)
             .map(BadgeDefinitionGenericEvent::getIdentifierTag)
             .toList()));

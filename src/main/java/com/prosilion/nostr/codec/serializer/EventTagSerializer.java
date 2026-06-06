@@ -13,8 +13,8 @@ public class EventTagSerializer extends JsonSerializer<EventTag> {
     jsonGenerator.writeString("e");
     jsonGenerator.writeString(value.getIdEvent());
 
-    if (value.getRelay() != null) {
-      jsonGenerator.writeString(value.getRelay().getUrl());
+    if (value.findRelay().isPresent()) {
+      jsonGenerator.writeString(value.requireRelay().getUrl());
     }
     jsonGenerator.writeEndArray();
   }
