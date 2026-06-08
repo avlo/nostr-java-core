@@ -7,7 +7,7 @@ import com.prosilion.nostr.codec.serializer.ExternalIdentityTagSerializer;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Tag(code = "i")
 @JsonPropertyOrder({"platform", "identity", "proof"})

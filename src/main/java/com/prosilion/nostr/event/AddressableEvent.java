@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 /**
  * AddressableEvent def'n: an event containing, minimally:

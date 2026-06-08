@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Optional;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Tag(code = "g")
 public record GeohashTag(

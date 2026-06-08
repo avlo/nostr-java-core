@@ -16,7 +16,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class EncryptedDirectMessage {
   public static final String AES_CBC_PKCS_5_PADDING = "AES/CBC/PKCS5Padding";

@@ -1,7 +1,7 @@
 package com.prosilion.nostr;
 
 import lombok.experimental.StandardException;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @StandardException
 public class NostrException extends RuntimeException {

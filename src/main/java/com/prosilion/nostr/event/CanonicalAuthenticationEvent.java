@@ -6,7 +6,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.GenericTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class CanonicalAuthenticationEvent extends BaseEvent {
   public CanonicalAuthenticationEvent(@NonNull Identity identity, @NonNull String challenge, @NonNull Relay relay) throws NostrException {

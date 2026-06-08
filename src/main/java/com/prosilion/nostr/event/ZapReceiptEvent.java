@@ -9,7 +9,7 @@ import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class ZapReceiptEvent extends BaseEvent {
   public ZapReceiptEvent(

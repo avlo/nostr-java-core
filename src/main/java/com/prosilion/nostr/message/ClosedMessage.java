@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.enums.Command;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;

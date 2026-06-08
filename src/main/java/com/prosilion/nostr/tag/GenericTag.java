@@ -6,7 +6,7 @@ import com.prosilion.nostr.codec.serializer.GenericTagSerializer;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @JsonSerialize(using = GenericTagSerializer.class)
 public record GenericTag(

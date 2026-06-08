@@ -7,7 +7,7 @@ import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public interface Util {
   String EMPTY_TAGS_VARIANTS_REGEX = "\\[\\s+]";

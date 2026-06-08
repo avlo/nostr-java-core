@@ -5,7 +5,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import java.util.Objects;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public record AwardEvent(AddressTag addressTag, PubKeyTag pubkeyTag) {
   public AwardEvent(@NonNull AddressTag addressTag, @NonNull PubKeyTag pubkeyTag) {

@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Getter
 public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {

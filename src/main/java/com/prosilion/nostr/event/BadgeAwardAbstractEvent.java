@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extends UniqueAddressTagEvent<T> {
   public BadgeAwardAbstractEvent(

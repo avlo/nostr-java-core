@@ -8,7 +8,7 @@ import com.prosilion.nostr.tag.ReferenceTag;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class ReferenceTagFilter extends AbstractFilterable<ReferenceTag> {

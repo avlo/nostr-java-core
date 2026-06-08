@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.ToString;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @EqualsAndHashCode
 public class Identity {

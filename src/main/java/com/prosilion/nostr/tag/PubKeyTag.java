@@ -8,7 +8,7 @@ import com.prosilion.nostr.codec.serializer.PubKeyTagSerializer;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
 @Tag(code = "p")

@@ -9,7 +9,7 @@ import com.prosilion.nostr.tag.RelayTag;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class RelayTagFilter extends AbstractFilterable<RelayTag> {

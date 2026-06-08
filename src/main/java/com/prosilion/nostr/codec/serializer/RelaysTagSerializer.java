@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.RelaysTag;
 import java.io.IOException;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class RelaysTagSerializer extends JsonSerializer<RelaysTag> {
 

@@ -24,7 +24,7 @@ import java.util.function.Function;
 import java.util.stream.StreamSupport;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class FilterableProvider {
   public static List<Filterable> getFilterFunction(@NonNull String type, @NonNull JsonNode node) {

@@ -8,7 +8,7 @@ import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> extends BadgeAwardAbstractEvent<T> {
   public BadgeAwardGenericEvent(

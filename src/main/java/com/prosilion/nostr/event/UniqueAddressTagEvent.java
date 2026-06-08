@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public abstract class UniqueAddressTagEvent<T extends AddressableEvent> extends BaseEvent implements TagMappedEventIF {
   public static final long ADDRESS_TAG_COUNT_LIMIT = 1L;

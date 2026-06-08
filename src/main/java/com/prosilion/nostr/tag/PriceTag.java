@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Tag(code = "price")
 @JsonPropertyOrder({"number", "currency", "frequency"})

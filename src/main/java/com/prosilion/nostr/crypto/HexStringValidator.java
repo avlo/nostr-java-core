@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class HexStringValidator {
   private static final String validHexChars = "0123456789abcdef";

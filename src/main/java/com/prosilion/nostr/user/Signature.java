@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.prosilion.nostr.crypto.NostrUtil;
 import java.util.Arrays;
 import java.util.Objects;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class Signature {
 

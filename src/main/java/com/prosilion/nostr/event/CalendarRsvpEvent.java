@@ -11,7 +11,7 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class CalendarRsvpEvent extends AddressableEvent {
   public enum Status {

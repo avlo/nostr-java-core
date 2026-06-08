@@ -8,7 +8,7 @@ import com.prosilion.nostr.tag.GenericTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class CalendarDurationBaseEvent extends AddressableEvent {
   public CalendarDurationBaseEvent(@NonNull Identity identity, @NonNull Kind kind, @NonNull Relay relay, @NonNull CalendarContent calendarContent, @NonNull String title) {

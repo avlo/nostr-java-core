@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prosilion.nostr.tag.PriceTag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Getter
 public class ClassifiedListing {

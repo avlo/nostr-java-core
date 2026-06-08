@@ -5,7 +5,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class ContactListEvent extends BaseEvent {
   public ContactListEvent(@NonNull Identity identity, @NonNull List<BaseTag> tags) throws NostrException {

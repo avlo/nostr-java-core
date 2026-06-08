@@ -8,7 +8,7 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class RelaySetsEvent extends BaseEvent {
   public RelaySetsEvent(@NonNull Identity identity, @NonNull RelaysTag relaysTags, @NonNull String content) throws NostrException {

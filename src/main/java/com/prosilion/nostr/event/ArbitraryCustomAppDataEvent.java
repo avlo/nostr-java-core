@@ -8,7 +8,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class ArbitraryCustomAppDataEvent extends AddressableEvent {
   public ArbitraryCustomAppDataEvent(

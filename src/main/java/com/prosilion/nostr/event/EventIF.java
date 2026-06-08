@@ -19,7 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 

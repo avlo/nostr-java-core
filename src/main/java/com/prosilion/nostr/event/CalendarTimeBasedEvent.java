@@ -6,7 +6,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class CalendarTimeBasedEvent extends CalendarDurationBaseEvent {
   public CalendarTimeBasedEvent(@NonNull Identity identity, @NonNull Relay relay, @NonNull CalendarContent calendarContent, @NonNull String title) {

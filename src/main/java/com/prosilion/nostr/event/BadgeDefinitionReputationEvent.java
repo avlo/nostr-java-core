@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Getter
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent implements TagMappedEventIF {

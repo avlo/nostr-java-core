@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
 @Tag(code = "e", name = "event")

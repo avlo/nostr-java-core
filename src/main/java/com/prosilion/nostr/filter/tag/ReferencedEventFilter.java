@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 

@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.stream.Streams;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;

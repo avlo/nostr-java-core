@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.enums.Kind;
 import java.util.Optional;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Tag(code = "k")
 public record KindTag(

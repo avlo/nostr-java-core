@@ -27,7 +27,7 @@ import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Log
 public class EncryptedPayloads {

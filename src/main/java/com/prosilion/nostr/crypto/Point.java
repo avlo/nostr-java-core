@@ -2,7 +2,7 @@ package com.prosilion.nostr.crypto;
 
 import com.prosilion.nostr.NostrException;
 import java.math.BigInteger;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class Point {
 

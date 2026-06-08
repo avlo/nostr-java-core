@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 

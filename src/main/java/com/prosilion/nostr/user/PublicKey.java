@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.prosilion.nostr.crypto.NostrUtil;
 import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public final class PublicKey {
 

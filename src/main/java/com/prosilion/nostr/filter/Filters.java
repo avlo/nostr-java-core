@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static java.util.stream.Collectors.groupingBy;
 

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class ClassifiedListingEvent extends AddressableEvent {
   public ClassifiedListingEvent(

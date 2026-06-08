@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 @Getter
 public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {

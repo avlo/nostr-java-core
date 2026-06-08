@@ -10,7 +10,7 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class ZapRequestEvent extends BaseEvent {
   public ZapRequestEvent(

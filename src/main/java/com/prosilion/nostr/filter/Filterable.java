@@ -6,7 +6,7 @@ import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.tag.BaseTag;
 import java.util.Optional;
 import java.util.function.Predicate;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;
 

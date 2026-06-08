@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public class DeletionEvent extends BaseEvent {
 

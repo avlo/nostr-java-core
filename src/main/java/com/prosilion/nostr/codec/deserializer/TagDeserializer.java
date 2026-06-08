@@ -23,7 +23,7 @@ import com.prosilion.nostr.tag.SubjectTag;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.IntStream;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 import lombok.Getter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
 import static com.prosilion.nostr.event.IEvent.MAPPER_AFTERBURNER;

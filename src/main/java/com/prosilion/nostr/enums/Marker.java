@@ -2,7 +2,7 @@
 package com.prosilion.nostr.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public enum Marker {
 	ROOT("root"),

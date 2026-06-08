@@ -3,7 +3,7 @@ package com.prosilion.nostr.user;
 import com.prosilion.nostr.crypto.NostrUtil;
 import com.prosilion.nostr.crypto.bech32.Bech32Prefix;
 import com.prosilion.nostr.crypto.schnorr.Schnorr;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public final class PrivateKey {
 

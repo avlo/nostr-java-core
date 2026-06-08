@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 /**
  *  RelaysTag (this class) is used to refer to other relay(s)

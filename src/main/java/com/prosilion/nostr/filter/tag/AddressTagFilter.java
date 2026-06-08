@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import lombok.EqualsAndHashCode;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 

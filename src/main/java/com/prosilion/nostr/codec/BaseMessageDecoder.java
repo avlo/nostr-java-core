@@ -13,7 +13,7 @@ import com.prosilion.nostr.message.OkMessage;
 import com.prosilion.nostr.message.ReqMessage;
 import com.prosilion.nostr.util.Util;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 

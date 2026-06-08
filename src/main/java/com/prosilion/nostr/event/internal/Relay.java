@@ -4,7 +4,7 @@ import com.prosilion.nostr.tag.Key;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 import org.springframework.web.util.InvalidUrlException;
 
 public record Relay(@Getter @Key String url) {
