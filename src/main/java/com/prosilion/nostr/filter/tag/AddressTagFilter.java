@@ -8,6 +8,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -19,8 +20,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.util.Strings;
 import lombok.NonNull;
+import org.apache.logging.log4j.util.Strings;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
@@ -29,6 +30,7 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
   public static final String FILTER_KEY = "#a";
 
   public AddressTagFilter(AddressTag addressTag) {
+//    super(validate(addressTag), FILTER_KEY); // unused for now, see bottom
     super(addressTag, FILTER_KEY);
   }
 
@@ -40,13 +42,13 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
   @Override
   public String getFilterableValue() {
     String requiredAttributes = Stream.of(
-            getAddressTag().getKind(),
-            getAddressTag().getPublicKey().toHexString())
-        .map(Object::toString).collect(Collectors.joining(":"));
+          getAddressTag().getKind(),
+          getAddressTag().getPublicKey().toHexString())
+       .map(Object::toString).collect(Collectors.joining(":"));
 
-    return Optional.ofNullable(getAddressTag().getIdentifierTag()).map(identifierTag ->
-        String.join(":", requiredAttributes, identifierTag.getUuid())).orElse(
-        Strings.concat(requiredAttributes, ":"));
+    return getAddressTag().findIdentifierTag().map(identifierTag ->
+       String.join(":", requiredAttributes, identifierTag.getUuid())).orElse(
+       Strings.concat(requiredAttributes, ":"));
   }
 
   private AddressTag getAddressTag() {
@@ -54,7 +56,7 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
   }
 
   public static Function<JsonNode, Filterable> fxn = node ->
-      new AddressTagFilter(createAddressTag(node));
+     new AddressTagFilter(createAddressTag(node));
 
   protected static AddressTag createAddressTag(@NonNull JsonNode node) {
     ArrayNode arrayNode = I_DECODER_MAPPER_AFTERBURNER.createArrayNode();
@@ -64,31 +66,38 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
     List<String> nodes = List.of(arrayNode.get(0).asText().split(":"));
 
     AtomicReference<AddressTag> addressTagAtomic = new AtomicReference<>(
-        new AddressTag(
-            Kind.valueOf(Integer.parseInt(nodes.get(0))),
-            new PublicKey(nodes.get(1))
-        ));
+       new AddressTag(
+          Kind.valueOf(Integer.parseInt(nodes.get(0))),
+          new PublicKey(nodes.get(1))
+       ));
 
     if (nodes.size() > 2) {
       addressTagAtomic.set(
-          new AddressTag(
-              Kind.valueOf(Integer.parseInt(nodes.get(0))),
-              new PublicKey(nodes.get(1)),
-              new IdentifierTag(nodes.get(2))));
+         new AddressTag(
+            Kind.valueOf(Integer.parseInt(nodes.get(0))),
+            new PublicKey(nodes.get(1)),
+            new IdentifierTag(nodes.get(2))));
     }
 
     if (list1.size() < 2)
       return addressTagAtomic.get();
 
     Optional.ofNullable(list1.get(1)).ifPresent(jsonNode ->
-        addressTagAtomic.set(
-            new AddressTag(
-                Kind.valueOf(Integer.parseInt(nodes.getFirst())),
-                new PublicKey(nodes.get(1)),
-                new IdentifierTag(nodes.get(2)),
-                new Relay(
-                    jsonNode.asText().replaceAll("^\"", "")))));
+       addressTagAtomic.set(
+          new AddressTag(
+             Kind.valueOf(Integer.parseInt(nodes.getFirst())),
+             new PublicKey(nodes.get(1)),
+             new IdentifierTag(nodes.get(2)),
+             new Relay(
+                jsonNode.asText().replaceAll("^\"", "")))));
 
     return addressTagAtomic.get();
+  }
+
+//  unused for now
+  private static AddressTag validate(AddressTag addressTag) {
+    addressTag.requireIdentifierTag();
+    addressTag.requireRelay();
+    return addressTag;
   }
 }

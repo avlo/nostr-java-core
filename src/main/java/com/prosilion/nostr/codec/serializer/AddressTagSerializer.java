@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import java.io.IOException;
-import java.util.Optional;
 
 public class AddressTagSerializer extends JsonSerializer<AddressTag> {
   @Override
@@ -14,9 +13,9 @@ public class AddressTagSerializer extends JsonSerializer<AddressTag> {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("a");
     jsonGenerator.writeString(
-        value.getKind() + ":" +
-            value.getPublicKey().toString() + ":" +
-            Optional.ofNullable(value.getIdentifierTag()).map(IdentifierTag::getUuid).orElse("")
+       value.getKind() + ":" +
+          value.getPublicKey().toString() + ":" +
+          value.findIdentifierTag().map(IdentifierTag::getUuid).orElse("")
     );
 
     if (value.getRelay() != null) {

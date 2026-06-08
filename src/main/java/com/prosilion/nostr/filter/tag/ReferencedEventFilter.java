@@ -20,6 +20,7 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
   public static final String FILTER_KEY = "#e";
 
   public ReferencedEventFilter(EventTag referencedEventTag) {
+//    super(validate(referencedEventTag), FILTER_KEY); // unused for now, see bottom
     super(referencedEventTag, FILTER_KEY);
   }
 
@@ -31,8 +32,8 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
   @Override
   public String getFilterableValue() {
     return String.join("\",\"",
-        getReferencedEventTag().getIdEvent(),
-        getReferencedEventTag().getRecommendedRelayUrl());
+       getReferencedEventTag().getIdEvent(),
+       getReferencedEventTag().getRecommendedRelayUrl());
   }
 
   private EventTag getReferencedEventTag() {
@@ -40,21 +41,27 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
   }
 
   public static Function<JsonNode, Filterable> fxn = node ->
-      new ReferencedEventFilter(
-          createEventTag(node));
+     new ReferencedEventFilter(
+        createEventTag(node));
 
   public static EventTag createEventTag(@NonNull JsonNode node) {
     List<String> attributes = Arrays.stream(node.get(0).asText().split("\",\"")).toList();
     return new EventTag(
-        attributes.get(0),
-        attributes.get(1));
+       attributes.get(0),
+       attributes.get(1));
   }
 
   @Override
   public void addToArrayNode(ArrayNode arrayNode) {
     arrayNode.add(
-        MAPPER_AFTERBURNER.createArrayNode()
-            .add(getFilterableValue())
+       MAPPER_AFTERBURNER.createArrayNode()
+          .add(getFilterableValue())
     );
+  }
+
+//  unused for now  
+  private static EventTag validate(EventTag eventTag) {
+    eventTag.requireRelay();
+    return eventTag;
   }
 }

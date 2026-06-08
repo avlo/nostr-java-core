@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.codec.serializer.AddressTagSerializer;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
@@ -22,10 +23,10 @@ import org.springframework.lang.Nullable;
 @JsonPropertyOrder({"kind", "publicKey", "identifierTag", "relay"})
 @JsonSerialize(using = AddressTagSerializer.class)
 public record AddressTag(
-    @Getter @Key Kind kind,
-    @Getter @Key PublicKey publicKey,
-    @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) IdentifierTag identifierTag,
-    @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) Relay relay) implements ReferencedAbstractEventTag {
+   @Getter @Key Kind kind,
+   @Getter @Key PublicKey publicKey,
+   @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) IdentifierTag identifierTag,
+   @Getter @Nullable @Key @JsonInclude(JsonInclude.Include.NON_NULL) Relay relay) implements ReferencedAbstractEventTag {
 
   public AddressTag(Kind kind, PublicKey publicKey) {
     this(kind, publicKey, null);
@@ -46,10 +47,10 @@ public record AddressTag(
     List<String> list = Arrays.stream(node.get(1).asText().split(":")).toList();
 
     return new AddressTag(
-        Kind.valueOf(Integer.parseInt(Optional.ofNullable(list.get(0)).orElseThrow())),
-        new PublicKey(Optional.ofNullable(list.get(1)).orElseThrow()),
-        Optional.ofNullable(list.get(2)).map(IdentifierTag::new).orElse(null),
-        Optional.ofNullable(node.get(2)).map(n -> new Relay(n.asText())).orElse(null)
+       Kind.valueOf(Integer.parseInt(Optional.ofNullable(list.get(0)).orElseThrow())),
+       new PublicKey(Optional.ofNullable(list.get(1)).orElseThrow()),
+       Optional.ofNullable(list.get(2)).map(IdentifierTag::new).orElse(null),
+       Optional.ofNullable(node.get(2)).map(n -> new Relay(n.asText())).orElse(null)
     );
   }
 
@@ -59,11 +60,11 @@ public record AddressTag(
       return false;
     AddressTag that = (AddressTag) o;
     return Objects.equals(kind, that.kind) &&
-        Objects.equals(publicKey, that.publicKey) &&
-        Objects.equals(identifierTag, that.identifierTag)
+       Objects.equals(publicKey, that.publicKey) &&
+       Objects.equals(identifierTag, that.identifierTag)
 //  TODO: revisit AddressTag equals for relay inclusion/superfluity        
 //      && (Objects.isNull(relay) && Objects.isNull(that.relay) || Objects.nonNull(relay) && Objects.nonNull(that.relay) && Objects.equals(relay.getUri().toString(), that.relay.getUri().toString()))
-        ;
+       ;
   }
 
   @Override
@@ -75,6 +76,17 @@ public record AddressTag(
   @Override
   public Optional<Relay> findRelay() {
     return Optional.ofNullable(relay);
+  }
+
+  @JsonIgnore
+  public Optional<IdentifierTag> findIdentifierTag() {
+    return Optional.ofNullable(identifierTag);
+  }
+
+  @JsonIgnore
+  public IdentifierTag requireIdentifierTag() {
+    return Optional.ofNullable(identifierTag).orElseThrow(() ->
+       new NostrException("required IdentifierTag is null"));
   }
 
   @JsonIgnore
