@@ -14,7 +14,6 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -186,7 +185,7 @@ public class FollowSetsEventTest {
     assertEquals(1, followSetsEvent.getTypeSpecificTags(RelayTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(RelayTag.class::isInstance).toList().size());
     assertEquals(1, followSetsEvent.getTypeSpecificTags(RelayTag.class).size());
-    assertEquals(relay, followSetsEvent.getEventOriginRelay());
+    assertEquals(relay, followSetsEvent.getRelay());
   }
 
   @Test
@@ -241,7 +240,7 @@ public class FollowSetsEventTest {
     assertEquals(1, followSetsEventWithBaseTags.getTypeSpecificTags(RelayTag.class).size());
     assertEquals(1, followSetsEventWithBaseTags.getTags().stream().filter(RelayTag.class::isInstance).toList().size());
     assertEquals(1, followSetsEventWithBaseTags.getTypeSpecificTags(RelayTag.class).size());
-    assertEquals(followSetsEventRelay, followSetsEventWithBaseTags.getEventOriginRelay());
+    assertEquals(followSetsEventRelay, followSetsEventWithBaseTags.getRelay());
   }
 
   @Test

@@ -48,7 +48,7 @@ public class BadgeAwardUpvoteEventTest {
     assertEquals(badgeAwardGenericEvent, badgeAwardUpvoteEvent);
     assertEquals(badgeAwardGenericEvent.getBadgeDefinitionEvent(), badgeAwardUpvoteEvent.getBadgeDefinitionEvent());
     assertEquals(List.of(badgeAwardGenericEvent.getAddressableEvent().asAddressableEventAddressTag()), List.of(badgeAwardUpvoteEvent.getAddressableEvent().asAddressableEventAddressTag()));
-    assertEquals(badgeAwardGenericEvent.getEventOriginRelay(), badgeAwardUpvoteEvent.getEventOriginRelay());
+    assertEquals(badgeAwardGenericEvent.getRelay(), badgeAwardUpvoteEvent.getRelay());
     assertEquals(List.of(badgeAwardGenericEvent.getAddressableEvent().asAddressableEventAddressTag()), List.of(badgeAwardUpvoteEvent.getAddressableEvent().asAddressableEventAddressTag()));
   }
 

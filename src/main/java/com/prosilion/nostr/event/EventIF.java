@@ -18,8 +18,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
 import lombok.NonNull;
+import org.slf4j.Logger;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
@@ -64,14 +64,14 @@ public interface EventIF extends Serializable {
   }
 
   Function<EventIF, GenericEventRecord> asGenericEventRecord = eventIF ->
-      new GenericEventRecord(
-          eventIF.getId(),
-          eventIF.getPublicKey(),
-          eventIF.getCreatedAt(),
-          eventIF.getKind(),
-          eventIF.getTags(),
-          eventIF.getContent(),
-          eventIF.getSignature());
+     new GenericEventRecord(
+        eventIF.getId(),
+        eventIF.getPublicKey(),
+        eventIF.getCreatedAt(),
+        eventIF.getKind(),
+        eventIF.getTags(),
+        eventIF.getContent(),
+        eventIF.getSignature());
 
   /**
    * (common) speed optimized tag-getting variants
@@ -89,19 +89,24 @@ public interface EventIF extends Serializable {
   }
 
   @JsonIgnore
-  default RelayTag getRelayTag() {
+  default Optional<RelayTag> findRelayTag() {
+    return findFirstTag(RelayTag.class);
+  }
+
+  @JsonIgnore
+  default RelayTag requireRelayTag() {
     return requireFirstTag(RelayTag.class);
   }
 
   @JsonIgnore
   String MISSING_RELAY_TAG_URL = "RelayTag: [%s] missing required url";
-  
+
   @JsonIgnore
-  default String getRelayTagUrl() {
-    Relay relay = getRelayTag().getRelay();
-    if (relay == null || relay.getUrl() == null) {
+  default String requireRelayTagUrl() {
+    Relay relay = requireRelayTag().requireRelay();
+    if (relay.getUrl() == null) {
       throw new NostrException(String.format(
-          MISSING_RELAY_TAG_URL, this.createPrettyPrintJson()));
+         MISSING_RELAY_TAG_URL, this.createPrettyPrintJson()));
     }
     return relay.getUrl();
   }
@@ -117,22 +122,22 @@ public interface EventIF extends Serializable {
 
   default <T extends BaseTag> T requireFirstTag(@NonNull Class<T> clazz) {
     return findFirstTag(clazz).orElseThrow(() ->
-        new NostrException(String.format("eventIF:\n%s\nis missing required [%s] tag",
-            this.createPrettyPrintJson(),
-            clazz.getSimpleName())));
+       new NostrException(String.format("eventIF:\n%s\nis missing required [%s] tag",
+          this.createPrettyPrintJson(),
+          clazz.getSimpleName())));
   }
 
   default void debug(@NonNull Logger logger) {
     Stream.of(this)
-        .collect(
-            Collectors.toMap(
-                EventIF::getClass,
-                EventIF::asGenericEventRecord))
-        .forEach((eventIFClass, serializedGenericEventRecord) ->
-            logger.debug(
-                "EventIF is of Class type:\n  {}\nwith serialized Event Content:\n{}",
-                eventIFClass.getSimpleName(),
-                createPrettyPrintJson(serializedGenericEventRecord)));
+       .collect(
+          Collectors.toMap(
+             EventIF::getClass,
+             EventIF::asGenericEventRecord))
+       .forEach((eventIFClass, serializedGenericEventRecord) ->
+          logger.debug(
+             "EventIF is of Class type:\n  {}\nwith serialized Event Content:\n{}",
+             eventIFClass.getSimpleName(),
+             createPrettyPrintJson(serializedGenericEventRecord)));
   }
 
   static String createPrettyPrintJson(@NonNull GenericEventRecord genericEventRecord) {
@@ -146,9 +151,9 @@ public interface EventIF extends Serializable {
 
   default String createPrettyPrintJson() {
     return createPrettyPrintJson(
-        asGenericEventRecord.apply(this));
+       asGenericEventRecord.apply(this));
   }
 
   Function<EventIF, String> createPrettyPrintJson = eventIF ->
-      createPrettyPrintJson(eventIF.asGenericEventRecord());
+     createPrettyPrintJson(eventIF.asGenericEventRecord());
 }

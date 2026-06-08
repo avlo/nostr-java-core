@@ -18,57 +18,57 @@ import lombok.NonNull;
 
 public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extends UniqueAddressTagEvent<T> {
   public BadgeAwardAbstractEvent(
-      @NonNull Identity identity,
-      @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull Relay relay,
-      @NonNull T badgeDefinitionGenericEvent,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull PublicKey awardRecipientPublicKey,
+     @NonNull Relay relay,
+     @NonNull T badgeDefinitionGenericEvent,
+     @NonNull String content) throws NostrException {
     this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, List.of(), content);
   }
 
   public BadgeAwardAbstractEvent(
-      @NonNull Identity identity,
-      @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull Relay relay,
-      @NonNull T badgeDefinitionGenericEvent,
-      @NonNull List<BaseTag> tags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull PublicKey awardRecipientPublicKey,
+     @NonNull Relay relay,
+     @NonNull T badgeDefinitionGenericEvent,
+     @NonNull List<BaseTag> tags,
+     @NonNull String content) throws NostrException {
     this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, tags.stream(), content);
   }
 
   public BadgeAwardAbstractEvent(
-      @NonNull Identity identity,
-      @NonNull PublicKey awardRecipientPublicKey,
-      @NonNull Relay relay,
-      @NonNull T badgeDefinitionGenericEvent,
-      @NonNull Stream<BaseTag> tags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull PublicKey awardRecipientPublicKey,
+     @NonNull Relay relay,
+     @NonNull T badgeDefinitionGenericEvent,
+     @NonNull Stream<BaseTag> tags,
+     @NonNull String content) throws NostrException {
     super(
-        identity,
-        Kind.BADGE_AWARD_EVENT,
-        badgeDefinitionGenericEvent,
-        Stream.concat(
-                Stream.concat(
-                    Stream.of(new PubKeyTag(awardRecipientPublicKey)),
-                    Stream.of(new RelayTag(relay))),
-                tags
-                    .filter(Predicate.not(AddressTag.class::isInstance))
-                    .filter(Predicate.not(PubKeyTag.class::isInstance))
-                    .filter(Predicate.not(RelayTag.class::isInstance)))
-            .toList(),
-        content);
+       identity,
+       Kind.BADGE_AWARD_EVENT,
+       badgeDefinitionGenericEvent,
+       Stream.concat(
+             Stream.concat(
+                Stream.of(new PubKeyTag(awardRecipientPublicKey)),
+                Stream.of(new RelayTag(relay))),
+             tags
+                .filter(Predicate.not(AddressTag.class::isInstance))
+                .filter(Predicate.not(PubKeyTag.class::isInstance))
+                .filter(Predicate.not(RelayTag.class::isInstance)))
+          .toList(),
+       content);
   }
 
   public BadgeAwardAbstractEvent(
-      @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<AddressTag, T> fxn) {
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull Function<AddressTag, T> fxn) {
     super(genericEventRecord, fxn);
   }
 
   @Override
   @JsonIgnore
-  public Relay getEventOriginRelay() {
-    return getRelayTag().getRelay();
+  public Relay getRelay() {
+    return requireRelayTag().requireRelay();
   }
 
   @JsonIgnore
@@ -79,5 +79,5 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   @JsonIgnore
   public T getBadgeDefinitionEvent() {
     return getAddressableEvent();
-  } 
+  }
 }

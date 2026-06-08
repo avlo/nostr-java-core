@@ -26,33 +26,33 @@ import lombok.NonNull;
  */
 public class AddressableEvent extends BaseEvent {
   public AddressableEvent(
-      @NonNull Identity identity,
-      @NonNull Kind kind,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull List<BaseTag> baseTags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull Kind kind,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
     this(identity, kind, identifierTag, relay, baseTags.stream(), content);
   }
 
   public AddressableEvent(
-      @NonNull Identity identity,
-      @NonNull Kind kind,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull Stream<BaseTag> baseTags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull Kind kind,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull Stream<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
     super(
-        identity,
-        validateKind(kind, intPredicate, errorMessage),
-        Stream.concat(
-            Stream.concat(
-                Stream.of(identifierTag),
-                Stream.of(new RelayTag(relay))),
-            baseTags
-                .filter(Predicate.not(RelayTag.class::isInstance))
-                .filter(Predicate.not(IdentifierTag.class::isInstance))),
-        content);
+       identity,
+       validateKind(kind, intPredicate, errorMessage),
+       Stream.concat(
+          Stream.concat(
+             Stream.of(identifierTag),
+             Stream.of(new RelayTag(relay))),
+          baseTags
+             .filter(Predicate.not(RelayTag.class::isInstance))
+             .filter(Predicate.not(IdentifierTag.class::isInstance))),
+       content);
   }
 
   public AddressableEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
@@ -67,15 +67,15 @@ public class AddressableEvent extends BaseEvent {
   @JsonIgnore
   public AddressTag asAddressableEventAddressTag() {
     return new AddressTag(
-        getKind(),
-        getPublicKey(),
-        getIdentifierTag(),
-        getEventOriginRelay());
+       getKind(),
+       getPublicKey(),
+       getIdentifierTag(),
+       getRelay());
   }
 
   @JsonIgnore
-  public Relay getEventOriginRelay() {
-    return getRelayTag().getRelay();
+  public Relay getRelay() {
+    return requireRelayTag().requireRelay();
   }
 
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
