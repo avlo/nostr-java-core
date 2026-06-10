@@ -11,8 +11,6 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -24,26 +22,36 @@ public class BadgeAwardUpvoteEventTest {
   public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
   public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
 
-  public final Identity identity = Identity.generateRandomIdentity();
-  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(identity, upvoteIdentifierTag, relay);
+  protected final Identity submitter =
+//     Identity.generateRandomIdentity();
+     Identity.create("aaa4585483196998204846989544737603523651520600328805626488477202");
 
-  PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
+  protected final Identity upvoteDefnCreator =
+//     Identity.generateRandomIdentity();
+     Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202");
+
+  protected final Identity recipient =
+//     Identity.generateRandomIdentity();
+     Identity.create("ccc4585483196998204846989544737603523651520600328805626488477202");
+
+  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(
+     upvoteDefnCreator, upvoteIdentifierTag, relay);
 
   BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent;
 
   public BadgeAwardUpvoteEventTest() {
     this.badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
-        identity,
-        badgeReceiverPublicKey,
-        relay,
-        badgeDefnUpvoteEvent);
+       submitter,
+       recipient.getPublicKey(),
+       relay,
+       badgeDefnUpvoteEvent);
   }
 
   @Test
   void testValidBadgeAwardReputationEvent() {
     BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
-        badgeAwardGenericEvent.getGenericEventRecord(),
-        addressTag -> badgeDefnUpvoteEvent);
+       badgeAwardGenericEvent.getGenericEventRecord(),
+       addressTag -> badgeDefnUpvoteEvent);
 
     assertEquals(badgeAwardGenericEvent, badgeAwardUpvoteEvent);
     assertEquals(badgeAwardGenericEvent.getBadgeDefinitionEvent(), badgeAwardUpvoteEvent.getBadgeDefinitionEvent());
@@ -55,11 +63,11 @@ public class BadgeAwardUpvoteEventTest {
   @Test
   void testSingularAddressTag() {
     BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
-        identity,
-        badgeReceiverPublicKey,
-        relay,
-        badgeDefnUpvoteEvent,
-        Collections.unmodifiableList(List.of(badgeAwardGenericEvent.getAddressableEvent().asAddressableEventAddressTag())));
+       submitter,
+       recipient.getPublicKey(),
+       relay,
+       badgeDefnUpvoteEvent,
+       List.of(badgeAwardGenericEvent.getAddressableEvent().asAddressableEventAddressTag()));
 
     assertEquals(1, List.of(badgeAwardUpvoteEvent.getAddressableEvent().asAddressableEventAddressTag()).size());
     assertEquals(1, badgeAwardUpvoteEvent.getTypeSpecificTags(AddressTag.class).size());
@@ -74,21 +82,21 @@ public class BadgeAwardUpvoteEventTest {
   void testEventIFAsGenericEventRecord() {
     EventIF badgeAwardGenericEventAsEventIF = badgeAwardGenericEvent;
     assertEquals(
-        badgeAwardGenericEventAsEventIF.asGenericEventRecord(),
-        badgeAwardGenericEvent.asGenericEventRecord());
+       badgeAwardGenericEventAsEventIF.asGenericEventRecord(),
+       badgeAwardGenericEvent.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-        badgeAwardGenericEventAsEventIF.asGenericEventRecord());
+       badgeAwardGenericEventAsEventIF.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-        badgeAwardGenericEvent.asGenericEventRecord());
+       badgeAwardGenericEvent.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-        EventIF.asGenericEventRecord.apply(badgeAwardGenericEvent));
+       EventIF.asGenericEventRecord.apply(badgeAwardGenericEvent));
 
     Function<EventIF, GenericEventRecord> methodInstance_AsGenericEventRecord = EventIF::asGenericEventRecord;
     assertEquals_VariantDemonstration(
-        methodInstance_AsGenericEventRecord.apply(badgeAwardGenericEvent));
+       methodInstance_AsGenericEventRecord.apply(badgeAwardGenericEvent));
   }
 
   private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {

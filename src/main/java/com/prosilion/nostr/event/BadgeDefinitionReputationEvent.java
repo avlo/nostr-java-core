@@ -126,7 +126,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   https://github.com/nostr-protocol/nips/blob/master/58.md    
 */
     return String.format("%s: %s == (previous)%s%s",
-       "SuperConductor BadgeDefinitionReputationEvent, default content from FormulaEvent(s) operator(s)",
+       "BadgeDefinitionReputationEvent FormulaEvent(s) operator(s) default content",
        identifierTag.getUuid(),
        identifierTag.getUuid(),
        operatorFormatDisplayIterator(formulaEvents));

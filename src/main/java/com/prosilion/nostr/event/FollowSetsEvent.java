@@ -138,7 +138,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
             .orElseThrow(() ->
                 new NostrException(
                     String.format(
-                        "FollowSetsEvent BadgeAwardGenericEvent / AddressTag [%s] is missing a relay url", badgeAwardGenericEvent)))
+                        "FollowSetsEvent BadgeAwardGenericEvent / AddressTag [%s] missing relay url", badgeAwardGenericEvent)))
             .getUrl());
   }
 
