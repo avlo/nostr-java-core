@@ -34,10 +34,10 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
       @NonNull List<BaseTag> tags,
       @NonNull BigDecimal score) {
     super(
-        aImgIdentity,
+        aImgIdentity, // TODO: potentially should match below badgeDefinitionReputationEvent.aImgIdentity parameter field
         badgeReceiverPubkey,
         relay,
-        badgeDefinitionReputationEvent,
+        badgeDefinitionReputationEvent, // TODO: badgeDefinitionReputationEvent.aImgIdentity value potentially should match above aImgIdentity parameter
         Stream.concat(
             Stream.of(
                 externalIdentityTag),
