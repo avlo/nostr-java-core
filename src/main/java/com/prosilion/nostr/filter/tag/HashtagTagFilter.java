@@ -18,12 +18,12 @@ public class HashtagTagFilter extends AbstractFilterable<HashtagTag> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(HashtagTag.class, getHashtagTag());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getHashtagTag().getHashTag();
   }
 

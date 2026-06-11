@@ -1,11 +1,7 @@
 
 package com.prosilion.nostr.user;
 
-import java.io.Serializable;
-
-public interface IKey extends Serializable {
-
-    byte[] getRawData();
-
-    String toBech32String();
+public interface IKey {
+  byte[] getRawData();
+  String toBech32String();
 }

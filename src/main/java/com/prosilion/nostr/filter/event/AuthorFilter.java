@@ -18,13 +18,13 @@ public class AuthorFilter extends AbstractFilterable<PublicKey> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
         genericEvent.getPublicKey().toHexString().equals(getFilterableValue());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getAuthor().toHexString();
   }
 

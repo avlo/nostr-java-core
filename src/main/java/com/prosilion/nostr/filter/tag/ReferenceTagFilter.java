@@ -19,12 +19,12 @@ public class ReferenceTagFilter extends AbstractFilterable<ReferenceTag> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(ReferenceTag.class, getReferenceTag());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getReferenceTag().getUrl();
   }
 

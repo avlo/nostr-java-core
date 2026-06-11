@@ -12,8 +12,8 @@ import com.prosilion.nostr.message.NoticeMessage;
 import com.prosilion.nostr.message.OkMessage;
 import com.prosilion.nostr.message.ReqMessage;
 import com.prosilion.nostr.util.Util;
-import lombok.extern.slf4j.Slf4j;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 
@@ -30,7 +30,7 @@ public class BaseMessageDecoder {
 //          client <-> relay messages
       case Command.AUTH ->
 //          subscriptionId instanceof Map map ?
-          CanonicalAuthenticationMessage.decode(jsonString);
+         CanonicalAuthenticationMessage.decode(jsonString);
 //          RelayAuthenticationMessage.decode(subscriptionId);
       case Command.EVENT -> EventMessage.decode(jsonString);
 //            missing client <-> relay handlers
@@ -47,21 +47,19 @@ public class BaseMessageDecoder {
       case Command.OK -> OkMessage.decode(jsonString);
 //            missing relay -> client handlers
 //            case "CLOSED" -> Closed.message.decode(subscriptionId);
-      default ->
-          throw new IllegalArgumentException(String.format("Invalid JSON command [%s] in JSON string [%s] ", validNostrJsonStructure.getCommand(), jsonString));
     };
   }
 
   private static ValidNostrJsonStructure validateProperlyFormedJson(@NonNull String jsonString) throws JsonProcessingException {
     ValidNostrJsonStructure validNostrJsonStructure = new ValidNostrJsonStructure(
-        I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(COMMAND_INDEX).asText(),
-        I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(ARG_INDEX).asText());
+       I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(COMMAND_INDEX).asText(),
+       I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(ARG_INDEX).asText());
     log.debug("{} decode(String jsonString) validated incoming json:\n{}", BaseMessageDecoder.class, Util.prettyFormatJson(jsonString, 2));
     return validNostrJsonStructure;
   }
 
   private record ValidNostrJsonStructure(
-      @NonNull String getCommand,
-      @NonNull Object getSubscriptionId) {
+     @NonNull String getCommand,
+     @NonNull Object getSubscriptionId) {
   }
 }

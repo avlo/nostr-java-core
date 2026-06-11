@@ -8,7 +8,6 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.AbstractFilterable;
 import com.prosilion.nostr.filter.Filterable;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -35,12 +34,12 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(AddressTag.class, getAddressTag());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     String requiredAttributes = Stream.of(
           getAddressTag().getKind(),
           getAddressTag().getPublicKey().toHexString())
@@ -94,7 +93,7 @@ public class AddressTagFilter extends AbstractFilterable<AddressTag> {
     return addressTagAtomic.get();
   }
 
-//  unused for now
+  //  unused for now
   private static AddressTag validate(AddressTag addressTag) {
     addressTag.requireIdentifierTag();
     addressTag.requireRelay();

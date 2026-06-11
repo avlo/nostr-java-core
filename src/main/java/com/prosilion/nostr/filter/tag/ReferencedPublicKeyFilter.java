@@ -19,12 +19,12 @@ public class ReferencedPublicKeyFilter extends AbstractFilterable<PubKeyTag> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(PubKeyTag.class, getReferencedPublicKey());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getReferencedPublicKey().getPublicKey().toHexString();
   }
 

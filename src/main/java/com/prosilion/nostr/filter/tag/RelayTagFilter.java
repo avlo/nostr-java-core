@@ -20,12 +20,12 @@ public class RelayTagFilter extends AbstractFilterable<RelayTag> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(RelayTag.class, getReferenceTag());
   }
 
   @Override
-  public Relay getFilterableValue() {
+  public final Relay getFilterableValue() {
     return getReferenceTag().getRelay();
   }
 

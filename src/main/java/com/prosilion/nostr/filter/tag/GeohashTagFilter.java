@@ -18,12 +18,12 @@ public class GeohashTagFilter extends AbstractFilterable<GeohashTag> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(GeohashTag.class, getGeoHashTag());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getGeoHashTag().getLocation();
   }
 

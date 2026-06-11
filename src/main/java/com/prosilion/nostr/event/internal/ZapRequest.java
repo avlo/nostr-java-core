@@ -9,13 +9,13 @@ import lombok.NonNull;
 @Getter
 public class ZapRequest {
   @JsonProperty("relays")
-  private RelaysTag relaysTag;
+  private final RelaysTag relaysTag;
 
   @JsonProperty
-  private Long amount;
+  private final Long amount;
 
   @JsonProperty("lnurl")
-  private String lnUrl;
+  private final String lnUrl;
 
   public ZapRequest(@NonNull RelaysTag relaysTag, @NonNull Long amount, @NonNull String lnUrl) {
     this.relaysTag = relaysTag;

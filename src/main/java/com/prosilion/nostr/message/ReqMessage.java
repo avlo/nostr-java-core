@@ -14,9 +14,9 @@ import com.prosilion.nostr.filter.Filters;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.stream.Streams;
-import lombok.NonNull;
 
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
@@ -24,8 +24,8 @@ import static com.prosilion.nostr.codec.IDecoder.I_DECODER_MAPPER_AFTERBURNER;
 @JsonTypeName("REQ")
 @JsonSerialize(using = ReqMessageSerializer.class)
 public record ReqMessage(
-    @Getter String subscriptionId,
-    @Getter List<Filters> filtersList) implements BaseMessage {
+   @Getter String subscriptionId,
+   @Getter List<Filters> filtersList) implements BaseMessage {
 
   @JsonIgnore
   public static Command command = Command.REQ;
@@ -44,13 +44,13 @@ public record ReqMessage(
   public String encode() throws JsonProcessingException {
     var encoderArrayNode = JsonNodeFactory.instance.arrayNode();
     encoderArrayNode
-        .add(getCommand().name())
-        .add(getSubscriptionId());
+       .add(getCommand().name())
+       .add(getSubscriptionId());
 
     filtersList.stream()
-        .map(FiltersEncoder::encode)
-        .map(Encoder::createJsonNode)
-        .forEach(encoderArrayNode::add);
+       .map(FiltersEncoder::encode)
+       .map(Encoder::createJsonNode)
+       .forEach(encoderArrayNode::add);
 
     return ENCODER_MAPPED_AFTERBURNER.writeValueAsString(encoderArrayNode);
   }
@@ -58,14 +58,13 @@ public record ReqMessage(
   public static <T extends BaseMessage> T decode(@NonNull Object subscriptionId, @NonNull String jsonString) throws JsonProcessingException {
     List<String> jsonFiltersList = getJsonFiltersList(jsonString);
     return (T) new ReqMessage(
-        BaseMessage.validateSubscriptionId(subscriptionId.toString()).toString(),
-        Streams.failableStream(jsonFiltersList.stream()).map(filtersList ->
-            FiltersDecoder.decode(filtersList)).stream().toList());
+       BaseMessage.validateSubscriptionId(subscriptionId.toString()),
+       Streams.failableStream(jsonFiltersList.stream()).map(FiltersDecoder::decode).stream().toList());
   }
 
   private static List<String> getJsonFiltersList(String jsonString) throws JsonProcessingException {
     return IntStream.range(FILTERS_START_INDEX, I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).size())
-        .mapToObj(idx -> readTree(jsonString, idx)).toList();
+       .mapToObj(idx -> readTree(jsonString, idx)).toList();
   }
 
   @SneakyThrows

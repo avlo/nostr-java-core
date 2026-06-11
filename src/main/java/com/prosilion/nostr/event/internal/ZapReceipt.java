@@ -16,7 +16,7 @@ public class ZapReceipt {
 
   @JsonProperty
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String preimage;
+  private final String preimage;
 
   public ZapReceipt(@NonNull String bolt11, @NonNull String descriptionSha256, String preimage) {
     this.descriptionSha256 = descriptionSha256;

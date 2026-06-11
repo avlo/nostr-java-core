@@ -18,13 +18,13 @@ public class EventFilter extends AbstractFilterable<GenericEventId> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
         genericEvent.getId().equals(getFilterableValue());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getEvent().getId();
   }
 

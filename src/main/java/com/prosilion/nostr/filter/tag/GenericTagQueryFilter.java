@@ -20,7 +20,7 @@ public class GenericTagQueryFilter extends AbstractFilterable<GenericTagQuery> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
         genericEvent.getTypeSpecificTags(GenericTag.class).stream()
             .filter(genericTag ->
@@ -34,12 +34,12 @@ public class GenericTagQueryFilter extends AbstractFilterable<GenericTagQuery> {
   }
 
   @Override
-  public String getFilterKey() {
+  public final String getFilterKey() {
     return getGenericTagQuery().getTagName();
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getGenericTagQuery().getValue();
   }
 

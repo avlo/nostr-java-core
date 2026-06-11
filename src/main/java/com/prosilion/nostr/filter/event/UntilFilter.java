@@ -21,18 +21,18 @@ public class UntilFilter extends AbstractFilterable<Long> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
         genericEvent.getCreatedAt() < getUntil();
   }
 
   @Override
-  public ObjectNode toObjectNode(ObjectNode objectNode) {
+  public final ObjectNode toObjectNode(ObjectNode objectNode) {
     return MAPPER_AFTERBURNER.createObjectNode().put(FILTER_KEY, getUntil());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getUntil().toString();
   }
 

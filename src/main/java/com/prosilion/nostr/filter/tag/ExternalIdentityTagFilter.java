@@ -28,12 +28,12 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(ExternalIdentityTag.class, getExternalIdentityTag());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return String.join("\",\"",
         Stream.of(
                 getExternalIdentityTag().getPlatform(),
@@ -71,7 +71,7 @@ public class ExternalIdentityTagFilter extends AbstractFilterable<ExternalIdenti
   }
 
   @Override
-  public void addToArrayNode(ArrayNode arrayNode) {
+  public final void addToArrayNode(ArrayNode arrayNode) {
     arrayNode.add(
         MAPPER_AFTERBURNER.createArrayNode()
             .add(getFilterableValue())

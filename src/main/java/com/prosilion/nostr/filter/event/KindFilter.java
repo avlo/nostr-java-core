@@ -21,20 +21,20 @@ public class KindFilter extends AbstractFilterable<Kind> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return (genericEvent) ->
         getFilterableValue().equals(genericEvent.getKind().getValue());
   }
 
   @Override
-  public void addToArrayNode(ArrayNode arrayNode) {
+  public final void addToArrayNode(ArrayNode arrayNode) {
     arrayNode.addAll(
         MAPPER_AFTERBURNER.createArrayNode().add(
             getFilterableValue()));
   }
 
   @Override
-  public Integer getFilterableValue() {
+  public final Integer getFilterableValue() {
     return getKind().getValue();
   }
 

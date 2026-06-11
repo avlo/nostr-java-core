@@ -19,12 +19,12 @@ public class IdentifierTagFilter extends AbstractFilterable<IdentifierTag> {
   }
 
   @Override
-  public Predicate<EventIF> getPredicate() {
+  public final Predicate<EventIF> getPredicate() {
     return getPredicate(IdentifierTag.class, getIdentifierTag());
   }
 
   @Override
-  public String getFilterableValue() {
+  public final String getFilterableValue() {
     return getIdentifierTag().getUuid();
   }
 
