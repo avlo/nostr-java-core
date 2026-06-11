@@ -17,15 +17,15 @@ abstract class AbstractTagSerializer<T extends BaseTag> extends StdSerializer<T>
     super(t);
   }
 
-  public void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+  public final void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
     final ObjectNode node = getBaseTagEncoderMappedAfterburnerCopy(this)
-        .getNodeFactory().objectNode();
+       .getNodeFactory().objectNode();
 
     Streams.failableStream(
-        value.getSupportedFields().stream()).forEach(f ->
-        value.getFieldValue(f)
-            .ifPresent(s ->
-                node.put(f.getName(), s)));
+       value.getSupportedFields().stream()).forEach(f ->
+       value.getFieldValue(f)
+          .ifPresent(s ->
+             node.put(f.getName(), s)));
 
     applyCustomAttributes(node, value);
 
@@ -35,7 +35,7 @@ abstract class AbstractTagSerializer<T extends BaseTag> extends StdSerializer<T>
   }
 
   @Override
-  public String encode(T value) throws JsonProcessingException {
+  public final String encode(T value) throws JsonProcessingException {
     return writeValueAsString(value, this);
   }
 

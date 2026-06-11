@@ -8,12 +8,12 @@ import java.io.IOException;
 
 public class ExternalIdentityTagSerializer extends JsonSerializer<ExternalIdentityTag> {
   @Override
-  public void serialize(ExternalIdentityTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
+  public final void serialize(ExternalIdentityTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("i");
     jsonGenerator.writeString(
-        value.platform() + ":" +
-            value.getIdentity()
+       value.platform() + ":" +
+          value.getIdentity()
     );
     jsonGenerator.writeString(value.getProof());
     jsonGenerator.writeEndArray();

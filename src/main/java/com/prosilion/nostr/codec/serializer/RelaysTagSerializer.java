@@ -9,9 +9,8 @@ import java.io.IOException;
 import lombok.NonNull;
 
 public class RelaysTagSerializer extends JsonSerializer<RelaysTag> {
-
   @Override
-  public void serialize(@NonNull RelaysTag relaysTag, @NonNull JsonGenerator jsonGenerator, @NonNull SerializerProvider serializerProvider) throws IOException {
+  public final void serialize(@NonNull RelaysTag relaysTag, @NonNull JsonGenerator jsonGenerator, @NonNull SerializerProvider serializerProvider) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("relays");
     for (Relay json : relaysTag.getRelays()) {

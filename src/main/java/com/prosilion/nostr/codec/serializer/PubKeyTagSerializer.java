@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class PubKeyTagSerializer extends JsonSerializer<PubKeyTag> {
   @Override
-  public void serialize(PubKeyTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
+  public final void serialize(PubKeyTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("p");
     jsonGenerator.writeString(value.getPublicKey().toString());
@@ -20,5 +20,4 @@ public class PubKeyTagSerializer extends JsonSerializer<PubKeyTag> {
     }
     jsonGenerator.writeEndArray();
   }
-
 }

@@ -16,49 +16,49 @@ import lombok.NonNull;
 
 public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefinitionReputationEvent> {
   public BadgeAwardReputationEvent(
-      @NonNull Identity aImgIdentity,
-      @NonNull PublicKey badgeReceiverPubkey,
-      @NonNull Relay relay,
-      @NonNull ExternalIdentityTag externalIdentityTag,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull BigDecimal score) {
+     @NonNull Identity aImgIdentity,
+     @NonNull PublicKey badgeReceiverPubkey,
+     @NonNull Relay relay,
+     @NonNull ExternalIdentityTag externalIdentityTag,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull BigDecimal score) {
     this(aImgIdentity, badgeReceiverPubkey, relay, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score);
   }
 
   public BadgeAwardReputationEvent(
-      @NonNull Identity aImgIdentity,
-      @NonNull PublicKey badgeReceiverPubkey,
-      @NonNull Relay relay,
-      @NonNull ExternalIdentityTag externalIdentityTag,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull List<BaseTag> tags,
-      @NonNull BigDecimal score) {
+     @NonNull Identity aImgIdentity,
+     @NonNull PublicKey badgeReceiverPubkey,
+     @NonNull Relay relay,
+     @NonNull ExternalIdentityTag externalIdentityTag,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull List<BaseTag> tags,
+     @NonNull BigDecimal score) {
     super(
-        aImgIdentity,
-        badgeReceiverPubkey,
-        relay,
-        badgeDefinitionReputationEvent,
-        Stream.concat(
-            Stream.of(
-                externalIdentityTag),
-            tags.stream()
-                .filter(Predicate.not(ExternalIdentityTag.class::isInstance))),
-        score.toString());
+       aImgIdentity,
+       badgeReceiverPubkey,
+       relay,
+       badgeDefinitionReputationEvent,
+       Stream.concat(
+          Stream.of(
+             externalIdentityTag),
+          tags.stream()
+             .filter(Predicate.not(ExternalIdentityTag.class::isInstance))),
+       score.toString());
   }
 
   public BadgeAwardReputationEvent(
-      @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxn) {
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxn) {
     super(genericEventRecord, fxn);
   }
 
   @JsonIgnore
-  public ExternalIdentityTag getExternalIdentityTag() {
+  public final ExternalIdentityTag getExternalIdentityTag() {
     return requireFirstTag(ExternalIdentityTag.class);
   }
 
   @JsonIgnore
-  public String getScore() {
+  public final String getScore() {
     return getContent();
   }
 }

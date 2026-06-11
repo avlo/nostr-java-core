@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class EventTagSerializer extends JsonSerializer<EventTag> {
   @Override
-  public void serialize(EventTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
+  public final void serialize(EventTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("e");
     jsonGenerator.writeString(value.getIdEvent());

@@ -60,12 +60,12 @@ public class AddressableEvent extends BaseEvent {
   }
 
   @JsonIgnore
-  public IdentifierTag getIdentifierTag() {
+  public final IdentifierTag getIdentifierTag() {
     return requireFirstTag(IdentifierTag.class);
   }
 
   @JsonIgnore
-  public AddressTag asAddressableEventAddressTag() {
+  public final AddressTag asAddressableEventAddressTag() {
     return new AddressTag(
        getKind(),
        getPublicKey(),
@@ -74,7 +74,7 @@ public class AddressableEvent extends BaseEvent {
   }
 
   @JsonIgnore
-  public Relay getRelay() {
+  public final Relay getRelay() {
     return requireRelayTag().requireRelay();
   }
 

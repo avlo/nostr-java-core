@@ -10,7 +10,7 @@ public final class PublicKey {
 
   private final BaseKey baseKey;
 
-  public PublicKey(@NonNull byte[] rawData) {
+  public PublicKey(byte[] rawData) {
     baseKey = new BaseKey(KeyType.PUBLIC, rawData, Bech32Prefix.NPUB);
   }
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.prosilion.nostr.message.CanonicalAuthenticationMessage;
-import com.prosilion.nostr.message.EventMessage;
 import java.io.IOException;
 
 public class CanonicalAuthenticationMessageSerializer extends StdSerializer<CanonicalAuthenticationMessage> {
@@ -12,7 +11,7 @@ public class CanonicalAuthenticationMessageSerializer extends StdSerializer<Cano
     super(CanonicalAuthenticationMessage.class);
   }
 
-  public void serialize(CanonicalAuthenticationMessage value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+  public final void serialize(CanonicalAuthenticationMessage value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
     gen.writeStartArray();
     gen.writePOJO(value.getCommand().getName());
     gen.writePOJO(value.getEvent());

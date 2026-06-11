@@ -9,7 +9,7 @@ public final class PrivateKey {
 
   private final BaseKey baseKey;
 
-  public PrivateKey(@NonNull byte[] rawData) {
+  public PrivateKey(byte[] rawData) {
     baseKey = new BaseKey(KeyType.PRIVATE, rawData, Bech32Prefix.NSEC);
   }
 

@@ -16,16 +16,16 @@ public class ReqMessageSerializer<T extends ReqMessage> extends StdSerializer<T>
     super((Class<T>) ReqMessage.class);
   }
 
-  public void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+  public final void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
     ArrayNode encoderArrayNode = JsonNodeFactory.instance.arrayNode();
     encoderArrayNode
-        .add(value.getCommand().getName())
-        .add(value.getSubscriptionId());
+       .add(value.getCommand().getName())
+       .add(value.getSubscriptionId());
 
     value.getFiltersList().stream()
-        .map(FiltersEncoder::encode)
-        .map(Encoder::createJsonNode)
-        .forEach(encoderArrayNode::add);
+       .map(FiltersEncoder::encode)
+       .map(Encoder::createJsonNode)
+       .forEach(encoderArrayNode::add);
 
     gen.writePOJO(encoderArrayNode);
   }

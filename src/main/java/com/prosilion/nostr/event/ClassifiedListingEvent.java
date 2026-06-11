@@ -15,32 +15,32 @@ import lombok.NonNull;
 
 public class ClassifiedListingEvent extends AddressableEvent {
   public ClassifiedListingEvent(
-      @NonNull Identity identity,
-      @NonNull Kind kind,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull ClassifiedListing classifiedListing,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull Kind kind,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull ClassifiedListing classifiedListing,
+     @NonNull String content) throws NostrException {
     this(identity, kind, identifierTag, relay, classifiedListing, List.of(), content);
   }
 
   public ClassifiedListingEvent(
-      @NonNull Identity identity,
-      @NonNull Kind kind,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull ClassifiedListing classifiedListing,
-      @NonNull List<BaseTag> baseTags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull Kind kind,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull ClassifiedListing classifiedListing,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
     super(
-        identity,
-        validateKind(kind, kindPredicate, errorMessage),
-        identifierTag,
-        relay,
-        Stream.concat(
-            baseTags.stream(),
-            Stream.of(classifiedListing.getPriceTag())),
-        content);
+       identity,
+       validateKind(kind, kindPredicate, errorMessage),
+       identifierTag,
+       relay,
+       Stream.concat(
+          baseTags.stream(),
+          Stream.of(classifiedListing.getPriceTag())),
+       content);
   }
 
   public ClassifiedListingEvent(@NonNull GenericEventRecord genericEventRecord) {

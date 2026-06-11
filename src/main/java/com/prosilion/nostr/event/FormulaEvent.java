@@ -14,8 +14,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {
@@ -23,49 +23,49 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent; // aTag
 
   public FormulaEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
-      @NonNull String formula) throws NostrException, ParseException {
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
+     @NonNull String formula) throws NostrException, ParseException {
     this(
-        identity,
-        identifierTag,
-        relay,
-        badgeDefinitionGenericEvent,
-        List.of(),
-        formula);
+       identity,
+       identifierTag,
+       relay,
+       badgeDefinitionGenericEvent,
+       List.of(),
+       formula);
   }
 
   public FormulaEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
-      @NonNull List<BaseTag> baseTags,
-      @NonNull String formula) throws NostrException, ParseException {
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String formula) throws NostrException, ParseException {
     super(
-        identity,
-        identifierTag,
-        relay,
-        Stream.concat(
-            Stream.of(
-                badgeDefinitionGenericEvent.asAddressableEventAddressTag()),
-            baseTags.stream()
-                .filter(Predicate.not(AddressTag.class::isInstance))),
-        validate(formula));
+       identity,
+       identifierTag,
+       relay,
+       Stream.concat(
+          Stream.of(
+             badgeDefinitionGenericEvent.asAddressableEventAddressTag()),
+          baseTags.stream()
+             .filter(Predicate.not(AddressTag.class::isInstance))),
+       validate(formula));
     this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
   }
 
   public FormulaEvent(
-      @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<AddressTag, BadgeDefinitionGenericEvent> fxn) {
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull Function<AddressTag, BadgeDefinitionGenericEvent> fxn) {
     super(genericEventRecord);
     this.badgeDefinitionGenericEvent = mapTagsToEvents(this, fxn, AddressTag.class).getFirst();
   }
 
   @JsonIgnore
-  public String getFormula() {
+  public final String getFormula() {
     return super.getContent();
   }
 
@@ -84,7 +84,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
       throw new ParseException(formula, "supplied formula is blank");
 //    TODO: store expression in global expression map
     new Expression(
-        String.format("%s %s", "validate", formula)).validate();
+       String.format("%s %s", "validate", formula)).validate();
     return formula;
   }
 }

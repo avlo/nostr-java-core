@@ -10,7 +10,7 @@ import lombok.NonNull;
 public class RelayTagSerializer extends JsonSerializer<RelayTag> {
 
   @Override
-  public void serialize(@NonNull RelayTag relayTag, @NonNull JsonGenerator jsonGenerator, @NonNull SerializerProvider serializerProvider) throws IOException {
+  public final void serialize(@NonNull RelayTag relayTag, @NonNull JsonGenerator jsonGenerator, @NonNull SerializerProvider serializerProvider) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("relay");
     jsonGenerator.writeString(relayTag.getRelay().getUrl());

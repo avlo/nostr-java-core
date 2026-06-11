@@ -60,7 +60,7 @@ public abstract class UniqueAddressTagEvent<T extends AddressableEvent> extends 
   }
 
   @JsonIgnore
-  public AddressTag getAddressTag() {
+  public final AddressTag getAddressTag() {
     return requireFirstTag(AddressTag.class);
   }
 }

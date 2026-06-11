@@ -32,124 +32,124 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent; // aTag
 
   public FollowSetsEvent(
-      @NonNull Identity identity,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull Relay relay,
-      @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvents) {
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull Relay relay,
+     @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvents) {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(badgeAwardGenericEvents), List.of(), DEFAULT_CONTENT);
   }
 
   public FollowSetsEvent(
-      @NonNull Identity identity,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents) {
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull Relay relay,
+     @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents) {
     this(identity, badgeDefinitionReputationEvent, relay, badgeAwardGenericEvents, List.of(), DEFAULT_CONTENT);
   }
 
   public FollowSetsEvent(
-      @NonNull Identity identity,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents,
-      @NonNull List<BaseTag> baseTags) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull Relay relay,
+     @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents,
+     @NonNull List<BaseTag> baseTags) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, badgeAwardGenericEvents, baseTags, DEFAULT_CONTENT);
   }
 
   public FollowSetsEvent(
-      @NonNull Identity identity,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull Relay relay,
-      @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvents,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull Relay relay,
+     @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvents,
+     @NonNull String content) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(badgeAwardGenericEvents), List.of(), content);
   }
 
   public FollowSetsEvent(
-      @NonNull Identity identity,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull Relay relay,
+     @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents,
+     @NonNull String content) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, badgeAwardGenericEvents, List.of(), content);
   }
 
   public FollowSetsEvent(
-      @NonNull Identity identity,
-      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-      @NonNull Relay relay,
-      @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents,
-      @NonNull List<BaseTag> baseTags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull Relay relay,
+     @NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
     super(
-        identity,
-        Kind.FOLLOW_SETS,
-        defaultIdentifierTag,
-        relay,
-        Stream.concat(
-            Stream.concat(
-                Stream.concat(
-                    TagMappedEventIF.throwIfEmpty(
-                            badgeAwardGenericEvents, MESSAGE)
-                        .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag),
-                    Stream.of(
-                        validateIdenticalBadgeAwardGenericEventsPublicKeys(badgeAwardGenericEvents))),
-                Stream.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag())),
-            baseTags.stream()
-                .filter(Predicate.not(EventTag.class::isInstance))
-                .filter(Predicate.not(PubKeyTag.class::isInstance))
-                .filter(Predicate.not(AddressTag.class::isInstance))),
-        content);
+       identity,
+       Kind.FOLLOW_SETS,
+       defaultIdentifierTag,
+       relay,
+       Stream.concat(
+          Stream.concat(
+             Stream.concat(
+                TagMappedEventIF.throwIfEmpty(
+                      badgeAwardGenericEvents, MESSAGE)
+                   .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag),
+                Stream.of(
+                   validateIdenticalBadgeAwardGenericEventsPublicKeys(badgeAwardGenericEvents))),
+             Stream.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag())),
+          baseTags.stream()
+             .filter(Predicate.not(EventTag.class::isInstance))
+             .filter(Predicate.not(PubKeyTag.class::isInstance))
+             .filter(Predicate.not(AddressTag.class::isInstance))),
+       content);
     this.badgeAwardGenericEvents = badgeAwardGenericEvents;
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
   }
 
   public FollowSetsEvent(
-      @NonNull GenericEventRecord genericEventRecord,
-      @NonNull Function<EventTag, BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> fxnEventTag,
-      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull Function<EventTag, BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> fxnEventTag,
+     @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
     super(genericEventRecord);
     this.badgeAwardGenericEvents = mapTagsToEvents(this, fxnEventTag, EventTag.class);
     this.badgeDefinitionReputationEvent = mapTagsToEvents(this, fxnAddressTag, AddressTag.class).getFirst();
   }
 
   @JsonIgnore
-  public List<EventTag> getEventTags() {
+  public final List<EventTag> getEventTags() {
     return badgeAwardGenericEvents.stream()
-        .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag)
-        .toList();
+       .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag)
+       .toList();
   }
 
   @JsonIgnore
-  public AddressTag getAddressTag() {
+  public final AddressTag getAddressTag() {
     return requireFirstTag(AddressTag.class);
   }
 
   @JsonIgnore
-  public PublicKey getAwardRecipientPulicKey() {
+  public final PublicKey getAwardRecipientPulicKey() {
     return requireFirstTag(PubKeyTag.class).publicKey();
   }
 
   public static EventTag badgeAwardGenericEventAsEventTag(@NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent) {
     return new EventTag(
-        badgeAwardGenericEvent.getId(),
-        Optional.ofNullable(
-                badgeAwardGenericEvent.getAddressTag().getRelay())
-            .orElseThrow(() ->
-                new NostrException(
-                    String.format(
-                        "FollowSetsEvent BadgeAwardGenericEvent / AddressTag [%s] missing relay url", badgeAwardGenericEvent)))
-            .getUrl());
+       badgeAwardGenericEvent.getId(),
+       Optional.ofNullable(
+             badgeAwardGenericEvent.getAddressTag().getRelay())
+          .orElseThrow(() ->
+             new NostrException(
+                String.format(
+                   "FollowSetsEvent BadgeAwardGenericEvent / AddressTag [%s] missing relay url", badgeAwardGenericEvent)))
+          .getUrl());
   }
 
   public static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@NonNull List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents) {
     List<PublicKey> distinctPublicKeys = badgeAwardGenericEvents.stream().map(BadgeAwardAbstractEvent::getAwardRecipientPublicKey).distinct().toList();
     if (distinctPublicKeys.size() != 1)
       throw new NostrException(
-          String.format(
-              "FollowSetsEvent BadgeAwardGenericEvents PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]",
-              distinctPublicKeys.size(),
-              distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
+         String.format(
+            "FollowSetsEvent BadgeAwardGenericEvents PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]",
+            distinctPublicKeys.size(),
+            distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
     return new PubKeyTag(distinctPublicKeys.getFirst());
   }
 }

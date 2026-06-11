@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class AddressTagSerializer extends JsonSerializer<AddressTag> {
   @Override
-  public void serialize(AddressTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
+  public final void serialize(AddressTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("a");
     jsonGenerator.writeString(
@@ -23,5 +23,4 @@ public class AddressTagSerializer extends JsonSerializer<AddressTag> {
     }
     jsonGenerator.writeEndArray();
   }
-
 }

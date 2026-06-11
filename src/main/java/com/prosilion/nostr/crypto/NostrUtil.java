@@ -1,5 +1,6 @@
 package com.prosilion.nostr.crypto;
 
+import com.prosilion.nostr.crypto.nip44.EncryptedPayloads;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -37,12 +38,7 @@ public class NostrUtil {
   }
 
   private static byte[] hexToBytesConvert(String s) {
-    int len = s.length();
-    byte[] buf = new byte[len / 2];
-    for (int i = 0; i < len; i += 2) {
-      buf[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
-    }
-    return buf;
+    return EncryptedPayloads.hexStringToByteArray(s);
   }
 
   public static byte[] bytesFromInt(int n) {
@@ -98,21 +94,21 @@ public class NostrUtil {
 
   public static String escapeJsonString(String jsonString) {
     return jsonString.replace("\\", "\\\\")
-        .replace("\"", "\\\"")
-        .replace("\b", "\\b")
-        .replace("\f", "\\f")
-        .replace("\n", "\\n")
-        .replace("\r", "\\r")
-        .replace("\t", "\\t");
+       .replace("\"", "\\\"")
+       .replace("\b", "\\b")
+       .replace("\f", "\\f")
+       .replace("\n", "\\n")
+       .replace("\r", "\\r")
+       .replace("\t", "\\t");
   }
 
   public static String unEscapeJsonString(String jsonString) {
     return jsonString.replace("\\\\", "\\")
-        .replace("\\\"", "\"")
-        .replace("\\b", "\b")
-        .replace("\\f", "\f")
-        .replace("\\n", "\n")
-        .replace("\\r", "\r")
-        .replace("\\t", "\t");
+       .replace("\\\"", "\"")
+       .replace("\\b", "\b")
+       .replace("\\f", "\f")
+       .replace("\\n", "\n")
+       .replace("\\r", "\r")
+       .replace("\\t", "\t");
   }
 }

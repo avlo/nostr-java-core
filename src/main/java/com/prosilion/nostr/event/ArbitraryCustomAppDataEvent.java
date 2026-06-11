@@ -12,35 +12,35 @@ import lombok.NonNull;
 
 public class ArbitraryCustomAppDataEvent extends AddressableEvent {
   public ArbitraryCustomAppDataEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull String content) throws NostrException {
     this(identity, identifierTag, relay, List.of(), content);
   }
 
   public ArbitraryCustomAppDataEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull List<BaseTag> baseTags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
     this(identity, identifierTag, relay, baseTags.stream(), content);
   }
 
   public ArbitraryCustomAppDataEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull Stream<BaseTag> baseTags,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull Stream<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
     super(
-        identity,
-        Kind.ARBITRARY_CUSTOM_APP_DATA,
-        identifierTag,
-        relay,
-        baseTags,
-        content);
+       identity,
+       Kind.ARBITRARY_CUSTOM_APP_DATA,
+       identifierTag,
+       relay,
+       baseTags,
+       content);
   }
 
   public ArbitraryCustomAppDataEvent(@NonNull GenericEventRecord genericEventRecord) {

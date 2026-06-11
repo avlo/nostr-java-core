@@ -10,8 +10,8 @@ public class Point {
   static final private BigInteger n = new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", 16);
 
   static final public Point G = new Point(
-      new BigInteger("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", 16),
-      new BigInteger("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
+     new BigInteger("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", 16),
+     new BigInteger("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
   );
 
   private static final BigInteger BI_TWO = BigInteger.valueOf(2);
@@ -38,31 +38,31 @@ public class Point {
     return G;
   }
 
-  public BigInteger getX() {
+  public final BigInteger getX() {
     return pair.getLeft();
   }
 
-  public BigInteger getY() {
+  public final BigInteger getY() {
     return pair.getRight();
   }
 
   public static BigInteger getX(Point P) {
     NostrException.testBoolean(
-        !P.isInfinite(), "Point X is infinite");
+       !P.isInfinite(), "Point X is infinite");
     return P.getX();
   }
 
   public static BigInteger getY(Point P) {
     NostrException.testBoolean(
-        !P.isInfinite(), "Point Y is infinite");
+       !P.isInfinite(), "Point Y is infinite");
     return P.getY();
   }
 
-  public Pair<BigInteger, BigInteger> getPair() {
+  public final Pair<BigInteger, BigInteger> getPair() {
     return pair;
   }
 
-  public boolean isInfinite() {
+  public final boolean isInfinite() {
     return pair == null || pair.getLeft() == null || pair.getRight() == null;
   }
 
@@ -70,7 +70,7 @@ public class Point {
     return P.isInfinite();
   }
 
-  public Point add(@NonNull Point P) {
+  public final Point add(@NonNull Point P) {
     return add(this, P);
   }
 
@@ -116,7 +116,7 @@ public class Point {
     return R;
   }
 
-  public boolean hasEvenY() {
+  public final boolean hasEvenY() {
     return hasEvenY(this);
   }
 
@@ -128,13 +128,13 @@ public class Point {
     return x.modPow(p.subtract(BigInteger.ONE).mod(BI_TWO), p).longValue() == 1L;
   }
 
-  public boolean hasSquareY() {
+  public final boolean hasSquareY() {
     return hasSquareY(this);
   }
 
   public static boolean hasSquareY(Point P) {
     NostrException.testBoolean(
-        !isInfinite(P), "Point P does not have Square Y");
+       !isInfinite(P), "Point P does not have Square Y");
     return isSquare(P.getY());
   }
 
@@ -150,7 +150,7 @@ public class Point {
     return NostrUtil.sha256(buf);
   }
 
-  public byte[] toBytes() {
+  public final byte[] toBytes() {
     return bytesFromPoint(this);
   }
 
@@ -179,7 +179,7 @@ public class Point {
     return new Point(null, (BigInteger) null);
   }
 
-  public boolean equals(Point P) {
+  public final boolean equals(Point P) {
     return getPair().equals(P.getPair());
   }
 }

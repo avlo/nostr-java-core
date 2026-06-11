@@ -38,8 +38,7 @@ public interface EventIF extends Serializable {
       arrayNode.add(genericEventRecord.getContent());
       arrayNode.add(genericEventRecord.getSignature().toString());
 
-      String s = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(arrayNode);
-      return s;
+      return ENCODER_MAPPED_AFTERBURNER.writeValueAsString(arrayNode);
     } catch (JsonProcessingException e) {
       throw new NostrException("serialize(GenericEventRecord genericEventRecord) failed with JsonProcessingException:", e);
     }

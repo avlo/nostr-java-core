@@ -47,37 +47,37 @@ public abstract class BaseEvent implements EventIF {
   }
 
   @Override
-  public String getContent() {
+  public final String getContent() {
     return genericEventRecord.getContent();
   }
 
   @Override
-  public Long getCreatedAt() {
+  public final Long getCreatedAt() {
     return genericEventRecord.getCreatedAt();
   }
 
   @Override
-  public String getId() {
+  public final String getId() {
     return genericEventRecord.getId();
   }
 
   @Override
-  public Kind getKind() {
+  public final Kind getKind() {
     return genericEventRecord.getKind();
   }
 
   @Override
-  public PublicKey getPublicKey() {
+  public final PublicKey getPublicKey() {
     return genericEventRecord.getPublicKey();
   }
 
   @Override
-  public Signature getSignature() {
+  public final Signature getSignature() {
     return genericEventRecord.getSignature();
   }
 
   @Override
-  public List<BaseTag> getTags() {
+  public final List<BaseTag> getTags() {
     return genericEventRecord.tags();
   }
 
@@ -89,13 +89,13 @@ public abstract class BaseEvent implements EventIF {
   }
 
   @Override
-  public boolean equals(@NonNull Object o) {
+  public final boolean equals(@NonNull Object o) {
     if (!o.getClass().isAssignableFrom(this.getClass())) return false;
     return Objects.equals(genericEventRecord, ((BaseEvent) o).genericEventRecord);
   }
 
   @Override
-  public int hashCode() {
+  public final int hashCode() {
     return Objects.hashCode(genericEventRecord);
   }
 }

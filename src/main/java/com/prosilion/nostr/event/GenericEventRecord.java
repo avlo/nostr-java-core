@@ -85,10 +85,9 @@ public record GenericEventRecord(
       arrayNode.add(ENCODER_MAPPED_AFTERBURNER.valueToTree(getTags()));
       arrayNode.add(getContent());
 
-      String s = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(arrayNode);
-      return s;
+      return ENCODER_MAPPED_AFTERBURNER.writeValueAsString(arrayNode);
     } catch (JsonProcessingException e) {
-      throw new NostrException(e);
+      throw new NostrException("GenericEventRecord.serialize() failed with error: ", e);
     }
   }
 

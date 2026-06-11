@@ -9,7 +9,7 @@ public class GenericTagSerializer extends AbstractTagSerializer<GenericTag> {
   }
 
   @Override
-  protected void applyCustomAttributes(ObjectNode node, GenericTag value) {
+  protected final void applyCustomAttributes(ObjectNode node, GenericTag value) {
     value.getAttributes().forEach(a -> node.put(a.getName(), a.getValue().toString()));
   }
 }

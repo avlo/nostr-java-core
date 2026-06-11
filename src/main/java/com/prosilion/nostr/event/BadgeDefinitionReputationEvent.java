@@ -91,12 +91,12 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   }
 
   @JsonIgnore
-  public ExternalIdentityTag getExternalIdentityTag() {
+  public final ExternalIdentityTag getExternalIdentityTag() {
     return requireFirstTag(ExternalIdentityTag.class);
   }
 
   @JsonIgnore
-  public PublicKey getReputationDefinitionCreatorPublicKey() {
+  public final PublicKey getReputationDefinitionCreatorPublicKey() {
     return requireFirstTag(PubKeyTag.class).publicKey();
   }
 

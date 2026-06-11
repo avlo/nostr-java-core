@@ -53,28 +53,28 @@ public class CalendarRsvpEvent extends AddressableEvent {
 
   public CalendarRsvpEvent(@NonNull Identity identity, @NonNull IdentifierTag identifierTag, @NonNull AddressTag addressTag, @NonNull Status status, @NonNull String title, @NonNull List<BaseTag> baseTags, @NonNull String content) {
     super(
-        identity,
-        Kind.CALENDAR_RSVP_EVENT,
-        identifierTag,
-        Objects.requireNonNull(validateAddressTagKind(addressTag).relay()),
-        Stream.concat(
-            Stream.of(validateAddressTagKind(addressTag)),
-            Stream.concat(
-                Stream.concat(
-                    Stream.of(GenericTag.create("title", title)),
-                    Stream.of(GenericTag.create("status", status.getStatus()))),
-                baseTags.stream())),
-        content);
+       identity,
+       Kind.CALENDAR_RSVP_EVENT,
+       identifierTag,
+       Objects.requireNonNull(validateAddressTagKind(addressTag).relay()),
+       Stream.concat(
+          Stream.of(validateAddressTagKind(addressTag)),
+          Stream.concat(
+             Stream.concat(
+                Stream.of(GenericTag.create("title", title)),
+                Stream.of(GenericTag.create("status", status.getStatus()))),
+             baseTags.stream())),
+       content);
   }
 
   private static AddressTag validateAddressTagKind(AddressTag addressTag) {
     NostrException.testBoolean(
-        Objects.equals(addressTag.getKind(), Kind.CALENDAR_DATE_BASED_EVENT) ||
-            Objects.equals(addressTag.getKind(), Kind.CALENDAR_TIME_BASED_EVENT),
-        String.format("CalendarRsvpEvent %s must be of either type %s or %s",
-            addressTag.getClass().getSimpleName(),
-            Kind.CALENDAR_DATE_BASED_EVENT.getName(),
-            Kind.CALENDAR_TIME_BASED_EVENT.getName()));
+       Objects.equals(addressTag.getKind(), Kind.CALENDAR_DATE_BASED_EVENT) ||
+          Objects.equals(addressTag.getKind(), Kind.CALENDAR_TIME_BASED_EVENT),
+       String.format("CalendarRsvpEvent %s must be of either type %s or %s",
+          addressTag.getClass().getSimpleName(),
+          Kind.CALENDAR_DATE_BASED_EVENT.getName(),
+          Kind.CALENDAR_TIME_BASED_EVENT.getName()));
     return addressTag;
   }
 

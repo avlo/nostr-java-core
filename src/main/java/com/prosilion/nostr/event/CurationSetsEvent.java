@@ -16,24 +16,24 @@ import lombok.NonNull;
 
 public class CurationSetsEvent extends AddressableEvent {
   public CurationSetsEvent(
-      @NonNull Identity identity,
-      @NonNull IdentifierTag identifierTag,
-      @NonNull Relay relay,
-      @NonNull PublicKey publicKey,
-      @NonNull List<CurationSet> curationSets,
-      @NonNull String content) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull Relay relay,
+     @NonNull PublicKey publicKey,
+     @NonNull List<CurationSet> curationSets,
+     @NonNull String content) throws NostrException {
     super(
-        identity,
-        Kind.CURATION_SETS,
-        identifierTag,
-        relay,
-        Stream.concat(
-            curationSets.stream()
-                .map(CurationSet::getTags)
-                .flatMap(Collection::stream),
-            Stream.of(
-                new IdentifierTag(publicKey.toHexString()))),
-        content);
+       identity,
+       Kind.CURATION_SETS,
+       identifierTag,
+       relay,
+       Stream.concat(
+          curationSets.stream()
+             .map(CurationSet::getTags)
+             .flatMap(Collection::stream),
+          Stream.of(
+             new IdentifierTag(publicKey.toHexString()))),
+       content);
   }
 
   public CurationSetsEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {

@@ -13,7 +13,7 @@ public class EventMessageSerializer extends StdSerializer<EventMessage> {
     super(EventMessage.class);
   }
 
-  public void serialize(EventMessage eventMessage, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+  public final void serialize(EventMessage eventMessage, JsonGenerator gen, SerializerProvider serializers) throws IOException {
     gen.writeStartArray();
     gen.writePOJO(eventMessage.getCommand().getName());
     gen.writePOJO(eventMessage.getEvent().asGenericEventRecord());

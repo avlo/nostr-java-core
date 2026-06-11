@@ -1,12 +1,12 @@
 package com.prosilion.nostr.user;
 
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.crypto.NostrUtil;
 import com.prosilion.nostr.crypto.schnorr.Schnorr;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
 import lombok.NonNull;
+import lombok.ToString;
 
 @EqualsAndHashCode
 public class Identity {
@@ -34,23 +34,26 @@ public class Identity {
     return new Identity(PrivateKey.generateRandomPrivKey());
   }
 
-  public PublicKey getPublicKey() {
+  public final PublicKey getPublicKey() {
     try {
       return new PublicKey(Schnorr.genPubKey(this.getPrivateKey().getRawData()));
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
+    } catch (Exception e) {
+      throw new NostrException("Schnorr.genPubKey failed with error: ", e);
     }
   }
 
-  @SneakyThrows
-  public Signature sign(@NonNull ISignableEntity signable) {
-    return
-        new Signature(
+  public final Signature sign(@NonNull ISignableEntity signable) {
+    try {
+      return
+         new Signature(
             Schnorr.sign(
-                NostrUtil.sha256(signable.getByteArraySupplier().get().array()),
-                this.getPrivateKey().getRawData(),
-                generateAuxRand())
-        );
+               NostrUtil.sha256(signable.getByteArraySupplier().get().array()),
+               this.getPrivateKey().getRawData(),
+               generateAuxRand())
+         );
+    } catch (Exception e) {
+      throw new NostrException("Schnorr.sign failed with error: ", e);
+    }
   }
 
   private byte[] generateAuxRand() {

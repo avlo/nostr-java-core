@@ -8,32 +8,30 @@ import java.util.Objects;
 import lombok.NonNull;
 
 public class Signature {
-
-  @JsonProperty("rawData")
-  private byte[] rawData;
+  @JsonProperty("rawData") final private byte[] rawData;
 
   public Signature(@NonNull String signatureString) {
     this(NostrUtil.hex128ToBytes(signatureString));
   }
 
-  public Signature(@NonNull byte[] rawData) {
+  public Signature(byte[] rawData) {
     this.rawData = rawData;
   }
 
   @JsonValue
   @Override
-  public String toString() {
+  public final String toString() {
     return NostrUtil.bytesToHex(rawData);
   }
 
   @Override
-  public boolean equals(@NonNull Object o) {
+  public final boolean equals(@NonNull Object o) {
     if (getClass() != o.getClass()) return false;
     return Arrays.equals(this.rawData, ((Signature) o).rawData);
   }
 
   @Override
-  public int hashCode() {
+  public final int hashCode() {
     return Objects.hash(Arrays.hashCode(rawData));
   }
 }
