@@ -10,8 +10,7 @@ import lombok.NonNull;
 import static com.prosilion.nostr.codec.Encoder.ENCODER_MAPPED_AFTERBURNER;
 
 @JsonTypeName("EOSE")
-public record EoseMessage(
-    @Getter String subscriptionId) implements BaseMessage {
+public record EoseMessage(@Getter String subscriptionId) implements BaseMessage {
 
   public static Command command = Command.EOSE;
 

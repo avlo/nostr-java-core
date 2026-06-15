@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.NonNull;
+import org.slf4j.Logger;
 
 public interface Util {
   String EMPTY_TAGS_VARIANTS_REGEX = "\\[\\s+]";
@@ -59,8 +60,8 @@ public interface Util {
     }
 
     return ret.toString().replaceAll(
-        EMPTY_TAGS_VARIANTS_REGEX,
-        EMPTY_TAGS_SUBSTITUTION);
+       EMPTY_TAGS_VARIANTS_REGEX,
+       EMPTY_TAGS_SUBSTITUTION);
   }
 
   static String generateRandomHex64String() {
@@ -93,8 +94,8 @@ public interface Util {
 
   static String prettyPrintReferencedAbstractEventTag(@NonNull ReferencedAbstractEventTag abstractTag) {
     return (abstractTag instanceof AddressTag) ?
-        prettyPrintAddressTags((AddressTag) abstractTag) :
-        prettyPrintEventTags((EventTag) abstractTag);
+       prettyPrintAddressTags((AddressTag) abstractTag) :
+       prettyPrintEventTags((EventTag) abstractTag);
   }
 
   static String prettyPrintReferencedAbstractEventTags(@NonNull List<? extends ReferencedAbstractEventTag> abstractTags) {
@@ -103,12 +104,46 @@ public interface Util {
 
   static String prettyPrintReferencedAbstractEventTags(@NonNull List<? extends ReferencedAbstractEventTag> abstractTags, final String regex, final String delimiter) {
     return abstractTags.stream().map(ReferencedAbstractEventTag::toString)
-        .map(tagProperty ->
-            String.join("\n  ",
-                tagProperty.split(", ")))
-        .map(addressTagLiteral ->
-            String.join(delimiter,
-                addressTagLiteral.split(regex)))
-        .collect(Collectors.joining(",\n"));
+       .map(tagProperty ->
+          String.join("\n  ",
+             tagProperty.split(", ")))
+       .map(addressTagLiteral ->
+          String.join(delimiter,
+             addressTagLiteral.split(regex)))
+       .collect(Collectors.joining(",\n"));
+  }
+
+  static void debug(Logger logger, @NonNull String value, @NonNull String value2, int... ints) {
+    String debug = debug(value, ints);
+    logger.debug(debug, value2);
+  }
+
+  static String debug(@NonNull String value, int... ints) {
+    return debug(value, false, ints);
+  }
+
+  static String debug(@NonNull String value, boolean newline, int... ints) {
+    return joinWithOptionalNewline(value, newline,
+       repeat(ints[0]),
+       repeat(ints.length > 1 ? ints[1] : ints[0]));
+  }
+
+  static String debug(@NonNull String value, char... chars) {
+    return debug(value, false, chars);
+  }
+
+  static String debug(@NonNull String value, boolean newline, char... chars) {
+    return joinWithOptionalNewline(value, newline,
+       repeat(chars[0]),
+       repeat(chars.length > 1 ? chars[1] : chars[0]));
+  }
+
+  private static String joinWithOptionalNewline(String value, boolean newline, String prefix, String postfix) {
+    String result = String.join("\n", prefix, prefix, value, postfix, postfix);
+    return newline ? "\n" + result + "\n\n" : result;
+  }
+
+  private static String repeat(Object value) {
+    return String.valueOf(value).repeat(40);
   }
 }
