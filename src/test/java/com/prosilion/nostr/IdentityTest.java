@@ -9,22 +9,29 @@ import com.prosilion.nostr.tag.RelaysTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.util.Util;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
+@JsonTest
+@SpringJUnitConfig
+@ActiveProfiles("test")
 public class IdentityTest {
 
   public IdentityTest() {
   }
 
   @Test
-  public void testSignEvent() throws NostrException {
+  public final void testSignEvent() throws NostrException {
     System.out.println("testSignEvent");
     Identity identity = Identity.generateRandomIdentity();
     PublicKey publicKey = identity.getPublicKey();
@@ -37,7 +44,7 @@ public class IdentityTest {
           some content
           1111111111111111111111111111111111111111
           1111111111111111111111111111111111111111""",
-       Util.debug(instance.getContent(), 1));
+       Util.getDebugString(instance.getContent(), 1));
 
     assertEquals("""
           2222222222222222222222222222222222222222
@@ -45,7 +52,7 @@ public class IdentityTest {
           some content
           3333333333333333333333333333333333333333
           3333333333333333333333333333333333333333""",
-       Util.debug(instance.getContent(), 2, 3));
+       Util.getDebugString(instance.getContent(), 2, 3));
 
     assertEquals("""
           
@@ -56,7 +63,7 @@ public class IdentityTest {
           4444444444444444444444444444444444444444
           
           """,
-       Util.debug(instance.getContent(), true, 4));
+       Util.getDebugString(instance.getContent(), true, 4));
 
     assertEquals("""
           
@@ -67,7 +74,7 @@ public class IdentityTest {
           6666666666666666666666666666666666666666
           
           """,
-       Util.debug(instance.getContent(), true, 5, 6));
+       Util.getDebugString(instance.getContent(), true, 5, 6));
 
     assertEquals("""
           AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -75,7 +82,7 @@ public class IdentityTest {
           some content
           AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
           AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA""",
-       Util.debug(instance.getContent(), 'A'));
+       Util.getDebugString(instance.getContent(), 'A'));
 
     assertEquals("""
           BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
@@ -83,7 +90,7 @@ public class IdentityTest {
           some content
           CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
           CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC""",
-       Util.debug(instance.getContent(), 'B', 'C'));
+       Util.getDebugString(instance.getContent(), 'B', 'C'));
 
     assertEquals("""
           
@@ -94,7 +101,7 @@ public class IdentityTest {
           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
           
           """,
-       Util.debug(instance.getContent(), true, 'D'));
+       Util.getDebugString(instance.getContent(), true, 'D'));
 
     assertEquals("""
           
@@ -105,21 +112,33 @@ public class IdentityTest {
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           
           """,
-       Util.debug(instance.getContent(), true, 'E', 'F'));
-
-    assertThrows(NullPointerException.class, () -> Util.debug(null, 1));
-
-    Util.debug(log, "the ext {}", "value", 1);
+       Util.getDebugString(instance.getContent(), true, 'E', 'F'));
   }
 
   @Test
-  final void tryit() {
-    Util.debug(log, "the ext {}", "value", 1);
+  public final void testDebugOutput() {
+//    non-newline
+    Util.debug(log, "single parameter: [{}]", "A", 1);
+    Util.debug(log, "two array parameters: [{}], [{}]", new String[]{"B", "C"}, 2);
+    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("D", "E"), 3, 4);
+
+//  newline
+    Util.debug(log, "single parameter: [{}]", "F", true, 5);
+    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("G", "H"), true, 6);
+    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("I", "J"), true, 7, 8);
+    Util.debug(log, "two array parameters: [{}], [{}]", new String[]{"L", "M"}, true, 9, 0);
+  }
+
+  @Test
+  public final void testNullParameters() {
+    assertThrows(NullPointerException.class, () -> Util.debug(null, "single parameter: [{}]", "A", 1));
+    assertThrows(NullPointerException.class, () -> Util.debug(log, null, "A", 1));
+    assertThrows(NullPointerException.class, () -> Util.debug(log, "parameters:  [{}]", (String) null, 1));
   }
 
   @Test
   @SneakyThrows
-  void testRelaySetsEvent() {
+  final void testRelaySetsEvent() {
     RelaySetsEvent relaySetsEvent = new RelaySetsEvent(
        Identity.generateRandomIdentity(),
        new RelaysTag(

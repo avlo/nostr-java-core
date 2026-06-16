@@ -7,6 +7,7 @@ import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.NonNull;
 import org.slf4j.Logger;
 
@@ -113,26 +114,45 @@ public interface Util {
        .collect(Collectors.joining(",\n"));
   }
 
-  static void debug(Logger logger, @NonNull String value, @NonNull String value2, int... ints) {
-    String debug = debug(value, ints);
-    logger.debug(debug, value2);
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, int... ints) {
+    logger.debug(getDebugString(value, ints), arg);
   }
 
-  static String debug(@NonNull String value, int... ints) {
-    return debug(value, false, ints);
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, int... ints) {
+    logger.debug(getDebugString(value, ints), args);
   }
 
-  static String debug(@NonNull String value, boolean newline, int... ints) {
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, int... ints) {
+    logger.debug(getDebugString(value, ints), arg.toArray());
+  }
+
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, boolean newline, int... ints) {
+    logger.debug(getDebugString(value, newline, ints), arg);
+  }
+
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, boolean newline, int... ints) {
+    logger.debug(getDebugString(value, newline, ints), arg.toArray());
+  }
+
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, boolean newline, int... ints) {
+    logger.debug(getDebugString(value, newline, ints), args);
+  }
+
+  static String getDebugString(@NonNull String value, int... ints) {
+    return getDebugString(value, false, ints);
+  }
+
+  static String getDebugString(@NonNull String value, boolean newline, int... ints) {
     return joinWithOptionalNewline(value, newline,
        repeat(ints[0]),
        repeat(ints.length > 1 ? ints[1] : ints[0]));
   }
 
-  static String debug(@NonNull String value, char... chars) {
-    return debug(value, false, chars);
+  static String getDebugString(@NonNull String value, char... chars) {
+    return getDebugString(value, false, chars);
   }
 
-  static String debug(@NonNull String value, boolean newline, char... chars) {
+  static String getDebugString(@NonNull String value, boolean newline, char... chars) {
     return joinWithOptionalNewline(value, newline,
        repeat(chars[0]),
        repeat(chars.length > 1 ? chars[1] : chars[0]));
