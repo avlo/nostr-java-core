@@ -114,56 +114,45 @@ public interface Util {
        .collect(Collectors.joining(",\n"));
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, int... ints) {
-    logger.debug(getDebugString(value, ints), arg);
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, char... markers) {
+    debug(logger, value, new Object[]{arg}, false, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, int... ints) {
-    logger.debug(getDebugString(value, ints), args);
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, char... markers) {
+    debug(logger, value, args, false, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, int... ints) {
-    logger.debug(getDebugString(value, ints), arg.toArray());
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, char... markers) {
+    debug(logger, value, arg.toArray(), false, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, boolean newline, int... ints) {
-    logger.debug(getDebugString(value, newline, ints), arg);
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, boolean newline, char... markers) {
+    debug(logger, value, new Object[]{arg}, newline, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, boolean newline, int... ints) {
-    logger.debug(getDebugString(value, newline, ints), arg.toArray());
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, boolean newline, char... markers) {
+    debug(logger, value, arg.toArray(), newline, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, boolean newline, int... ints) {
-    logger.debug(getDebugString(value, newline, ints), args);
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, boolean newline, char... markers) {
+    if (!logger.isDebugEnabled()) {
+      return;
+    }
+    logger.debug(getDebugString(value, newline, markers), args);
   }
 
-  static String getDebugString(@NonNull String value, int... ints) {
-    return getDebugString(value, false, ints);
+  static String getDebugString(@NonNull String value, char... markers) {
+    return getDebugString(value, false, markers);
   }
 
-  static String getDebugString(@NonNull String value, boolean newline, int... ints) {
-    return joinWithOptionalNewline(value, newline,
-       repeat(ints[0]),
-       repeat(ints.length > 1 ? ints[1] : ints[0]));
-  }
+  static String getDebugString(@NonNull String value, boolean newline, char... markers) {
+    char prefixChar = markers.length > 0 ? markers[0] : '-';
+    char postfixChar = markers.length > 1 ? markers[1] : prefixChar;
 
-  static String getDebugString(@NonNull String value, char... chars) {
-    return getDebugString(value, false, chars);
-  }
-
-  static String getDebugString(@NonNull String value, boolean newline, char... chars) {
-    return joinWithOptionalNewline(value, newline,
-       repeat(chars[0]),
-       repeat(chars.length > 1 ? chars[1] : chars[0]));
-  }
-
-  private static String joinWithOptionalNewline(String value, boolean newline, String prefix, String postfix) {
+    String prefix = String.valueOf(prefixChar).repeat(40);
+    String postfix = String.valueOf(postfixChar).repeat(40);
     String result = String.join("\n", prefix, prefix, value, postfix, postfix);
-    return newline ? "\n" + result + "\n\n" : result;
-  }
 
-  private static String repeat(Object value) {
-    return String.valueOf(value).repeat(40);
+    return newline ? "\n" + result + "\n\n" : result;
   }
 }

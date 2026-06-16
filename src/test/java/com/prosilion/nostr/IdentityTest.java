@@ -44,7 +44,7 @@ public class IdentityTest {
           some content
           1111111111111111111111111111111111111111
           1111111111111111111111111111111111111111""",
-       Util.getDebugString(instance.getContent(), 1));
+       Util.getDebugString(instance.getContent(), '1'));
 
     assertEquals("""
           2222222222222222222222222222222222222222
@@ -52,7 +52,7 @@ public class IdentityTest {
           some content
           3333333333333333333333333333333333333333
           3333333333333333333333333333333333333333""",
-       Util.getDebugString(instance.getContent(), 2, 3));
+       Util.getDebugString(instance.getContent(), '2', '3'));
 
     assertEquals("""
           
@@ -63,7 +63,7 @@ public class IdentityTest {
           4444444444444444444444444444444444444444
           
           """,
-       Util.getDebugString(instance.getContent(), true, 4));
+       Util.getDebugString(instance.getContent(), true, '4'));
 
     assertEquals("""
           
@@ -74,7 +74,7 @@ public class IdentityTest {
           6666666666666666666666666666666666666666
           
           """,
-       Util.getDebugString(instance.getContent(), true, 5, 6));
+       Util.getDebugString(instance.getContent(), true, '5', '6'));
 
     assertEquals("""
           AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -118,22 +118,22 @@ public class IdentityTest {
   @Test
   public final void testDebugOutput() {
 //    non-newline
-    Util.debug(log, "single parameter: [{}]", "A", 1);
-    Util.debug(log, "two array parameters: [{}], [{}]", new String[]{"B", "C"}, 2);
-    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("D", "E"), 3, 4);
+    Util.debug(log, "single parameter: [{}]", "A", '1');
+    Util.debug(log, "two array parameters: [{}], [{}]", new String[]{"B", "C"}, '2');
+    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("D", "E"), '3', '4');
 
 //  newline
-    Util.debug(log, "single parameter: [{}]", "F", true, 5);
-    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("G", "H"), true, 6);
-    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("I", "J"), true, 7, 8);
-    Util.debug(log, "two array parameters: [{}], [{}]", new String[]{"L", "M"}, true, 9, 0);
+    Util.debug(log, "single parameter: [{}]", "F", true, '5');
+    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("G", "H"), true, '6');
+    Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("I", "J"), true, '7', '8');
+    Util.debug(log, "two array parameters: [{}], [{}]", new String[]{"L", "M"}, true, '9', '0');
   }
 
   @Test
   public final void testNullParameters() {
-    assertThrows(NullPointerException.class, () -> Util.debug(null, "single parameter: [{}]", "A", 1));
-    assertThrows(NullPointerException.class, () -> Util.debug(log, null, "A", 1));
-    assertThrows(NullPointerException.class, () -> Util.debug(log, "parameters:  [{}]", (String) null, 1));
+    assertThrows(NullPointerException.class, () -> Util.debug(null, "single parameter: [{}]", "A", '1'));
+    assertThrows(NullPointerException.class, () -> Util.debug(log, null, "A", '1'));
+    assertThrows(NullPointerException.class, () -> Util.debug(log, "parameters:  [{}]", (String) null, '1'));
   }
 
   @Test
