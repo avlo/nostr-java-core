@@ -114,6 +114,14 @@ public interface Util {
        .collect(Collectors.joining(",\n"));
   }
 
+  static void debug(@NonNull Logger logger, char... markers) {
+    debug(logger, false, markers);
+  }
+
+  static void debug(@NonNull Logger logger, boolean newline, char... markers) {
+    debug(logger, "", new Object[]{}, newline, markers);
+  }
+
   static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, char... markers) {
     debug(logger, value, new Object[]{arg}, false, markers);
   }
@@ -146,12 +154,15 @@ public interface Util {
   }
 
   static String getDebugString(@NonNull String value, boolean newline, char... markers) {
-    char prefixChar = markers.length > 0 ? markers[0] : '-';
+    char prefixChar = markers[0];
     char postfixChar = markers.length > 1 ? markers[1] : prefixChar;
 
     String prefix = String.valueOf(prefixChar).repeat(40);
     String postfix = String.valueOf(postfixChar).repeat(40);
-    String result = String.join("\n", prefix, prefix, value, postfix, postfix);
+
+    String result = value.isEmpty() ?
+       String.join("\n", prefix, prefix, postfix, postfix) :
+       String.join("\n", prefix, prefix, value, postfix, postfix);
 
     return newline ? "\n" + result + "\n\n" : result;
   }

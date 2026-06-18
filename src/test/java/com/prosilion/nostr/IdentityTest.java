@@ -7,7 +7,6 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.RelaysTag;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.util.Util;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
@@ -34,7 +33,6 @@ public class IdentityTest {
   public final void testSignEvent() throws NostrException {
     System.out.println("testSignEvent");
     Identity identity = Identity.generateRandomIdentity();
-    PublicKey publicKey = identity.getPublicKey();
     BaseEvent instance = new TextNoteEvent(identity, "some content");
     Assertions.assertNotNull(instance.getSignature());
 
@@ -127,6 +125,12 @@ public class IdentityTest {
     Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("G", "H"), true, '6');
     Util.debug(log, "two stream parameters: [{}], [{}]", Stream.of("I", "J"), true, '7', '8');
     Util.debug(log, "two array parameters: [{}], [{}]", new String[]{"L", "M"}, true, '9', '0');
+  }
+
+  @Test
+  public final void testMinimalDebugOutput() {
+    Util.debug(log, '1');
+    Util.debug(log, true, '2');
   }
 
   @Test
