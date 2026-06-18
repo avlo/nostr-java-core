@@ -21,5 +21,12 @@ class PubkeyTagTest {
             assertEquals(sha256, pubKeyTag.getFieldValue(field).orElseThrow());
         });
     }
-
+    
+    @Test
+    void testEquality() {
+        String sha256 = "56adf01ca1aa9d6f1c35953833bbe6d99a0c85b73af222e6bd305b51f2749f6f";
+        PubKeyTag pubKeyTagWithoutUrl = new PubKeyTag(new PublicKey(sha256));
+        PubKeyTag pubKeyTagWithUrl = new PubKeyTag(new PublicKey(sha256), "ws://localhost:5555");
+        assertEquals(pubKeyTagWithoutUrl, pubKeyTagWithUrl);
+    }
 }

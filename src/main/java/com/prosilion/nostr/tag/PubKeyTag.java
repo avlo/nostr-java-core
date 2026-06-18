@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prosilion.nostr.codec.serializer.PubKeyTagSerializer;
 import com.prosilion.nostr.user.PublicKey;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.NonNull;
@@ -39,5 +40,12 @@ public record PubKeyTag(
             Optional.ofNullable(node.get(1)).orElseThrow().asText()),
         Optional.ofNullable(node.get(2)).map(JsonNode::asText).orElse(null),
         Optional.ofNullable(node.get(3)).map(JsonNode::asText).orElse(null));
+  }
+
+  @Override
+  public boolean equals(Object that) {
+    if (that == null || getClass() != that.getClass()) return false;
+    PubKeyTag thatPubKeyTag = (PubKeyTag) that;
+    return Objects.equals(publicKey, thatPubKeyTag.publicKey);
   }
 }
