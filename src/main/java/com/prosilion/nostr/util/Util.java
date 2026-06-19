@@ -1,9 +1,11 @@
 package com.prosilion.nostr.util;
 
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -114,48 +116,67 @@ public interface Util {
        .collect(Collectors.joining(",\n"));
   }
 
-  static void debug(@NonNull Logger logger, char... markers) {
-    debug(logger, false, markers);
+
+  @Debug
+  static void debug(@NonNull Logger logger, @NonNull Character marker) {
+    debug(logger, false, marker);
   }
 
-  static void debug(@NonNull Logger logger, boolean newline, char... markers) {
-    debug(logger, "", new Object[]{}, newline, markers);
+  @Debug
+  static void debug(@NonNull Logger logger, boolean newline, @NonNull Character marker, @NonNull Character... markers) {
+    debug(logger, "", new Object[]{}, newline, marker, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, char... markers) {
-    debug(logger, value, new Object[]{arg}, false, markers);
+  @Debug
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, @NonNull Character marker, @NonNull Character... markers) {
+    debug(logger, value, new Object[]{arg}, false, marker, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, char... markers) {
-    debug(logger, value, args, false, markers);
+  @Debug
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, @NonNull Character marker, @NonNull Character... markers) {
+    debug(logger, value, args, false, marker, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, char... markers) {
-    debug(logger, value, arg.toArray(), false, markers);
+  @Debug
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, @NonNull Character marker, @NonNull Character... markers) {
+    debug(logger, value, arg.toArray(), false, marker, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, boolean newline, char... markers) {
-    debug(logger, value, new Object[]{arg}, newline, markers);
+  @Debug
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull String arg, boolean newline, @NonNull Character marker, @NonNull Character... markers) {
+    debug(logger, value, new Object[]{arg}, newline, marker, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, boolean newline, char... markers) {
-    debug(logger, value, arg.toArray(), newline, markers);
+  @Debug
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Stream<String> arg, boolean newline, @NonNull Character marker, @NonNull Character... markers) {
+    debug(logger, value, arg.toArray(), newline, marker, markers);
   }
 
-  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, boolean newline, char... markers) {
+  @Debug
+  static void debug(@NonNull Logger logger, @NonNull String value, @NonNull Object[] args, boolean newline, @NonNull Character marker, @NonNull Character... markers) {
     if (!logger.isDebugEnabled()) {
       return;
     }
-    logger.debug(getDebugString(value, newline, markers), args);
+    logger.debug(getDebugString(value, newline, marker, markers), args);
   }
 
-  static String getDebugString(@NonNull String value, char... markers) {
-    return getDebugString(value, false, markers);
+  @Debug
+  static String getDebugString(@NonNull String value, @NonNull Character marker, @NonNull Character... markers) {
+    return getDebugString(value, false, marker, markers);
   }
 
-  static String getDebugString(@NonNull String value, boolean newline, char... markers) {
-    char prefixChar = markers[0];
-    char postfixChar = markers.length > 1 ? markers[1] : prefixChar;
+  @Debug
+  static String getDebugString(@NonNull String value, boolean newline, @NonNull Character marker, @NonNull Character... markers) {
+    return getDebugString(value, newline, Stream.concat(Stream.of(marker), Arrays.stream(markers)).toList());
+  }
+
+  @Debug
+  static String getDebugString(@NonNull String value, boolean newline, @NonNull List<Character> markers) {
+    if (markers.isEmpty())
+      throw new NostrException("Util.debug(...) requires at least one character marker");
+
+    char prefixChar = markers.getFirst();
+    char postfixChar = markers.size() > 1 ? markers.get(1) : prefixChar;
 
     String prefix = String.valueOf(prefixChar).repeat(40);
     String postfix = String.valueOf(postfixChar).repeat(40);
@@ -164,6 +185,6 @@ public interface Util {
        String.join("\n", prefix, prefix, postfix, postfix) :
        String.join("\n", prefix, prefix, value, postfix, postfix);
 
-    return newline ? "\n" + result + "\n\n" : result;
+    return newline ? "\n" + result + "\n" : result;
   }
 }

@@ -58,7 +58,7 @@ public class IdentityTest {
           4444444444444444444444444444444444444444
           some content
           4444444444444444444444444444444444444444
-          4444444444444444444444444444444444444444
+          4444444444444444444444444444444444444444\
           
           """,
        Util.getDebugString(instance.getContent(), true, '4'));
@@ -69,7 +69,7 @@ public class IdentityTest {
           5555555555555555555555555555555555555555
           some content
           6666666666666666666666666666666666666666
-          6666666666666666666666666666666666666666
+          6666666666666666666666666666666666666666\
           
           """,
        Util.getDebugString(instance.getContent(), true, '5', '6'));
@@ -96,7 +96,7 @@ public class IdentityTest {
           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
           some content
           DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-          DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+          DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD\
           
           """,
        Util.getDebugString(instance.getContent(), true, 'D'));
@@ -107,7 +107,7 @@ public class IdentityTest {
           EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
           some content
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\
           
           """,
        Util.getDebugString(instance.getContent(), true, 'E', 'F'));
@@ -130,7 +130,9 @@ public class IdentityTest {
   @Test
   public final void testMinimalDebugOutput() {
     Util.debug(log, '1');
+    log.debug("-- visual separator.  should be blank line below --");
     Util.debug(log, true, '2');
+    log.debug("-- should be blank line above --");
   }
 
   @Test
