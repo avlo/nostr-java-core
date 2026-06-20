@@ -24,8 +24,11 @@ import lombok.NonNull;
 public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String DEFAULT_IDENTIFIER = "PROSILION_FOLLOW_SETS_EVENT";
   public static final IdentifierTag defaultIdentifierTag = new IdentifierTag(DEFAULT_IDENTIFIER);
+
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   public static final String MESSAGE = "FollowSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
+  public static final String PUBKEYS_MUST_MATCH =
+     "FollowSetsEvent BadgeAwardGenericEvents PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
   @JsonIgnore
   private final List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents; // eTags
   @JsonIgnore
@@ -147,7 +150,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
     if (distinctPublicKeys.size() != 1)
       throw new NostrException(
          String.format(
-            "FollowSetsEvent BadgeAwardGenericEvents PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]",
+            PUBKEYS_MUST_MATCH,
             distinctPublicKeys.size(),
             distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
     return new PubKeyTag(distinctPublicKeys.getFirst());
