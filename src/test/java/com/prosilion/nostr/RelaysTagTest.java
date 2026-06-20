@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.RelaysTag;
 import java.net.MalformedURLException;
-import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.util.InvalidUrlException;
 
@@ -24,7 +24,7 @@ class RelaysTagTest {
   @Test
   void testSerialize() throws JsonProcessingException {
     final String expected = "[\"relays\",\"ws://localhost:5555\",\"ws://localhost:5432\"]";
-    RelaysTag relaysTag = new RelaysTag(List.of(new Relay(LOCALHOST_VALUE_5555), new Relay(LOCALHOST_VALUE_5432)));
+    RelaysTag relaysTag = new RelaysTag(Set.of(new Relay(LOCALHOST_VALUE_5555), new Relay(LOCALHOST_VALUE_5432)));
     String s = I_DECODER_MAPPER_AFTERBURNER.writeValueAsString(relaysTag);
     assertEquals(expected, s);
   }
@@ -35,7 +35,7 @@ class RelaysTagTest {
     JsonNode node = MAPPER_AFTERBURNER.readTree(EXPECTED);
     RelaysTag deserialize = (RelaysTag) RelaysTag.deserialize(node);
     assertEquals(RELAYS_KEY, deserialize.getCode());
-    assertEquals(LOCALHOST_VALUE_5555, deserialize.getRelays().getFirst().getUrl());
+    assertEquals(LOCALHOST_VALUE_5555, deserialize.getRelays().stream().findFirst().map(Relay::getUrl).orElseThrow());
   }
 
   @Test
