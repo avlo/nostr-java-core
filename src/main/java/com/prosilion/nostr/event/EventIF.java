@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.PublicKey;
@@ -87,27 +86,27 @@ public interface EventIF {
   }
 
   @JsonIgnore
-  default Optional<RelayTag> findRelayTag() {
+  default <T extends RelayTag> Optional<RelayTag> getRelayTag() {
     return findFirstTag(RelayTag.class);
   }
 
-  @JsonIgnore
-  default RelayTag requireRelayTag() {
-    return requireFirstTag(RelayTag.class);
-  }
+//  @JsonIgnore
+//  default RelayTag requireRelayTag() {
+//    return requireFirstTag(RelayTag.class);
+//  }
 
   @JsonIgnore
   String MISSING_RELAY_TAG_URL = "RelayTag: [%s] missing required url";
 
-  @JsonIgnore
-  default String requireRelayTagUrl() {
-    Relay relay = requireRelayTag().requireRelay();
-    if (relay.getUrl() == null) {
-      throw new NostrException(String.format(
-         MISSING_RELAY_TAG_URL, this.createPrettyPrintJson()));
-    }
-    return relay.getUrl();
-  }
+//  @JsonIgnore
+//  default String requireRelayTagUrl() {
+//    Relay relay = requireRelayTag().requireRelay();
+//    if (relay.getUrl() == null) {
+//      throw new NostrException(String.format(
+//         MISSING_RELAY_TAG_URL, this.createPrettyPrintJson()));
+//    }
+//    return relay.getUrl();
+//  }
 
   default <T extends BaseTag> Optional<T> findFirstTag(@NonNull Class<T> clazz) {
     for (BaseTag tag : this.getTags()) {

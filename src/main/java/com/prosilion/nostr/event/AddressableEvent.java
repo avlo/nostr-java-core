@@ -10,6 +10,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -29,7 +30,7 @@ public class AddressableEvent extends BaseEvent {
      @NonNull Identity identity,
      @NonNull Kind kind,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     this(identity, kind, identifierTag, relay, baseTags.stream(), content);
@@ -39,18 +40,15 @@ public class AddressableEvent extends BaseEvent {
      @NonNull Identity identity,
      @NonNull Kind kind,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull Stream<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     super(
        identity,
        validateKind(kind, intPredicate, errorMessage),
        Stream.concat(
-          Stream.concat(
-             Stream.of(identifierTag),
-             Stream.of(new RelayTag(relay))),
-          baseTags
-             .filter(Predicate.not(RelayTag.class::isInstance))
+          Stream.of(identifierTag),
+          baseTagsRelayTagFilter(baseTags, relay)
              .filter(Predicate.not(IdentifierTag.class::isInstance))),
        content);
   }
@@ -65,17 +63,17 @@ public class AddressableEvent extends BaseEvent {
   }
 
   @JsonIgnore
-  public final AddressTag asAddressableEventAddressTag() {
+  public AddressTag asAddressableEventAddressTag() {
     return new AddressTag(
        getKind(),
        getPublicKey(),
        getIdentifierTag(),
-       getRelay());
+       getRelay().orElse(null));
   }
 
   @JsonIgnore
-  public final Relay getRelay() {
-    return requireRelayTag().requireRelay();
+  public Optional<Relay> getRelay() {
+    return getRelayTag().map(RelayTag::getRelay);
   }
 
   private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);

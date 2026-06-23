@@ -5,6 +5,7 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -26,5 +27,5 @@ public interface TagMappedEventIF extends EventIF {
   }
 
   @JsonIgnore
-  Relay getRelay();
+  Optional<Relay> getRelay();
 }

@@ -2,14 +2,19 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
@@ -83,8 +88,8 @@ public abstract class BaseEvent implements EventIF {
 
   protected static Kind validateKind(@NonNull Kind kind, @NonNull IntPredicate intPredicate, @NonNull Function<Kind, String> errorMessage) {
     NostrException.testBoolean(
-        intPredicate.test(kind.getValue()),
-        errorMessage.apply(kind));
+       intPredicate.test(kind.getValue()),
+       errorMessage.apply(kind));
     return kind;
   }
 
@@ -97,5 +102,24 @@ public abstract class BaseEvent implements EventIF {
   @Override
   public final int hashCode() {
     return Objects.hashCode(genericEventRecord);
+  }
+
+  public static Stream<BaseTag> baseTagsRelayTagFilter(@Nonnull Stream<BaseTag> tags, Relay relay) {
+
+    Optional<Relay> relay1 = Optional.ofNullable(relay);
+    
+    List<BaseTag> baseTagStream1 = relay1.stream()
+       .flatMap(nonNullRelay ->
+       {
+         Stream<BaseTag> concat = Stream.concat(
+            Stream.of(new RelayTag(nonNullRelay)),
+            tags
+               .filter(Predicate.not(RelayTag.class::isInstance)));
+         return concat;
+       }).toList();
+    
+    List<BaseTag> baseTagStream = baseTagStream1.stream().toList();
+    
+    return baseTagStream.stream();
   }
 }

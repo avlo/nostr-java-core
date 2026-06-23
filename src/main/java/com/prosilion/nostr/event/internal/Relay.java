@@ -22,14 +22,14 @@ public record Relay(@Getter @Key String url) {
 
   private static String asCanonicalUrl(String url) {
     return Optional.of(url)
-        .filter(s -> URL_PATTERN_W_PORT_PASSTHROUGH.matcher(s).matches())
-        .orElseThrow(() -> new InvalidUrlException(
-            String.format("Invalid Relay url: [%s]", url)));
+       .filter(s -> URL_PATTERN_W_PORT_PASSTHROUGH.matcher(s).matches())
+       .orElseThrow(() -> new InvalidUrlException(
+          String.format("Invalid Relay url: [%s]", url)));
   }
 
   public static final Pattern URL_PATTERN_W_PORT_PASSTHROUGH
-      = Pattern.compile("^((https?|wss?)://)?(((\\w+\\-*\\w+\\.)*(\\w+\\-*\\w+)(\\.[\\w]{2,})+)|(((1|2){0,1}[0-9]{1,2}\\.){3}(1|2){0,1}[0-9]{1,2}))(:[0-9]{2,5})?(/(#/)?[\\w0-9+\\/\\-]*(\\?([\\w0-9 ]+=([\\w0-9]|%[0-7][0-9a-f])+&?)*)?(#[\\w0-9]*)?)*$");
+     = Pattern.compile("^((https?|wss?)://)?(((\\w+\\-*\\w+\\.)*(\\w+\\-*\\w+)(\\.[\\w]{2,})+)|(((1|2){0,1}[0-9]{1,2}\\.){3}(1|2){0,1}[0-9]{1,2}))(:[0-9]{2,5})?(/(#/)?[\\w0-9+\\/\\-]*(\\?([\\w0-9 ]+=([\\w0-9]|%[0-7][0-9a-f])+&?)*)?(#[\\w0-9]*)?)*$");
 
   public static final Pattern LOCALHOST
-      = Pattern.compile("^((https?|wss?)://(localhost|superconductor|afterimage|0.0.0.0).*)?(:[0-9]{2,5})?(/(#/)?[\\\\w0-9+\\\\/\\\\-]*(\\\\?([\\\\w0-9 ]+=([\\\\w0-9]|%[0-7][0-9a-f])+&?)*)?(#[\\\\w0-9]*)?)*$");
+     = Pattern.compile("^((https?|wss?)://(localhost|superconductor|afterimage|0.0.0.0).*)?(:[0-9]{2,5})?(/(#/)?[\\\\w0-9+\\\\/\\\\-]*(\\\\?([\\\\w0-9 ]+=([\\\\w0-9]|%[0-7][0-9a-f])+&?)*)?(#[\\\\w0-9]*)?)*$");
 }

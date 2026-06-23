@@ -14,14 +14,14 @@ public class BadgeDefinitionGenericEvent extends AddressableEvent {
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay) throws NostrException {
+     Relay relay) throws NostrException {
     this(identity, identifierTag, relay, "");
   }
 
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull String content) throws NostrException {
     this(identity, identifierTag, relay, List.of(), content);
   }
@@ -29,7 +29,7 @@ public class BadgeDefinitionGenericEvent extends AddressableEvent {
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     this(identity, identifierTag, relay, baseTags.stream(), content);
@@ -38,7 +38,7 @@ public class BadgeDefinitionGenericEvent extends AddressableEvent {
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull Stream<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag, relay, baseTags, content);

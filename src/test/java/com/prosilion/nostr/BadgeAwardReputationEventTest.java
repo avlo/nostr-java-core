@@ -78,7 +78,7 @@ public class BadgeAwardReputationEventTest {
     assertEquals(expected.getBadgeDefinitionEvent(), badgeAwardReputationEvent.getBadgeDefinitionEvent());
     assertEquals(List.of(expected.getAddressableEvent().asAddressableEventAddressTag()), List.of(badgeAwardReputationEvent.getAddressableEvent().asAddressableEventAddressTag()));
     assertEquals(expected.getExternalIdentityTag(), badgeAwardReputationEvent.getExternalIdentityTag());
-    assertEquals(expected.getRelay(), badgeAwardReputationEvent.getRelay());
+    assertEquals(expected.getRelayTag(), badgeAwardReputationEvent.getRelayTag());
   }
 
   @Test

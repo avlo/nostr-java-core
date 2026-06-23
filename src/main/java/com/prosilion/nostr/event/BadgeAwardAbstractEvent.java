@@ -11,6 +11,7 @@ import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -20,7 +21,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull String content) throws NostrException {
     this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, List.of(), content);
@@ -29,7 +30,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull List<BaseTag> tags,
      @NonNull String content) throws NostrException {
@@ -39,7 +40,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull Relay relay,
+     Relay relay,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull Stream<BaseTag> tags,
      @NonNull String content) throws NostrException {
@@ -48,13 +49,10 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
        Kind.BADGE_AWARD_EVENT,
        badgeDefinitionGenericEvent,
        Stream.concat(
-             Stream.concat(
-                Stream.of(new PubKeyTag(awardRecipientPublicKey)),
-                Stream.of(new RelayTag(relay))),
-             tags
+             Stream.of(new PubKeyTag(awardRecipientPublicKey)),
+             baseTagsRelayTagFilter(tags, relay)
                 .filter(Predicate.not(AddressTag.class::isInstance))
-                .filter(Predicate.not(PubKeyTag.class::isInstance))
-                .filter(Predicate.not(RelayTag.class::isInstance)))
+                .filter(Predicate.not(PubKeyTag.class::isInstance)))
           .toList(),
        content);
   }
@@ -67,8 +65,8 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
 
   @Override
   @JsonIgnore
-  public final Relay getRelay() {
-    return requireRelayTag().requireRelay();
+  public final Optional<Relay> getRelay() {
+    return getRelayTag().map(RelayTag::getRelay);
   }
 
   @JsonIgnore
