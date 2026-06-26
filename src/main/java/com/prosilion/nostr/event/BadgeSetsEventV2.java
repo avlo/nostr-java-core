@@ -7,7 +7,6 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
-import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.TupleBadgeDefinitionBadgeEvent;
 import com.prosilion.nostr.user.Identity;
@@ -23,9 +22,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 @Getter
 public class BadgeSetsEventV2 extends AddressableEvent implements TagMappedEventIF {
-  public static final String DEFAULT_IDENTIFIER = "PROSILION_FOLLOW_SETS_EVENT";
-  public static final IdentifierTag defaultIdentifierTag = new IdentifierTag(DEFAULT_IDENTIFIER);
-
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   public static final String MESSAGE = "FollowSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
   public static final String PUBKEYS_MUST_MATCH =
@@ -88,7 +84,7 @@ public class BadgeSetsEventV2 extends AddressableEvent implements TagMappedEvent
     super(
        identity,
        Kind.BADGE_SETS_EVENT,
-       defaultIdentifierTag,
+       badgeDefinitionReputationEvent.getIdentifierTag(),
        Stream.concat(
           Stream.concat(
              TagMappedEventIF

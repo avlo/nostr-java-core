@@ -118,8 +118,9 @@ public abstract class BaseEvent implements EventIF {
   }
 
   protected static Stream<BaseTag> useFirstRelayTag(@NonNull Stream<BaseTag> baseTags) {
+    AtomicBoolean seenRelay = new AtomicBoolean(false);
     return baseTags
        .filter(Predicate.not(RelayTag.class::isInstance)
-          .or(tag -> new AtomicBoolean(false).compareAndSet(false, true)));
+          .or(tag -> seenRelay.compareAndSet(false, true)));
   }
 }

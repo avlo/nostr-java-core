@@ -4,6 +4,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import lombok.Getter;
 import lombok.NonNull;
 
+// TODO: consolidate common fxnality w/ BadgeDefinitionGenericEventAux
 @Getter
 public class BadgeAwardGenericEventAux {
   private final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent;

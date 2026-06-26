@@ -1,18 +1,19 @@
 package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.tag.RelayTag;
+import com.prosilion.nostr.event.internal.Relay;
 import lombok.Getter;
 import lombok.NonNull;
 
+// TODO: consolidate common fxnality w/ BadgeAwardGenericEventAux
 @Getter
 public class BadgeDefinitionGenericEventAux {
   private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent;
-  private final RelayTag relayTag;
+  private final Relay relay;
 
   public BadgeDefinitionGenericEventAux(
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
-     RelayTag relayTag) {
+     Relay relay) {
     this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
-    this.relayTag = badgeDefinitionGenericEvent.getRelayTag().orElse(relayTag);
+    this.relay = badgeDefinitionGenericEvent.getRelay().orElse(relay);
   }
 }

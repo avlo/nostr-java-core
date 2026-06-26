@@ -54,8 +54,16 @@ public class BadgeDefinitionGenericEvent extends AddressableEvent {
      @NonNull Stream<BaseTag> baseTags,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
-    super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag,
+    this(identity, identifierTag,
        prependExtraRelayTagStream(baseTags, relay), content);
+  }
+
+  public BadgeDefinitionGenericEvent(
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
+    this(identity, identifierTag, baseTags.stream(), content);
   }
 
   public BadgeDefinitionGenericEvent(

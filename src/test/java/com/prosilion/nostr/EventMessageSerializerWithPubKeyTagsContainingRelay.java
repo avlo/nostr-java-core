@@ -7,7 +7,7 @@
 //import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 //import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 //import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-//import com.prosilion.nostr.event.FollowSetsEventRxR;
+//import com.prosilion.nostr.event.FollowSetsEvent;
 //import com.prosilion.nostr.event.FormulaEvent;
 //import com.prosilion.nostr.event.GenericEventRecord;
 //import com.prosilion.nostr.event.internal.Relay;
@@ -53,7 +53,7 @@
 //  private final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
 //
 //  private final BadgeAwardGenericEventAux<BadgeDefinitionGenericEventAux> badgeAwardUpvoteEventAux;
-//  private final FollowSetsEventRxR followSetsEvent;
+//  private final FollowSetsEvent followSetsEvent;
 //
 //  private final GenericEventRecord followSetsAsGenericEventEventWithEventTag;
 //
@@ -89,7 +89,7 @@
 //    BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
 //       platformIdentity,
 //       authorIdentity.getPublicKey(),
-//       FollowSetsEventRxR.defaultIdentifierTag,
+//       FollowSetsEvent.defaultIdentifierTag,
 //       relay,
 //       new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
 //       plusOneFormulaEvent);
@@ -109,7 +109,7 @@
 //       "AfterImage generated FollowSetsEvent",
 //       new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
 //
-//    this.followSetsEvent = new FollowSetsEventRxR(
+//    this.followSetsEvent = new FollowSetsEvent(
 //       platformIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       relay,
