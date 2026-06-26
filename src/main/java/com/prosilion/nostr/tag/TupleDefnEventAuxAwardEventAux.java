@@ -13,10 +13,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 @Getter
 @Slf4j
-public class TupleBadgeDefinitionBadgeEvent extends ImmutablePair<BadgeDefinitionGenericEventAux, BadgeAwardGenericEventAux> {
+public class TupleDefnEventAuxAwardEventAux extends ImmutablePair<BadgeDefinitionGenericEventAux, BadgeAwardGenericEventAux> {
   private final TupleATagETag tupleATagETag;
 
-  public TupleBadgeDefinitionBadgeEvent(
+  public TupleDefnEventAuxAwardEventAux(
      @NonNull BadgeDefinitionGenericEventAux badgeDefinitionGenericEventAux,
      @NonNull BadgeAwardGenericEventAux badgeAwardGenericEventAux) {
     super(badgeDefinitionGenericEventAux, badgeAwardGenericEventAux);

@@ -9,7 +9,7 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
-import com.prosilion.nostr.tag.TupleBadgeDefinitionBadgeEvent;
+import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAux;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -31,7 +31,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   public static final String PUBKEYS_MUST_MATCH =
      "FollowSetsEvent BadgeAwardGenericEvents PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
   @JsonIgnore
-  private final List<TupleBadgeDefinitionBadgeEvent> tupleBadgeDefinitionBadgeEvents; // eTags
+  private final List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes; // eTags
   @JsonIgnore
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent; // aTag
 
@@ -39,7 +39,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull TupleBadgeDefinitionBadgeEvent tupleBadgeDefinitionBadgeEvents) {
+     @NonNull TupleDefnEventAuxAwardEventAux tupleBadgeDefinitionBadgeEvents) {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(tupleBadgeDefinitionBadgeEvents), List.of(), DEFAULT_CONTENT);
   }
 
@@ -47,24 +47,24 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleBadgeDefinitionBadgeEvent> tupleBadgeDefinitionBadgeEvents) {
-    this(identity, badgeDefinitionReputationEvent, relay, tupleBadgeDefinitionBadgeEvents, List.of(), DEFAULT_CONTENT);
+     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes) {
+    this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, List.of(), DEFAULT_CONTENT);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleBadgeDefinitionBadgeEvent> tupleBadgeDefinitionBadgeEvents,
+     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
      @NonNull List<BaseTag> baseTags) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, relay, tupleBadgeDefinitionBadgeEvents, baseTags, DEFAULT_CONTENT);
+    this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, baseTags, DEFAULT_CONTENT);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull TupleBadgeDefinitionBadgeEvent tupleBadgeDefinitionBadgeEvents,
+     @NonNull TupleDefnEventAuxAwardEventAux tupleBadgeDefinitionBadgeEvents,
      @NonNull String content) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(tupleBadgeDefinitionBadgeEvents), List.of(), content);
   }
@@ -73,16 +73,16 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleBadgeDefinitionBadgeEvent> tupleBadgeDefinitionBadgeEvents,
+     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
      @NonNull String content) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, relay, tupleBadgeDefinitionBadgeEvents, List.of(), content);
+    this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, List.of(), content);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleBadgeDefinitionBadgeEvent> tupleBadgeDefinitionBadgeEvents,
+     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     super(
@@ -93,32 +93,32 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
           Stream.concat(
              Stream.concat(
                 TagMappedEventIF.throwIfEmpty(
-                      tupleBadgeDefinitionBadgeEvents, MESSAGE)
+                      tupleDefnEventAuxAwardEventAuxes, MESSAGE)
                    .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag),
                 Stream.of(
-                   validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleBadgeDefinitionBadgeEvents))),
+                   validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
              Stream.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag())),
           baseTags.stream()
              .filter(Predicate.not(EventTag.class::isInstance))
              .filter(Predicate.not(PubKeyTag.class::isInstance))
              .filter(Predicate.not(AddressTag.class::isInstance))).toList(), content, relay
     );
-    this.tupleBadgeDefinitionBadgeEvents = tupleBadgeDefinitionBadgeEvents;
+    this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
   }
 
   public FollowSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<TupleBadgeDefinitionBadgeEvent> tupleBadgeDefinitionBadgeEvents,
+     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
     super(genericEventRecord);
-    this.tupleBadgeDefinitionBadgeEvents = tupleBadgeDefinitionBadgeEvents;
+    this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
     this.badgeDefinitionReputationEvent = mapTagsToEvents(this, fxnAddressTag, AddressTag.class).getFirst();
   }
 
   @JsonIgnore
   public final List<EventTag> getEventTags() {
-    return tupleBadgeDefinitionBadgeEvents.stream()
+    return tupleDefnEventAuxAwardEventAuxes.stream()
        .map(FollowSetsEvent::badgeAwardGenericEventAsEventTag)
        .toList();
   }
@@ -133,15 +133,15 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
     return requireFirstTag(PubKeyTag.class).publicKey();
   }
 
-  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleBadgeDefinitionBadgeEvent tupleBadgeDefinitionBadgeEvent) {
+  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleDefnEventAuxAwardEventAux tupleDefnEventAuxAwardEventAux) {
     return new EventTag(
-       tupleBadgeDefinitionBadgeEvent.getAwardEventId(),
-       tupleBadgeDefinitionBadgeEvent.getAwardEventRelay()
+       tupleDefnEventAuxAwardEventAux.getAwardEventId(),
+       tupleDefnEventAuxAwardEventAux.getAwardEventRelay()
           .getUrl());
   }
 
-  public static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@NonNull List<TupleBadgeDefinitionBadgeEvent> tupleBadgeDefinitionBadgeEvents) {
-    List<PublicKey> distinctPublicKeys = tupleBadgeDefinitionBadgeEvents.stream()
+  public static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes) {
+    List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
        .map(ImmutablePair::getLeft)
        .map(BadgeDefinitionGenericEventAux::getBadgeDefinitionGenericEvent)
        .map(BaseEvent::getPublicKey).distinct().toList();
