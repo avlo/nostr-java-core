@@ -7,10 +7,8 @@ import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEventV2;
-import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
@@ -74,38 +72,36 @@ public class BadgeSetsEventTest {
   BadgeDefinitionGenericEvent badgeDefnDownvoteEvent;
   private final FormulaEvent plusOneFormulaEvent;
   private final FormulaEvent minusOneFormulaEvent;
-  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula;
-  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventMinusOneFormula;
+//  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula;
+//  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventMinusOneFormula;
 
   private final BadgeAwardGenericEventAux awardUpvoteEventAux;
   private final BadgeAwardGenericEventAux awardDownvoteEventAux;
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
   public BadgeSetsEventTest() throws ParseException {
-    this.badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, relayArgRelay);
+    this.badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
     this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
        submitter,
        recipient.getPublicKey(),
-       badgeDefnUpvoteEvent,
-       relayArgRelay);
+       badgeDefnUpvoteEvent);
 
-    this.badgeDefnDownvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, relayArgRelay);
+    this.badgeDefnDownvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag);
     this.badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
        submitter,
        recipient.getPublicKey(),
-       badgeDefnDownvoteEvent,
-       relayArgRelay);
+       badgeDefnDownvoteEvent);
 
     this.plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, relayArgRelay, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
     this.minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, relayArgRelay, badgeDefnDownvoteEvent, MINUS_ONE_FORMULA);
 
-    this.badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), FollowSetsEvent.defaultIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, plusOneFormulaEvent);
-    this.badgeDefinitionReputationEventMinusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), FollowSetsEvent.defaultIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, minusOneFormulaEvent);
+//    this.badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), reputationIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, plusOneFormulaEvent);
+//    this.badgeDefinitionReputationEventMinusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), reputationIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, minusOneFormulaEvent);
 
     this.awardUpvoteEventAux = new BadgeAwardGenericEventAux(
-       new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), badgeDefnUpvoteEvent), auxRelay);
+       badgeAwardUpvoteEvent, null);
     this.awardDownvoteEventAux = new BadgeAwardGenericEventAux(
-       new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), badgeDefnDownvoteEvent), auxRelay);
+       badgeAwardDownvoteEvent, null);
 
     this.badgeDefinitionReputationEvent =
        new BadgeDefinitionReputationEvent(
@@ -119,8 +115,8 @@ public class BadgeSetsEventTest {
 
   @Test
   final void testValidBadgeSetsEvent() {
-    BadgeDefinitionGenericEventAux badgeDefnUpvoteEventAux = new BadgeDefinitionGenericEventAux(badgeDefnUpvoteEvent, auxRelay);
-    BadgeDefinitionGenericEventAux badgeDefnDownvoteEventAux = new BadgeDefinitionGenericEventAux(badgeDefnDownvoteEvent, auxRelay);
+    BadgeDefinitionGenericEventAux badgeDefnUpvoteEventAux = new BadgeDefinitionGenericEventAux(badgeDefnUpvoteEvent, null);
+    BadgeDefinitionGenericEventAux badgeDefnDownvoteEventAux = new BadgeDefinitionGenericEventAux(badgeDefnDownvoteEvent, null);
 
     TupleBadgeDefinitionBadgeEvent tupleUpvoteEvent = new TupleBadgeDefinitionBadgeEvent(badgeDefnUpvoteEventAux, awardUpvoteEventAux);
     TupleBadgeDefinitionBadgeEvent tupleDownvoteEvent = new TupleBadgeDefinitionBadgeEvent(badgeDefnDownvoteEventAux, awardDownvoteEventAux);
@@ -132,9 +128,6 @@ public class BadgeSetsEventTest {
 
     assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
-
-    Relay first = badgeSetsEvent.getEventTags().stream().map(EventTag::requireRelay).toList().getFirst();
-    boolean equals = first.equals(auxRelay);
 
 //    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::requireRelay).toList().contains(eventTagRelay));
   }

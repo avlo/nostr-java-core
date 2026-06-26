@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -45,8 +44,8 @@ public class BadgeDefinitionGenericEventAuxTest {
     BadgeDefinitionGenericEventAux eventAux = new BadgeDefinitionGenericEventAux(
        new BadgeDefinitionGenericEvent(aImgidentity, downvoteIdentifierTag), null);
 
-    assertNull(eventAux.getRelay());
-    assertThrows(Exception.class, () -> eventAux.getRelay().getUrl());
+    assertEquals(Optional.empty(), eventAux.getRelay());
+    assertThrows(Exception.class, () -> eventAux.getRelay().map(Relay::getUrl).orElseThrow());
     assertThrows(NostrException.class, () -> eventAux.getBadgeDefinitionGenericEvent().requireFirstTag(RelayTag.class));
   }
 
@@ -60,11 +59,11 @@ public class BadgeDefinitionGenericEventAuxTest {
     assertThrows(NostrException.class, () -> eventAux.getBadgeDefinitionGenericEvent().requireFirstTag(RelayTag.class));
     assertEquals(Optional.empty(), eventAux.getBadgeDefinitionGenericEvent().getRelayTag());
 
-    assertEquals(auxRelayTag.getRelay(), eventAux.getRelay());
+    assertEquals(auxRelayTag.getRelay(), eventAux.getRelay().orElseThrow());
     assertEquals(Optional.empty(), eventAux.getBadgeDefinitionGenericEvent().getRelay());
     assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeDefinitionGenericEvent().getRelay().orElseThrow());
-    assertEquals(auxRelayTag.getRelay().getUrl(), eventAux.getRelay().getUrl());
-    assertEquals(auxRelay, eventAux.getRelay());
+    assertEquals(auxRelayTag.getRelay().getUrl(), eventAux.getRelay().map(Relay::getUrl).orElseThrow());
+    assertEquals(auxRelay, eventAux.getRelay().orElseThrow());
     assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeDefinitionGenericEvent().getRelayTag().orElseThrow());
     assertThrows(NostrException.class, () -> eventAux.getBadgeDefinitionGenericEvent().requireFirstTag(RelayTag.class));
     assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeDefinitionGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());
@@ -136,8 +135,8 @@ public class BadgeDefinitionGenericEventAuxTest {
           new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(baseTagsRelayTag, baseTagsAnotherRelayTag), ""),
           auxRelay);
 
-    assertTrue(List.of(baseTagsRelay, baseTagsAnotherRelay).contains(eventAux.getRelay()));
-    assertTrue(Stream.of(baseTagsRelay, baseTagsAnotherRelay).toList().contains(eventAux.getRelay()));
+    assertTrue(List.of(baseTagsRelay, baseTagsAnotherRelay).contains(eventAux.getRelay().orElseThrow()));
+    assertTrue(Stream.of(baseTagsRelay, baseTagsAnotherRelay).toList().contains(eventAux.getRelay().orElseThrow()));
     testTags(baseTagsRelayTag, eventAux);
 
     BadgeDefinitionGenericEventAux eventAuxReversedBaseTags =
@@ -145,8 +144,8 @@ public class BadgeDefinitionGenericEventAuxTest {
           new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(baseTagsAnotherRelayTag, baseTagsRelayTag), ""),
           auxRelay);
 
-    assertTrue(List.of(baseTagsAnotherRelay, baseTagsRelay).contains(eventAuxReversedBaseTags.getRelay()));
-    assertTrue(Stream.of(baseTagsAnotherRelay, baseTagsRelay).toList().contains(eventAuxReversedBaseTags.getRelay()));
+    assertTrue(List.of(baseTagsAnotherRelay, baseTagsRelay).contains(eventAuxReversedBaseTags.getRelay().orElseThrow()));
+    assertTrue(Stream.of(baseTagsAnotherRelay, baseTagsRelay).toList().contains(eventAuxReversedBaseTags.getRelay().orElseThrow()));
     testTags(baseTagsAnotherRelayTag, eventAuxReversedBaseTags);
   }
 
@@ -179,10 +178,10 @@ public class BadgeDefinitionGenericEventAuxTest {
   }
 
   private void testTags(RelayTag relayTag, BadgeDefinitionGenericEventAux eventAux) {
-    assertEquals(relayTag.getRelay(), eventAux.getRelay());
+    assertEquals(relayTag.getRelay(), eventAux.getRelay().orElseThrow());
     assertEquals(relayTag.getRelay(), eventAux.getBadgeDefinitionGenericEvent().getRelay().orElseThrow());
-    assertEquals(relayTag.getRelay().getUrl(), eventAux.getRelay().getUrl());
-    assertEquals(relayTag.getRelay(), eventAux.getRelay());
+    assertEquals(relayTag.getRelay().getUrl(), eventAux.getRelay().map(Relay::getUrl).orElseThrow());
+    assertEquals(relayTag.getRelay(), eventAux.getRelay().orElseThrow());
     assertEquals(relayTag, eventAux.getBadgeDefinitionGenericEvent().getRelayTag().orElseThrow());
     assertEquals(relayTag, eventAux.getBadgeDefinitionGenericEvent().requireFirstTag(RelayTag.class));
     assertEquals(relayTag, eventAux.getBadgeDefinitionGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());

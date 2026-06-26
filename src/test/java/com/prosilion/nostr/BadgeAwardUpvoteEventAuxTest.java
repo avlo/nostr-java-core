@@ -67,8 +67,8 @@ public class BadgeAwardUpvoteEventAuxTest {
     BadgeAwardGenericEventAux eventAux = new BadgeAwardGenericEventAux(
        new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), badgeDefnUpvoteEvent), null);
 
-    assertNull(eventAux.getRelay());
-    assertThrows(Exception.class, () -> eventAux.getRelay().getUrl());
+    assertEquals(Optional.empty(), eventAux.getRelay());
+    assertEquals(Optional.empty(), eventAux.getRelay().map(Relay::getUrl));
     assertThrows(NostrException.class, () -> eventAux.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
   }
 
@@ -80,11 +80,11 @@ public class BadgeAwardUpvoteEventAuxTest {
     assertThrows(NostrException.class, () -> eventAux.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
     assertEquals(Optional.empty(), eventAux.getBadgeAwardGenericEvent().getRelayTag());
 
-    assertEquals(auxRelayTag.getRelay(), eventAux.getRelay());
+    assertEquals(auxRelayTag.getRelay(), eventAux.getRelay().orElseThrow());
     assertEquals(Optional.empty(), eventAux.getBadgeAwardGenericEvent().getRelay());
     assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeAwardGenericEvent().getRelay().orElseThrow());
-    assertEquals(auxRelayTag.getRelay().getUrl(), eventAux.getRelay().getUrl());
-    assertEquals(auxRelay, eventAux.getRelay());
+    assertEquals(auxRelayTag.getRelay().getUrl(), eventAux.getRelay().map(Relay::getUrl).orElseThrow());
+    assertEquals(auxRelay, eventAux.getRelay().orElseThrow());
     assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeAwardGenericEvent().getRelayTag().orElseThrow());
     assertThrows(NostrException.class, () -> eventAux.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
     assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeAwardGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());
@@ -216,16 +216,16 @@ public class BadgeAwardUpvoteEventAuxTest {
   }
 
   private void testTags(RelayTag relayTag, BadgeAwardGenericEventAux eventAux) {
-    assertEquals(relayTag.getRelay().getUrl(), eventAux.getRelay().getUrl());
-    assertEquals(relayTag.getRelay(), eventAux.getRelay());
+    assertEquals(relayTag.getRelay().getUrl(), eventAux.getRelay().map(Relay::getUrl).orElseThrow());
+    assertEquals(relayTag.getRelay(), eventAux.getRelay().orElseThrow());
     assertEquals(relayTag.getRelay(), eventAux.getBadgeAwardGenericEvent().getRelay().orElseThrow());
 
     assertEquals(relayTag, eventAux.getBadgeAwardGenericEvent().getRelayTag().orElseThrow());
     assertEquals(relayTag, eventAux.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
     assertEquals(relayTag, eventAux.getBadgeAwardGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());
 
-    assertEquals(relayTag.getRelay().getUrl(), eventAux.getRelay().getUrl());
-    assertEquals(relayTag.getRelay(), eventAux.getRelay());
+    assertEquals(relayTag.getRelay().getUrl(), eventAux.getRelay().map(Relay::getUrl).orElseThrow());
+    assertEquals(relayTag.getRelay(), eventAux.getRelay().orElseThrow());
     assertEquals(relayTag.getRelay(), eventAux.getBadgeAwardGenericEvent().getRelay().orElseThrow());
 
     assertEquals(relayTag, eventAux.getBadgeAwardGenericEvent().getRelayTag().orElseThrow());

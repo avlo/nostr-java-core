@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'org.springframework.boot' version '3.5.6'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.adarshr.test-logger' version '4.0.0'
     id 'jacoco'
 }
 
@@ -46,7 +47,7 @@ dependencies {
     implementation 'org.projectlombok:lombok:' + lombok
     implementation 'org.apache.commons:commons-lang3:' + apacheCommonsLang3
     implementation 'com.ezylang:EvalEx:3.5.0'
-               api 'org.jspecify:jspecify:' + jspecify // "api" usable since plugins contain "java-library"
+    api 'org.jspecify:jspecify:' + jspecify // "api" usable since plugins contain "java-library"
 
     annotationProcessor 'org.projectlombok:lombok:' + lombok
 
@@ -56,6 +57,12 @@ dependencies {
 
     testAnnotationProcessor 'org.projectlombok:lombok:' + lombok
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    testLogging {
+        showStandardStreams = false
+    }
 }
 
 tasks.named('test') {
