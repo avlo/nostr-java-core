@@ -8,16 +8,17 @@ import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseEvent implements EventIF {
   @Getter
@@ -104,22 +105,21 @@ public abstract class BaseEvent implements EventIF {
     return Objects.hashCode(genericEventRecord);
   }
 
-  public static Stream<BaseTag> baseTagsRelayTagFilter(@Nonnull Stream<BaseTag> tags, Relay relay) {
+  protected static List<BaseTag> prependExplicitRelayTag(@NonNull List<BaseTag> baseTags, @Nullable Relay relay) {
+    return prependExtraRelayTagStream(baseTags.stream(), relay).toList();
+  }
 
-    Optional<Relay> relay1 = Optional.ofNullable(relay);
-    
-    List<BaseTag> baseTagStream1 = relay1.stream()
-       .flatMap(nonNullRelay ->
-       {
-         Stream<BaseTag> concat = Stream.concat(
-            Stream.of(new RelayTag(nonNullRelay)),
-            tags
-               .filter(Predicate.not(RelayTag.class::isInstance)));
-         return concat;
-       }).toList();
-    
-    List<BaseTag> baseTagStream = baseTagStream1.stream().toList();
-    
-    return baseTagStream.stream();
+  protected static Stream<BaseTag> prependExtraRelayTagStream(@NonNull Stream<BaseTag> baseTags, @Nullable Relay relay) {
+    return Optional.ofNullable(relay)
+       .map(r -> Stream.concat(
+          baseTags.filter(Predicate.not(RelayTag.class::isInstance)),
+          Stream.of(new RelayTag(r))))
+       .orElse(baseTags);
+  }
+
+  protected static Stream<BaseTag> useFirstRelayTag(@NonNull Stream<BaseTag> baseTags) {
+    return baseTags
+       .filter(Predicate.not(RelayTag.class::isInstance)
+          .or(tag -> new AtomicBoolean(false).compareAndSet(false, true)));
   }
 }

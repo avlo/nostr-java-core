@@ -13,35 +13,57 @@ import lombok.NonNull;
 public class BadgeDefinitionGenericEvent extends AddressableEvent {
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
-     @NonNull IdentifierTag identifierTag,
-     Relay relay) throws NostrException {
-    this(identity, identifierTag, relay, "");
+     @NonNull IdentifierTag identifierTag) throws NostrException {
+    this(identity, identifierTag, "");
   }
 
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     Relay relay,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, identifierTag, "", relay);
+  }
+
+  public BadgeDefinitionGenericEvent(
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
      @NonNull String content) throws NostrException {
-    this(identity, identifierTag, relay, List.of(), content);
+    this(identity, identifierTag, Stream.of(), content);
   }
 
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     Relay relay,
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, identifierTag, List.of(), content, relay);
+  }
+
+  public BadgeDefinitionGenericEvent(
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
      @NonNull List<BaseTag> baseTags,
-     @NonNull String content) throws NostrException {
-    this(identity, identifierTag, relay, baseTags.stream(), content);
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, identifierTag, baseTags.stream(), content, relay);
   }
 
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     Relay relay,
+     @NonNull Stream<BaseTag> baseTags,
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag,
+       prependExtraRelayTagStream(baseTags, relay), content);
+  }
+
+  public BadgeDefinitionGenericEvent(
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
      @NonNull Stream<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
-    super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag, relay, baseTags, content);
+    super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag, baseTags, content);
   }
 
   public BadgeDefinitionGenericEvent(@NonNull GenericEventRecord genericEventRecord) {

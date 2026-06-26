@@ -67,7 +67,6 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
     super(
        aImgIdentity,
        identifierTag,
-       relay,
        Stream.concat(
           Stream.concat(
              TagMappedEventIF.throwIfEmpty(formulaEvents, MISSING_FORMULA_EVENTS)
@@ -79,7 +78,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
                 .filter(Predicate.not(IdentifierTag.class::isInstance))
                 .filter(Predicate.not(AddressTag.class::isInstance))
                 .filter(Predicate.not(PubKeyTag.class::isInstance)))),
-       defaultContentFromFormulaOperators(identifierTag, formulaEvents));
+       defaultContentFromFormulaOperators(identifierTag, formulaEvents), relay);
     this.formulaEvents = formulaEvents;
   }
 

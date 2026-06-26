@@ -7,41 +7,38 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.NonNull;
 
 public class ArbitraryCustomAppDataEvent extends AddressableEvent {
   public ArbitraryCustomAppDataEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
-     @NonNull String content) throws NostrException {
-    this(identity, identifierTag, relay, List.of(), content);
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, identifierTag, List.of(), content, relay);
   }
 
   public ArbitraryCustomAppDataEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
      @NonNull List<BaseTag> baseTags,
-     @NonNull String content) throws NostrException {
-    this(identity, identifierTag, relay, baseTags.stream(), content);
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    super(identity, Kind.ARBITRARY_CUSTOM_APP_DATA, identifierTag, baseTags, content, relay);
   }
 
-  public ArbitraryCustomAppDataEvent(
-     @NonNull Identity identity,
-     @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
-     @NonNull Stream<BaseTag> baseTags,
-     @NonNull String content) throws NostrException {
-    super(
-       identity,
-       Kind.ARBITRARY_CUSTOM_APP_DATA,
-       identifierTag,
-       relay,
-       baseTags,
-       content);
-  }
+//  public ArbitraryCustomAppDataEvent(
+//     @NonNull Identity identity,
+//     @NonNull IdentifierTag identifierTag,
+//     @NonNull Stream<BaseTag> baseTags,
+//     @NonNull String content,
+//     @NonNull Relay relay) throws NostrException {
+//    super(
+//       identity,
+//       Kind.ARBITRARY_CUSTOM_APP_DATA,
+//       identifierTag,
+//       baseTags.toList(), content, relay);
+//  }
 
   public ArbitraryCustomAppDataEvent(@NonNull GenericEventRecord genericEventRecord) {
     super(genericEventRecord);

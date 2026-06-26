@@ -26,14 +26,13 @@ public class CurationSetsEvent extends AddressableEvent {
        identity,
        Kind.CURATION_SETS,
        identifierTag,
-       relay,
        Stream.concat(
           curationSets.stream()
              .map(CurationSet::getTags)
              .flatMap(Collection::stream),
           Stream.of(
-             new IdentifierTag(publicKey.toHexString()))),
-       content);
+             new IdentifierTag(publicKey.toHexString()))).toList(),
+       content, relay);
   }
 
   public CurationSetsEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {

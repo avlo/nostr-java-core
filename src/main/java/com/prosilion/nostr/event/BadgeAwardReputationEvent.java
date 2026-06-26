@@ -18,17 +18,42 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
   public BadgeAwardReputationEvent(
      @NonNull Identity aImgIdentity,
      @NonNull PublicKey badgeReceiverPubkey,
-     @NonNull Relay relay,
      @NonNull ExternalIdentityTag externalIdentityTag,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull BigDecimal score) {
-    this(aImgIdentity, badgeReceiverPubkey, relay, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score);
+    this(aImgIdentity, badgeReceiverPubkey, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score);
   }
 
   public BadgeAwardReputationEvent(
      @NonNull Identity aImgIdentity,
      @NonNull PublicKey badgeReceiverPubkey,
-     @NonNull Relay relay,
+     @NonNull ExternalIdentityTag externalIdentityTag,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull BigDecimal score,
+     @NonNull Relay relay) {
+    this(aImgIdentity, badgeReceiverPubkey, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score, relay);
+  }
+
+  public BadgeAwardReputationEvent(
+     @NonNull Identity aImgIdentity,
+     @NonNull PublicKey badgeReceiverPubkey,
+     @NonNull ExternalIdentityTag externalIdentityTag,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull List<BaseTag> tags,
+     @NonNull BigDecimal score,
+     @NonNull Relay relay) {
+    this(
+       aImgIdentity,
+       badgeReceiverPubkey,
+       externalIdentityTag,
+       badgeDefinitionReputationEvent,
+       prependExplicitRelayTag(tags, relay),
+       score);
+  }
+
+  public BadgeAwardReputationEvent(
+     @NonNull Identity aImgIdentity,
+     @NonNull PublicKey badgeReceiverPubkey,
      @NonNull ExternalIdentityTag externalIdentityTag,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull List<BaseTag> tags,
@@ -36,13 +61,13 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
     super(
        aImgIdentity,
        badgeReceiverPubkey,
-       relay,
        badgeDefinitionReputationEvent,
        Stream.concat(
-          Stream.of(
-             externalIdentityTag),
-          tags.stream()
-             .filter(Predicate.not(ExternalIdentityTag.class::isInstance))),
+             Stream.of(
+                externalIdentityTag),
+             tags.stream()
+                .filter(Predicate.not(ExternalIdentityTag.class::isInstance)))
+          .toList(),
        score.toString());
   }
 

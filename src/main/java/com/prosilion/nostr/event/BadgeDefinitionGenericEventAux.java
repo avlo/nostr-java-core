@@ -1,22 +1,18 @@
 package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.tag.RelayTag;
-import java.util.Optional;
+import lombok.Getter;
 import lombok.NonNull;
 
-public class BadgeDefinitionGenericEventAux extends BadgeDefinitionGenericEvent {
+@Getter
+public class BadgeDefinitionGenericEventAux {
+  private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent;
   private final RelayTag relayTag;
 
   public BadgeDefinitionGenericEventAux(
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
      RelayTag relayTag) {
-    super(badgeDefinitionGenericEvent.asGenericEventRecord());
-    this.relayTag = relayTag;
-  }
-
-  @Override
-//  TODO: potentially removable, since exists in EventIF
-  public Optional<RelayTag> getRelayTag() {
-    return Optional.ofNullable(relayTag);
+    this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
+    this.relayTag = badgeDefinitionGenericEvent.getRelayTag().orElse(relayTag);
   }
 }

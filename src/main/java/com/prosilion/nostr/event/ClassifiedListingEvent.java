@@ -36,11 +36,10 @@ public class ClassifiedListingEvent extends AddressableEvent {
        identity,
        validateKind(kind, kindPredicate, errorMessage),
        identifierTag,
-       relay,
        Stream.concat(
           baseTags.stream(),
-          Stream.of(classifiedListing.getPriceTag())),
-       content);
+          Stream.of(classifiedListing.getPriceTag())).toList(),
+       content, relay);
   }
 
   public ClassifiedListingEvent(@NonNull GenericEventRecord genericEventRecord) {

@@ -28,11 +28,10 @@ public class CalendarDurationBaseEvent extends AddressableEvent {
        identity,
        kind,
        calendarContent.getIdentifierTag(),
-       relay,
        Stream.concat(
           Stream.of(GenericTag.create("title", title)),
-          baseTags.stream()),
-       content);
+          baseTags.stream()).toList(), content, relay
+    );
   }
 
   public CalendarDurationBaseEvent(@NonNull GenericEventRecord genericEventRecord) {

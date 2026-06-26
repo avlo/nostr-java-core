@@ -15,7 +15,7 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * AddressableEvent def'n: an event containing, minimally:
@@ -30,17 +30,25 @@ public class AddressableEvent extends BaseEvent {
      @NonNull Identity identity,
      @NonNull Kind kind,
      @NonNull IdentifierTag identifierTag,
-     Relay relay,
      @NonNull List<BaseTag> baseTags,
-     @NonNull String content) throws NostrException {
-    this(identity, kind, identifierTag, relay, baseTags.stream(), content);
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, kind, identifierTag, prependExplicitRelayTag(baseTags, relay), content);
   }
 
   public AddressableEvent(
      @NonNull Identity identity,
      @NonNull Kind kind,
      @NonNull IdentifierTag identifierTag,
-     Relay relay,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content) throws NostrException {
+    this(identity, kind, identifierTag, baseTags.stream(), content);
+  }
+
+  public AddressableEvent(
+     @NonNull Identity identity,
+     @NonNull Kind kind,
+     @NonNull IdentifierTag identifierTag,
      @NonNull Stream<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     super(
@@ -48,7 +56,7 @@ public class AddressableEvent extends BaseEvent {
        validateKind(kind, intPredicate, errorMessage),
        Stream.concat(
           Stream.of(identifierTag),
-          baseTagsRelayTagFilter(baseTags, relay)
+          useFirstRelayTag(baseTags)
              .filter(Predicate.not(IdentifierTag.class::isInstance))),
        content);
   }
@@ -63,7 +71,7 @@ public class AddressableEvent extends BaseEvent {
   }
 
   @JsonIgnore
-  public AddressTag asAddressableEventAddressTag() {
+  public final AddressTag asAddressableEventAddressTag() {
     return new AddressTag(
        getKind(),
        getPublicKey(),
@@ -72,7 +80,7 @@ public class AddressableEvent extends BaseEvent {
   }
 
   @JsonIgnore
-  public Optional<Relay> getRelay() {
+  public final Optional<Relay> getRelay() {
     return getRelayTag().map(RelayTag::getRelay);
   }
 

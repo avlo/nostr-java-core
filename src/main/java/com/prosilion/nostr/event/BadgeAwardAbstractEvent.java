@@ -21,7 +21,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     Relay relay,
+     @NonNull Relay relay,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull String content) throws NostrException {
     this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, List.of(), content);
@@ -30,17 +30,25 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     Relay relay,
      @NonNull T badgeDefinitionGenericEvent,
-     @NonNull List<BaseTag> tags,
      @NonNull String content) throws NostrException {
-    this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, tags.stream(), content);
+    this(identity, awardRecipientPublicKey, badgeDefinitionGenericEvent, Stream.of(), content);
   }
 
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     Relay relay,
+     @NonNull Relay relay,
+     @NonNull T badgeDefinitionGenericEvent,
+     @NonNull List<BaseTag> tags,
+     @NonNull String content) throws NostrException {
+    this(identity, awardRecipientPublicKey, badgeDefinitionGenericEvent,
+       prependExplicitRelayTag(tags, relay).stream(), content);
+  }
+
+  public BadgeAwardAbstractEvent(
+     @NonNull Identity identity,
+     @NonNull PublicKey awardRecipientPublicKey,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull Stream<BaseTag> tags,
      @NonNull String content) throws NostrException {
@@ -50,7 +58,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
        badgeDefinitionGenericEvent,
        Stream.concat(
              Stream.of(new PubKeyTag(awardRecipientPublicKey)),
-             baseTagsRelayTagFilter(tags, relay)
+             useFirstRelayTag(tags)
                 .filter(Predicate.not(AddressTag.class::isInstance))
                 .filter(Predicate.not(PubKeyTag.class::isInstance)))
           .toList(),

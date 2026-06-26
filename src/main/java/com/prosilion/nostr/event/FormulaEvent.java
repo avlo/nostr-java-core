@@ -47,13 +47,11 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
     super(
        identity,
        identifierTag,
-       relay,
        Stream.concat(
           Stream.of(
              badgeDefinitionGenericEvent.asAddressableEventAddressTag()),
           baseTags.stream()
-             .filter(Predicate.not(AddressTag.class::isInstance))),
-       validate(formula));
+             .filter(Predicate.not(AddressTag.class::isInstance))).toList(), validate(formula), relay);
     this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
   }
 

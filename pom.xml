@@ -25,6 +25,7 @@
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jspecify.version>1.0.0</jspecify.version>
   </properties>
 
   <dependencyManagement>
@@ -93,6 +94,11 @@
       <version>${spring-boot.version}</version>
       <scope>runtime</scope>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
+      <version>${jspecify.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
