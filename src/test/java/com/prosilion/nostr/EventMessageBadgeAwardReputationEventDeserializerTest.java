@@ -94,10 +94,8 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     BadgeAwardReputationEvent actualBadgeAwardReputationEvent = new BadgeAwardReputationEvent(
         platformIdentity,
         recipientPubkey,
-        relay,
-        externalIdentityTag,
-        badgeDefinitionReputationEvent,
-        new BigDecimal("+1"));
+       externalIdentityTag, badgeDefinitionReputationEvent, new BigDecimal("+1"), relay
+    );
 
     String eventId = actualBadgeAwardReputationEvent.getId();
     String authorPubkey = actualBadgeAwardReputationEvent.getPublicKey().toHexString();

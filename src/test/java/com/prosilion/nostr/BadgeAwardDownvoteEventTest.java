@@ -30,8 +30,8 @@ public class BadgeAwardDownvoteEventTest {
     this.expected = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
-        relay,
-        badgeDefnDownvoteEvent);
+       badgeDefnDownvoteEvent, relay
+    );
   }
 
   @Test
@@ -51,9 +51,8 @@ public class BadgeAwardDownvoteEventTest {
     BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
         identity,
         badgeReceiverPublicKey,
-        relay,
-        badgeDefnDownvoteEvent,
-        List.of(expected.getAddressableEvent().asAddressableEventAddressTag()));
+       badgeDefnDownvoteEvent, List.of(expected.getAddressableEvent().asAddressableEventAddressTag()), relay
+    );
 
     assertEquals(1, List.of(badgeAwardDownvoteEvent.getAddressableEvent().asAddressableEventAddressTag()).size());
     assertEquals(1, badgeAwardDownvoteEvent.getTypeSpecificTags(AddressTag.class).size());

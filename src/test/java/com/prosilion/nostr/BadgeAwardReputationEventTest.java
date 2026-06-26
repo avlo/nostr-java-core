@@ -65,10 +65,8 @@ public class BadgeAwardReputationEventTest {
     BadgeAwardReputationEvent expected = new BadgeAwardReputationEvent(
         aImgidentity,
         badgeReceiverPublicKey,
-        relay,
-        externalIdentityTag,
-        badgeDefinitionReputationEvent,
-        BigDecimal.ZERO);
+       externalIdentityTag, badgeDefinitionReputationEvent, BigDecimal.ZERO, relay
+    );
 
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
         expected.getGenericEventRecord(),
@@ -86,11 +84,8 @@ public class BadgeAwardReputationEventTest {
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
         aImgidentity,
         badgeReceiverPublicKey,
-        relay,
-        externalIdentityTag,
-        badgeDefinitionReputationEvent,
-        List.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag()),
-        BigDecimal.ZERO);
+       externalIdentityTag, badgeDefinitionReputationEvent, List.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag()), BigDecimal.ZERO, relay
+    );
 
     assertEquals(1, List.of(badgeAwardReputationEvent.getAddressableEvent().asAddressableEventAddressTag()).size());
     assertEquals(1, badgeAwardReputationEvent.getTypeSpecificTags(AddressTag.class).size());
