@@ -6,7 +6,7 @@ import com.prosilion.nostr.event.BadgeAwardGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-import com.prosilion.nostr.event.BadgeSetsEventV2;
+import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
@@ -121,7 +121,7 @@ public class BadgeSetsEventTest {
     TupleBadgeDefinitionBadgeEvent tupleUpvoteEvent = new TupleBadgeDefinitionBadgeEvent(badgeDefnUpvoteEventAux, awardUpvoteEventAux);
     TupleBadgeDefinitionBadgeEvent tupleDownvoteEvent = new TupleBadgeDefinitionBadgeEvent(badgeDefnDownvoteEventAux, awardDownvoteEventAux);
 
-    BadgeSetsEventV2 badgeSetsEvent = new BadgeSetsEventV2(
+    BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        aImgIdentity,
        badgeDefinitionReputationEvent,
        relayArgRelay, List.of(tupleUpvoteEvent, tupleDownvoteEvent));
