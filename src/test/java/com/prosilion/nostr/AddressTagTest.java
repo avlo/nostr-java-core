@@ -145,6 +145,42 @@ class AddressTagTest {
   }
 
   @Test
+  void testRelayVariantsEquality() {
+    AddressTag expected = new AddressTag(
+       kind,
+       publicKey,
+       identifierTag,
+       relay);
+
+    assertEquals(expected,
+       new AddressTag(
+          expected.getKind(),
+          expected.getPublicKey(),
+          expected.getIdentifierTag(),
+          expected.getRelay()));
+
+    assertEquals(expected,
+       new AddressTag(
+          expected.getKind(),
+          expected.getPublicKey(),
+          expected.getIdentifierTag()));
+
+    assertEquals(expected,
+       new AddressTag(
+          expected.getKind(),
+          expected.getPublicKey(),
+          expected.getIdentifierTag(),
+          null));
+
+    assertEquals(expected,
+       new AddressTag(
+          expected.getKind(),
+          expected.getPublicKey(),
+          expected.getIdentifierTag(),
+          new Relay("ws://localhost-nomatch:5555")));
+  }
+
+  @Test
   void getRelayReturnsNostrException() {
     AddressTag addressTagSansRelay = new AddressTag(kind, publicKey, identifierTag);
     assertThrows(NostrException.class, addressTagSansRelay::requireRelay);

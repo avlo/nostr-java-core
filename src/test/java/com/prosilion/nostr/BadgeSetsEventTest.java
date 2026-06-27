@@ -4,6 +4,7 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -17,7 +18,7 @@ import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class  BadgeSetsEventTest extends BaseEventAuxTest {
+public class BadgeSetsEventTest extends BaseEventAuxTest {
   private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
   private static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
   private static final IdentifierTag formulaUnitUpvote = new IdentifierTag(FORMULA_UNIT_UPVOTE);
@@ -64,7 +65,7 @@ public class  BadgeSetsEventTest extends BaseEventAuxTest {
 
     assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
-    
+
     List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getTupleDefnEventAuxAwardEventAuxes();
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleUpvoteEvent));
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleDownvoteEvent));
@@ -85,12 +86,43 @@ public class  BadgeSetsEventTest extends BaseEventAuxTest {
 
     AddressTag upvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();
     AddressTag downvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();
-    
+
     assertTrue(badgeSetsEvent.getAddressTags().stream().toList().contains(upvoteAsAddressTag));
     assertTrue(badgeSetsEvent.getAddressTags().stream().toList().contains(downvoteAsAddressTag));
 
     assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAux::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getRelay()));
     assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAux::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getRelay()));
+
+    assertEquals(
+       new AddressTag(
+          badgeSetsEvent.getKind(),
+          badgeSetsEvent.getPublicKey(),
+          badgeSetsEvent.getIdentifierTag(),
+          badgeSetsEvent.getRelay().orElse(null)),
+       badgeSetsEvent.asAddressableEventAddressTag());
+
+    assertEquals(
+       new AddressTag(
+          badgeSetsEvent.getKind(),
+          badgeSetsEvent.getPublicKey(),
+          badgeSetsEvent.getIdentifierTag()),
+       badgeSetsEvent.asAddressableEventAddressTag());
+
+    assertEquals(
+       new AddressTag(
+          badgeSetsEvent.getKind(),
+          badgeSetsEvent.getPublicKey(),
+          badgeSetsEvent.getIdentifierTag(),
+          null),
+       badgeSetsEvent.asAddressableEventAddressTag());
+
+    assertEquals(
+       new AddressTag(
+          badgeSetsEvent.getKind(),
+          badgeSetsEvent.getPublicKey(),
+          badgeSetsEvent.getIdentifierTag(),
+          new Relay("ws://localhost-nomatch:5555")),
+       badgeSetsEvent.asAddressableEventAddressTag());
 
 //    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::requireRelay).toList().contains(eventTagRelay));
   }
