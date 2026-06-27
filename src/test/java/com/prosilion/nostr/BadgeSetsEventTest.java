@@ -52,8 +52,8 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
     BadgeDefinitionGenericEventAux badgeDefnUpvoteEventAux = new BadgeDefinitionGenericEventAux(defnEvent_NoNo_Upvote, null);
     BadgeDefinitionGenericEventAux badgeDefnDownvoteEventAux = new BadgeDefinitionGenericEventAux(defnEvent_NoNo_Downvote, null);
 
-    TupleDefnEventAuxAwardEventAux tupleUpvoteEvent = new TupleDefnEventAuxAwardEventAux(badgeDefnUpvoteEventAux, eventAux_NoNo_No_Upvote);
-    TupleDefnEventAuxAwardEventAux tupleDownvoteEvent = new TupleDefnEventAuxAwardEventAux(badgeDefnDownvoteEventAux, eventAux_NoNo_No_Downvote);
+    TupleDefnEventAuxAwardEventAux tupleUpvoteEvent = new TupleDefnEventAuxAwardEventAux(badgeDefnUpvoteEventAux, eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+    TupleDefnEventAuxAwardEventAux tupleDownvoteEvent = new TupleDefnEventAuxAwardEventAux(badgeDefnDownvoteEventAux, eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,

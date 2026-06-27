@@ -45,8 +45,7 @@ public class BadgeDefinitionGenericEventTest extends BaseEventTest {
 
   @Test
   final void B_NoYes__testEventNullRelayHasRelayTag() {
-    testTags(baseTagsRelayTag,
-       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(baseTagsRelayTag), ""));
+    testTags(baseTagsRelayTag, defnEvent_NoYes_Upvote);
   }
 
   @Test
@@ -56,25 +55,24 @@ public class BadgeDefinitionGenericEventTest extends BaseEventTest {
 
   @Test
   final void D_YesYes__testEventHasRelayHasRelayTag() {
-    testTags(relayArgRelayTag,
-       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay));
+    testTags(relayArgRelayTag, defnEvent_YesYes_Upvote);
   }
 
   @Test
   final void Z_testEventNullRelayMultipleRelayTags() {
     RelayTag relayTag = new RelayTag(new Relay("ws://localhost-from-another-relay-tag:5555"));
     testTags(baseTagsRelayTag,
-       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag), ""));
+       new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag), ""));
 
     testTags(relayTag,
-       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(relayTag, baseTagsRelayTag), ""));
+       new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(relayTag, baseTagsRelayTag), ""));
   }
 
   @Test
   final void testEventValidBadgeDefinitionGenericEventMultipleRelayTags() {
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-should-not-appear:5555"));
     testTags(relayArgRelayTag,
-       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay));
+       new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay));
   }
 
   @Test
@@ -82,14 +80,14 @@ public class BadgeDefinitionGenericEventTest extends BaseEventTest {
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-should-not-appear:5555"));
     testTags(relayArgRelayTag,
        new BadgeDefinitionGenericEvent(
-          new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay).asGenericEventRecord()));
+          new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay).asGenericEventRecord()));
   }
 
   @Test
   final void testEventValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTagContaingNullRelay() {
     assertThrows(IllegalArgumentException.class, () ->
        new BadgeDefinitionGenericEvent(
-          submitter,
+          upvoteDefnCreator,
           upvoteIdentifierTag,
           List.of(new RelayTag(null)),
           "testValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTag"));

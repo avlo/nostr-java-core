@@ -22,24 +22,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BadgeAwardUpvoteEventAuxTest extends BaseEventAuxTest {
   @Test
   final void A_NoNo_No_testEventNullRelayNoRelayTagEventAuxNullRelayTag() {
-    assertEquals(Optional.empty(), eventAux_NoNo_No_Upvote.getRelay());
-    assertEquals(Optional.empty(), eventAux_NoNo_No_Upvote.getRelay().map(Relay::getUrl));
-    assertThrows(NostrException.class, () -> eventAux_NoNo_No_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
+    assertEquals(Optional.empty(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getRelay());
+    assertEquals(Optional.empty(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getRelay().map(Relay::getUrl));
+    assertThrows(NostrException.class, () -> eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
   }
 
   @Test
   final void A_NoNo_Yes_testEventNullRelayNoRelayTagEventAuxNullRelayTag() {
-    assertThrows(NostrException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
-    assertEquals(Optional.empty(), eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelayTag());
+    assertThrows(NostrException.class, () -> eventAuxYes_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
+    assertEquals(Optional.empty(), eventAuxYes_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getRelayTag());
 
-    assertEquals(auxRelayTag.getRelay(), eventAux_NoNo_Yes_Upvote.getRelay().orElseThrow());
-    assertEquals(Optional.empty(), eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelay());
-    assertThrows(NoSuchElementException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelay().orElseThrow());
-    assertEquals(auxRelayTag.getRelay().getUrl(), eventAux_NoNo_Yes_Upvote.getRelay().map(Relay::getUrl).orElseThrow());
-    assertEquals(auxRelay, eventAux_NoNo_Yes_Upvote.getRelay().orElseThrow());
-    assertThrows(NoSuchElementException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelayTag().orElseThrow());
-    assertThrows(NostrException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
-    assertThrows(NoSuchElementException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());
+    assertEquals(auxRelayTag.getRelay(), eventAuxYes_award_NoNo_defn_NoNo_Upvote.getRelay().orElseThrow());
+    assertEquals(Optional.empty(), eventAuxYes_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getRelay());
+    assertThrows(NoSuchElementException.class, () -> eventAuxYes_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getRelay().orElseThrow());
+    assertEquals(auxRelayTag.getRelay().getUrl(), eventAuxYes_award_NoNo_defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow());
+    assertEquals(auxRelay, eventAuxYes_award_NoNo_defn_NoNo_Upvote.getRelay().orElseThrow());
+    assertThrows(NoSuchElementException.class, () -> eventAuxYes_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getRelayTag().orElseThrow());
+    assertThrows(NostrException.class, () -> eventAuxYes_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
+    assertThrows(NoSuchElementException.class, () -> eventAuxYes_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());
   }
 
   @Test
