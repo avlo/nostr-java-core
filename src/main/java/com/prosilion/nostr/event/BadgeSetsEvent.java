@@ -6,28 +6,18 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.EventTag;
-import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
-import lombok.Getter;
 import lombok.NonNull;
 
-@Getter
-public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF, SetsPairedEventTagIF {
+public class BadgeSetsEvent extends AbstractSetsEvent<BadgeAwardGenericEventAux> implements SetsPairedEventTagIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated BadgeSetsEvent";
   public static final String MESSAGE = "BadgeSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
-  @JsonIgnore
-  private final List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes; // aTag/eTag combo
-  @JsonIgnore
-  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent; // aTag
 
   public BadgeSetsEvent(
      @NonNull Identity identity,
@@ -83,21 +73,11 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
        identity,
        Kind.BADGE_SETS_EVENT,
        badgeDefinitionReputationEvent.getIdentifierTag(),
-       Stream.concat(
-          Stream.concat(
-             TagMappedEventIF
-                .throwIfEmpty(tupleDefnEventAuxAwardEventAuxes, MESSAGE)
-                .flatMap(setsPairedEvents ->
-                   Stream.of(setsPairedEvents.getAddressTag(), setsPairedEvents.getEventTag())),
-             Stream.of(
-                validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
-          baseTags.stream()
-             .filter(Predicate.not(EventTag.class::isInstance))
-             .filter(Predicate.not(PubKeyTag.class::isInstance))
-             .filter(Predicate.not(AddressTag.class::isInstance))).toList(), content, relay
-    );
-    this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
-    this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
+       tupleDefnEventAuxAwardEventAuxes,
+       badgeDefinitionReputationEvent,
+       buildTags(tupleDefnEventAuxAwardEventAuxes, baseTags),
+       content,
+       relay);
   }
 
   public BadgeSetsEvent(
@@ -111,33 +91,27 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
-    super(genericEventRecord);
-    this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
-    this.badgeDefinitionReputationEvent = mapTagsToEvents(this, fxnAddressTag, AddressTag.class).getFirst();
+    super(genericEventRecord, tupleDefnEventAuxAwardEventAuxes, fxnAddressTag);
   }
 
-  @JsonIgnore
-  public final List<EventTag> getEventTags() {
-    return tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(BadgeSetsEvent::badgeAwardGenericEventAsEventTag).toList();
+  private static List<BaseTag> buildTags(
+     List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
+     List<BaseTag> baseTags) {
+    return Stream.concat(
+       Stream.concat(
+          TagMappedEventIF
+             .throwIfEmpty(tupleDefnEventAuxAwardEventAuxes, MESSAGE)
+             .flatMap(setsPairedEvents ->
+                Stream.of(setsPairedEvents.getAddressTag(), setsPairedEvents.getEventTag())),
+          Stream.of(
+             validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
+       filterBaseTags(baseTags)).toList();
   }
 
   @JsonIgnore
   public final List<AddressTag> getAddressTags() {
     return tupleDefnEventAuxAwardEventAuxes.stream()
        .map(SetsPairedEvents::getAddressTag).toList();
-  }
-
-  @JsonIgnore
-  public final PublicKey getAwardRecipientPublicKey() {
-    return tupleDefnEventAuxAwardEventAuxes.getFirst().getAwardRecipientPublicKey();
-  }
-
-  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull SetsPairedEvents<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux) {
-    return new EventTag(
-       tupleDefnEventAuxAwardEventAux.getAwardEventId(),
-       tupleDefnEventAuxAwardEventAux.getAwardEventRelay()
-          .map(Relay::getUrl).orElse(null));
   }
 
   @Override
