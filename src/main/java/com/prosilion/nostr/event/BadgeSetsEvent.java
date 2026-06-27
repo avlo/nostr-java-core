@@ -8,8 +8,8 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.PubKeyTag;
-import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAuxNeedsAppropriateName;
 import com.prosilion.nostr.tag.SetsEventTupleNeedsAppropriateNameIF;
+import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAuxNeedsAppropriateName;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -146,11 +146,13 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   }
 
   @Override
+  @JsonIgnore
   public String getIdEvent() {
     return super.getId();
   }
 
   @Override
+  @JsonIgnore
   public Optional<Relay> findRelay() {
     return super.getRelay();
   }

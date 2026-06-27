@@ -1,5 +1,6 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.SetsEventTupleNeedsAppropriateNameIF;
 import com.prosilion.nostr.user.PublicKey;
@@ -19,21 +20,25 @@ public class BadgeAwardGenericEventAux implements SetsEventTupleNeedsAppropriate
     this.relay = badgeAwardGenericEvent.getRelay().orElse(relay);
   }
 
+  @JsonIgnore
   public final Optional<Relay> getRelay() {
     return Optional.ofNullable(relay);
   }
 
   @Override
+  @JsonIgnore
   public String getIdEvent() {
     return getBadgeAwardGenericEvent().getId();
   }
 
   @Override
+  @JsonIgnore
   public Optional<Relay> findRelay() {
     return Optional.ofNullable(relay);
   }
 
   @Override
+  @JsonIgnore
   public PublicKey getPublicKey() {
     return getBadgeAwardGenericEvent().getPublicKey();
   }
