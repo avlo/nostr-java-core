@@ -48,8 +48,8 @@ public class BadgeDefinitionGenericEventAuxTest extends BaseEventAuxTest {
 
   @Test
   final void A_NoYes_Yes_testEventNullRelayHasRelayTagEventAuxHasRelayTag() {
-    testTags(baseTagsRelayTag, defnAuxNo_defnEvent_NoYes_Upvote);
-    testTags(baseTagsRelayTag, defnAuxNo_defnEvent_NoYes_Downvote);
+    testTags(baseTagsRelayTag, defnAuxYes_defnEvent_NoYes_Upvote);
+    testTags(baseTagsRelayTag, defnAuxYes_defnEvent_NoYes_Downvote);
   }
 
   @Test

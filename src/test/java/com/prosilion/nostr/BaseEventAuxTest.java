@@ -21,11 +21,12 @@ public class BaseEventAuxTest extends BaseEventTest {
   static final BadgeDefinitionGenericEventAux defnAuxNo_defnEvent_NoNo_Downvote = new BadgeDefinitionGenericEventAux(defnEvent_NoNo_Downvote, null);
   static final BadgeAwardGenericEventAux eventAuxNo_award_NoNo_defn_NoNo_Upvote = new BadgeAwardGenericEventAux(award_NoNo_Defn_NoNo_Upvote, null);
   static final BadgeAwardGenericEventAux eventAuxNo_award_NoNo_defn_NoNo_Downvote = new BadgeAwardGenericEventAux(award_NoNo_Defn_NoNo_Downvote, null);
-
   
   static final BadgeDefinitionGenericEventAux defnAuxNo_defnEvent_NoYes_Upvote = new BadgeDefinitionGenericEventAux(defnEvent_NoYes_Upvote, null);
   static final BadgeDefinitionGenericEventAux defnAuxNo_defnEvent_NoYes_Downvote = new BadgeDefinitionGenericEventAux(defnEvent_NoYes_Downvote, null);
-
+  static final BadgeDefinitionGenericEventAux defnAuxYes_defnEvent_NoYes_Upvote = new BadgeDefinitionGenericEventAux(defnEvent_NoYes_Upvote, auxRelay);
+  static final BadgeDefinitionGenericEventAux defnAuxYes_defnEvent_NoYes_Downvote = new BadgeDefinitionGenericEventAux(defnEvent_NoYes_Downvote, auxRelay);
+  
   static final BadgeDefinitionGenericEventAux defnAuxYes_defnEvent_NoNo_Upvote = new BadgeDefinitionGenericEventAux(defnEvent_NoNo_Upvote, auxRelay);
   static final BadgeDefinitionGenericEventAux defnAuxYes_defnEvent_NoNo_Downvote = new BadgeDefinitionGenericEventAux(defnEvent_NoNo_Downvote, auxRelay);
   static final BadgeAwardGenericEventAux eventAuxYes_award_NoNo_defn_NoNo_Upvote = new BadgeAwardGenericEventAux(award_NoNo_Defn_NoNo_Upvote, auxRelay);
@@ -42,4 +43,13 @@ public class BaseEventAuxTest extends BaseEventTest {
 
   static final BadgeDefinitionGenericEventAux defnAuxNo_defnEvent_YesYes_Upvote = new BadgeDefinitionGenericEventAux(defnEvent_YesYes_Upvote, null);
   static final BadgeDefinitionGenericEventAux defnAuxYes_defnEvent_YesYes_Upvote = new BadgeDefinitionGenericEventAux(defnEvent_YesYes_Upvote, auxRelay);
+
+  static final BadgeAwardGenericEventAux eventAuxNo_award_YesNo_Defn_YesYes_Upvote = new BadgeAwardGenericEventAux(award_YesNo_Defn_YesYes_Upvote, null);
+  static final BadgeAwardGenericEventAux eventAuxYes_award_YesNo_Defn_YesYes_Upvote = new BadgeAwardGenericEventAux(award_YesNo_Defn_YesYes_Upvote, auxRelay);
+
+  static final BadgeAwardGenericEventAux eventAuxNo_award_YesNo_Defn_YesNo_Upvote = new BadgeAwardGenericEventAux(award_YesNo_Defn_YesNo_Upvote, null);
+  static final BadgeAwardGenericEventAux eventAuxYes_award_YesNo_Defn_YesNo_Upvote = new BadgeAwardGenericEventAux(award_YesNo_Defn_YesNo_Upvote, auxRelay);
+
+  static final BadgeAwardGenericEventAux eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTag = new BadgeAwardGenericEventAux(award_YesNo_Defn_NoYes_UpvoteExtraRelayTag, null);
+  static final BadgeAwardGenericEventAux eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed = new BadgeAwardGenericEventAux(award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed, null);
 }

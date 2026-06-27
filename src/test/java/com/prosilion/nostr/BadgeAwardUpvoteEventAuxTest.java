@@ -44,58 +44,37 @@ public class BadgeAwardUpvoteEventAuxTest extends BaseEventAuxTest {
 
   @Test
   final void B_NoYes_No__testEventNullRelayHasRelayTagEventAuxNullRelayTagValue() {
-    testTags(relayArgRelayTag,
-       new BadgeAwardGenericEventAux(
-          new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), ""), null));
+    testTags(relayArgRelayTag, eventAuxNo_award_YesNo_Defn_YesYes_Upvote);
   }
 
   @Test
   final void A_NoYes_Yes_testEventNullRelayHasRelayTagEventAuxHasRelayTag() {
-    testTags(relayArgRelayTag,
-       new BadgeAwardGenericEventAux(
-          new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), ""), auxRelay));
+    testTags(relayArgRelayTag, eventAuxYes_award_YesNo_Defn_YesYes_Upvote);
   }
 
   @Test
   final void C_YesNo_No__testEventHasRelayNoRelayTagEventAuxNullRelayTagValue() {
-    testTags(relayArgRelayTag,
-       new BadgeAwardGenericEventAux(
-          new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             defnEvent_YesNo_Upvote, relayArgRelay), null));
+    testTags(relayArgRelayTag, eventAuxNo_award_YesNo_Defn_YesNo_Upvote);
   }
 
   @Test
   final void C_YesNo_Yes__testEventHasRelayNoRelayTagEventAuxHasRelayTagValue() {
-    testTags(relayArgRelayTag,
-       new BadgeAwardGenericEventAux(
-          new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             defnEvent_YesNo_Upvote, relayArgRelay), auxRelay));
+    testTags(relayArgRelayTag, eventAuxYes_award_YesNo_Defn_YesNo_Upvote);
   }
 
   @Test
   final void D_YesYes_No__testEventHasRelayHasRelayTagEventAuxNullRelayTagValue() {
-    testTags(relayArgRelayTag,
-       new BadgeAwardGenericEventAux(
-          new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), "", relayArgRelay), null));
+    testTags(relayArgRelayTag, eventAuxNo_award_YesNo_Defn_YesYes_Upvote);
   }
 
   @Test
   final void D_YesYes_Yes__testEventHasRelayHasRelayTagEventAuxHasRelayTagValue() {
-    testTags(relayArgRelayTag,
-       new BadgeAwardGenericEventAux(
-          new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), "", relayArgRelay), auxRelay));
+    testTags(relayArgRelayTag, eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed);
   }
 
   @Test
   final void E_NoYes_No__testEventNullRelayMultipleRelayTagsEventAuxNullRelayTagValue() {
-    testTags(baseTagsRelayTag,
-       new BadgeAwardGenericEventAux(
-          new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag, relayArgRelayTag), ""), null));
+    testTags(baseTagsRelayTag, eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTag);
   }
 
   @Test
