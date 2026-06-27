@@ -120,13 +120,13 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   @JsonIgnore
   public final List<EventTag> getEventTags() {
     return tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(BadgeSetsEvent::badgeAwardGenericEventAsEventTag)
-       .toList();
+       .map(BadgeSetsEvent::badgeAwardGenericEventAsEventTag).toList();
   }
 
   @JsonIgnore
-  public final AddressTag getAddressTag() {
-    return requireFirstTag(AddressTag.class);
+  public final List<AddressTag> getAddressTags() {
+    return tupleDefnEventAuxAwardEventAuxes.stream()
+       .map(TupleDefnEventAuxAwardEventAux::getDefinitionEventAsAddressTag).toList();
   }
 
   public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleDefnEventAuxAwardEventAux tupleDefnEventAuxAwardEventAux) {
@@ -136,8 +136,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
           .map(Relay::getUrl).orElse(null));
   }
 
-  private static Stream<BaseTag> badgeAwardGenericEventAsTruple(
-     @NonNull TupleDefnEventAuxAwardEventAux tupleDefnEventAuxAwardEventAux) {
+  private static Stream<BaseTag> badgeAwardGenericEventAsTruple(@NonNull TupleDefnEventAuxAwardEventAux tupleDefnEventAuxAwardEventAux) {
     return Stream.of(
        tupleDefnEventAuxAwardEventAux.getTupleATagETag().getLeft(),
        tupleDefnEventAuxAwardEventAux.getTupleATagETag().getRight());
