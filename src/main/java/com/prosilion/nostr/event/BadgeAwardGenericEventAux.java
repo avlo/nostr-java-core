@@ -1,7 +1,7 @@
 package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.tag.SetsEventTupleIF;
+import com.prosilion.nostr.tag.SetsEventTupleNeedsAppropriateNameIF;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.NonNull;
 
 // TODO: consolidate common fxnality w/ BadgeDefinitionGenericEventAux
 @Getter
-public class BadgeAwardGenericEventAux implements SetsEventTupleIF {
+public class BadgeAwardGenericEventAux implements SetsEventTupleNeedsAppropriateNameIF {
   private final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent;
   private final Relay relay;
 

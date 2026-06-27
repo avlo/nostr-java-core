@@ -9,8 +9,8 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAux;
-import com.prosilion.nostr.tag.SetsEventTupleIF;
+import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAuxNeedsAppropriateName;
+import com.prosilion.nostr.tag.SetsEventTupleNeedsAppropriateNameIF;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -115,8 +115,8 @@ public class AddressableEvent extends BaseEvent {
     return new NostrException(String.format(s, ger.createPrettyPrintJson(), tag));
   }
 
-  static <T extends SetsEventTupleIF> PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(
-     @NonNull List<TupleDefnEventAuxAwardEventAux<T>> tupleDefnEventAuxAwardEventAuxes) {
+  static <T extends SetsEventTupleNeedsAppropriateNameIF> PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(
+     @NonNull List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<T>> tupleDefnEventAuxAwardEventAuxes) {
     List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
        .map(ImmutablePair::getLeft)
        .map(BadgeDefinitionGenericEventAux::getBadgeDefinitionGenericEvent)
