@@ -5,7 +5,7 @@ import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
 
 public interface SetsPairedEventTagIF {
-  String getIdEvent();
+  String getEventId();
   Optional<Relay> findRelay();
   PublicKey getPublicKey();
 }

@@ -24,7 +24,7 @@ public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
           badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getIdentifierTag(),
           badgeDefinition.getRelay().orElse(null)),
        new EventTag(
-          badgeAward.getIdEvent(),
+          badgeAward.getEventId(),
           badgeAward.findRelay().map(Relay::getUrl).orElse(null)));
   }
 

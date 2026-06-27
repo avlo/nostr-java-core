@@ -14,6 +14,7 @@ import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -23,7 +24,7 @@ import lombok.NonNull;
 @Getter
 public abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends AddressableEvent implements TagMappedEventIF {
   @JsonIgnore
-  protected final List<SetsPairedEvents<T>> tupleDefnEventAuxAwardEventAuxes;
+  protected final List<SetsPairedEvents<T>> setsPairedEvents;
   @JsonIgnore
   protected final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
@@ -31,35 +32,51 @@ public abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends 
      @NonNull Identity identity,
      @NonNull Kind kind,
      @NonNull IdentifierTag identifierTag,
-     @NonNull List<SetsPairedEvents<T>> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<SetsPairedEvents<T>> setsPairedEvents,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull List<BaseTag> tags,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
     super(identity, kind, identifierTag, tags, content, relay);
-    this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
+    this.setsPairedEvents = setsPairedEvents;
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
   }
 
   protected AbstractSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<SetsPairedEvents<T>> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<SetsPairedEvents<T>> setsPairedEvents,
      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
     super(genericEventRecord);
-    this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
+    this.setsPairedEvents = setsPairedEvents;
     this.badgeDefinitionReputationEvent = mapTagsToEvents(this, fxnAddressTag, AddressTag.class).getFirst();
   }
 
   @JsonIgnore
+  public String getEventId() {
+    return super.getId();
+  }
+
+  @JsonIgnore
+  public Optional<Relay> findRelay() {
+    return super.getRelay();
+  }
+
+  @JsonIgnore
+  public final List<AddressTag> getAddressTags() {
+    return setsPairedEvents.stream()
+       .map(SetsPairedEvents::getAddressTag).toList();
+  }
+
+  @JsonIgnore
   public final List<EventTag> getEventTags() {
-    return tupleDefnEventAuxAwardEventAuxes.stream()
+    return setsPairedEvents.stream()
        .map(AbstractSetsEvent::badgeAwardGenericEventAsEventTag)
        .toList();
   }
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
-    return tupleDefnEventAuxAwardEventAuxes.getFirst().getAwardRecipientPublicKey();
+    return setsPairedEvents.getFirst().getAwardRecipientPublicKey();
   }
 
   public static <T extends SetsPairedEventTagIF> EventTag badgeAwardGenericEventAsEventTag(@NonNull SetsPairedEvents<T> tupleDefnEventAuxAwardEventAux) {

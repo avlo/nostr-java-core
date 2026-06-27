@@ -27,7 +27,7 @@ public class BadgeAwardGenericEventAux implements SetsPairedEventTagIF {
 
   @Override
   @JsonIgnore
-  public String getIdEvent() {
+  public String getEventId() {
     return getBadgeAwardGenericEvent().getId();
   }
 

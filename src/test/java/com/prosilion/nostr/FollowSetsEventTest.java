@@ -109,20 +109,20 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
        defnAuxNo_defnEvent_NoNo_Upvote,
        badgeSetsEvent);
 
-    FollowSetsEvent expected = new FollowSetsEvent(
+    FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
        aImgIdentity,
        badgeDefinitionReputationEventPlusOneFormula,
        auxRelay,
        badgeSetsEventTuple);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
-       expected.asGenericEventRecord(),
+       expectedFollowSetsEvent.asGenericEventRecord(),
        badgeSetsEventTuple,
        addressTag -> badgeDefinitionReputationEventPlusOneFormula);
 
-    assertEquals(expected.getAddressTag(), followSetsEvent.getAddressTag());
-    assertEquals(expected.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
-    assertEquals(expected, followSetsEvent);
+    assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
+    assertEquals(expectedFollowSetsEvent.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
+    assertEquals(expectedFollowSetsEvent, followSetsEvent);
 
     assertEquals(1, followSetsEvent.getEventTags().size());
     assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
@@ -153,20 +153,20 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
        defnAuxNo_defnEvent_NoNo_Upvote,
        badgeSetsEvent);
 
-    FollowSetsEvent expected = new FollowSetsEvent(
+    FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
        aImgIdentity,
        badgeDefinitionReputationEventPlusOneFormula,
        auxRelay,
        badgeSetsEventTuple);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
-       expected.getGenericEventRecord(),
+       expectedFollowSetsEvent.getGenericEventRecord(),
        badgeSetsEventTuple,
        addressTag -> badgeDefinitionReputationEventPlusOneFormula);
 
-    assertEquals(expected.getAddressTag(), followSetsEvent.getAddressTag());
-    assertEquals(expected.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
-    assertEquals(expected, followSetsEvent);
+    assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
+    assertEquals(expectedFollowSetsEvent.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
+    assertEquals(expectedFollowSetsEvent, followSetsEvent);
 
     assertEquals(1, followSetsEvent.getEventTags().size());
     assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());

@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
@@ -108,10 +107,5 @@ public class FollowSetsEvent extends AbstractSetsEvent<BadgeSetsEvent> {
                 validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
           Stream.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag())),
        filterBaseTags(baseTags)).toList();
-  }
-
-  @JsonIgnore
-  public final AddressTag getAddressTag() {
-    return requireFirstTag(AddressTag.class);
   }
 }

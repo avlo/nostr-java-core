@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
@@ -10,7 +9,6 @@ import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.NonNull;
@@ -23,8 +21,8 @@ public class BadgeSetsEvent extends AbstractSetsEvent<BadgeAwardGenericEventAux>
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull SetsPairedEvents<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux) {
-    this(identity, badgeDefinitionReputationEvent, relay, List.of(tupleDefnEventAuxAwardEventAux), List.of(), DEFAULT_CONTENT);
+     @NonNull SetsPairedEvents<BadgeAwardGenericEventAux> setsPairedEvents) {
+    this(identity, badgeDefinitionReputationEvent, relay, List.of(setsPairedEvents), List.of(), DEFAULT_CONTENT);
   }
 
   public BadgeSetsEvent(
@@ -82,9 +80,9 @@ public class BadgeSetsEvent extends AbstractSetsEvent<BadgeAwardGenericEventAux>
 
   public BadgeSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull SetsPairedEvents<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux,
+     @NonNull SetsPairedEvents<BadgeAwardGenericEventAux> setsPairedEvents,
      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
-    this(genericEventRecord, List.of(tupleDefnEventAuxAwardEventAux), fxnAddressTag);
+    this(genericEventRecord, List.of(setsPairedEvents), fxnAddressTag);
   }
 
   public BadgeSetsEvent(
@@ -106,23 +104,5 @@ public class BadgeSetsEvent extends AbstractSetsEvent<BadgeAwardGenericEventAux>
           Stream.of(
              validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
        filterBaseTags(baseTags)).toList();
-  }
-
-  @JsonIgnore
-  public final List<AddressTag> getAddressTags() {
-    return tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(SetsPairedEvents::getAddressTag).toList();
-  }
-
-  @Override
-  @JsonIgnore
-  public String getIdEvent() {
-    return super.getId();
-  }
-
-  @Override
-  @JsonIgnore
-  public Optional<Relay> findRelay() {
-    return super.getRelay();
   }
 }
