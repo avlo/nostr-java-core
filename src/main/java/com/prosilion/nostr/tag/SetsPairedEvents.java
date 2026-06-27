@@ -6,22 +6,18 @@ import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 @Slf4j
 public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
-  @Getter
-  private final BadgeDefinitionGenericEventAux badgeDefinition;
-  private final T badgeAward;
-  private final TupleATagETag tupleATagETag;
+  private final PublicKey recipientPublicKey;
+  private final ATagETagPair aTagETagPair;
 
   public SetsPairedEvents(@NonNull BadgeDefinitionGenericEventAux badgeDefinition, @NonNull T badgeAward) {
-    this.badgeAward = badgeAward;
-    this.badgeDefinition = badgeDefinition;
-    this.tupleATagETag = new TupleATagETag(
+    this.recipientPublicKey = badgeAward.getPublicKey();
+    this.aTagETagPair = new ATagETagPair(
        new AddressTag(
           badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
           badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getPublicKey(),
@@ -34,7 +30,7 @@ public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
 
   @JsonIgnore
   public final EventTag getEventTag() {
-    return tupleATagETag.getRight();
+    return aTagETagPair.getRight();
   }
 
   @JsonIgnore
@@ -49,7 +45,7 @@ public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
 
   @JsonIgnore
   public final AddressTag getAddressTag() {
-    return tupleATagETag.getLeft();
+    return aTagETagPair.getLeft();
   }
 
   @JsonIgnore
@@ -74,11 +70,11 @@ public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
-    return badgeAward.getPublicKey();
+    return recipientPublicKey;
   }
 
-  private static class TupleATagETag extends ImmutablePair<AddressTag, EventTag> {
-    public TupleATagETag(@NonNull AddressTag left, @NonNull EventTag right) {
+  private static class ATagETagPair extends ImmutablePair<AddressTag, EventTag> {
+    public ATagETagPair(@NonNull AddressTag left, @NonNull EventTag right) {
       super(left, right);
     }
   }

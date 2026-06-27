@@ -117,9 +117,7 @@ public class AddressableEvent extends BaseEvent {
   static <T extends SetsPairedEventTagIF> PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(
      @NonNull List<SetsPairedEvents<T>> tupleDefnEventAuxAwardEventAuxes) {
     List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(SetsPairedEvents::getBadgeDefinition)
-       .map(BadgeDefinitionGenericEventAux::getBadgeDefinitionGenericEvent)
-       .map(BadgeDefinitionGenericEvent::getPublicKey)
+       .map(SetsPairedEvents::getDefinitionEventPublicKey)
        .distinct().toList();
     if (distinctPublicKeys.size() != 1)
       throw new NostrException(
