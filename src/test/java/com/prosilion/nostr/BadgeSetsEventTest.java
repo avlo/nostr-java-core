@@ -9,7 +9,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
-import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAuxNeedsAppropriateName;
+import com.prosilion.nostr.tag.SetsPairedEvents;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -51,11 +51,11 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
   @Test
   final void testValidBadgeSetsEvent() {
-    TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleUpvoteEvent = new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+    SetsPairedEvents<BadgeAwardGenericEventAux> tupleUpvoteEvent = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Upvote,
        eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
-    TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleDownvoteEvent = new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+    SetsPairedEvents<BadgeAwardGenericEventAux> tupleDownvoteEvent = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Downvote,
        eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
@@ -67,7 +67,7 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
     assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
 
-    List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getTupleDefnEventAuxAwardEventAuxes();
+    List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getTupleDefnEventAuxAwardEventAuxes();
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleUpvoteEvent));
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleDownvoteEvent));
     String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getId();
@@ -75,10 +75,10 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
     assertEquals(
        upvoteEventId,
-       tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAuxNeedsAppropriateName::getAwardEventId).findFirst().orElseThrow());
+       tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getAwardEventId).findFirst().orElseThrow());
     assertEquals(
        defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag(),
-       tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAuxNeedsAppropriateName::getDefinitionEventAsAddressTag).findFirst().orElseThrow());
+       tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getAddressTag).findFirst().orElseThrow());
 
     assertEquals(recipient.getPublicKey(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getAwardRecipientPublicKey());
 
@@ -91,8 +91,8 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
     assertTrue(badgeSetsEvent.getAddressTags().stream().toList().contains(upvoteAsAddressTag));
     assertTrue(badgeSetsEvent.getAddressTags().stream().toList().contains(downvoteAsAddressTag));
 
-    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAuxNeedsAppropriateName::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getRelay()));
-    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAuxNeedsAppropriateName::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getRelay()));
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getRelay()));
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getRelay()));
 
     assertEquals(
        new AddressTag(

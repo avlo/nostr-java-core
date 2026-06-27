@@ -8,8 +8,8 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.PubKeyTag;
-import com.prosilion.nostr.tag.SetsEventTupleNeedsAppropriateNameIF;
-import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAuxNeedsAppropriateName;
+import com.prosilion.nostr.tag.SetsPairedEventTagIF;
+import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -21,11 +21,11 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF, SetsEventTupleNeedsAppropriateNameIF {
+public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF, SetsPairedEventTagIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated BadgeSetsEvent";
   public static final String MESSAGE = "BadgeSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
   @JsonIgnore
-  private final List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes; // aTag/eTag combo
+  private final List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes; // aTag/eTag combo
   @JsonIgnore
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent; // aTag
 
@@ -33,7 +33,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux) {
+     @NonNull SetsPairedEvents<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux) {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(tupleDefnEventAuxAwardEventAux), List.of(), DEFAULT_CONTENT);
   }
 
@@ -41,7 +41,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes) {
+     @NonNull List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes) {
     this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, List.of(), DEFAULT_CONTENT);
   }
 
@@ -49,7 +49,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull List<BaseTag> baseTags) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, baseTags, DEFAULT_CONTENT);
   }
@@ -58,7 +58,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> badgeAwardGenericEventAux,
+     @NonNull SetsPairedEvents<BadgeAwardGenericEventAux> badgeAwardGenericEventAux,
      @NonNull String content) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(badgeAwardGenericEventAux), List.of(), content);
   }
@@ -67,7 +67,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux>> badgeAwardGenericEventAuxes,
+     @NonNull List<SetsPairedEvents<BadgeAwardGenericEventAux>> badgeAwardGenericEventAuxes,
      @NonNull String content) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, badgeAwardGenericEventAuxes, List.of(), content);
   }
@@ -76,7 +76,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     super(
@@ -87,7 +87,8 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
           Stream.concat(
              TagMappedEventIF
                 .throwIfEmpty(tupleDefnEventAuxAwardEventAuxes, MESSAGE)
-                .flatMap(BadgeSetsEvent::badgeAwardGenericEventAsTruple),
+                .flatMap(setsPairedEvents ->
+                   Stream.of(setsPairedEvents.getAddressTag(), setsPairedEvents.getEventTag())),
              Stream.of(
                 validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
           baseTags.stream()
@@ -101,14 +102,14 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
 
   public BadgeSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux,
+     @NonNull SetsPairedEvents<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux,
      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
     this(genericEventRecord, List.of(tupleDefnEventAuxAwardEventAux), fxnAddressTag);
   }
 
   public BadgeSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
     super(genericEventRecord);
     this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
@@ -124,7 +125,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   @JsonIgnore
   public final List<AddressTag> getAddressTags() {
     return tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(TupleDefnEventAuxAwardEventAuxNeedsAppropriateName::getDefinitionEventAsAddressTag).toList();
+       .map(SetsPairedEvents::getAddressTag).toList();
   }
 
   @JsonIgnore
@@ -132,17 +133,11 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
     return tupleDefnEventAuxAwardEventAuxes.getFirst().getAwardRecipientPublicKey();
   }
 
-  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux) {
+  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull SetsPairedEvents<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux) {
     return new EventTag(
        tupleDefnEventAuxAwardEventAux.getAwardEventId(),
        tupleDefnEventAuxAwardEventAux.getAwardEventRelay()
           .map(Relay::getUrl).orElse(null));
-  }
-
-  private static Stream<BaseTag> badgeAwardGenericEventAsTruple(@NonNull TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleDefnEventAuxAwardEventAux) {
-    return Stream.of(
-       tupleDefnEventAuxAwardEventAux.getTupleATagETag().getLeft(),
-       tupleDefnEventAuxAwardEventAux.getTupleATagETag().getRight());
   }
 
   @Override

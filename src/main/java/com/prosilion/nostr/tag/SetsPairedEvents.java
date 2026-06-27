@@ -1,21 +1,20 @@
 package com.prosilion.nostr.tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-@Getter
 @Slf4j
-public class TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<T extends SetsEventTupleNeedsAppropriateNameIF> extends ImmutablePair<BadgeDefinitionGenericEventAux, T> {
+public class SetsPairedEvents<T extends SetsPairedEventTagIF> extends ImmutablePair<BadgeDefinitionGenericEventAux, T> {
   private final TupleATagETag tupleATagETag;
 
-  public TupleDefnEventAuxAwardEventAuxNeedsAppropriateName(
+  public SetsPairedEvents(
      @NonNull BadgeDefinitionGenericEventAux badgeDefinition,
      @NonNull T badgeAward) {
     super(badgeDefinition, badgeAward);
@@ -32,23 +31,43 @@ public class TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<T extends SetsEv
   }
 
   @JsonIgnore
+  public final EventTag getEventTag() {
+    return tupleATagETag.getRight();
+  }
+
+  @JsonIgnore
   public final String getAwardEventId() {
-    return tupleATagETag.getRight().getIdEvent();
+    return getEventTag().getIdEvent();
   }
 
   @JsonIgnore
   public final Optional<Relay> getAwardEventRelay() {
-    return tupleATagETag.getRight().findRelay();
+    return getEventTag().findRelay();
   }
 
   @JsonIgnore
-  public final AddressTag getDefinitionEventAsAddressTag() {
+  public final AddressTag getAddressTag() {
     return tupleATagETag.getLeft();
   }
 
   @JsonIgnore
+  public final Kind getDefinitionEventKind() {
+    return getAddressTag().getKind();
+  }
+
+  @JsonIgnore
+  public final PublicKey getDefinitionEventPublicKey() {
+    return getAddressTag().getPublicKey();
+  }
+
+  @JsonIgnore
+  public final IdentifierTag getDefinitionEventIdentifierTag() {
+    return getAddressTag().getIdentifierTag();
+  }
+
+  @JsonIgnore
   public final Optional<Relay> getDefinitionEventRelay() {
-    return tupleATagETag.getLeft().findRelay();
+    return getAddressTag().findRelay();
   }
 
   @JsonIgnore
@@ -56,7 +75,7 @@ public class TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<T extends SetsEv
     return getRight().getPublicKey();
   }
 
-  public static class TupleATagETag extends ImmutablePair<AddressTag, EventTag> {
+  private static class TupleATagETag extends ImmutablePair<AddressTag, EventTag> {
     public TupleATagETag(@NonNull AddressTag left, @NonNull EventTag right) {
       super(left, right);
     }

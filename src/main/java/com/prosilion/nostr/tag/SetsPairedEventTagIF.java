@@ -4,7 +4,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
 
-public interface SetsEventTupleNeedsAppropriateNameIF {
+public interface SetsPairedEventTagIF {
   String getIdEvent();
   Optional<Relay> findRelay();
   PublicKey getPublicKey();

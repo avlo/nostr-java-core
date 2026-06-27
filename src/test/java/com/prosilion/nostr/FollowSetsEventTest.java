@@ -10,7 +10,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAuxNeedsAppropriateName;
+import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.UUID;
@@ -73,11 +73,11 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
 
   @Test
   final void testValidFollowSetsEvent() {
-    TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleUpvoteEvent = new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+    SetsPairedEvents<BadgeAwardGenericEventAux> tupleUpvoteEvent = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Upvote,
        eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
-    TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeAwardGenericEventAux> tupleDownvoteEvent = new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+    SetsPairedEvents<BadgeAwardGenericEventAux> tupleDownvoteEvent = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Downvote,
        eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
@@ -90,7 +90,7 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
        aImgIdentity,
        badgeDefinitionReputationEventPlusOneFormula,
        auxRelay,
-       new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+       new SetsPairedEvents<>(
           defnAuxNo_defnEvent_NoNo_Upvote,
           badgeSetsEvent));
   }
@@ -101,11 +101,11 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
        relayArgRelay,
-       new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+       new SetsPairedEvents<>(
           defnAuxNo_defnEvent_NoNo_Upvote,
           eventAuxNo_award_NoNo_defn_NoNo_Upvote));
 
-    TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeSetsEvent> badgeSetsEventTuple = new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+    SetsPairedEvents<BadgeSetsEvent> badgeSetsEventTuple = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Upvote,
        badgeSetsEvent);
 
@@ -142,14 +142,14 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
        badgeDefinitionReputationEventPlusOneFormula,
        relayArgRelay,
        List.of(
-          new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+          new SetsPairedEvents<>(
              defnAuxNo_defnEvent_NoNo_Upvote,
              eventAuxNo_award_NoNo_defn_NoNo_Upvote),
-          new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+          new SetsPairedEvents<>(
              defnAuxNo_defnEvent_NoNo_Downvote,
              eventAuxNo_award_NoNo_defn_NoNo_Downvote)));
 
-    TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<BadgeSetsEvent> badgeSetsEventTuple = new TupleDefnEventAuxAwardEventAuxNeedsAppropriateName<>(
+    SetsPairedEvents<BadgeSetsEvent> badgeSetsEventTuple = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Upvote,
        badgeSetsEvent);
 
