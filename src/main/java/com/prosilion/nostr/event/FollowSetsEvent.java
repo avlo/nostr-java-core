@@ -27,7 +27,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   public static final String MESSAGE = "FollowSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
 
   @JsonIgnore
-  private final List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes; // eTags
+  private final List<TupleDefnEventAuxAwardEventAux<BadgeSetsEvent>> tupleDefnEventAuxAwardEventAuxes; // eTags
   @JsonIgnore
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent; // aTag
 
@@ -35,7 +35,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull TupleDefnEventAuxAwardEventAux tupleBadgeDefinitionBadgeEvents) {
+     @NonNull TupleDefnEventAuxAwardEventAux<BadgeSetsEvent> tupleBadgeDefinitionBadgeEvents) {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(tupleBadgeDefinitionBadgeEvents), List.of(), DEFAULT_CONTENT);
   }
 
@@ -43,7 +43,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes) {
+     @NonNull List<TupleDefnEventAuxAwardEventAux<BadgeSetsEvent>> tupleDefnEventAuxAwardEventAuxes) {
     this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, List.of(), DEFAULT_CONTENT);
   }
 
@@ -51,7 +51,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<TupleDefnEventAuxAwardEventAux<BadgeSetsEvent>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull List<BaseTag> baseTags) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, baseTags, DEFAULT_CONTENT);
   }
@@ -60,7 +60,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull TupleDefnEventAuxAwardEventAux tupleBadgeDefinitionBadgeEvents,
+     @NonNull TupleDefnEventAuxAwardEventAux<BadgeSetsEvent> tupleBadgeDefinitionBadgeEvents,
      @NonNull String content) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, List.of(tupleBadgeDefinitionBadgeEvents), List.of(), content);
   }
@@ -69,7 +69,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<TupleDefnEventAuxAwardEventAux<BadgeSetsEvent>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull String content) throws NostrException {
     this(identity, badgeDefinitionReputationEvent, relay, tupleDefnEventAuxAwardEventAuxes, List.of(), content);
   }
@@ -78,7 +78,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull Relay relay,
-     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<TupleDefnEventAuxAwardEventAux<BadgeSetsEvent>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     super(
@@ -105,7 +105,14 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   public FollowSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull TupleDefnEventAuxAwardEventAux<BadgeSetsEvent> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
+    this(genericEventRecord, List.of(tupleDefnEventAuxAwardEventAuxes), fxnAddressTag);
+  }
+
+  public FollowSetsEvent(
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull List<TupleDefnEventAuxAwardEventAux<BadgeSetsEvent>> tupleDefnEventAuxAwardEventAuxes,
      @NonNull Function<AddressTag, BadgeDefinitionReputationEvent> fxnAddressTag) {
     super(genericEventRecord);
     this.tupleDefnEventAuxAwardEventAuxes = tupleDefnEventAuxAwardEventAuxes;
@@ -125,11 +132,11 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   }
 
   @JsonIgnore
-  public final PublicKey getAwardRecipientPulicKey() {
-    return requireFirstTag(PubKeyTag.class).publicKey();
+  public final PublicKey getAwardRecipientPublicKey() {
+    return tupleDefnEventAuxAwardEventAuxes.getFirst().getAwardRecipientPublicKey();
   }
 
-  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleDefnEventAuxAwardEventAux tupleDefnEventAuxAwardEventAux) {
+  public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleDefnEventAuxAwardEventAux<BadgeSetsEvent> tupleDefnEventAuxAwardEventAux) {
     return new EventTag(
        tupleDefnEventAuxAwardEventAux.getAwardEventId(),
        tupleDefnEventAuxAwardEventAux.getAwardEventRelay().map(Relay::getUrl).orElse(null));
