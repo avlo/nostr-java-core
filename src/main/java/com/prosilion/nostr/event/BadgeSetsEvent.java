@@ -10,22 +10,17 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAux;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 @Getter
 public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated BadgeSetsEvent";
   public static final String MESSAGE = "BadgeSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
-  public static final String PUBKEYS_MUST_MATCH =
-     "BadgeSetsEvent BadgeAwardGenericEvents PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
   @JsonIgnore
   private final List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes; // aTag/eTag combo
   @JsonIgnore
@@ -140,19 +135,5 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
     return Stream.of(
        tupleDefnEventAuxAwardEventAux.getTupleATagETag().getLeft(),
        tupleDefnEventAuxAwardEventAux.getTupleATagETag().getRight());
-  }
-
-  public static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes) {
-    List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(ImmutablePair::getLeft)
-       .map(BadgeDefinitionGenericEventAux::getBadgeDefinitionGenericEvent)
-       .map(BaseEvent::getPublicKey).distinct().toList();
-    if (distinctPublicKeys.size() != 1)
-      throw new NostrException(
-         String.format(
-            PUBKEYS_MUST_MATCH,
-            distinctPublicKeys.size(),
-            distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
-    return new PubKeyTag(distinctPublicKeys.getFirst());
   }
 }

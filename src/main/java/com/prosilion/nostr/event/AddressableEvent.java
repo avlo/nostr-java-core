@@ -7,14 +7,19 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
+import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAux;
 import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -26,6 +31,9 @@ import org.jspecify.annotations.NonNull;
  * ["a", "KIND:EVENT_CREATOR_PUBKEY:UUID", "URL"]
  */
 public class AddressableEvent extends BaseEvent {
+  public static final String PUBKEYS_MUST_MATCH =
+     "AddressableEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
+
   public AddressableEvent(
      @NonNull Identity identity,
      @NonNull Kind kind,
@@ -104,5 +112,19 @@ public class AddressableEvent extends BaseEvent {
 
   private static NostrException exceptionMessage(String s, GenericEventRecord ger, String tag) {
     return new NostrException(String.format(s, ger.createPrettyPrintJson(), tag));
+  }
+
+  protected static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@lombok.NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes) {
+    List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
+       .map(ImmutablePair::getLeft)
+       .map(BadgeDefinitionGenericEventAux::getBadgeDefinitionGenericEvent)
+       .map(BaseEvent::getPublicKey).distinct().toList();
+    if (distinctPublicKeys.size() != 1)
+      throw new NostrException(
+         String.format(
+            PUBKEYS_MUST_MATCH,
+            distinctPublicKeys.size(),
+            distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
+    return new PubKeyTag(distinctPublicKeys.getFirst());
   }
 }

@@ -15,21 +15,17 @@ import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 @Getter
 public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String DEFAULT_IDENTIFIER = "PROSILION_FOLLOW_SETS_EVENT";
   public static final IdentifierTag defaultIdentifierTag = new IdentifierTag(DEFAULT_IDENTIFIER);
-
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
   public static final String MESSAGE = "FollowSetsEvent ctor() is missing a BadgeAwardGenericEvent parameter";
-  public static final String PUBKEYS_MUST_MATCH =
-     "FollowSetsEvent BadgeAwardGenericEvents PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
+
   @JsonIgnore
   private final List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes; // eTags
   @JsonIgnore
@@ -137,19 +133,5 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
     return new EventTag(
        tupleDefnEventAuxAwardEventAux.getAwardEventId(),
        tupleDefnEventAuxAwardEventAux.getAwardEventRelay().map(Relay::getUrl).orElse(null));
-  }
-
-  public static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes) {
-    List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(ImmutablePair::getLeft)
-       .map(BadgeDefinitionGenericEventAux::getBadgeDefinitionGenericEvent)
-       .map(BaseEvent::getPublicKey).distinct().toList();
-    if (distinctPublicKeys.size() != 1)
-      throw new NostrException(
-         String.format(
-            PUBKEYS_MUST_MATCH,
-            distinctPublicKeys.size(),
-            distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
-    return new PubKeyTag(distinctPublicKeys.getFirst());
   }
 }
