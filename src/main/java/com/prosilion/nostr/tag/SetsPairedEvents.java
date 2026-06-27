@@ -6,19 +6,21 @@ import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Optional;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 @Slf4j
-public class SetsPairedEvents<T extends SetsPairedEventTagIF> extends ImmutablePair<BadgeDefinitionGenericEventAux, T> {
+public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
+  @Getter
+  private final BadgeDefinitionGenericEventAux badgeDefinition;
+  private final T badgeAward;
   private final TupleATagETag tupleATagETag;
 
-  public SetsPairedEvents(
-     @NonNull BadgeDefinitionGenericEventAux badgeDefinition,
-     @NonNull T badgeAward) {
-    super(badgeDefinition, badgeAward);
-
+  public SetsPairedEvents(@NonNull BadgeDefinitionGenericEventAux badgeDefinition, @NonNull T badgeAward) {
+    this.badgeAward = badgeAward;
+    this.badgeDefinition = badgeDefinition;
     this.tupleATagETag = new TupleATagETag(
        new AddressTag(
           badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
@@ -72,7 +74,7 @@ public class SetsPairedEvents<T extends SetsPairedEventTagIF> extends ImmutableP
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
-    return getRight().getPublicKey();
+    return badgeAward.getPublicKey();
   }
 
   private static class TupleATagETag extends ImmutablePair<AddressTag, EventTag> {

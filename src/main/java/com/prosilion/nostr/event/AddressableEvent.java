@@ -9,8 +9,8 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.tag.SetsPairedEventTagIF;
+import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
@@ -20,7 +20,6 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -118,9 +117,10 @@ public class AddressableEvent extends BaseEvent {
   static <T extends SetsPairedEventTagIF> PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(
      @NonNull List<SetsPairedEvents<T>> tupleDefnEventAuxAwardEventAuxes) {
     List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(ImmutablePair::getLeft)
+       .map(SetsPairedEvents::getBadgeDefinition)
        .map(BadgeDefinitionGenericEventAux::getBadgeDefinitionGenericEvent)
-       .map(BaseEvent::getPublicKey).distinct().toList();
+       .map(BadgeDefinitionGenericEvent::getPublicKey)
+       .distinct().toList();
     if (distinctPublicKeys.size() != 1)
       throw new NostrException(
          String.format(
