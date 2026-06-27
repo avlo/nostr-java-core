@@ -58,10 +58,4 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
           .add(getFilterableValue())
     );
   }
-
-  //  unused for now  
-  private static EventTag validate(EventTag eventTag) {
-    eventTag.requireRelay();
-    return eventTag;
-  }
 }
