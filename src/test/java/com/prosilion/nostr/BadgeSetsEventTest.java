@@ -1,10 +1,10 @@
 package com.prosilion.nostr;
 
 import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.TupleDefnEventAuxAwardEventAux;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import static com.prosilion.nostr.BadgeAwardReputationEventTest.MINUS_ONE_FORMULA;
 import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BadgeSetsEventTest extends BaseEventAuxTest {
   private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
@@ -23,16 +24,14 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
   public static final String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
-  private final FormulaEvent plusOneFormulaEvent;
-  private final FormulaEvent minusOneFormulaEvent;
-//  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula;
+  //  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula;
 //  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventMinusOneFormula;
 
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
   public BadgeSetsEventTest() throws ParseException {
-    this.plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, relayArgRelay, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA);
-    this.minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, relayArgRelay, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, relayArgRelay, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA);
+    FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, relayArgRelay, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA);
 
 //    this.badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), reputationIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, plusOneFormulaEvent);
 //    this.badgeDefinitionReputationEventMinusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), reputationIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, minusOneFormulaEvent);
@@ -49,11 +48,13 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
   @Test
   final void testValidBadgeSetsEvent() {
-    BadgeDefinitionGenericEventAux badgeDefnUpvoteEventAux = new BadgeDefinitionGenericEventAux(defnEvent_NoNo_Upvote, null);
-    BadgeDefinitionGenericEventAux badgeDefnDownvoteEventAux = new BadgeDefinitionGenericEventAux(defnEvent_NoNo_Downvote, null);
+    TupleDefnEventAuxAwardEventAux tupleUpvoteEvent = new TupleDefnEventAuxAwardEventAux(
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
-    TupleDefnEventAuxAwardEventAux tupleUpvoteEvent = new TupleDefnEventAuxAwardEventAux(badgeDefnUpvoteEventAux, eventAuxNo_award_NoNo_defn_NoNo_Upvote);
-    TupleDefnEventAuxAwardEventAux tupleDownvoteEvent = new TupleDefnEventAuxAwardEventAux(badgeDefnDownvoteEventAux, eventAuxNo_award_NoNo_defn_NoNo_Downvote);
+    TupleDefnEventAuxAwardEventAux tupleDownvoteEvent = new TupleDefnEventAuxAwardEventAux(
+       defnAuxNo_defnEvent_NoNo_Downvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
@@ -62,6 +63,24 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
     assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
+    
+    List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getTupleDefnEventAuxAwardEventAuxes();
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleUpvoteEvent));
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleDownvoteEvent));
+    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getId();
+    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getBadgeAwardGenericEvent().getId();
+
+    assertEquals(
+       upvoteEventId,
+       tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAux::getAwardEventId).findFirst().orElseThrow());
+    assertEquals(
+       defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag(),
+       tupleDefnEventAuxAwardEventAuxes.stream().map(TupleDefnEventAuxAwardEventAux::getDefinitionEventAsAddressTag).findFirst().orElseThrow());
+    
+    assertEquals(recipient.getPublicKey(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getAwardRecipientPublicKey());
+
+    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getIdEvent).toList().contains(upvoteEventId));
+    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getIdEvent).toList().contains(downvoteEventId));
 
 //    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::requireRelay).toList().contains(eventTagRelay));
   }

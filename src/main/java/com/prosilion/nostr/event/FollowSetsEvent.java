@@ -136,8 +136,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleDefnEventAuxAwardEventAux tupleDefnEventAuxAwardEventAux) {
     return new EventTag(
        tupleDefnEventAuxAwardEventAux.getAwardEventId(),
-       tupleDefnEventAuxAwardEventAux.getAwardEventRelay()
-          .getUrl());
+       tupleDefnEventAuxAwardEventAux.getAwardEventRelay().map(Relay::getUrl).orElse(null));
   }
 
   public static PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(@NonNull List<TupleDefnEventAuxAwardEventAux> tupleDefnEventAuxAwardEventAuxes) {

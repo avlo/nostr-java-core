@@ -4,6 +4,7 @@ import com.prosilion.nostr.event.BadgeAwardGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.util.Util;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -46,16 +47,16 @@ public class TupleDefnEventAuxAwardEventAux extends ImmutablePair<BadgeDefinitio
     return tupleATagETag.right.getIdEvent();
   }
 
-  public final Relay getAwardEventRelay() {
-    return tupleATagETag.right.requireRelay();
+  public final Optional<Relay> getAwardEventRelay() {
+    return tupleATagETag.right.findRelay();
   }
 
   public final AddressTag getDefinitionEventAsAddressTag() {
     return tupleATagETag.left;
   }
 
-  public final Relay getDefinitionEventRelay() {
-    return tupleATagETag.left.requireRelay();
+  public final Optional<Relay> getDefinitionEventRelay() {
+    return tupleATagETag.left.findRelay();
   }
 
   public static class TupleATagETag extends ImmutablePair<AddressTag, EventTag> {

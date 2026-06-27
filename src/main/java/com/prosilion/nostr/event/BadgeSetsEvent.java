@@ -129,16 +129,11 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
     return requireFirstTag(AddressTag.class);
   }
 
-  @JsonIgnore
-  public final PublicKey getAwardRecipientPulicKey() {
-    return requireFirstTag(PubKeyTag.class).publicKey();
-  }
-
   public static EventTag badgeAwardGenericEventAsEventTag(@NonNull TupleDefnEventAuxAwardEventAux tupleDefnEventAuxAwardEventAux) {
     return new EventTag(
        tupleDefnEventAuxAwardEventAux.getAwardEventId(),
        tupleDefnEventAuxAwardEventAux.getAwardEventRelay()
-          .getUrl());
+          .map(Relay::getUrl).orElse(null));
   }
 
   private static Stream<BaseTag> badgeAwardGenericEventAsTruple(
