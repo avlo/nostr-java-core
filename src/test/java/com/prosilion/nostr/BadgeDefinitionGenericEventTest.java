@@ -3,9 +3,7 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -16,81 +14,67 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BadgeDefinitionGenericEventTest {
-  public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
-  public static final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-  public static final Identity aImgidentity = Identity.generateRandomIdentity();
-
-  public static final String relayArgUrl = "ws://localhost:5555";
-  public static final Relay relayArgRelay = new Relay(relayArgUrl);
-  public static final RelayTag relayArgRelayTag = new RelayTag(relayArgRelay);
-
-  public static final String baseTagsRelayUrl = "ws://localhost-from-relay-tag:5555";
-  public static final Relay baseTagsRelay = new Relay(baseTagsRelayUrl);
-  public static final RelayTag baseTagsRelayTag = new RelayTag(baseTagsRelay);
-
+public class BadgeDefinitionGenericEventTest extends BaseEventTest {
   @Test
   final void A_NoNo__testEventNullRelayNoRelayTag() {
-    BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag);
-    assertEquals(Optional.empty(), badgeDefnUpvoteEvent.getRelayTag());
-    assertEquals(Optional.empty(), badgeDefnUpvoteEvent.getRelayTag().map(RelayTag::getRelay));
-    assertEquals(Optional.empty(), badgeDefnUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
-    assertThrows(Exception.class, () -> badgeDefnUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl).orElseThrow());
-    assertThrows(NostrException.class, () -> badgeDefnUpvoteEvent.requireFirstTag(RelayTag.class));
+    assertEquals(Optional.empty(), defnEvent_NoNo_Upvote.getRelayTag());
+    assertEquals(Optional.empty(), defnEvent_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay));
+    assertEquals(Optional.empty(), defnEvent_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
+    assertThrows(Exception.class, () -> defnEvent_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl).orElseThrow());
+    assertThrows(NostrException.class, () -> defnEvent_NoNo_Upvote.requireFirstTag(RelayTag.class));
 
-    assertTrue(badgeDefnUpvoteEvent.getRelayTag().isEmpty());
-    assertTrue(badgeDefnUpvoteEvent.findFirstTag(RelayTag.class).isEmpty());
-    assertTrue(badgeDefnUpvoteEvent.getTypeSpecificTags(RelayTag.class).isEmpty());
-    assertThrows(NostrException.class, () -> badgeDefnUpvoteEvent.requireFirstTag(RelayTag.class));
+    assertTrue(defnEvent_NoNo_Upvote.getRelayTag().isEmpty());
+    assertTrue(defnEvent_NoNo_Upvote.findFirstTag(RelayTag.class).isEmpty());
+    assertTrue(defnEvent_NoNo_Upvote.getTypeSpecificTags(RelayTag.class).isEmpty());
+    assertThrows(NostrException.class, () -> defnEvent_NoNo_Upvote.requireFirstTag(RelayTag.class));
 
 //    relayTag.getRelay related    
-    assertTrue(badgeDefnUpvoteEvent.getRelay().isEmpty());
-    assertTrue(badgeDefnUpvoteEvent.getRelayTag().map(RelayTag::getRelay).isEmpty());
+    assertTrue(defnEvent_NoNo_Upvote.getRelay().isEmpty());
+    assertTrue(defnEvent_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay).isEmpty());
 
-    AddressTag addressableEventAddressTag = badgeDefnUpvoteEvent.asAddressableEventAddressTag();
-    assertEquals(badgeDefnUpvoteEvent.getKind(), addressableEventAddressTag.getKind());
-    assertEquals(badgeDefnUpvoteEvent.getPublicKey(), addressableEventAddressTag.getPublicKey());
-    assertEquals(badgeDefnUpvoteEvent.getIdentifierTag(), addressableEventAddressTag.requireIdentifierTag());
+    AddressTag addressableEventAddressTag = defnEvent_NoNo_Upvote.asAddressableEventAddressTag();
+    assertEquals(defnEvent_NoNo_Upvote.getKind(), addressableEventAddressTag.getKind());
+    assertEquals(defnEvent_NoNo_Upvote.getPublicKey(), addressableEventAddressTag.getPublicKey());
+    assertEquals(defnEvent_NoNo_Upvote.getIdentifierTag(), addressableEventAddressTag.requireIdentifierTag());
 
-    assertEquals(Optional.empty(), badgeDefnUpvoteEvent.getRelay());
-    assertEquals(Optional.empty(), badgeDefnUpvoteEvent.getRelay().map(Relay::getUrl));
-    assertEquals(Optional.empty(), badgeDefnUpvoteEvent.getRelay().map(Relay::getUrl).map(String::toString));
+    assertEquals(Optional.empty(), defnEvent_NoNo_Upvote.getRelay());
+    assertEquals(Optional.empty(), defnEvent_NoNo_Upvote.getRelay().map(Relay::getUrl));
+    assertEquals(Optional.empty(), defnEvent_NoNo_Upvote.getRelay().map(Relay::getUrl).map(String::toString));
     assertNull(addressableEventAddressTag.getRelay());
   }
 
   @Test
   final void B_NoYes__testEventNullRelayHasRelayTag() {
     testTags(baseTagsRelayTag,
-       new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(baseTagsRelayTag), ""));
+       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(baseTagsRelayTag), ""));
   }
 
   @Test
   final void C_YesNo__testEventHasRelayNoRelayTag() {
-    testTags(relayArgRelayTag,
-       new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relayArgRelay));
+    testTags(relayArgRelayTag, defnEvent_YesNo_Upvote);
   }
 
   @Test
   final void D_YesYes__testEventHasRelayHasRelayTag() {
     testTags(relayArgRelayTag,
-       new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay));
+       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay));
   }
 
   @Test
   final void Z_testEventNullRelayMultipleRelayTags() {
     RelayTag relayTag = new RelayTag(new Relay("ws://localhost-from-another-relay-tag:5555"));
     testTags(baseTagsRelayTag,
-       new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag), ""));
+       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag), ""));
 
     testTags(relayTag,
-       new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(relayTag, baseTagsRelayTag), ""));
+       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(relayTag, baseTagsRelayTag), ""));
   }
 
   @Test
   final void testEventValidBadgeDefinitionGenericEventMultipleRelayTags() {
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-should-not-appear:5555"));
     testTags(relayArgRelayTag,
-       new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay));
+       new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay));
   }
 
   @Test
@@ -98,14 +82,14 @@ public class BadgeDefinitionGenericEventTest {
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-should-not-appear:5555"));
     testTags(relayArgRelayTag,
        new BadgeDefinitionGenericEvent(
-          new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay).asGenericEventRecord()));
+          new BadgeDefinitionGenericEvent(submitter, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay).asGenericEventRecord()));
   }
 
   @Test
   final void testEventValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTagContaingNullRelay() {
     assertThrows(IllegalArgumentException.class, () ->
        new BadgeDefinitionGenericEvent(
-          aImgidentity,
+          submitter,
           upvoteIdentifierTag,
           List.of(new RelayTag(null)),
           "testValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTag"));

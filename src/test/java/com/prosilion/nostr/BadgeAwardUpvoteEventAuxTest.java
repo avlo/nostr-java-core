@@ -11,83 +11,35 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class BadgeAwardUpvoteEventAuxTest {
-  private static final String relayArgUrl = "ws://localhost:5555";
-  private static final Relay relayArgRelay = new Relay(relayArgUrl);
-  private static final RelayTag relayArgRelayTag = new RelayTag(relayArgRelay);
-
-  private static final String baseTagsRelayUrl = "ws://localhost-from-relay-tag:5555";
-  private static final Relay baseTagsRelay = new Relay(baseTagsRelayUrl);
-  private static final RelayTag baseTagsRelayTag = new RelayTag(baseTagsRelay);
-
-  private static final String auxRelayUrl = "ws://localhost-aux-event-relay:5555";
-  private static final Relay auxRelay = new Relay(auxRelayUrl);
-  private static final RelayTag auxRelayTag = new RelayTag(auxRelay);
-
-  public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
-  public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-
-  protected final Identity submitter =
-//     Identity.generateRandomIdentity();
-     Identity.create("aaa4585483196998204846989544737603523651520600328805626488477202");
-
-  protected final Identity upvoteDefnCreator =
-//     Identity.generateRandomIdentity();
-     Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202");
-
-  protected final Identity recipient =
-//     Identity.generateRandomIdentity();
-     Identity.create("ccc4585483196998204846989544737603523651520600328805626488477202");
-
-  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(
-     upvoteDefnCreator, upvoteIdentifierTag, relayArgRelay);
-
-  BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent;
-
-  public BadgeAwardUpvoteEventAuxTest() {
-    this.badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
-       submitter,
-       recipient.getPublicKey(),
-       badgeDefnUpvoteEvent,
-       relayArgRelay);
-  }
-
+public class BadgeAwardUpvoteEventAuxTest extends BaseEventAuxTest {
   @Test
   final void A_NoNo_No_testEventNullRelayNoRelayTagEventAuxNullRelayTag() {
-    BadgeAwardGenericEventAux eventAux = new BadgeAwardGenericEventAux(
-       new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), badgeDefnUpvoteEvent), null);
-
-    assertEquals(Optional.empty(), eventAux.getRelay());
-    assertEquals(Optional.empty(), eventAux.getRelay().map(Relay::getUrl));
-    assertThrows(NostrException.class, () -> eventAux.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
+    assertEquals(Optional.empty(), eventAux_NoNo_No_Upvote.getRelay());
+    assertEquals(Optional.empty(), eventAux_NoNo_No_Upvote.getRelay().map(Relay::getUrl));
+    assertThrows(NostrException.class, () -> eventAux_NoNo_No_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
   }
 
   @Test
   final void A_NoNo_Yes_testEventNullRelayNoRelayTagEventAuxNullRelayTag() {
-    BadgeAwardGenericEventAux eventAux = new BadgeAwardGenericEventAux(
-       new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), badgeDefnUpvoteEvent), auxRelay);
+    assertThrows(NostrException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
+    assertEquals(Optional.empty(), eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelayTag());
 
-    assertThrows(NostrException.class, () -> eventAux.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
-    assertEquals(Optional.empty(), eventAux.getBadgeAwardGenericEvent().getRelayTag());
-
-    assertEquals(auxRelayTag.getRelay(), eventAux.getRelay().orElseThrow());
-    assertEquals(Optional.empty(), eventAux.getBadgeAwardGenericEvent().getRelay());
-    assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeAwardGenericEvent().getRelay().orElseThrow());
-    assertEquals(auxRelayTag.getRelay().getUrl(), eventAux.getRelay().map(Relay::getUrl).orElseThrow());
-    assertEquals(auxRelay, eventAux.getRelay().orElseThrow());
-    assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeAwardGenericEvent().getRelayTag().orElseThrow());
-    assertThrows(NostrException.class, () -> eventAux.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
-    assertThrows(NoSuchElementException.class, () -> eventAux.getBadgeAwardGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());
+    assertEquals(auxRelayTag.getRelay(), eventAux_NoNo_Yes_Upvote.getRelay().orElseThrow());
+    assertEquals(Optional.empty(), eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelay());
+    assertThrows(NoSuchElementException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelay().orElseThrow());
+    assertEquals(auxRelayTag.getRelay().getUrl(), eventAux_NoNo_Yes_Upvote.getRelay().map(Relay::getUrl).orElseThrow());
+    assertEquals(auxRelay, eventAux_NoNo_Yes_Upvote.getRelay().orElseThrow());
+    assertThrows(NoSuchElementException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getRelayTag().orElseThrow());
+    assertThrows(NostrException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().requireFirstTag(RelayTag.class));
+    assertThrows(NoSuchElementException.class, () -> eventAux_NoNo_Yes_Upvote.getBadgeAwardGenericEvent().getTypeSpecificTags(RelayTag.class).stream().findFirst().orElseThrow());
   }
 
   @Test
@@ -95,7 +47,7 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(relayArgRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             badgeDefnUpvoteEvent, List.of(relayArgRelayTag, baseTagsRelayTag), ""), null));
+             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), ""), null));
   }
 
   @Test
@@ -103,7 +55,7 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(relayArgRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             badgeDefnUpvoteEvent, List.of(relayArgRelayTag, baseTagsRelayTag), ""), auxRelay));
+             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), ""), auxRelay));
   }
 
   @Test
@@ -111,7 +63,7 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(relayArgRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             badgeDefnUpvoteEvent, relayArgRelay), null));
+             defnEvent_YesNo_Upvote, relayArgRelay), null));
   }
 
   @Test
@@ -119,7 +71,7 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(relayArgRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             badgeDefnUpvoteEvent, relayArgRelay), auxRelay));
+             defnEvent_YesNo_Upvote, relayArgRelay), auxRelay));
   }
 
   @Test
@@ -127,7 +79,7 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(relayArgRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             badgeDefnUpvoteEvent, List.of(relayArgRelayTag, baseTagsRelayTag), "", relayArgRelay), null));
+             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), "", relayArgRelay), null));
   }
 
   @Test
@@ -135,7 +87,7 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(relayArgRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             badgeDefnUpvoteEvent, List.of(relayArgRelayTag, baseTagsRelayTag), "", relayArgRelay), auxRelay));
+             defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag), "", relayArgRelay), auxRelay));
   }
 
   @Test
@@ -143,7 +95,7 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(baseTagsRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-             badgeDefnUpvoteEvent, List.of(baseTagsRelayTag, relayArgRelayTag), ""), null));
+             defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag, relayArgRelayTag), ""), null));
   }
 
   @Test
@@ -151,24 +103,24 @@ public class BadgeAwardUpvoteEventAuxTest {
     testTags(relayArgRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(
-             new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), badgeDefnUpvoteEvent, relayArgRelay)
+             new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, relayArgRelay)
                 .getGenericEventRecord(),
-             addressTag -> badgeDefnUpvoteEvent), null));
+             addressTag -> defnEvent_YesNo_Upvote), null));
 
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-should-not-appear:5555"));
     testTags(baseTagsRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(
              new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-                badgeDefnUpvoteEvent, List.of(baseTagsRelayTag, anotherRelayTag), "").getGenericEventRecord(),
-             addressTag -> badgeDefnUpvoteEvent), null));
+                defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag, anotherRelayTag), "").getGenericEventRecord(),
+             addressTag -> defnEvent_YesNo_Upvote), null));
 
     testTags(anotherRelayTag,
        new BadgeAwardGenericEventAux(
           new BadgeAwardGenericEvent<>(
              new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(),
-                badgeDefnUpvoteEvent, List.of(anotherRelayTag, baseTagsRelayTag), "").getGenericEventRecord(),
-             addressTag -> badgeDefnUpvoteEvent), null));
+                defnEvent_YesNo_Upvote, List.of(anotherRelayTag, baseTagsRelayTag), "").getGenericEventRecord(),
+             addressTag -> defnEvent_YesNo_Upvote), null));
 
   }
 
@@ -177,8 +129,8 @@ public class BadgeAwardUpvoteEventAuxTest {
     BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
        submitter,
        recipient.getPublicKey(),
-       badgeDefnUpvoteEvent,
-       List.of(this.badgeAwardUpvoteEvent.getAddressableEvent().asAddressableEventAddressTag()),
+       defnEvent_YesNo_Upvote,
+       List.of(award_NoNo_Defn_YesNo_Upvote.getAddressableEvent().asAddressableEventAddressTag()),
        relayArgRelay);
 
     assertEquals(1, List.of(badgeAwardUpvoteEvent.getAddressableEvent().asAddressableEventAddressTag()).size());
@@ -192,27 +144,27 @@ public class BadgeAwardUpvoteEventAuxTest {
 
   @Test
   final void testEventIFAsGenericEventRecord() {
-    EventIF badgeAwardGenericEventAsEventIF = badgeAwardUpvoteEvent;
+    EventIF badgeAwardGenericEventAsEventIF = award_NoNo_Defn_YesNo_Upvote;
     assertEquals(
        badgeAwardGenericEventAsEventIF.asGenericEventRecord(),
-       badgeAwardUpvoteEvent.asGenericEventRecord());
+       award_NoNo_Defn_YesNo_Upvote.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
        badgeAwardGenericEventAsEventIF.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-       badgeAwardUpvoteEvent.asGenericEventRecord());
+       award_NoNo_Defn_YesNo_Upvote.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-       EventIF.asGenericEventRecord.apply(badgeAwardUpvoteEvent));
+       EventIF.asGenericEventRecord.apply(award_NoNo_Defn_YesNo_Upvote));
 
     Function<EventIF, GenericEventRecord> methodInstance_AsGenericEventRecord = EventIF::asGenericEventRecord;
     assertEquals_VariantDemonstration(
-       methodInstance_AsGenericEventRecord.apply(badgeAwardUpvoteEvent));
+       methodInstance_AsGenericEventRecord.apply(award_NoNo_Defn_YesNo_Upvote));
   }
 
   private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {
-    assertEquals(badgeAwardUpvoteEvent.asGenericEventRecord(), genericEventRecordVariant);
+    assertEquals(award_NoNo_Defn_YesNo_Upvote.asGenericEventRecord(), genericEventRecordVariant);
   }
 
   private void testTags(RelayTag relayTag, BadgeAwardGenericEventAux eventAux) {

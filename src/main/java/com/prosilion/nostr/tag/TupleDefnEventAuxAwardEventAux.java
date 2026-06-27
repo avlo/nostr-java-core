@@ -27,9 +27,9 @@ public class TupleDefnEventAuxAwardEventAux extends ImmutablePair<BadgeDefinitio
     Util.debug(log, "badgeDefinitionGenericEventAux.getBadgeDefinitionGenericEvent().getRelayTag():\n  [ {} ]",
        badgeDefinitionGenericEventAux.getBadgeDefinitionGenericEvent().getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl).orElse("EMPTY RELAY"), true, '3');
     Util.debug(log, "badgeDefinitionGenericEventAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().findRelay():\n  [ {} ]",
-       badgeDefinitionGenericEventAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().findRelay().map(Relay::getUrl).orElse("EMPTY RELAY"), true, '3');
+       badgeDefinitionGenericEventAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().findRelay().map(Relay::getUrl).orElse("EMPTY RELAY"), true, '4');
     Util.debug(log, "badgeDefinitionGenericEventAux.getRelay():\n  [ {} ]",
-       badgeDefinitionGenericEventAux.getRelay().map(Relay::getUrl).orElse("EMPTY RELAY"), true, '4');
+       badgeDefinitionGenericEventAux.getRelay().map(Relay::getUrl).orElse("EMPTY RELAY"), true, '5');
 
     this.tupleATagETag = new TupleATagETag(
        new AddressTag(
@@ -39,7 +39,7 @@ public class TupleDefnEventAuxAwardEventAux extends ImmutablePair<BadgeDefinitio
           badgeDefinitionGenericEventAux.getRelay().orElse(null)),
        new EventTag(
           badgeAwardGenericEventAux.getBadgeAwardGenericEvent().getId(),
-          badgeAwardGenericEventAux.getBadgeAwardGenericEvent().getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl).orElse(null)));
+          badgeAwardGenericEventAux.getRelay().map(Relay::getUrl).orElse(null)));
   }
 
   public final String getAwardEventId() {
