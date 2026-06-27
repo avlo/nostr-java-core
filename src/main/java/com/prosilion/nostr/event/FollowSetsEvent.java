@@ -98,14 +98,12 @@ public class FollowSetsEvent extends AbstractSetsEvent<BadgeSetsEvent> {
      List<SetsPairedEvents<BadgeSetsEvent>> tupleDefnEventAuxAwardEventAuxes,
      BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      List<BaseTag> baseTags) {
-    return Stream.concat(
+    return buildTags(
        Stream.concat(
-          Stream.concat(
-             TagMappedEventIF.throwIfEmpty(tupleDefnEventAuxAwardEventAuxes, MESSAGE)
-                .map(AbstractSetsEvent::badgeAwardGenericEventAsEventTag),
-             Stream.of(
-                validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
+          TagMappedEventIF.throwIfEmpty(tupleDefnEventAuxAwardEventAuxes, MESSAGE)
+             .map(AbstractSetsEvent::badgeAwardGenericEventAsEventTag),
           Stream.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag())),
-       filterBaseTags(baseTags)).toList();
+       tupleDefnEventAuxAwardEventAuxes,
+       baseTags);
   }
 }

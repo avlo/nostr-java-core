@@ -85,10 +85,17 @@ public abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends 
        tupleDefnEventAuxAwardEventAux.getAwardEventRelay().map(Relay::getUrl).orElse(null));
   }
 
-  protected static Stream<BaseTag> filterBaseTags(@NonNull List<BaseTag> baseTags) {
-    return baseTags.stream()
-       .filter(Predicate.not(EventTag.class::isInstance))
-       .filter(Predicate.not(PubKeyTag.class::isInstance))
-       .filter(Predicate.not(AddressTag.class::isInstance));
+  protected static <T extends SetsPairedEventTagIF> List<BaseTag> buildTags(
+     @NonNull Stream<BaseTag> primaryTags,
+     @NonNull List<SetsPairedEvents<T>> tupleDefnEventAuxAwardEventAuxes,
+     @NonNull List<BaseTag> baseTags) {
+    return Stream.concat(
+       Stream.concat(
+          primaryTags,
+          Stream.of(validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
+       baseTags.stream()
+          .filter(Predicate.not(EventTag.class::isInstance))
+          .filter(Predicate.not(PubKeyTag.class::isInstance))
+          .filter(Predicate.not(AddressTag.class::isInstance))).toList();
   }
 }

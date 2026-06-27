@@ -95,14 +95,11 @@ public class BadgeSetsEvent extends AbstractSetsEvent<BadgeAwardGenericEventAux>
   private static List<BaseTag> buildTags(
      List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes,
      List<BaseTag> baseTags) {
-    return Stream.concat(
-       Stream.concat(
-          TagMappedEventIF
-             .throwIfEmpty(tupleDefnEventAuxAwardEventAuxes, MESSAGE)
-             .flatMap(setsPairedEvents ->
-                Stream.of(setsPairedEvents.getAddressTag(), setsPairedEvents.getEventTag())),
-          Stream.of(
-             validateIdenticalBadgeAwardGenericEventsPublicKeys(tupleDefnEventAuxAwardEventAuxes))),
-       filterBaseTags(baseTags)).toList();
+    return buildTags(
+       TagMappedEventIF.throwIfEmpty(tupleDefnEventAuxAwardEventAuxes, MESSAGE)
+          .flatMap(setsPairedEvents ->
+             Stream.of(setsPairedEvents.getAddressTag(), setsPairedEvents.getEventTag())),
+       tupleDefnEventAuxAwardEventAuxes,
+       baseTags);
   }
 }
