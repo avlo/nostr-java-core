@@ -1,24 +1,18 @@
 package com.prosilion.nostr.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.event.internal.Relay;
-import java.util.Optional;
-import lombok.Getter;
 import lombok.NonNull;
 
-// TODO: consolidate common fxnality w/ BadgeAwardGenericEventAux
-@Getter
-public class BadgeDefinitionGenericEventAux {
-  private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent;
-  private final Relay relay;
-
+public class BadgeDefinitionGenericEventAux extends BadgeGenericEventAux<BadgeDefinitionGenericEvent> {
   public BadgeDefinitionGenericEventAux(
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
      Relay relay) {
-    this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
-    this.relay = badgeDefinitionGenericEvent.getRelay().orElse(relay);
+    super(badgeDefinitionGenericEvent, relay);
   }
 
-  public final Optional<Relay> getRelay() {
-    return Optional.ofNullable(relay);
+  @JsonIgnore
+  public final BadgeDefinitionGenericEvent getBadgeDefinitionGenericEvent() {
+    return getEvent();
   }
 }

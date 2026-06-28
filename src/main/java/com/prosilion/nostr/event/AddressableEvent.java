@@ -7,12 +7,12 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
-import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -114,10 +114,11 @@ public class AddressableEvent extends BaseEvent {
     return new NostrException(String.format(s, ger.createPrettyPrintJson(), tag));
   }
 
-  static <T extends SetsPairedEventTagIF> PubKeyTag validateIdenticalBadgeAwardGenericEventsPublicKeys(
-     @NonNull List<SetsPairedEvents<T>> tupleDefnEventAuxAwardEventAuxes) {
-    List<PublicKey> distinctPublicKeys = tupleDefnEventAuxAwardEventAuxes.stream()
-       .map(SetsPairedEvents::getDefinitionEventPublicKey)
+  static <T extends SetsPairedEventTagIF> List<BaseTag> validateIdenticalBadgeAwardGenericEventsPublicKeys(
+     @NonNull List<SetsPairedEvents<T>> setsPairedEventsList) {
+    TagMappedEventIF.throwIfEmpty(setsPairedEventsList, "AddressableEvent setsPairedEvents is empty");
+    List<PublicKey> distinctPublicKeys = setsPairedEventsList.stream()
+       .map(SetsPairedEvents::getAwardRecipientPublicKey)
        .distinct().toList();
     if (distinctPublicKeys.size() != 1)
       throw new NostrException(
@@ -125,6 +126,11 @@ public class AddressableEvent extends BaseEvent {
             PUBKEYS_MUST_MATCH,
             distinctPublicKeys.size(),
             distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
-    return new PubKeyTag(distinctPublicKeys.getFirst());
+
+    List<BaseTag> pairs = new ArrayList<>();
+    setsPairedEventsList.forEach(pair ->
+       pairs.addAll(List.of(pair.getAddressTag(), pair.getEventTag())));
+
+    return pairs;
   }
 }

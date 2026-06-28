@@ -62,12 +62,12 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEvent,
-       relayArgRelay, List.of(tupleUpvoteEvent, tupleDownvoteEvent));
+       List.of(tupleUpvoteEvent, tupleDownvoteEvent), relayArgRelay);
 
     assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
 
-    List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getSetsPairedEvents();
+    List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getSetsPairedEventsList();
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleUpvoteEvent));
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleDownvoteEvent));
     String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getId();

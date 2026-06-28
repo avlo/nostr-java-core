@@ -16,8 +16,7 @@ public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
   private final ATagETagPair aTagETagPair;
 
   public SetsPairedEvents(@NonNull BadgeDefinitionGenericEventAux badgeDefinition, @NonNull T badgeAward) {
-    this.recipientPublicKey = badgeAward.getPublicKey();
-    this.aTagETagPair = new ATagETagPair(
+    this(
        new AddressTag(
           badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
           badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getPublicKey(),
@@ -25,7 +24,13 @@ public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
           badgeDefinition.getRelay().orElse(null)),
        new EventTag(
           badgeAward.getEventId(),
-          badgeAward.findRelay().map(Relay::getUrl).orElse(null)));
+          badgeAward.findRelay().map(Relay::getUrl).orElse(null)),
+       badgeAward.getPublicKey());
+  }
+
+  public SetsPairedEvents(@NonNull AddressTag addressTag, @NonNull EventTag eventTag, @NonNull PublicKey publicKey) {
+    this.recipientPublicKey = publicKey;
+    this.aTagETagPair = new ATagETagPair(addressTag, eventTag);
   }
 
   @JsonIgnore

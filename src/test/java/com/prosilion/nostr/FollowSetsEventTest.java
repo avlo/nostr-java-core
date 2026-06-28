@@ -84,15 +84,14 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-       relayArgRelay, List.of(tupleUpvoteEvent, tupleDownvoteEvent));
+       List.of(tupleUpvoteEvent, tupleDownvoteEvent), relayArgRelay);
 
     new FollowSetsEvent(
        aImgIdentity,
-       badgeDefinitionReputationEventPlusOneFormula,
-       auxRelay,
        new SetsPairedEvents<>(
           defnAuxNo_defnEvent_NoNo_Upvote,
-          badgeSetsEvent));
+          badgeSetsEvent),
+       auxRelay);
   }
 
   @Test
@@ -100,10 +99,10 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-       relayArgRelay,
        new SetsPairedEvents<>(
           defnAuxNo_defnEvent_NoNo_Upvote,
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote));
+          eventAuxNo_award_NoNo_defn_NoNo_Upvote), relayArgRelay
+    );
 
     SetsPairedEvents<BadgeSetsEvent> badgeSetsEventTuple = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Upvote,
@@ -111,17 +110,14 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
 
     FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
        aImgIdentity,
-       badgeDefinitionReputationEventPlusOneFormula,
-       auxRelay,
-       badgeSetsEventTuple);
+       badgeSetsEventTuple,
+       auxRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
        expectedFollowSetsEvent.asGenericEventRecord(),
-       badgeSetsEventTuple,
-       addressTag -> badgeDefinitionReputationEventPlusOneFormula);
+       badgeSetsEventTuple);
 
     assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
-    assertEquals(expectedFollowSetsEvent.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
     assertEquals(expectedFollowSetsEvent, followSetsEvent);
 
     assertEquals(1, followSetsEvent.getEventTags().size());
@@ -140,14 +136,14 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-       relayArgRelay,
        List.of(
           new SetsPairedEvents<>(
              defnAuxNo_defnEvent_NoNo_Upvote,
              eventAuxNo_award_NoNo_defn_NoNo_Upvote),
           new SetsPairedEvents<>(
              defnAuxNo_defnEvent_NoNo_Downvote,
-             eventAuxNo_award_NoNo_defn_NoNo_Downvote)));
+             eventAuxNo_award_NoNo_defn_NoNo_Downvote)), relayArgRelay
+    );
 
     SetsPairedEvents<BadgeSetsEvent> badgeSetsEventTuple = new SetsPairedEvents<>(
        defnAuxNo_defnEvent_NoNo_Upvote,
@@ -155,17 +151,14 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
 
     FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
        aImgIdentity,
-       badgeDefinitionReputationEventPlusOneFormula,
-       auxRelay,
-       badgeSetsEventTuple);
+       badgeSetsEventTuple,
+       auxRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
        expectedFollowSetsEvent.getGenericEventRecord(),
-       badgeSetsEventTuple,
-       addressTag -> badgeDefinitionReputationEventPlusOneFormula);
+       badgeSetsEventTuple);
 
     assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
-    assertEquals(expectedFollowSetsEvent.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
     assertEquals(expectedFollowSetsEvent, followSetsEvent);
 
     assertEquals(1, followSetsEvent.getEventTags().size());
