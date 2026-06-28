@@ -15,15 +15,18 @@ import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
 public abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends AddressableEvent implements TagMappedEventIF {
+  public static final String PUBKEYS_MUST_MATCH =
+     "AbstractSetsEvent AwardEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
+  private static final String EMPTY_PAIRS = "AbstractSetsEvent List<SetsPairedEvents> is empty";
   @JsonIgnore
   protected final List<SetsPairedEvents<T>> setsPairedEventsList;
-
 
   protected AbstractSetsEvent(
      @NonNull Identity identity,
@@ -64,7 +67,7 @@ public abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends 
   @JsonIgnore
   public final List<EventTag> getEventTags() {
     return setsPairedEventsList.stream()
-       .map(AbstractSetsEvent::badgeAwardGenericEventAsEventTag)
+       .map(SetsPairedEvents::getEventTag)
        .toList();
   }
 
@@ -73,20 +76,37 @@ public abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends 
     return setsPairedEventsList.getFirst().getAwardRecipientPublicKey();
   }
 
-  public static <T extends SetsPairedEventTagIF> EventTag badgeAwardGenericEventAsEventTag(@NonNull SetsPairedEvents<T> tupleDefnEventAuxAwardEventAux) {
-    return new EventTag(
-       tupleDefnEventAuxAwardEventAux.getAwardEventId(),
-       tupleDefnEventAuxAwardEventAux.getAwardEventRelay().map(Relay::getUrl).orElse(null));
-  }
-
   protected static <T extends SetsPairedEventTagIF> List<BaseTag> buildTags(
      @NonNull List<SetsPairedEvents<T>> setsPairedEventsList,
      @NonNull List<BaseTag> baseTags) {
     return Stream.concat(
-       validateIdenticalBadgeAwardGenericEventsPublicKeys(
-          setsPairedEventsList).stream(),
+       flattenSetsPairedEventsToTags(
+          validateIdenticalBadgeAwardGenericEventsPublicKeys(setsPairedEventsList)),
        baseTags.stream()
           .filter(Predicate.not(EventTag.class::isInstance))
           .filter(Predicate.not(AddressTag.class::isInstance))).toList();
+  }
+
+  private static <T extends SetsPairedEventTagIF> Stream<SetsPairedEvents<T>> validateIdenticalBadgeAwardGenericEventsPublicKeys(
+     @NonNull List<SetsPairedEvents<T>> pairs) {
+    List<PublicKey> uniqueKeys =
+       TagMappedEventIF.throwIfEmpty(pairs, EMPTY_PAIRS)
+          .map(SetsPairedEvents::getAwardRecipientPublicKey)
+          .distinct().toList();
+    if (uniqueKeys.size() != 1)
+      throw new NostrException(
+         String.format(
+            PUBKEYS_MUST_MATCH,
+            uniqueKeys.size(),
+            uniqueKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
+    return pairs.stream();
+  }
+
+  private static <T extends SetsPairedEventTagIF> Stream<BaseTag> flattenSetsPairedEventsToTags(
+     @NonNull Stream<SetsPairedEvents<T>> setsPairedEventsList) {
+    return setsPairedEventsList
+       .flatMap(pair ->
+          Stream.of(
+             pair.getAddressTag(), (BaseTag) pair.getEventTag()));
   }
 }

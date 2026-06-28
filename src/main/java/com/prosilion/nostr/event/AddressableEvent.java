@@ -8,17 +8,12 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.tag.SetsPairedEventTagIF;
-import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jspecify.annotations.NonNull;
 
@@ -31,9 +26,6 @@ import org.jspecify.annotations.NonNull;
  * ["a", "KIND:EVENT_CREATOR_PUBKEY:UUID", "URL"]
  */
 public class AddressableEvent extends BaseEvent {
-  public static final String PUBKEYS_MUST_MATCH =
-     "AddressableEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
-
   public AddressableEvent(
      @NonNull Identity identity,
      @NonNull Kind kind,
@@ -112,25 +104,5 @@ public class AddressableEvent extends BaseEvent {
 
   private static NostrException exceptionMessage(String s, GenericEventRecord ger, String tag) {
     return new NostrException(String.format(s, ger.createPrettyPrintJson(), tag));
-  }
-
-  static <T extends SetsPairedEventTagIF> List<BaseTag> validateIdenticalBadgeAwardGenericEventsPublicKeys(
-     @NonNull List<SetsPairedEvents<T>> setsPairedEventsList) {
-    TagMappedEventIF.throwIfEmpty(setsPairedEventsList, "AddressableEvent setsPairedEvents is empty");
-    List<PublicKey> distinctPublicKeys = setsPairedEventsList.stream()
-       .map(SetsPairedEvents::getAwardRecipientPublicKey)
-       .distinct().toList();
-    if (distinctPublicKeys.size() != 1)
-      throw new NostrException(
-         String.format(
-            PUBKEYS_MUST_MATCH,
-            distinctPublicKeys.size(),
-            distinctPublicKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
-
-    List<BaseTag> pairs = new ArrayList<>();
-    setsPairedEventsList.forEach(pair ->
-       pairs.addAll(List.of(pair.getAddressTag(), pair.getEventTag())));
-
-    return pairs;
   }
 }
