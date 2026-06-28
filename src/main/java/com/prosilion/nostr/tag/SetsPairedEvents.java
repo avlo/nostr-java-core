@@ -6,10 +6,12 @@ import com.prosilion.nostr.event.BadgeAwardGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j
 public class SetsPairedEvents {
@@ -79,9 +81,30 @@ public class SetsPairedEvents {
     return recipientPublicKey;
   }
 
-  private static class ATagETagPair extends ImmutablePair<AddressTag, EventTag> {
+  private static class ATagETagPair extends ImmutablePair<AddressTag, EventTag> implements Comparable<Pair<AddressTag, EventTag>> {
     public ATagETagPair(@NonNull AddressTag left, @NonNull EventTag right) {
       super(left, right);
     }
+
+    @Override
+    public final boolean equals(Object that) {
+      if (that == null || getClass() != that.getClass()) return false;
+      ATagETagPair thatATagETagPair = (ATagETagPair) that;
+      return Objects.equals(left, thatATagETagPair.left) &&
+         Objects.equals(right, thatATagETagPair.right);
+    }
+  }
+
+  @Override
+  public final boolean equals(Object that) {
+    if (that == null || getClass() != that.getClass()) return false;
+    SetsPairedEvents thatSetsPairedEvents = (SetsPairedEvents) that;
+    return Objects.equals(recipientPublicKey, thatSetsPairedEvents.recipientPublicKey) &&
+       Objects.equals(aTagETagPair, thatSetsPairedEvents.aTagETagPair);
+  }
+
+  @Override
+  public final int hashCode() {
+    return Objects.hash(recipientPublicKey, aTagETagPair);
   }
 }

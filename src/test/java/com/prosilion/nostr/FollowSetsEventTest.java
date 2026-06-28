@@ -162,37 +162,28 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
     assertEquals(auxRelay, followSetsEvent.getRelayTag().map(RelayTag::getRelay).orElseThrow());
   }
 
-//  @Test
-//  final void eventTagCountAsListTest() {
-//    Identity authorIdentity = Identity.generateRandomIdentity();
-//
-//    BadgeDefinitionGenericEvent badgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(
-//       authorIdentity,
-//       upvoteIdentifierTag,
-//       auxRelay);
-//
-//    BadgeDefinitionGenericEventAux badgeDefinitionGenericEventAux = new BadgeDefinitionGenericEventAux(
-//       badgeDefinitionGenericEvent,
-//       new RelayTag(auxRelay));
-//
-//    BadgeAwardGenericEventAux<BadgeDefinitionGenericEventAux> badgeAwardGenericEvent = new BadgeAwardGenericEventAux<>(
-//       authorIdentity,
-//       upvotedUserPublicKey,
-//       auxRelay,
-//       badgeDefinitionGenericEventAux);
-//
-//    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
-//       aImgIdentity,
-//       badgeDefinitionReputationEventPlusOneFormula,
-//       auxRelay,
-//       List.of(badgeAwardGenericEvent),
-//       FollowSetsEvent.class.getSimpleName());
-//
-//    assertEquals(1, followSetsEvent.getEventTags().size());
-//    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
-//    assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
-//    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
-//  }
+  @Test
+  final void eventTagCountAsListTest() {
+    BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
+       List.of(
+          new SetsPairedEvents(
+             defnAuxNo_defnEvent_NoNo_Upvote,
+             eventAuxNo_award_NoNo_defn_NoNo_Upvote),
+          new SetsPairedEvents(
+             defnAuxNo_defnEvent_NoNo_Upvote,
+             eventAuxNo_award_NoNo_defn_NoNo_Upvote)), relayArgRelay);
+
+    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
+       badgeSetsEvent.getGenericEventRecord(),
+       badgeSetsEvent);
+
+    assertEquals(1, followSetsEvent.getEventTags().size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
+    assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
+  }
 //
 //  @Test
 //  final void relayTagCountTest() {

@@ -8,7 +8,6 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
-import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
@@ -19,13 +18,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
-@Getter
+@Slf4j
 public abstract class AbstractSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String PUBKEYS_MUST_MATCH =
      "AbstractSetsEvent AwardEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
   private static final String EMPTY_PAIRS = "AbstractSetsEvent List<SetsPairedEvents> is empty";
-  
+
   @Getter
   @JsonIgnore
   protected final List<SetsPairedEvents> setsPairedEventsList;
@@ -40,14 +40,14 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
      @NonNull Relay relay) throws NostrException {
     super(identity, kind, identifierTag,
        buildTags(setsPairedEventsList, tags), content, relay);
-    this.setsPairedEventsList = setsPairedEventsList;
+    this.setsPairedEventsList = cullMatchingSetsPairs(setsPairedEventsList);
   }
 
   protected AbstractSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull List<SetsPairedEvents> setsPairedEventsList) {
     super(genericEventRecord);
-    this.setsPairedEventsList = setsPairedEventsList;
+    this.setsPairedEventsList = cullMatchingSetsPairs(setsPairedEventsList);
   }
 
   @JsonIgnore
@@ -78,18 +78,18 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
     return setsPairedEventsList.getFirst().getAwardRecipientPublicKey();
   }
 
-  protected static <T extends SetsPairedEventTagIF> List<BaseTag> buildTags(
+  protected static List<BaseTag> buildTags(
      @NonNull List<SetsPairedEvents> setsPairedEventsList,
      @NonNull List<BaseTag> baseTags) {
     return Stream.concat(
-       flattenSetsPairedEventsToTags(
-          validateIdenticalBadgeAwardGenericEventsPublicKeys(setsPairedEventsList)),
+       setsPairsToBaseTags(
+          throwNonUniquePublicKeys(setsPairedEventsList).toList()),
        baseTags.stream()
           .filter(Predicate.not(EventTag.class::isInstance))
           .filter(Predicate.not(AddressTag.class::isInstance))).toList();
   }
 
-  private static Stream<SetsPairedEvents> validateIdenticalBadgeAwardGenericEventsPublicKeys(
+  private static Stream<SetsPairedEvents> throwNonUniquePublicKeys(
      @NonNull List<SetsPairedEvents> pairs) {
     List<PublicKey> uniqueKeys =
        TagMappedEventIF.throwIfEmpty(pairs, EMPTY_PAIRS)
@@ -104,11 +104,24 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
     return pairs.stream();
   }
 
-  private static Stream<BaseTag> flattenSetsPairedEventsToTags(
-     @NonNull Stream<SetsPairedEvents> setsPairedEventsList) {
-    return setsPairedEventsList
+  private static Stream<BaseTag> setsPairsToBaseTags(@NonNull List<SetsPairedEvents> sets) {
+    return cullMatchingSetsPairs(sets).stream()
        .flatMap(pair ->
           Stream.of(
              pair.getAddressTag(), (BaseTag) pair.getEventTag()));
+  }
+
+  private static List<SetsPairedEvents> cullMatchingSetsPairs(List<SetsPairedEvents> setsPairedEventsList) {
+    List<SetsPairedEvents> distinctSets = setsPairedEventsList.stream().distinct().toList();
+    int initialSize = setsPairedEventsList.size();
+    if (initialSize != distinctSets.size()) {
+      log.info("*** WARNING: non-distinct SetsPairedEvents ***");
+      log.info("***  List<SetsPairedEvents>  size: [ {} ]  ***", initialSize);
+      log.info("***  future variants will throw exception  ***");
+      log.info("*** WARNING: non-distinct SetsPairedEvents ***");
+    }
+
+    log.info("flattenSetsPairedEventsToTags returning distinct size: [{}]", distinctSets.size());
+    return distinctSets;
   }
 }
