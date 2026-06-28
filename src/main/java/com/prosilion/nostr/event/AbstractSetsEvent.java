@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends AddressableEvent implements TagMappedEventIF {
+abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends AddressableEvent implements TagMappedEventIF {
   public static final String PUBKEYS_MUST_MATCH =
      "AbstractSetsEvent AwardEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
   private static final String EMPTY_PAIRS = "AbstractSetsEvent List<SetsPairedEvents> is empty";
