@@ -1,7 +1,6 @@
 package com.prosilion.nostr;
 
 import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.BadgeAwardGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
@@ -73,11 +72,11 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
 
   @Test
   final void testValidFollowSetsEvent() {
-    SetsPairedEvents<BadgeAwardGenericEventAux> tupleUpvoteEvent = new SetsPairedEvents<>(
+    SetsPairedEvents tupleUpvoteEvent = new SetsPairedEvents(
        defnAuxNo_defnEvent_NoNo_Upvote,
        eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
-    SetsPairedEvents<BadgeAwardGenericEventAux> tupleDownvoteEvent = new SetsPairedEvents<>(
+    SetsPairedEvents tupleDownvoteEvent = new SetsPairedEvents(
        defnAuxNo_defnEvent_NoNo_Downvote,
        eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
@@ -88,34 +87,29 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
 
     new FollowSetsEvent(
        aImgIdentity,
-       new SetsPairedEvents<>(
-          defnAuxNo_defnEvent_NoNo_Upvote,
-          badgeSetsEvent),
+       badgeSetsEvent,
        auxRelay);
   }
 
   @Test
   final void testFollowSetsEventEquality() {
+    SetsPairedEvents badgeSetsEventPairedEvents = new SetsPairedEvents(
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-       new SetsPairedEvents<>(
-          defnAuxNo_defnEvent_NoNo_Upvote,
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote), relayArgRelay
-    );
-
-    SetsPairedEvents<BadgeSetsEvent> badgeSetsEventTuple = new SetsPairedEvents<>(
-       defnAuxNo_defnEvent_NoNo_Upvote,
-       badgeSetsEvent);
+       badgeSetsEventPairedEvents, relayArgRelay);
 
     FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
        aImgIdentity,
-       badgeSetsEventTuple,
+       badgeSetsEvent,
        auxRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
        expectedFollowSetsEvent.asGenericEventRecord(),
-       badgeSetsEventTuple);
+       badgeSetsEvent);
 
     assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
     assertEquals(expectedFollowSetsEvent, followSetsEvent);
@@ -137,34 +131,30 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
        List.of(
-          new SetsPairedEvents<>(
+          new SetsPairedEvents(
              defnAuxNo_defnEvent_NoNo_Upvote,
              eventAuxNo_award_NoNo_defn_NoNo_Upvote),
-          new SetsPairedEvents<>(
+          new SetsPairedEvents(
              defnAuxNo_defnEvent_NoNo_Downvote,
              eventAuxNo_award_NoNo_defn_NoNo_Downvote)), relayArgRelay
     );
 
-    SetsPairedEvents<BadgeSetsEvent> badgeSetsEventTuple = new SetsPairedEvents<>(
-       defnAuxNo_defnEvent_NoNo_Upvote,
-       badgeSetsEvent);
-
     FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
        aImgIdentity,
-       badgeSetsEventTuple,
+       badgeSetsEvent,
        auxRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
        expectedFollowSetsEvent.getGenericEventRecord(),
-       badgeSetsEventTuple);
+       badgeSetsEvent);
 
     assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
     assertEquals(expectedFollowSetsEvent, followSetsEvent);
 
-    assertEquals(1, followSetsEvent.getEventTags().size());
-    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
-    assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
-    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
+    assertEquals(2, followSetsEvent.getEventTags().size());
+    assertEquals(2, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
+    assertEquals(2, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
+    assertEquals(2, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
 
     assertEquals(1, followSetsEvent.getTypeSpecificTags(RelayTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(RelayTag.class::isInstance).toList().size());

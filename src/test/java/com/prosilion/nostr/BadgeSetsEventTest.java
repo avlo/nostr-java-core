@@ -1,7 +1,6 @@
 package com.prosilion.nostr;
 
 import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.BadgeAwardGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
@@ -51,11 +50,11 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
   @Test
   final void testValidBadgeSetsEvent() {
-    SetsPairedEvents<BadgeAwardGenericEventAux> tupleUpvoteEvent = new SetsPairedEvents<>(
+    SetsPairedEvents tupleUpvoteEvent = new SetsPairedEvents(
        defnAuxNo_defnEvent_NoNo_Upvote,
        eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
-    SetsPairedEvents<BadgeAwardGenericEventAux> tupleDownvoteEvent = new SetsPairedEvents<>(
+    SetsPairedEvents tupleDownvoteEvent = new SetsPairedEvents(
        defnAuxNo_defnEvent_NoNo_Downvote,
        eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
@@ -67,7 +66,7 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
     assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
 
-    List<SetsPairedEvents<BadgeAwardGenericEventAux>> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getSetsPairedEventsList();
+    List<SetsPairedEvents> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getSetsPairedEventsList();
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleUpvoteEvent));
     assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleDownvoteEvent));
     String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getId();

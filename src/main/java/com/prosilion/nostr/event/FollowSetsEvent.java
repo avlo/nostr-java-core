@@ -7,55 +7,56 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
+import java.util.Collection;
 import java.util.List;
 import lombok.NonNull;
 
-public class FollowSetsEvent extends AbstractSetsEvent<BadgeSetsEvent> {
+public class FollowSetsEvent extends AbstractSetsEvent {
   public static final String DEFAULT_IDENTIFIER = "PROSILION_FOLLOW_SETS_EVENT";
   public static final IdentifierTag defaultIdentifierTag = new IdentifierTag(DEFAULT_IDENTIFIER);
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";
 
   public FollowSetsEvent(
      @NonNull Identity identity,
-     @NonNull SetsPairedEvents<BadgeSetsEvent> setsPairedEvents,
+     @NonNull BadgeSetsEvent badgeSetsEvent,
      @NonNull Relay relay) {
-    this(identity, List.of(setsPairedEvents), List.of(), DEFAULT_CONTENT, relay);
+    this(identity, List.of(badgeSetsEvent), List.of(), DEFAULT_CONTENT, relay);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
-     @NonNull List<SetsPairedEvents<BadgeSetsEvent>> setsPairedEventsList,
+     @NonNull List<BadgeSetsEvent> badgeSetsEvents,
      @NonNull Relay relay) {
-    this(identity, setsPairedEventsList, List.of(), DEFAULT_CONTENT, relay);
+    this(identity, badgeSetsEvents, List.of(), DEFAULT_CONTENT, relay);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
-     @NonNull List<SetsPairedEvents<BadgeSetsEvent>> setsPairedEventsList,
+     @NonNull List<BadgeSetsEvent> badgeSetsEvents,
      @NonNull List<BaseTag> baseTags,
      @NonNull Relay relay) throws NostrException {
-    this(identity, setsPairedEventsList, baseTags, DEFAULT_CONTENT, relay);
+    this(identity, badgeSetsEvents, baseTags, DEFAULT_CONTENT, relay);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
-     @NonNull SetsPairedEvents<BadgeSetsEvent> setsPairedEvents,
+     @NonNull BadgeSetsEvent badgeSetsEvent,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
-    this(identity, List.of(setsPairedEvents), List.of(), content, relay);
+    this(identity, List.of(badgeSetsEvent), List.of(), content, relay);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
-     @NonNull List<SetsPairedEvents<BadgeSetsEvent>> setsPairedEventsList,
+     @NonNull List<BadgeSetsEvent> badgeSetsEvents,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
-    this(identity, setsPairedEventsList, List.of(), content, relay);
+    this(identity, badgeSetsEvents, List.of(), content, relay);
   }
 
   public FollowSetsEvent(
      @NonNull Identity identity,
-     @NonNull List<SetsPairedEvents<BadgeSetsEvent>> setsPairedEventsList,
+     @NonNull List<BadgeSetsEvent> badgeSetsEvents,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
@@ -63,7 +64,7 @@ public class FollowSetsEvent extends AbstractSetsEvent<BadgeSetsEvent> {
        identity,
        Kind.FOLLOW_SETS,
        defaultIdentifierTag,
-       setsPairedEventsList,
+       mapStream(badgeSetsEvents),
        baseTags,
        content,
        relay);
@@ -71,13 +72,17 @@ public class FollowSetsEvent extends AbstractSetsEvent<BadgeSetsEvent> {
 
   public FollowSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull SetsPairedEvents<BadgeSetsEvent> setsPairedEvents) {
-    this(genericEventRecord, List.of(setsPairedEvents));
+     @NonNull BadgeSetsEvent badgeSetsEvent) {
+    this(genericEventRecord, List.of(badgeSetsEvent));
   }
 
   public FollowSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<SetsPairedEvents<BadgeSetsEvent>> setsPairedEventsList) {
-    super(genericEventRecord, setsPairedEventsList);
+     @NonNull List<BadgeSetsEvent> badgeSetsEvents) {
+    super(genericEventRecord, mapStream(badgeSetsEvents));
+  }
+
+  private static List<SetsPairedEvents> mapStream(List<BadgeSetsEvent> badgeSetsEvents) {
+    return badgeSetsEvents.stream().map(AbstractSetsEvent::getSetsPairedEventsList).flatMap(Collection::stream).toList();
   }
 }

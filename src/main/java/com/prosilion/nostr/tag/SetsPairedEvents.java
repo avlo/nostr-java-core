@@ -2,6 +2,7 @@ package com.prosilion.nostr.tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.BadgeAwardGenericEventAux;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
@@ -11,21 +12,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 @Slf4j
-public class SetsPairedEvents<T extends SetsPairedEventTagIF> {
+public class SetsPairedEvents {
   private final PublicKey recipientPublicKey;
   private final ATagETagPair aTagETagPair;
 
-  public SetsPairedEvents(@NonNull BadgeDefinitionGenericEventAux badgeDefinition, @NonNull T badgeAward) {
+  public SetsPairedEvents(@NonNull BadgeDefinitionGenericEventAux defnAux, @NonNull BadgeAwardGenericEventAux awardAux) {
     this(
        new AddressTag(
-          badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
-          badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getPublicKey(),
-          badgeDefinition.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getIdentifierTag(),
-          badgeDefinition.getRelay().orElse(null)),
+          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
+          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getPublicKey(),
+          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getIdentifierTag(),
+          defnAux.getRelay().orElse(null)),
        new EventTag(
-          badgeAward.getEventId(),
-          badgeAward.findRelay().map(Relay::getUrl).orElse(null)),
-       badgeAward.getPublicKey());
+          awardAux.getEventId(),
+          awardAux.findRelay().map(Relay::getUrl).orElse(null)),
+       awardAux.getPublicKey());
   }
 
   public SetsPairedEvents(@NonNull AddressTag addressTag, @NonNull EventTag eventTag, @NonNull PublicKey publicKey) {

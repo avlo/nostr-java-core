@@ -21,18 +21,20 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends AddressableEvent implements TagMappedEventIF {
+public abstract class AbstractSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String PUBKEYS_MUST_MATCH =
      "AbstractSetsEvent AwardEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
   private static final String EMPTY_PAIRS = "AbstractSetsEvent List<SetsPairedEvents> is empty";
+  
+  @Getter
   @JsonIgnore
-  protected final List<SetsPairedEvents<T>> setsPairedEventsList;
+  protected final List<SetsPairedEvents> setsPairedEventsList;
 
   protected AbstractSetsEvent(
      @NonNull Identity identity,
      @NonNull Kind kind,
      @NonNull IdentifierTag identifierTag,
-     @NonNull List<SetsPairedEvents<T>> setsPairedEventsList,
+     @NonNull List<SetsPairedEvents> setsPairedEventsList,
      @NonNull List<BaseTag> tags,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
@@ -43,7 +45,7 @@ abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends Address
 
   protected AbstractSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<SetsPairedEvents<T>> setsPairedEventsList) {
+     @NonNull List<SetsPairedEvents> setsPairedEventsList) {
     super(genericEventRecord);
     this.setsPairedEventsList = setsPairedEventsList;
   }
@@ -77,7 +79,7 @@ abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends Address
   }
 
   protected static <T extends SetsPairedEventTagIF> List<BaseTag> buildTags(
-     @NonNull List<SetsPairedEvents<T>> setsPairedEventsList,
+     @NonNull List<SetsPairedEvents> setsPairedEventsList,
      @NonNull List<BaseTag> baseTags) {
     return Stream.concat(
        flattenSetsPairedEventsToTags(
@@ -87,8 +89,8 @@ abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends Address
           .filter(Predicate.not(AddressTag.class::isInstance))).toList();
   }
 
-  private static <T extends SetsPairedEventTagIF> Stream<SetsPairedEvents<T>> validateIdenticalBadgeAwardGenericEventsPublicKeys(
-     @NonNull List<SetsPairedEvents<T>> pairs) {
+  private static Stream<SetsPairedEvents> validateIdenticalBadgeAwardGenericEventsPublicKeys(
+     @NonNull List<SetsPairedEvents> pairs) {
     List<PublicKey> uniqueKeys =
        TagMappedEventIF.throwIfEmpty(pairs, EMPTY_PAIRS)
           .map(SetsPairedEvents::getAwardRecipientPublicKey)
@@ -102,8 +104,8 @@ abstract class AbstractSetsEvent<T extends SetsPairedEventTagIF> extends Address
     return pairs.stream();
   }
 
-  private static <T extends SetsPairedEventTagIF> Stream<BaseTag> flattenSetsPairedEventsToTags(
-     @NonNull Stream<SetsPairedEvents<T>> setsPairedEventsList) {
+  private static Stream<BaseTag> flattenSetsPairedEventsToTags(
+     @NonNull Stream<SetsPairedEvents> setsPairedEventsList) {
     return setsPairedEventsList
        .flatMap(pair ->
           Stream.of(
