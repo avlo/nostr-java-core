@@ -72,18 +72,18 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
 
   @Test
   final void testValidFollowSetsEvent() {
-    SetsPairedEvents tupleUpvoteEvent = new SetsPairedEvents(
+    SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(
        defnAuxNo_defnEvent_NoNo_Upvote,
        eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
-    SetsPairedEvents tupleDownvoteEvent = new SetsPairedEvents(
+    SetsPairedEvents setsPairedDownvoteEvents = new SetsPairedEvents(
        defnAuxNo_defnEvent_NoNo_Downvote,
        eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-       List.of(tupleUpvoteEvent, tupleDownvoteEvent), relayArgRelay);
+       List.of(setsPairedUpvoteEvents, setsPairedDownvoteEvents), relayArgRelay);
 
     new FollowSetsEvent(
        aImgIdentity,
