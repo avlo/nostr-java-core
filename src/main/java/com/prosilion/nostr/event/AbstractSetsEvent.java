@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String PUBKEYS_MUST_MATCH =
-     "AbstractSetsEvent AwardEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
+    "AbstractSetsEvent AwardEvent PublicKeys must all match, but instead contained [%s] different keys:\n  [%s]";
   private static final String EMPTY_PAIRS = "AbstractSetsEvent List<SetsPairedEvents> is empty";
 
   @Getter
@@ -31,21 +31,22 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
   protected final List<SetsPairedEvents> setsPairedEventsList;
 
   protected AbstractSetsEvent(
-     @NonNull Identity identity,
-     @NonNull Kind kind,
-     @NonNull IdentifierTag identifierTag,
-     @NonNull List<SetsPairedEvents> setsPairedEventsList,
-     @NonNull List<BaseTag> tags,
-     @NonNull String content,
-     @NonNull Relay relay) throws NostrException {
+    @NonNull Identity identity,
+    @NonNull Kind kind,
+    @NonNull IdentifierTag identifierTag,
+    @NonNull List<SetsPairedEvents> setsPairedEventsList,
+    @NonNull List<BaseTag> tags,
+    @NonNull String content,
+    @NonNull Relay relay) throws NostrException {
     super(identity, kind, identifierTag,
-       buildTags(setsPairedEventsList, tags), content, relay);
+      buildTags(
+        cullMatchingSetsPairs(setsPairedEventsList), tags), content, relay);
     this.setsPairedEventsList = cullMatchingSetsPairs(setsPairedEventsList);
   }
 
   protected AbstractSetsEvent(
-     @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<SetsPairedEvents> setsPairedEventsList) {
+    @NonNull GenericEventRecord genericEventRecord,
+    @NonNull List<SetsPairedEvents> setsPairedEventsList) {
     super(genericEventRecord);
     this.setsPairedEventsList = cullMatchingSetsPairs(setsPairedEventsList);
   }
@@ -63,14 +64,14 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
   @JsonIgnore
   public final List<AddressTag> getAddressTags() {
     return setsPairedEventsList.stream()
-       .map(SetsPairedEvents::getAddressTag).toList();
+      .map(SetsPairedEvents::getAddressTag).toList();
   }
 
   @JsonIgnore
   public final List<EventTag> getEventTags() {
     return setsPairedEventsList.stream()
-       .map(SetsPairedEvents::getEventTag)
-       .toList();
+      .map(SetsPairedEvents::getEventTag)
+      .toList();
   }
 
   @JsonIgnore
@@ -79,36 +80,36 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
   }
 
   protected static List<BaseTag> buildTags(
-     @NonNull List<SetsPairedEvents> setsPairedEventsList,
-     @NonNull List<BaseTag> baseTags) {
+    @NonNull List<SetsPairedEvents> setsPairedEventsList,
+    @NonNull List<BaseTag> baseTags) {
     return Stream.concat(
-       setsPairsToBaseTags(
-          throwNonUniquePublicKeys(setsPairedEventsList).toList()),
-       baseTags.stream()
-          .filter(Predicate.not(EventTag.class::isInstance))
-          .filter(Predicate.not(AddressTag.class::isInstance))).toList();
+      setsPairsToBaseTags(
+        throwNonUniquePublicKeys(setsPairedEventsList).toList()),
+      baseTags.stream()
+        .filter(Predicate.not(EventTag.class::isInstance))
+        .filter(Predicate.not(AddressTag.class::isInstance))).toList();
   }
 
   private static Stream<SetsPairedEvents> throwNonUniquePublicKeys(
-     @NonNull List<SetsPairedEvents> pairs) {
+    @NonNull List<SetsPairedEvents> pairs) {
     List<PublicKey> uniqueKeys =
-       TagMappedEventIF.throwIfEmpty(pairs, EMPTY_PAIRS)
-          .map(SetsPairedEvents::getAwardRecipientPublicKey)
-          .distinct().toList();
+      TagMappedEventIF.throwIfEmpty(pairs, EMPTY_PAIRS)
+        .map(SetsPairedEvents::getAwardRecipientPublicKey)
+        .distinct().toList();
     if (uniqueKeys.size() != 1)
       throw new NostrException(
-         String.format(
-            PUBKEYS_MUST_MATCH,
-            uniqueKeys.size(),
-            uniqueKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
+        String.format(
+          PUBKEYS_MUST_MATCH,
+          uniqueKeys.size(),
+          uniqueKeys.stream().map(PublicKey::toHexString).collect(Collectors.joining("],\n  ["))));
     return pairs.stream();
   }
 
   private static Stream<BaseTag> setsPairsToBaseTags(@NonNull List<SetsPairedEvents> sets) {
     return cullMatchingSetsPairs(sets).stream()
-       .flatMap(pair ->
-          Stream.of(
-             pair.getAddressTag(), (BaseTag) pair.getEventTag()));
+      .flatMap(pair ->
+        Stream.of(
+          pair.getAddressTag(), (BaseTag) pair.getEventTag()));
   }
 
   private static List<SetsPairedEvents> cullMatchingSetsPairs(List<SetsPairedEvents> setsPairedEventsList) {

@@ -20,15 +20,15 @@ public class SetsPairedEvents {
 
   public SetsPairedEvents(@NonNull BadgeDefinitionGenericEventAux defnAux, @NonNull BadgeAwardGenericEventAux awardAux) {
     this(
-       new AddressTag(
-          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
-          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getPublicKey(),
-          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getIdentifierTag(),
-          defnAux.getRelay().orElse(null)),
-       new EventTag(
-          awardAux.getEventId(),
-          awardAux.findRelay().map(Relay::getUrl).orElse(null)),
-       awardAux.getPublicKey());
+      new AddressTag(
+        defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
+        defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getPublicKey(),
+        defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getIdentifierTag(),
+        defnAux.getRelay().orElse(null)),
+      new EventTag(
+        awardAux.getEventId(),
+        awardAux.findRelay().map(Relay::getUrl).orElse(null)),
+      awardAux.getPublicKey());
   }
 
   public SetsPairedEvents(@NonNull AddressTag addressTag, @NonNull EventTag eventTag, @NonNull PublicKey publicKey) {
@@ -91,7 +91,7 @@ public class SetsPairedEvents {
       if (that == null || getClass() != that.getClass()) return false;
       ATagETagPair thatATagETagPair = (ATagETagPair) that;
       return Objects.equals(left, thatATagETagPair.left) &&
-         Objects.equals(right, thatATagETagPair.right);
+        Objects.equals(right, thatATagETagPair.right);
     }
   }
 
@@ -100,7 +100,7 @@ public class SetsPairedEvents {
     if (that == null || getClass() != that.getClass()) return false;
     SetsPairedEvents thatSetsPairedEvents = (SetsPairedEvents) that;
     return Objects.equals(recipientPublicKey, thatSetsPairedEvents.recipientPublicKey) &&
-       Objects.equals(aTagETagPair, thatSetsPairedEvents.aTagETagPair);
+      Objects.equals(aTagETagPair, thatSetsPairedEvents.aTagETagPair);
   }
 
   @Override
