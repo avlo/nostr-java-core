@@ -191,7 +191,7 @@ public class JsonParseTest {
     List<Filterable> referencedEventFilters = filters.getFilterByType(ReferencedEventFilter.FILTER_KEY);
     assertEquals(1, referencedEventFilters.size());
     assertEquals(new ReferencedEventFilter(new EventTag("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712")), referencedEventFilters.getFirst());
-    assertEquals(new ReferencedEventFilter(new EventTag("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712", relay.getUrl())).getFilterable().getIdEvent(), ((ReferencedEventFilter) referencedEventFilters.getFirst()).getFilterable().getIdEvent());
+    assertEquals(new ReferencedEventFilter(new EventTag("fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712", relay.getUrl())).getFilterable().getEventId(), ((ReferencedEventFilter) referencedEventFilters.getFirst()).getFilterable().getEventId());
   }
 
   @Test

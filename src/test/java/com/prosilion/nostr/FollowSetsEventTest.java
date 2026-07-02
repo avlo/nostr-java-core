@@ -44,99 +44,99 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
 
   public FollowSetsEventTest() throws ParseException {
     this.plusOneFormulaEvent = new FormulaEvent(
-      authorIdentity,
-      formulaUnitUpvote,
-      auxRelay,
-      defnEvent_NoNo_Upvote,
-      PLUS_ONE_FORMULA);
+       authorIdentity,
+       formulaUnitUpvote,
+       auxRelay,
+       defnEvent_NoNo_Upvote,
+       PLUS_ONE_FORMULA);
 
     this.minusOneFormulaEvent = new FormulaEvent(
-      authorIdentity,
-      formulaUnitDownvote,
-      auxRelay,
-      defnEvent_NoNo_Downvote,
-      MINUS_ONE_FORMULA);
+       authorIdentity,
+       formulaUnitDownvote,
+       auxRelay,
+       defnEvent_NoNo_Downvote,
+       MINUS_ONE_FORMULA);
 
     this.badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
-      aImgIdentity,
-      authorIdentity.getPublicKey(),
-      FollowSetsEvent.defaultIdentifierTag,
-      auxRelay,
-      EXTERNAL_IDENTITY_TAG,
-      plusOneFormulaEvent);
+       aImgIdentity,
+       authorIdentity.getPublicKey(),
+       FollowSetsEvent.defaultIdentifierTag,
+       auxRelay,
+       EXTERNAL_IDENTITY_TAG,
+       plusOneFormulaEvent);
 
     this.badgeDefinitionReputationEventMinusOneFormula = new BadgeDefinitionReputationEvent(
-      aImgIdentity,
-      authorIdentity.getPublicKey(),
-      FollowSetsEvent.defaultIdentifierTag,
-      auxRelay,
-      EXTERNAL_IDENTITY_TAG,
-      minusOneFormulaEvent);
+       aImgIdentity,
+       authorIdentity.getPublicKey(),
+       FollowSetsEvent.defaultIdentifierTag,
+       auxRelay,
+       EXTERNAL_IDENTITY_TAG,
+       minusOneFormulaEvent);
   }
 
   @Test
   final void testValidFollowSetsEvent() {
     SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Upvote,
-      eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
     SetsPairedEvents setsPairedDownvoteEvents = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Downvote,
-      eventAuxNo_award_NoNo_defn_NoNo_Downvote);
+       defnAuxNo_defnEvent_NoNo_Downvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       List.of(setsPairedUpvoteEvents, setsPairedDownvoteEvents), relayArgRelay);
 
     new FollowSetsEvent(
-      aImgIdentity,
-      badgeSetsEvent,
-      auxRelay);
+       aImgIdentity,
+       badgeSetsEvent,
+       auxRelay);
   }
 
   @Test
   final void testValidFollowSetsEventBadgeSetsEventContainsDuplicate() {
     SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Upvote,
-      eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
     SetsPairedEvents setsPairedDownvoteEvents = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Downvote,
-      eventAuxNo_award_NoNo_defn_NoNo_Downvote);
+       defnAuxNo_defnEvent_NoNo_Downvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       List.of(setsPairedUpvoteEvents), relayArgRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
-      aImgIdentity,
-      List.of(badgeSetsEvent, badgeSetsEvent),
-      auxRelay);
-    
+       aImgIdentity,
+       List.of(badgeSetsEvent, badgeSetsEvent),
+       auxRelay);
+
     assertEquals(1, followSetsEvent.getBadgeSetsEvents().size());
   }
-  
+
   @Test
   final void testFollowSetsEventEquality() {
     SetsPairedEvents badgeSetsEventPairedEvents = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Upvote,
-      eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       badgeSetsEventPairedEvents, relayArgRelay);
 
     FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
-      aImgIdentity,
-      badgeSetsEvent,
-      auxRelay);
+       aImgIdentity,
+       badgeSetsEvent,
+       auxRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
-      expectedFollowSetsEvent.asGenericEventRecord(),
-      badgeSetsEvent);
+       expectedFollowSetsEvent.asGenericEventRecord(),
+       badgeSetsEvent);
 
     assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
     assertEquals(expectedFollowSetsEvent, followSetsEvent);
@@ -155,25 +155,25 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
   @Test
   final void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       List.of(
         new SetsPairedEvents(
-          defnAuxNo_defnEvent_NoNo_Upvote,
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote),
-        new SetsPairedEvents(
-          defnAuxNo_defnEvent_NoNo_Downvote,
+                defnAuxNo_defnEvent_NoNo_Upvote,
+                eventAuxNo_award_NoNo_defn_NoNo_Upvote),
+             new SetsPairedEvents(
+                defnAuxNo_defnEvent_NoNo_Downvote,
           eventAuxNo_award_NoNo_defn_NoNo_Downvote)), relayArgRelay
     );
 
     FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
-      aImgIdentity,
-      badgeSetsEvent,
-      auxRelay);
+       aImgIdentity,
+       badgeSetsEvent,
+       auxRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
-      expectedFollowSetsEvent.getGenericEventRecord(),
-      badgeSetsEvent);
+       expectedFollowSetsEvent.getGenericEventRecord(),
+       badgeSetsEvent);
 
     assertEquals(expectedFollowSetsEvent.getAddressTags(), followSetsEvent.getAddressTags());
     assertEquals(expectedFollowSetsEvent, followSetsEvent);
@@ -192,19 +192,19 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
   @Test
   final void eventTagCountAsListTest() {
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
-      List.of(
-        new SetsPairedEvents(
-          defnAuxNo_defnEvent_NoNo_Upvote,
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote),
-        new SetsPairedEvents(
-          defnAuxNo_defnEvent_NoNo_Upvote,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
+          List.of(
+             new SetsPairedEvents(
+                defnAuxNo_defnEvent_NoNo_Upvote,
+                eventAuxNo_award_NoNo_defn_NoNo_Upvote),
+             new SetsPairedEvents(
+                defnAuxNo_defnEvent_NoNo_Upvote,
           eventAuxNo_award_NoNo_defn_NoNo_Upvote)), relayArgRelay);
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
-      badgeSetsEvent.getGenericEventRecord(),
-      badgeSetsEvent);
+       badgeSetsEvent.getGenericEventRecord(),
+       badgeSetsEvent);
 
     assertEquals(1, followSetsEvent.getEventTags().size());
     assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
@@ -215,107 +215,107 @@ public class FollowSetsEventTest extends BaseEventAuxTest {
   @Test
   final void testContains() {
     SetsPairedEvents badgeSetsUpvoteEventPairedEvents = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Upvote,
-      eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
     SetsPairedEvents badgeSetsDownvoteEventPairedEvents = new SetsPairedEvents(
       defnAuxNo_defnEvent_NoNo_Downvote,
       eventAuxNo_award_NoNo_defn_NoNo_Downvote);
 
     BadgeSetsEvent badgeSetsUpvoteEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       badgeSetsUpvoteEventPairedEvents, relayArgRelay);
 
     BadgeSetsEvent badgeSetsDownvoteEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       badgeSetsDownvoteEventPairedEvents, relayArgRelay);
 
     FollowSetsEvent followSetsUpEvent = new FollowSetsEvent(
-      aImgIdentity,
-      badgeSetsUpvoteEvent,
-      auxRelay);
+       aImgIdentity,
+       badgeSetsUpvoteEvent,
+       auxRelay);
 
     FollowSetsEvent followSetsDownEvent = new FollowSetsEvent(
-      aImgIdentity,
-      badgeSetsDownvoteEvent,
-      auxRelay);
+       aImgIdentity,
+       badgeSetsDownvoteEvent,
+       auxRelay);
 
     AddressTag defnUpvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();
     AddressTag defnDownvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();
 
     List<FollowSetsEvent> upvoteFollowSetsEvent = Stream.of(followSetsUpEvent, followSetsDownEvent)
-      .filter(followSetsEvent ->
-        followSetsEvent.getSetsPairedEventsList().stream()
-          .map(SetsPairedEvents::getAddressTag).toList()
-          .contains(defnUpvoteAsAddressTag)).toList();
+       .filter(followSetsEvent ->
+          followSetsEvent.getSetsPairedEventsList().stream()
+             .map(SetsPairedEvents::getAddressTag).toList()
+             .contains(defnUpvoteAsAddressTag)).toList();
     assertEquals(1, upvoteFollowSetsEvent.size());
 
     List<FollowSetsEvent> downvoteFollowSetsEvent = Stream.of(followSetsUpEvent, followSetsDownEvent)
-      .filter(followSetsEvent ->
-        followSetsEvent.getSetsPairedEventsList().stream()
-          .map(SetsPairedEvents::getAddressTag).toList()
-          .contains(defnDownvoteAsAddressTag)).toList();
+       .filter(followSetsEvent ->
+          followSetsEvent.getSetsPairedEventsList().stream()
+             .map(SetsPairedEvents::getAddressTag).toList()
+             .contains(defnDownvoteAsAddressTag)).toList();
     assertEquals(1, downvoteFollowSetsEvent.size());
 
     FollowSetsEvent followSetsBothEvents = new FollowSetsEvent(
-      aImgIdentity,
-      List.of(badgeSetsUpvoteEvent, badgeSetsDownvoteEvent),
-      auxRelay);
+       aImgIdentity,
+       List.of(badgeSetsUpvoteEvent, badgeSetsDownvoteEvent),
+       auxRelay);
 
     List<FollowSetsEvent> downvoteFollowSetsEvent_2 = Stream.of(followSetsBothEvents)
-      .filter(followSetsEvent ->
-        followSetsEvent.getSetsPairedEventsList().stream()
-          .map(SetsPairedEvents::getAddressTag).toList()
-          .contains(defnDownvoteAsAddressTag)).toList();
+       .filter(followSetsEvent ->
+          followSetsEvent.getSetsPairedEventsList().stream()
+             .map(SetsPairedEvents::getAddressTag).toList()
+             .contains(defnDownvoteAsAddressTag)).toList();
     assertEquals(1, downvoteFollowSetsEvent_2.size());
 
     SetsPairedEvents badgeSetsUpvoteEventPairedEvents2 = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Upvote,
-      eventAuxNo_award_NoNo_Defn_YesNo_Upvote);
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_Defn_YesNo_Upvote);
 
     BadgeSetsEvent badgeSetsUpvoteEvent2 = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       badgeSetsUpvoteEventPairedEvents2, relayArgRelay);
 
     FollowSetsEvent followSetsBothEventsWithVariant = new FollowSetsEvent(
-      aImgIdentity,
-      List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
-      auxRelay);
+       aImgIdentity,
+       List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
+       auxRelay);
 
     List<FollowSetsEvent> upvoteFollowSetsEvent_3 = Stream.of(followSetsBothEvents, followSetsBothEventsWithVariant)
-      .filter(followSetsEvent ->
-        followSetsEvent.getSetsPairedEventsList().stream()
-          .map(SetsPairedEvents::getAddressTag).toList()
-          .contains(defnUpvoteAsAddressTag)).toList();
+       .filter(followSetsEvent ->
+          followSetsEvent.getSetsPairedEventsList().stream()
+             .map(SetsPairedEvents::getAddressTag).toList()
+             .contains(defnUpvoteAsAddressTag)).toList();
     assertEquals(2, upvoteFollowSetsEvent_3.size());
 
     List<FollowSetsEvent> downvoteFollowSetsEvent_3 = Stream.of(followSetsBothEvents, followSetsBothEventsWithVariant)
-      .filter(followSetsEvent ->
-        followSetsEvent.getSetsPairedEventsList().stream()
-          .map(SetsPairedEvents::getAddressTag).toList()
-          .contains(defnDownvoteAsAddressTag)).toList();
+       .filter(followSetsEvent ->
+          followSetsEvent.getSetsPairedEventsList().stream()
+             .map(SetsPairedEvents::getAddressTag).toList()
+             .contains(defnDownvoteAsAddressTag)).toList();
     assertEquals(1, downvoteFollowSetsEvent_3.size());
 
     FollowSetsEvent followSetsContainingMatchingUpvoteEvent = new FollowSetsEvent(
-      aImgIdentity,
-      List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
-      auxRelay);
+       aImgIdentity,
+       List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
+       auxRelay);
 
     String voteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventId();
     assertTrue(Stream.of(followSetsUpEvent, followSetsContainingMatchingUpvoteEvent)
-      .allMatch(setsPairedEvents ->
-        setsPairedEvents.getSetsPairedEventsList().stream()
-          .map(SetsPairedEvents::getAwardEventId).toList()
-          .contains(voteEventId)));
+       .allMatch(setsPairedEvents ->
+          setsPairedEvents.getSetsPairedEventsList().stream()
+             .map(SetsPairedEvents::getAwardEventId).toList()
+             .contains(voteEventId)));
 
     assertFalse(Stream.of(followSetsDownEvent, followSetsContainingMatchingUpvoteEvent)
-      .allMatch(setsPairedEvents ->
-        setsPairedEvents.getSetsPairedEventsList().stream()
-          .map(SetsPairedEvents::getAwardEventId).toList()
-          .contains(voteEventId)));
+       .allMatch(setsPairedEvents ->
+          setsPairedEvents.getSetsPairedEventsList().stream()
+             .map(SetsPairedEvents::getAwardEventId).toList()
+             .contains(voteEventId)));
   }
 //
 //  @Test

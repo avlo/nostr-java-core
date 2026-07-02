@@ -53,7 +53,7 @@ public class AddressableEvent extends BaseEvent {
      @NonNull String content) throws NostrException {
     super(
        identity,
-       validateKind(kind, intPredicate, errorMessage),
+       validateKind(kind, addressableKindPredicate, errorMessage),
        Stream.concat(
           Stream.of(identifierTag),
           useFirstRelayTag(baseTags)
@@ -62,7 +62,7 @@ public class AddressableEvent extends BaseEvent {
   }
 
   public AddressableEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
-    super(validateIdentifierTagRelayTag(genericEventRecord));
+    super(validateKind(validateIdentifierTagRelayTag(genericEventRecord)));
   }
 
   @JsonIgnore
@@ -84,11 +84,16 @@ public class AddressableEvent extends BaseEvent {
     return getRelayTag().map(RelayTag::getRelay);
   }
 
-  private static final IntPredicate intPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
+  private static final IntPredicate addressableKindPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
   private static final Function<Kind, String> errorMessage = kind -> String.format("Intended AddressableEvent invalid kind [%s] value [%s] is not between 30000 and 40000", kind, kind.getValue());
 
   private static final String MISSING_TAG = "ctor() genericEventRecord parameter:\n%s\nis missing required [%s]";
   private static final String MULTIPLE_TAG = "ctor() genericEventRecord parameter:\n%s\nhas multiple [%s]";
+
+  public static GenericEventRecord validateKind(@NonNull GenericEventRecord genericEventRecord) {
+    validateKind(genericEventRecord.getKind(), addressableKindPredicate, errorMessage);
+    return genericEventRecord;
+  }
 
   public static GenericEventRecord validateIdentifierTagRelayTag(@NonNull GenericEventRecord genericEventRecord) {
     List<IdentifierTag> identifierTags = genericEventRecord.getTypeSpecificTags(IdentifierTag.class);

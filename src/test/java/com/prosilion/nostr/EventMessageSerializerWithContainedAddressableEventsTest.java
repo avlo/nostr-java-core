@@ -58,27 +58,27 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
 
   public EventMessageSerializerWithContainedAddressableEventsTest() throws ParseException {
     this.genericEventRecordWithAddressTag = new GenericEventRecord(
-      "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
-      new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-      1111111111111L,
-      Kind.BADGE_AWARD_EVENT,
-      List.of(
-        new AddressTag(Kind.BADGE_DEFINITION_EVENT,
-          new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-          new IdentifierTag(UNIT_UPVOTE),
-          relayArgRelay)),
-      "matching kind, author, identity-tag filter test",
-      new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
+       "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+       new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+       1111111111111L,
+       Kind.BADGE_AWARD_EVENT,
+       List.of(
+          new AddressTag(Kind.BADGE_DEFINITION_EVENT,
+             new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+             new IdentifierTag(UNIT_UPVOTE),
+             relayArgRelay)),
+       "matching kind, author, identity-tag filter test",
+       new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
 
     this.genericEventRecordWithEventTag = new GenericEventRecord(
-      "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
-      new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-      1111111111111L,
-      Kind.BADGE_AWARD_EVENT,
-      List.of(
-        new EventTag("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984", relayArgUrl)),
-      "matching kind, author, identity-tag filter test",
-      new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
+       "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
+       new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
+       1111111111111L,
+       Kind.BADGE_AWARD_EVENT,
+       List.of(
+          new EventTag("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984", relayArgUrl)),
+       "matching kind, author, identity-tag filter test",
+       new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
 
     this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventId();
     this.badgeAwardGenericEventWithAddressTagCreatedAt = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getCreatedAt().toString();
@@ -86,46 +86,46 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
     this.badgeAwardGenericEventWithAddressTagSignature = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getSignature().toString();
 
     this.followSetsAsGenericEventEventWithEventTag = new GenericEventRecord(
-      "09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50",
-      new PublicKey("703c164e01d6ba4632d440af596f21ff51e8e01f04283e1e2797de04127f91cc"),
-      1769322511594L,
-      Kind.FOLLOW_SETS,
-      List.of(
-        FollowSetsEvent.defaultIdentifierTag,
-        new RelayTag(relayArgRelay),
-        new EventTag("2e0864780d99e270cf9c1d9f124d8efd18e9e8be7e2b8c6537c79f34ef2ed445", relayArgRelay.getUrl()),
-        new PubKeyTag(new PublicKey("fd320dfb0433681cf5a4244cbc18f82b19407beec2867fc03d8109902ecc6d0c"))),
-      "AfterImage generated FollowSetsEvent",
-      new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
+       "09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50",
+       new PublicKey("703c164e01d6ba4632d440af596f21ff51e8e01f04283e1e2797de04127f91cc"),
+       1769322511594L,
+       Kind.FOLLOW_SETS,
+       List.of(
+          FollowSetsEvent.defaultIdentifierTag,
+          new RelayTag(relayArgRelay),
+          new EventTag("2e0864780d99e270cf9c1d9f124d8efd18e9e8be7e2b8c6537c79f34ef2ed445", relayArgRelay.getUrl()),
+          new PubKeyTag(new PublicKey("fd320dfb0433681cf5a4244cbc18f82b19407beec2867fc03d8109902ecc6d0c"))),
+       "AfterImage generated FollowSetsEvent",
+       new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
 
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(
-      upvoteDefnCreator,
-      new IdentifierTag(FORMULA_UNIT_UPVOTE),
-      relayArgRelay,
-      defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent(),
-      PLUS_ONE_FORMULA);
+       upvoteDefnCreator,
+       new IdentifierTag(FORMULA_UNIT_UPVOTE),
+       relayArgRelay,
+       defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent(),
+       PLUS_ONE_FORMULA);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
-      platformIdentity,
-      upvoteDefnCreator.getPublicKey(),
-      FollowSetsEvent.defaultIdentifierTag,
-      relayArgRelay,
-      new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
-      plusOneFormulaEvent);
+       platformIdentity,
+       upvoteDefnCreator.getPublicKey(),
+       FollowSetsEvent.defaultIdentifierTag,
+       relayArgRelay,
+       new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
+       plusOneFormulaEvent);
 
     SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(
-      defnAuxNo_defnEvent_NoNo_Upvote,
-      eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+       defnAuxNo_defnEvent_NoNo_Upvote,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-      submitter,
-      badgeDefinitionReputationEventPlusOneFormula,
+       submitter,
+       badgeDefinitionReputationEventPlusOneFormula,
       setsPairedUpvoteEvents, relayArgRelay);
 
     this.followSetsEvent = new FollowSetsEvent(
-      platformIdentity,
-      badgeSetsEvent,
-      relayArgRelay);
+       platformIdentity,
+       badgeSetsEvent,
+       relayArgRelay);
 
     this.followSetsEventWithEventTagEventId = followSetsEvent.getId();
     this.followSetsEventWithEventTagCreatedAt = followSetsEvent.getCreatedAt().toString();
@@ -136,57 +136,57 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
   @Test
   void testStringEventMessageAddressTagGenericEventRecordEncoder() throws IOException, NostrException {
     getStringEquals(
-      new EventMessage(
-        genericEventRecordWithAddressTag),
-      expectedStringEventMessageAddressTagGenericEventRecord());
+       new EventMessage(
+          genericEventRecordWithAddressTag),
+       expectedStringEventMessageAddressTagGenericEventRecord());
   }
 
   @Test
   void testStringEventMessageAddressTagBadgeAwardGenericEventEncoder() throws IOException, NostrException {
     getStringEquals(
-      new EventMessage(
-        eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().asGenericEventRecord()),
-      expectedStringEventMessageAddressTagBadgeAwardGenericEvent());
+       new EventMessage(
+          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().asGenericEventRecord()),
+       expectedStringEventMessageAddressTagBadgeAwardGenericEvent());
   }
 
   @Test
   void testStringEventMessageFollowSetsEventTagGenericEventRecordEncoder() throws IOException, NostrException {
     getStringEquals(
-      new EventMessage(
-        followSetsAsGenericEventEventWithEventTag),
-      expectedStringFollowSetsEventMessageAddressTagGenericEventRecord());
+       new EventMessage(
+          followSetsAsGenericEventEventWithEventTag),
+       expectedStringFollowSetsEventMessageAddressTagGenericEventRecord());
   }
 
   @Test
   void testStringEventMessageFollowSetsEventAwardGenericEventEncoder() throws IOException, NostrException {
     getStringEquals(
-      new EventMessage(
-        followSetsEvent.asGenericEventRecord()),
-      expectedStringEventMessageAddressTagFollowSetsEvent());
+       new EventMessage(
+          followSetsEvent.asGenericEventRecord()),
+       expectedStringEventMessageAddressTagFollowSetsEvent());
   }
 
   @Test
   void testJsonEventMessageAddressTagGenericEventKindEncoder() throws IOException, NostrException {
     getJsonEquals(
-      new EventMessage(
-        genericEventRecordWithAddressTag),
-      expectedStringEventMessageAddressTagGenericEventRecord());
+       new EventMessage(
+          genericEventRecordWithAddressTag),
+       expectedStringEventMessageAddressTagGenericEventRecord());
   }
 
   @Test
   void testStringEventMessageEventTagGenericEventKindEncoder() throws IOException, NostrException {
     getStringEquals(
-      new EventMessage(
-        genericEventRecordWithEventTag),
-      expectedStringWithEventTagShouldMatch());
+       new EventMessage(
+          genericEventRecordWithEventTag),
+       expectedStringWithEventTagShouldMatch());
   }
 
   @Test
   void testJsonEventMessageEventTagGenericEventKindEncoder() throws IOException, NostrException {
     getJsonEquals(
-      new EventMessage(
-        genericEventRecordWithEventTag),
-      expectedStringWithEventTagShouldMatch());
+       new EventMessage(
+          genericEventRecordWithEventTag),
+       expectedStringWithEventTagShouldMatch());
   }
 
   private void getStringEquals(EventMessage eventMessage, String expected) throws IOException, NostrException {
@@ -218,12 +218,12 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
 
   private String expectedStringEventMessageAddressTagGenericEventRecord() {
     return """
-      ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["a","30009:bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984:UNIT_UPVOTE","ws://localhost:5555"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
+       ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["a","30009:bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984:UNIT_UPVOTE","ws://localhost:5555"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
   }
 
   private String expectedStringWithEventTagShouldMatch() {
     return """
-      ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["e","bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","ws://localhost:5555"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
+       ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["e","bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","ws://localhost:5555"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
   }
 
   private String expectedStringEventMessageAddressTagBadgeAwardGenericEvent() {
@@ -235,7 +235,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
 
   private String expectedStringFollowSetsEventMessageAddressTagGenericEventRecord() {
     return """
-      ["EVENT",{"id":"09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50","pubkey":"703c164e01d6ba4632d440af596f21ff51e8e01f04283e1e2797de04127f91cc","created_at":1769322511594,"kind":30000,"tags":[["d","PROSILION_FOLLOW_SETS_EVENT"],["relay","ws://localhost:5555"],["e","2e0864780d99e270cf9c1d9f124d8efd18e9e8be7e2b8c6537c79f34ef2ed445","ws://localhost:5555"],["p","fd320dfb0433681cf5a4244cbc18f82b19407beec2867fc03d8109902ecc6d0c"]],"content":"AfterImage generated FollowSetsEvent","sig":"27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"}]""";
+       ["EVENT",{"id":"09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50","pubkey":"703c164e01d6ba4632d440af596f21ff51e8e01f04283e1e2797de04127f91cc","created_at":1769322511594,"kind":30000,"tags":[["d","PROSILION_FOLLOW_SETS_EVENT"],["relay","ws://localhost:5555"],["e","2e0864780d99e270cf9c1d9f124d8efd18e9e8be7e2b8c6537c79f34ef2ed445","ws://localhost:5555"],["p","fd320dfb0433681cf5a4244cbc18f82b19407beec2867fc03d8109902ecc6d0c"]],"content":"AfterImage generated FollowSetsEvent","sig":"27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"}]""";
   }
 
   private String expectedStringEventMessageAddressTagFollowSetsEvent() {

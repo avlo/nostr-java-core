@@ -18,23 +18,23 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.lang.Nullable;
 
 @Tag(code = "e", name = "event")
-@JsonPropertyOrder({"idEvent", "recommendedRelayUrl", "marker"})
+@JsonPropertyOrder({"eventId", "recommendedRelayUrl", "marker"})
 @JsonSerialize(using = EventTagSerializer.class)
 public record EventTag(
-   @Getter @Key String idEvent,
+   @Getter @Key String eventId,
    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) String recommendedRelayUrl,
    @Getter @Key @Nullable @JsonInclude(JsonInclude.Include.NON_NULL) Marker marker) implements ReferencedAbstractEventTag {
 
-  public EventTag(@NonNull String idEvent) {
-    this(idEvent, null);
+  public EventTag(@NonNull String eventId) {
+    this(eventId, null);
   }
 
-  public EventTag(@NonNull String idEvent, String recommendedRelayUrl) {
-    this(idEvent, recommendedRelayUrl, null);
+  public EventTag(@NonNull String eventId, String recommendedRelayUrl) {
+    this(eventId, recommendedRelayUrl, null);
   }
 
-  public EventTag(@NonNull String idEvent, String recommendedRelayUrl, Marker marker) {
-    this.idEvent = HexStringValidator.validateHex(idEvent, 64);
+  public EventTag(@NonNull String eventId, String recommendedRelayUrl, Marker marker) {
+    this.eventId = HexStringValidator.validateHex(eventId, 64);
     this.marker = marker;
     this.recommendedRelayUrl = urlValidator(recommendedRelayUrl);
   }
@@ -66,11 +66,11 @@ public record EventTag(
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     EventTag eventTag = (EventTag) o;
-    return Objects.equals(idEvent, eventTag.idEvent);
+    return Objects.equals(eventId, eventTag.eventId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(idEvent);
+    return Objects.hashCode(eventId);
   }
 }

@@ -81,8 +81,8 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
     assertEquals(recipient.getPublicKey(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getAwardRecipientPublicKey());
 
-    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getIdEvent).toList().contains(upvoteEventId));
-    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getIdEvent).toList().contains(downvoteEventId));
+    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(upvoteEventId));
+    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(downvoteEventId));
 
     AddressTag upvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();
     AddressTag downvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();

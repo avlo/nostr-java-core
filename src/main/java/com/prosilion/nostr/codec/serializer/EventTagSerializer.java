@@ -11,7 +11,7 @@ public class EventTagSerializer extends JsonSerializer<EventTag> {
   public final void serialize(EventTag value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
     jsonGenerator.writeStartArray();
     jsonGenerator.writeString("e");
-    jsonGenerator.writeString(value.getIdEvent());
+    jsonGenerator.writeString(value.getEventId());
 
     if (value.findRelay().isPresent()) {
       jsonGenerator.writeString(value.requireRelay().getUrl());

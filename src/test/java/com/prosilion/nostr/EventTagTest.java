@@ -75,7 +75,7 @@ class EventTagTest {
     EventTag eventTag = new EventTag(EVENT_ID, recommendedRelayUrl, Marker.REPLY);
 
     List<Field> fields = eventTag.getSupportedFields();
-    anyFieldNameMatch(fields, field -> field.getName().equals("idEvent"));
+    anyFieldNameMatch(fields, field -> field.getName().equals("eventId"));
     anyFieldNameMatch(fields, field -> field.getName().equals("recommendedRelayUrl"));
     anyFieldNameMatch(fields, field -> field.getName().equals("marker"));
 

@@ -32,7 +32,7 @@ public class ReferencedEventFilter extends AbstractFilterable<EventTag> {
   @Override
   public final String getFilterableValue() {
     return String.join("\",\"",
-       getReferencedEventTag().getIdEvent(),
+       getReferencedEventTag().eventId(),
        getReferencedEventTag().getRecommendedRelayUrl());
   }
 
