@@ -238,6 +238,6 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
 
   private String expectedStringEventMessageAddressTagFollowSetsEvent() {
     String withUrl = "\"" + UNIT_UPVOTE + "\",\"" + relayArgUrl + "\"";
-    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"],[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + UNIT_UPVOTE + "\"],[\"e\",\"" + eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId() + "\"],[\"relay\",\"" + relayArgUrl + "\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
+    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"],[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + UNIT_UPVOTE + "\"],[\"e\",\"" + eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId() + "\"],[\"p\",\"" + upvotedUserPubkey + "\"],[\"relay\",\"" + relayArgUrl + "\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
   }
 }
