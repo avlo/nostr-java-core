@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ActiveProfiles("test")
-public class EventMessageSerializerWithContainedAddressableEventsTest extends BaseEventAuxTest {
+public class EventMessageSerializerWithContainedAddressableEventsTest extends BaseEventTest {
   private final static String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
 
   private final GenericEventRecord genericEventRecordWithAddressTag;
@@ -80,10 +80,10 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
        "matching kind, author, identity-tag filter test",
        new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
 
-    this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventId();
-    this.badgeAwardGenericEventWithAddressTagCreatedAt = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getCreatedAt().toString();
+    this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
+    this.badgeAwardGenericEventWithAddressTagCreatedAt = award_NoNo_Defn_NoNo_Upvote.getCreatedAt().toString();
     this.upvotedUserPubkey = recipient.getPublicKey().toHexString();
-    this.badgeAwardGenericEventWithAddressTagSignature = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getSignature().toString();
+    this.badgeAwardGenericEventWithAddressTagSignature = award_NoNo_Defn_NoNo_Upvote.getSignature().toString();
 
     this.followSetsAsGenericEventEventWithEventTag = new GenericEventRecord(
        "09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50",
@@ -102,7 +102,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
        upvoteDefnCreator,
        new IdentifierTag(FORMULA_UNIT_UPVOTE),
        relayArgRelay,
-       defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent(),
+       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
        PLUS_ONE_FORMULA);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
@@ -113,14 +113,12 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
        new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
        plusOneFormulaEvent);
 
-    SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(
-       defnAuxNo_defnEvent_NoNo_Upvote,
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
+    SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(), recipient.getPublicKey());
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-      setsPairedUpvoteEvents, relayArgRelay);
+       setsPairedUpvoteEvents, relayArgRelay);
 
     this.followSetsEvent = new FollowSetsEvent(
        platformIdentity,
@@ -130,7 +128,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
     this.followSetsEventWithEventTagEventId = followSetsEvent.getId();
     this.followSetsEventWithEventTagCreatedAt = followSetsEvent.getCreatedAt().toString();
     this.followSetsEventWithEventTagSignature = followSetsEvent.getSignature().toString();
-    this.followSetsEventReferencedEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventId();
+    this.followSetsEventReferencedEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
   }
 
   @Test
@@ -145,7 +143,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
   void testStringEventMessageAddressTagBadgeAwardGenericEventEncoder() throws IOException, NostrException {
     getStringEquals(
        new EventMessage(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().asGenericEventRecord()),
+          award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord()),
        expectedStringEventMessageAddressTagBadgeAwardGenericEvent());
   }
 
@@ -240,6 +238,6 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
 
   private String expectedStringEventMessageAddressTagFollowSetsEvent() {
     String withUrl = "\"" + UNIT_UPVOTE + "\",\"" + relayArgUrl + "\"";
-    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"],[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + UNIT_UPVOTE + "\"],[\"e\",\"" + eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventId() + "\"],[\"relay\",\"" + relayArgUrl + "\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
+    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"],[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + UNIT_UPVOTE + "\"],[\"e\",\"" + eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId() + "\"],[\"relay\",\"" + relayArgUrl + "\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
   }
 }

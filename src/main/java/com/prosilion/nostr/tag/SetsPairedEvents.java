@@ -2,8 +2,6 @@ package com.prosilion.nostr.tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.BadgeAwardGenericEventAux;
-import com.prosilion.nostr.event.BadgeDefinitionGenericEventAux;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Objects;
@@ -17,19 +15,6 @@ import org.apache.commons.lang3.tuple.Pair;
 public class SetsPairedEvents {
   private final PublicKey recipientPublicKey;
   private final ATagETagPair aTagETagPair;
-
-  public SetsPairedEvents(@NonNull BadgeDefinitionGenericEventAux defnAux, @NonNull BadgeAwardGenericEventAux awardAux) {
-    this(
-       new AddressTag(
-          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getKind(),
-          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getPublicKey(),
-          defnAux.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag().getIdentifierTag(),
-          defnAux.getRelay().orElse(null)),
-       new EventTag(
-          awardAux.getEventId(),
-          awardAux.findRelay().map(Relay::getUrl).orElse(null)),
-       awardAux.getPublicKey());
-  }
 
   public SetsPairedEvents(@NonNull AddressTag addressTag, @NonNull EventTag eventTag, @NonNull PublicKey publicKey) {
     this.recipientPublicKey = publicKey;

@@ -18,7 +18,7 @@ import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BadgeSetsEventTest extends BaseEventAuxTest {
+public class BadgeSetsEventTest extends BaseEventTest {
   private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
   private static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
   private static final IdentifierTag formulaUnitUpvote = new IdentifierTag(FORMULA_UNIT_UPVOTE);
@@ -26,17 +26,12 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
   public static final String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
-  //  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula;
-//  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventMinusOneFormula;
 
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
   public BadgeSetsEventTest() throws ParseException {
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, relayArgRelay, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA);
     FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, relayArgRelay, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA);
-
-//    this.badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), reputationIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, plusOneFormulaEvent);
-//    this.badgeDefinitionReputationEventMinusOneFormula = new BadgeDefinitionReputationEvent(aImgIdentity, upvoteDefnCreator.getPublicKey(), reputationIdentifierTag, relayArgRelay, EXTERNAL_IDENTITY_TAG, minusOneFormulaEvent);
 
     this.badgeDefinitionReputationEvent =
        new BadgeDefinitionReputationEvent(
@@ -50,48 +45,40 @@ public class BadgeSetsEventTest extends BaseEventAuxTest {
 
   @Test
   final void testValidBadgeSetsEvent() {
-    SetsPairedEvents tupleUpvoteEvent = new SetsPairedEvents(
-       defnAuxNo_defnEvent_NoNo_Upvote,
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
-
-    SetsPairedEvents tupleDownvoteEvent = new SetsPairedEvents(
-       defnAuxNo_defnEvent_NoNo_Downvote,
-       eventAuxNo_award_NoNo_defn_NoNo_Downvote);
-
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEvent,
-       List.of(tupleUpvoteEvent, tupleDownvoteEvent), relayArgRelay);
+       List.of(eventAuxNo_award_NoNo_defn_NoNo_Upvote, eventAuxNo_award_NoNo_defn_NoNo_Downvote), relayArgRelay);
 
     assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
 
     List<SetsPairedEvents> tupleDefnEventAuxAwardEventAuxes = badgeSetsEvent.getSetsPairedEventsList();
-    assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleUpvoteEvent));
-    assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(tupleDownvoteEvent));
-    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getId();
-    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getBadgeAwardGenericEvent().getId();
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(eventAuxNo_award_NoNo_defn_NoNo_Upvote));
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.contains(eventAuxNo_award_NoNo_defn_NoNo_Downvote));
+    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
+    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardEventId();
 
     assertEquals(
        upvoteEventId,
        tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getAwardEventId).findFirst().orElseThrow());
     assertEquals(
-       defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag(),
+       defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag(),
        tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getAddressTag).findFirst().orElseThrow());
 
-    assertEquals(recipient.getPublicKey(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeAwardGenericEvent().getAwardRecipientPublicKey());
+    assertEquals(submitter.getPublicKey(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey());
 
     assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(upvoteEventId));
     assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(downvoteEventId));
 
-    AddressTag upvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();
-    AddressTag downvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag();
+    AddressTag upvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag();
+    AddressTag downvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag();
 
     assertTrue(badgeSetsEvent.getAddressTags().stream().toList().contains(upvoteAsAddressTag));
     assertTrue(badgeSetsEvent.getAddressTags().stream().toList().contains(downvoteAsAddressTag));
 
-    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getRelay()));
-    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getRelay()));
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getAwardEventRelay()));
+    assertTrue(tupleDefnEventAuxAwardEventAuxes.stream().map(SetsPairedEvents::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getAwardEventRelay()));
 
     assertEquals(
        new AddressTag(

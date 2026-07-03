@@ -14,7 +14,6 @@ import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.tag.SetsPairedEvents;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
@@ -31,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ActiveProfiles("test")
-public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends BaseEventAuxTest {
+public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends BaseEventTest {
   private final Identity platformIdentity = Identity.generateRandomIdentity();
 
   private final static String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
@@ -71,14 +70,10 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Bas
        "AfterImage generated FollowSetsEvent",
        new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
 
-    SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(
-       defnAuxNo_defnEvent_NoNo_Upvote,
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote);
-
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-			setsPairedUpvoteEvents, relayArgRelay);
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote, relayArgRelay);
 
     this.followSetsEvent = new FollowSetsEvent(
        platformIdentity,
