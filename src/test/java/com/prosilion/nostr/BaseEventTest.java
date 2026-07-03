@@ -149,18 +149,18 @@ public class BaseEventTest {
   static final SetsPairedEvents eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed = create(award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed, null);
 
   private static SetsPairedEvents create(BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> event, Relay relay) {
-    AddressTag convenience = event.getBadgeDefinitionEvent().asAddressableEventAddressTag();
+    AddressTag badgeDefnEventAsAddressTag = event.getBadgeDefinitionEvent().asAddressableEventAddressTag();
 
     AddressTag addressTag = new AddressTag(
-       convenience.getKind(),
-       convenience.getPublicKey(),
-       convenience.getIdentifierTag(),
-       relay == null ? convenience.findRelay().orElse(null) : relay);
+       badgeDefnEventAsAddressTag.getKind(),
+       badgeDefnEventAsAddressTag.getPublicKey(),
+       badgeDefnEventAsAddressTag.getIdentifierTag(),
+       relay == null ? badgeDefnEventAsAddressTag.findRelay().orElse(null) : relay);
 
     SetsPairedEvents setsPairedEvents = new SetsPairedEvents(
        addressTag,
        new EventTag(event.getId(), event.getRelay().map(Relay::getUrl).orElse(null)),
-       event.getPublicKey());
+       event.getAwardRecipientPublicKey());
     
     return setsPairedEvents;
   }

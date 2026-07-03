@@ -77,14 +77,16 @@ public class FollowSetsEventTest extends BaseEventTest {
   @Test
   final void testValidFollowSetsEvent() {
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-       submitter,
+       aImgIdentity,
        badgeDefinitionReputationEventPlusOneFormula,
        List.of(eventAuxNo_award_NoNo_defn_NoNo_Upvote, eventAuxNo_award_NoNo_defn_NoNo_Downvote), relayArgRelay);
 
-    new FollowSetsEvent(
+    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
        aImgIdentity,
        badgeSetsEvent,
        auxRelay);
+
+    assertEquals(recipient.getPublicKey(), followSetsEvent.getAwardRecipientPublicKey());
   }
 
   @Test
