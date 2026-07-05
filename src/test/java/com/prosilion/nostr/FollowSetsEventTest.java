@@ -83,19 +83,13 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -116,10 +110,7 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -141,10 +132,7 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -180,19 +168,13 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -233,10 +215,7 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -261,19 +240,13 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsUpvoteEvent = new BadgeSetsEvent(
@@ -338,10 +311,7 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent2 = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_YesNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_Defn_YesNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_Defn_YesNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_Defn_YesNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_Defn_YesNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsUpvoteEvent2 = new BadgeSetsEvent(
@@ -404,10 +374,7 @@ public class FollowSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(

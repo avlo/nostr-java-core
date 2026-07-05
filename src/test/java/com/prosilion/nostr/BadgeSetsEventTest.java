@@ -49,21 +49,15 @@ public class BadgeSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
        relayArgRelay);
-    
+
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        aImgIdentity,
        badgeDefinitionReputationEvent,
@@ -76,7 +70,7 @@ public class BadgeSetsEventTest extends BaseEventTest {
     List<SetsPairedEvent> setsPairedEventList = badgeSetsEvent
        .getCurationSetsEventList().stream().map(
           CurationSetsEvent::getSetsPairedEvent).toList();
-    
+
     assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_Upvote));
     assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_Downvote));
     String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
@@ -100,8 +94,8 @@ public class BadgeSetsEventTest extends BaseEventTest {
     assertTrue(badgeSetsEvent.getCurationSetsEventList().stream().map(CurationSetsEvent::getAddressTag).anyMatch(upvoteAsAddressTag::equals));
     assertTrue(badgeSetsEvent.getCurationSetsEventList().stream().map(CurationSetsEvent::getAddressTag).anyMatch(downvoteAsAddressTag::equals));
 
-    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getAwardEventRelay()));
-    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getAwardEventRelay()));
+    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getDefinitionEventRelay()));
+    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getDefinitionEventRelay()));
 
     assertEquals(
        new AddressTag(

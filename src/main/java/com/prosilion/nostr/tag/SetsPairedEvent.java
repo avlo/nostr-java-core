@@ -1,6 +1,7 @@
 package com.prosilion.nostr.tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
@@ -13,12 +14,20 @@ import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j
 public class SetsPairedEvent {
-  private final PublicKey recipientPublicKey;
+  public static final String NULL_EVENT_TAG_RELAY = "SetsPairedEvent EventTag relay cannot be null";
   private final ATagETagPair aTagETagPair;
+  private final PublicKey awardRecipientPublicKey;
 
-  public SetsPairedEvent(@NonNull AddressTag addressTag, @NonNull EventTag eventTag, @NonNull PublicKey publicKey) {
-    this.recipientPublicKey = publicKey;
-    this.aTagETagPair = new ATagETagPair(addressTag, eventTag);
+  public SetsPairedEvent(@NonNull AddressTag addressTag, Relay backupRelay, @NonNull EventTag eventTag, @NonNull PublicKey awardRecipientPublicKey) {
+    if (eventTag.findRelay().isEmpty())
+      throw new NostrException(NULL_EVENT_TAG_RELAY);
+    this.aTagETagPair = new ATagETagPair(
+       new AddressTag(
+          addressTag.getKind(),
+          addressTag.getPublicKey(),
+          addressTag.getIdentifierTag(),
+          addressTag.findRelay().orElse(backupRelay)), eventTag);
+    this.awardRecipientPublicKey = awardRecipientPublicKey;
   }
 
   @JsonIgnore
@@ -32,8 +41,8 @@ public class SetsPairedEvent {
   }
 
   @JsonIgnore
-  public final Optional<Relay> getAwardEventRelay() {
-    return getEventTag().findRelay();
+  public final Relay getAwardEventRelay() {
+    return getEventTag().requireRelay();
   }
 
   @JsonIgnore
@@ -47,7 +56,7 @@ public class SetsPairedEvent {
   }
 
   @JsonIgnore
-  public final PublicKey getDefinitionEventPublicKey() {
+  public final PublicKey getDefinitionEventCreatorPublicKey() {
     return getAddressTag().getPublicKey();
   }
 
@@ -63,7 +72,7 @@ public class SetsPairedEvent {
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
-    return recipientPublicKey;
+    return awardRecipientPublicKey;
   }
 
   private static class ATagETagPair extends ImmutablePair<AddressTag, EventTag> implements Comparable<Pair<AddressTag, EventTag>> {
@@ -84,12 +93,12 @@ public class SetsPairedEvent {
   public final boolean equals(Object that) {
     if (that == null || getClass() != that.getClass()) return false;
     SetsPairedEvent thatSetsPairedEvent = (SetsPairedEvent) that;
-    return Objects.equals(recipientPublicKey, thatSetsPairedEvent.recipientPublicKey) &&
+    return Objects.equals(awardRecipientPublicKey, thatSetsPairedEvent.awardRecipientPublicKey) &&
        Objects.equals(aTagETagPair, thatSetsPairedEvent.aTagETagPair);
   }
 
   @Override
   public final int hashCode() {
-    return Objects.hash(recipientPublicKey, aTagETagPair);
+    return Objects.hash(awardRecipientPublicKey, aTagETagPair);
   }
 }

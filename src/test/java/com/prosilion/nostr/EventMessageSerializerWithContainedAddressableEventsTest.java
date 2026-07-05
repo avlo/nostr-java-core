@@ -115,15 +115,10 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
        new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
        plusOneFormulaEvent);
 
-    SetsPairedEvent setsPairedUpvoteEvents = new SetsPairedEvent(
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-       recipient.getPublicKey());
-
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       setsPairedUpvoteEvents,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     this.badgeSetsEvent = new BadgeSetsEvent(
@@ -239,7 +234,6 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
   private String expectedStringEventMessageAddressTagBadgeAwardGenericEvent() {
     String withUrl = "\"" + UNIT_UPVOTE + "\",\"" + relayArgUrl + "\"";
     String relayTag = ",[\"relay\",\"ws://localhost:5555\"]";
-    relayTag = "";
     return "[\"EVENT\",{\"id\":\"" + badgeAwardGenericEventWithAddressTagEventId + "\",\"pubkey\":\"" + submitter.getPublicKey().toHexString() + "\",\"created_at\":" + badgeAwardGenericEventWithAddressTagCreatedAt + ",\"kind\":8,\"tags\":[[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + UNIT_UPVOTE + "\"],[\"p\",\"" + upvotedUserPubkey + "\"]" + relayTag + "],\"content\":\"\",\"sig\":\"" + badgeAwardGenericEventWithAddressTagSignature + "\"}]";
   }
 

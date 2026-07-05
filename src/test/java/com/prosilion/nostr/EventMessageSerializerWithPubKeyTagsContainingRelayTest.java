@@ -72,15 +72,10 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Bas
        "AfterImage generated FollowSetsEvent",
        new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
 
-    SetsPairedEvent setsPairedUpvoteEvents = new SetsPairedEvent(
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-       recipient.getPublicKey());
-
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       setsPairedUpvoteEvents,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
     
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(

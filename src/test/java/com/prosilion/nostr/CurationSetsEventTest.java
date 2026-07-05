@@ -17,19 +17,13 @@ public class CurationSetsEventTest extends BaseEventTest {
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       new SetsPairedEvent(
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAddressTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag(),
-          eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardRecipientPublicKey()),
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
        relayArgRelay);
 
     SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
@@ -58,25 +52,20 @@ public class CurationSetsEventTest extends BaseEventTest {
     assertEquals(curationSetsUpvoteEvent.getAddressTag(), upvoteAsAddressTag);
     assertEquals(curationSetsDownvoteEvent.getAddressTag(), downvoteAsAddressTag);
 
-    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Upvote.getAwardEventRelay());
-    assertEquals(setsPairedDownvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Downvote.getAwardEventRelay());
+    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Upvote.getDefinitionEventRelay());
+    assertEquals(setsPairedDownvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Downvote.getDefinitionEventRelay());
   }
 
   @Test
   final void testNewFromExisting() {
-    SetsPairedEvent setsPairedEvent = new SetsPairedEvent(
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey());
-
     CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       setsPairedEvent,
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
        relayArgRelay);
 
     CurationSetsEvent newFromExisting = curationSetsUpvoteEvent.createNewFromExisting(
-       aImgIdentity, setsPairedEvent);
+       aImgIdentity, eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
     assertEquals(curationSetsUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
     assertEquals(curationSetsUpvoteEvent.getAddressTagEventTagPair(), newFromExisting.getAddressTagEventTagPair());

@@ -15,30 +15,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BadgeAwardUpvoteEventTest extends BaseEventTest {
   @Test
   final void A_NoNo__testEventNullRelayNoRelayTag() {
-    assertEquals(Optional.empty(), award_NoNo_Defn_NoNo_Upvote.getRelayTag());
-    assertEquals(Optional.empty(), award_NoNo_Defn_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay));
-    assertEquals(Optional.empty(), award_NoNo_Defn_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
-    assertThrows(Exception.class, () -> award_NoNo_Defn_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl).orElseThrow());
-    assertThrows(NostrException.class, () -> award_NoNo_Defn_NoNo_Upvote.requireFirstTag(RelayTag.class));
-
-    assertTrue(award_NoNo_Defn_NoNo_Upvote.getRelayTag().isEmpty());
-    assertTrue(award_NoNo_Defn_NoNo_Upvote.findFirstTag(RelayTag.class).isEmpty());
-    assertTrue(award_NoNo_Defn_NoNo_Upvote.getTypeSpecificTags(RelayTag.class).isEmpty());
-    assertThrows(NostrException.class, () -> award_NoNo_Defn_NoNo_Upvote.requireFirstTag(RelayTag.class));
-
-//    relayTag.getRelay related    
-    assertTrue(award_NoNo_Defn_NoNo_Upvote.getRelay().isEmpty());
-    assertTrue(award_NoNo_Defn_NoNo_Upvote.getRelayTag().map(RelayTag::getRelay).isEmpty());
-
-    assertEquals(Optional.empty(), award_NoNo_Defn_NoNo_Upvote.getRelay());
-    assertEquals(Optional.empty(), award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl));
-    assertEquals(Optional.empty(), award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).map(String::toString));
+    assertNotEquals(Optional.empty(), award_NoNo_Defn_NoNo_Upvote.getRelayTag());
   }
 
   @Test
