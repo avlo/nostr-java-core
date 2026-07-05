@@ -1,48 +1,16 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CurationSetsEvent;
-import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.EventTag;
-import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.MINUS_ONE_FORMULA;
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BadgeSetsEventTest extends BaseEventTest {
-  private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
-  private static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
-  private static final IdentifierTag formulaUnitUpvote = new IdentifierTag(FORMULA_UNIT_UPVOTE);
-  private static final IdentifierTag formulaUnitDownvote = new IdentifierTag(FORMULA_UNIT_DOWNVOTE);
-
-  public static final String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
-  public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
-
-  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
-
-  public BadgeSetsEventTest() throws ParseException {
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, relayArgRelay, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA);
-    FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, relayArgRelay, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA);
-
-    this.badgeDefinitionReputationEvent =
-       new BadgeDefinitionReputationEvent(
-          submitter,
-          upvoteDefnCreator.getPublicKey(),
-          reputationIdentifierTag,
-          relayArgRelay,
-          EXTERNAL_IDENTITY_TAG,
-          List.of(plusOneFormulaEvent, minusOneFormulaEvent));
-  }
+public class CurationSetsEventTest extends BaseEventTest {
 
   @Test
   final void testValidBadgeSetsEvent() {
@@ -63,78 +31,62 @@ public class BadgeSetsEventTest extends BaseEventTest {
           eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag(),
           eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardRecipientPublicKey()),
        relayArgRelay);
-    
-    BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEvent,
-       List.of(curationSetsUpvoteEvent, curationSetsDownvoteEvent),
-       relayArgRelay);
 
-    assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
-    assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
+    SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
+    SetsPairedEvent setsPairedDownvoteEvent = curationSetsDownvoteEvent.getSetsPairedEvent();
 
-    List<SetsPairedEvent> setsPairedEventList = badgeSetsEvent
-       .getCurationSetsEventList().stream().map(
-          CurationSetsEvent::getSetsPairedEvent).toList();
-    
-    assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_Upvote));
-    assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_Downvote));
+    assertEquals(eventAuxNo_award_NoNo_defn_NoNo_Upvote, setsPairedUpvoteEvent);
+    assertEquals(eventAuxNo_award_NoNo_defn_NoNo_Downvote, setsPairedDownvoteEvent);
     String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
     String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardEventId();
 
     assertEquals(
        upvoteEventId,
-       setsPairedEventList.stream().map(SetsPairedEvent::getAwardEventId).findFirst().orElseThrow());
+       setsPairedUpvoteEvent.getAwardEventId());
     assertEquals(
-       defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag(),
-       setsPairedEventList.stream().map(SetsPairedEvent::getAddressTag).findFirst().orElseThrow());
+       defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag(),
+       setsPairedDownvoteEvent.getAddressTag());
 
     assertEquals(recipient.getPublicKey(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey());
 
-    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(curationSetsUpvoteEvent.getEventId()));
-    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(curationSetsDownvoteEvent.getEventId()));
+    assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
+    assertEquals(setsPairedDownvoteEvent.getEventTag().getEventId(), downvoteEventId);
 
     AddressTag upvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag();
     AddressTag downvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag();
 
-    assertTrue(badgeSetsEvent.getCurationSetsEventList().stream().map(CurationSetsEvent::getAddressTag).anyMatch(upvoteAsAddressTag::equals));
-    assertTrue(badgeSetsEvent.getCurationSetsEventList().stream().map(CurationSetsEvent::getAddressTag).anyMatch(downvoteAsAddressTag::equals));
+    assertEquals(curationSetsUpvoteEvent.getAddressTag(), upvoteAsAddressTag);
+    assertEquals(curationSetsDownvoteEvent.getAddressTag(), downvoteAsAddressTag);
 
-    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getAwardEventRelay()));
-    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getAwardEventRelay()));
+    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Upvote.getAwardEventRelay());
+    assertEquals(setsPairedDownvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Downvote.getAwardEventRelay());
+  }
 
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag(),
-          badgeSetsEvent.getRelay().orElse(null)),
-       badgeSetsEvent.asAddressableEventAddressTag());
+  @Test
+  final void testNewFromExisting() {
+    SetsPairedEvent setsPairedEvent = new SetsPairedEvent(
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey());
 
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag()),
-       badgeSetsEvent.asAddressableEventAddressTag());
+    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
+       setsPairedEvent,
+       relayArgRelay);
 
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag(),
-          null),
-       badgeSetsEvent.asAddressableEventAddressTag());
+    CurationSetsEvent newFromExisting = curationSetsUpvoteEvent.createNewFromExisting(
+       aImgIdentity, setsPairedEvent);
 
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag(),
-          new Relay("ws://localhost-nomatch:5555")),
-       badgeSetsEvent.asAddressableEventAddressTag());
-
-//    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::requireRelay).toList().contains(eventTagRelay));
+    assertEquals(curationSetsUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
+    assertEquals(curationSetsUpvoteEvent.getAddressTagEventTagPair(), newFromExisting.getAddressTagEventTagPair());
+    assertEquals(curationSetsUpvoteEvent.getBadgeDefinitionGenericEvent(), newFromExisting.getBadgeDefinitionGenericEvent());
+    assertEquals(curationSetsUpvoteEvent.getEventTag(), newFromExisting.getEventTag());
+    assertEquals(curationSetsUpvoteEvent.asAddressableEventAddressTag(), newFromExisting.asAddressableEventAddressTag());
+    assertEquals(curationSetsUpvoteEvent.getAwardRecipientPublicKey(), newFromExisting.getAwardRecipientPublicKey());
+    assertEquals(curationSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
+    assertEquals(curationSetsUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl),
+       newFromExisting.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
   }
 
 //  @Test

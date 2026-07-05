@@ -4,115 +4,115 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.SetsPairedEventTagIF;
-import com.prosilion.nostr.tag.SetsPairedEvents;
+import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class BadgeSetsEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
+public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated BadgeSetsEvent";
 
   @Getter
   @JsonIgnore
-  protected final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
+  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
+
+  @JsonIgnore
+  private final List<CurationSetsEvent> curationSetsEventList;
 
   public BadgeSetsEvent(
-    @NonNull Identity identity,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-    @NonNull SetsPairedEvents setsPairedEvents,
-    @NonNull Relay relay) {
-    this(identity, badgeDefinitionReputationEvent, List.of(setsPairedEvents), List.of(), DEFAULT_CONTENT, relay);
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull CurationSetsEvent curationSetsEvent,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, badgeDefinitionReputationEvent, List.of(curationSetsEvent), List.of(), DEFAULT_CONTENT, relay);
   }
 
   public BadgeSetsEvent(
-    @NonNull Identity identity,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-    @NonNull List<SetsPairedEvents> setsPairedEventsList,
-    @NonNull Relay relay) {
-    this(identity, badgeDefinitionReputationEvent, setsPairedEventsList, List.of(), DEFAULT_CONTENT, relay);
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull List<CurationSetsEvent> curationSetsEventList,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, badgeDefinitionReputationEvent, curationSetsEventList, List.of(), DEFAULT_CONTENT, relay);
   }
 
   public BadgeSetsEvent(
-    @NonNull Identity identity,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-    @NonNull List<SetsPairedEvents> setsPairedEventsList,
-    @NonNull List<BaseTag> baseTags,
-    @NonNull Relay relay) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, setsPairedEventsList, baseTags, DEFAULT_CONTENT, relay);
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull CurationSetsEvent curationSetsEvent,
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, badgeDefinitionReputationEvent, List.of(curationSetsEvent), List.of(), content, relay);
   }
 
   public BadgeSetsEvent(
-    @NonNull Identity identity,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-    @NonNull SetsPairedEvents setsPairedEvents,
-    @NonNull String content,
-    @NonNull Relay relay) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, List.of(setsPairedEvents), List.of(), content, relay);
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull CurationSetsEvent curationSetsEvent,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, badgeDefinitionReputationEvent, List.of(curationSetsEvent), baseTags, content, relay);
   }
 
   public BadgeSetsEvent(
-    @NonNull Identity identity,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-    @NonNull List<SetsPairedEvents> setsPairedEventsList,
-    @NonNull String content,
-    @NonNull Relay relay) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, setsPairedEventsList, List.of(), content, relay);
-  }
-
-  public BadgeSetsEvent(
-    @NonNull Identity identity,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-    @NonNull List<SetsPairedEvents> setsPairedEventsList,
-    @NonNull List<BaseTag> baseTags,
-    @NonNull String content,
-    @NonNull Relay relay) throws NostrException {
+     @NonNull Identity identity,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull List<CurationSetsEvent> curationSetsEventList,
+     @NonNull List<BaseTag> baseTags,
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
     super(
-      identity,
-      Kind.BADGE_SETS_EVENT,
-      badgeDefinitionReputationEvent.getIdentifierTag(),
-      setsPairedEventsList,
-      baseTags,
-      content,
-      relay);
+       identity,
+       Kind.BADGE_SETS_EVENT,
+       badgeDefinitionReputationEvent.getIdentifierTag(),
+       Stream.concat(
+          Stream.concat(
+             Stream.concat(
+                Stream.of(
+                   new PubKeyTag(curationSetsEventList.getFirst().getAwardRecipientPublicKey())),
+                curationSetsEventList
+                   .stream()
+                   .map(curationSetsEvent ->
+                      new EventTag(
+                         curationSetsEvent.getId(),
+                         curationSetsEvent.getRelay().map(Relay::getUrl).orElse(null)))),
+             Stream.of(
+                new AddressTag(
+                   badgeDefinitionReputationEvent.getKind(),
+                   badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey(),
+                   badgeDefinitionReputationEvent.getIdentifierTag(),
+                   badgeDefinitionReputationEvent.getRelay().orElse(null)))),
+          baseTags.stream()
+             .filter(Predicate.not(PubKeyTag.class::isInstance))
+             .filter(Predicate.not(EventTag.class::isInstance))
+             .filter(Predicate.not(AddressTag.class::isInstance))).toList(),
+       content, relay);
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
+    this.curationSetsEventList = curationSetsEventList;
   }
 
   public BadgeSetsEvent(
-    @NonNull GenericEventRecord genericEventRecord,
-    @NonNull SetsPairedEvents setsPairedEvents,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
-    this(genericEventRecord, List.of(setsPairedEvents), badgeDefinitionReputationEvent);
-  }
-
-  public BadgeSetsEvent(
-    @NonNull GenericEventRecord genericEventRecord,
-    @NonNull List<SetsPairedEvents> setsPairedEvents,
-    @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent) {
-    super(genericEventRecord, setsPairedEvents);
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     @NonNull List<CurationSetsEvent> curationSetsEventList) throws NostrException {
+    super(genericEventRecord);
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
+    this.curationSetsEventList = curationSetsEventList;
   }
 
-  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull SetsPairedEvents newSetsPairedEvents) {
-    return createNewFromExisting(identity, List.of(newSetsPairedEvents));
+  @JsonIgnore
+  public List<EventTag> getEventTags() {
+    return getTypeSpecificTags(EventTag.class);
   }
 
-  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<SetsPairedEvents> newSetsPairedEventsList) {
-    List<SetsPairedEvents> appendList = new ArrayList<>(getSetsPairedEventsList());
-    appendList.addAll(newSetsPairedEventsList);
-    List<SetsPairedEvents> distinctList = appendList.stream().distinct().toList();
-    if (getSetsPairedEventsList().equals(distinctList))
-      return this;
-
-    return new BadgeSetsEvent(
-      identity,
-      badgeDefinitionReputationEvent,
-      distinctList,
-      getTags(),
-      getContent(),
-      getRelay().orElseThrow());
+  @JsonIgnore
+  public List<CurationSetsEvent> getCurationSetsEventList() {
+    return curationSetsEventList;
   }
 }

@@ -5,6 +5,7 @@ import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
+import com.prosilion.nostr.event.CurationSetsEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -15,7 +16,7 @@ import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.tag.SetsPairedEvents;
+import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
@@ -44,6 +45,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
   private final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT_UUID);
 
   private final FollowSetsEvent followSetsEvent;
+  private final BadgeSetsEvent badgeSetsEvent;
 
   private final String badgeAwardGenericEventWithAddressTagEventId;
   private final String badgeAwardGenericEventWithAddressTagCreatedAt;
@@ -113,12 +115,22 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
        new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
        plusOneFormulaEvent);
 
-    SetsPairedEvents setsPairedUpvoteEvents = new SetsPairedEvents(eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(), recipient.getPublicKey());
+    SetsPairedEvent setsPairedUpvoteEvents = new SetsPairedEvent(
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
+       recipient.getPublicKey());
 
-    BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
+    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
+       setsPairedUpvoteEvents,
+       relayArgRelay);
+
+    this.badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-       setsPairedUpvoteEvents, relayArgRelay);
+       curationSetsUpvoteEvent,
+       relayArgRelay);
 
     this.followSetsEvent = new FollowSetsEvent(
        platformIdentity,
@@ -237,7 +249,10 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
   }
 
   private String expectedStringEventMessageAddressTagFollowSetsEvent() {
-    String withUrl = "\"" + UNIT_UPVOTE + "\",\"" + relayArgUrl + "\"";
-    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"],[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + UNIT_UPVOTE + "\"],[\"e\",\"" + eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId() + "\"],[\"p\",\"" + upvotedUserPubkey + "\"],[\"relay\",\"" + relayArgUrl + "\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
+    String withUrl = badgeSetsEvent.getId() + "\",\"" + relayArgUrl;
+    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"]," +
+       "[\"p\",\"" + upvotedUserPubkey + "\"]," +
+       "[\"e\",\"" + withUrl + "\"]," +
+       "[\"relay\",\"" + relayArgUrl + "\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
   }
 }

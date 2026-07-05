@@ -231,7 +231,7 @@ public class JsonParseTest {
         new Filters(
             new KindFilter(Kind.SET_METADATA),
             new KindFilter(Kind.TEXT_NOTE),
-            new KindFilter(Kind.CONTACT_LIST),
+            new KindFilter(Kind.FOLLOW_LIST),
             new KindFilter(Kind.DELETION),
             new AuthorFilter(publicKey)));
 

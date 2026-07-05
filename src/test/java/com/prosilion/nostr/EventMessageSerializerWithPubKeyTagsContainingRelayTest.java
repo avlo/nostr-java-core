@@ -5,6 +5,7 @@ import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
+import com.prosilion.nostr.event.CurationSetsEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -14,6 +15,7 @@ import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
+import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
@@ -70,10 +72,21 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Bas
        "AfterImage generated FollowSetsEvent",
        new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
 
+    SetsPairedEvent setsPairedUpvoteEvents = new SetsPairedEvent(
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAddressTag(),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag(),
+       recipient.getPublicKey());
+
+    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
+       setsPairedUpvoteEvents,
+       relayArgRelay);
+    
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote, relayArgRelay);
+       curationSetsUpvoteEvent, relayArgRelay);
 
     this.followSetsEvent = new FollowSetsEvent(
        platformIdentity,

@@ -10,7 +10,7 @@ public enum Kind {
   SET_METADATA(0, "set_metadata"),
   TEXT_NOTE(1, "text_note"),
   RECOMMEND_SERVER(2, "recommend_server"),
-  CONTACT_LIST(3, "contact_list"),
+  FOLLOW_LIST(3, "follow_list"),
   ENCRYPTED_DIRECT_MESSAGE(4, "encrypted_direct_message"),
   DELETION(5, "deletion"),
   REPOST(6, "repost"),

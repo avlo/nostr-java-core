@@ -12,11 +12,11 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j
-public class SetsPairedEvents {
+public class SetsPairedEvent {
   private final PublicKey recipientPublicKey;
   private final ATagETagPair aTagETagPair;
 
-  public SetsPairedEvents(@NonNull AddressTag addressTag, @NonNull EventTag eventTag, @NonNull PublicKey publicKey) {
+  public SetsPairedEvent(@NonNull AddressTag addressTag, @NonNull EventTag eventTag, @NonNull PublicKey publicKey) {
     this.recipientPublicKey = publicKey;
     this.aTagETagPair = new ATagETagPair(addressTag, eventTag);
   }
@@ -83,9 +83,9 @@ public class SetsPairedEvents {
   @Override
   public final boolean equals(Object that) {
     if (that == null || getClass() != that.getClass()) return false;
-    SetsPairedEvents thatSetsPairedEvents = (SetsPairedEvents) that;
-    return Objects.equals(recipientPublicKey, thatSetsPairedEvents.recipientPublicKey) &&
-       Objects.equals(aTagETagPair, thatSetsPairedEvents.aTagETagPair);
+    SetsPairedEvent thatSetsPairedEvent = (SetsPairedEvent) that;
+    return Objects.equals(recipientPublicKey, thatSetsPairedEvent.recipientPublicKey) &&
+       Objects.equals(aTagETagPair, thatSetsPairedEvent.aTagETagPair);
   }
 
   @Override

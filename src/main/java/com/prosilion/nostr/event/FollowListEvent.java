@@ -7,12 +7,12 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import lombok.NonNull;
 
-public class ContactListEvent extends BaseEvent {
-  public ContactListEvent(@NonNull Identity identity, @NonNull List<BaseTag> tags) throws NostrException {
-    super(identity, Kind.CONTACT_LIST, tags);
+public class FollowListEvent extends BaseEvent {
+  public FollowListEvent(@NonNull Identity identity, @NonNull List<BaseTag> tags) throws NostrException {
+    super(identity, Kind.FOLLOW_LIST, tags);
   }
 
-  public ContactListEvent(@NonNull GenericEventRecord genericEventRecord) {
+  public FollowListEvent(@NonNull GenericEventRecord genericEventRecord) {
     super(genericEventRecord);
   }
 }
