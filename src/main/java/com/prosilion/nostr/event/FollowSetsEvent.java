@@ -108,23 +108,17 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
        distinctList,
        getTags(),
        getContent(),
-       getRelay().orElseThrow());
+       getRelay().orElseThrow(() ->
+          new NostrException("createNewFromExisting FollowSetsEvent is missing a Relay")));
   }
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
-    return badgeSetsEventList.getFirst()
-       .getCurationSetsEventList()
-       .getFirst().getAwardRecipientPublicKey();
-  }
-
-  @JsonIgnore
-  public List<EventTag> getEventTags() {
-    return getTypeSpecificTags(EventTag.class);
+    return badgeSetsEventList.getFirst().getAwardRecipientPublicKey();
   }
 
   private static List<BaseTag> mapStream(@NonNull List<BadgeSetsEvent> badgeSetsEventList, @NonNull List<BaseTag> baseTags) {
-    List<BaseTag> baseTags1 = Stream.concat(
+    return Stream.concat(
        Stream.concat(
           Stream.of(
              new PubKeyTag(badgeSetsEventList.getFirst()
@@ -138,6 +132,5 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
        baseTags.stream()
           .filter(Predicate.not(PubKeyTag.class::isInstance))
           .filter(Predicate.not(EventTag.class::isInstance))).toList();
-    return baseTags1;
   }
 }

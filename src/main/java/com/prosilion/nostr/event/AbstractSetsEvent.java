@@ -46,7 +46,6 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull SetsPairedEvent setsPairedEvent) {
     super(genericEventRecord);
-//    this.setsPairedEvents = cullMatchingSetsPairs(setsPairedEvents);
     this.setsPairedEvent = setsPairedEvent;
   }
 
@@ -73,6 +72,11 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
     return setsPairedEvent.getAwardRecipientPublicKey();
+  }
+
+  @JsonIgnore
+  public List<BaseTag> getAddressTagEventTagPairAsBaseTags() {
+    return List.of(getEventTag(), getAddressTag());
   }
 
   protected static List<BaseTag> buildTags(

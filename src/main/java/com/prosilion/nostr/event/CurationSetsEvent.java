@@ -5,10 +5,9 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.PubKeyTag;
-import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.tag.SetsPairedEvent;
+import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.function.Predicate;
@@ -61,13 +60,7 @@ public class CurationSetsEvent extends AbstractSetsEvent implements SetsPairedEv
        Kind.CURATION_SETS,
        badgeDefinitionGenericEvent.getIdentifierTag(),
        setsPairedEvent,
-       Stream.concat(
-          Stream.concat(
-             Stream.of(
-                new PubKeyTag(setsPairedEvent.getAwardRecipientPublicKey())),
-             Stream.of(badgeDefinitionGenericEvent.asAddressableEventAddressTag())),
-          baseTags.stream()
-             .filter(Predicate.not(PubKeyTag.class::isInstance))).toList(),
+       mapStream(badgeDefinitionGenericEvent, setsPairedEvent, baseTags),
        content,
        relay);
     this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
@@ -88,15 +81,21 @@ public class CurationSetsEvent extends AbstractSetsEvent implements SetsPairedEv
        setsPairedEvent,
        getTags(),
        getContent(),
-       getRelay().orElseThrow());
+       getRelay().orElseThrow(() ->
+          new NostrException("createNewFromExisting CurationSetsEvent is missing a Relay")));
   }
 
-  public List<BaseTag> getAddressTagEventTagPair() {
-    return List.of(getEventTag(), getAddressTag());
-  }
-
-  public List<EventTag> getEventTags() {
-    return List.of(getEventTag());
+  private static List<BaseTag> mapStream(
+     BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
+     SetsPairedEvent setsPairedEvent,
+     List<BaseTag> baseTags) {
+    return Stream.concat(
+       Stream.concat(
+          Stream.of(
+             new PubKeyTag(setsPairedEvent.getAwardRecipientPublicKey())),
+          Stream.of(badgeDefinitionGenericEvent.asAddressableEventAddressTag())),
+       baseTags.stream()
+          .filter(Predicate.not(PubKeyTag.class::isInstance))).toList();
   }
 }
 

@@ -6,6 +6,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
@@ -65,6 +66,11 @@ public class AddressableEvent extends BaseEvent {
     super(validateKind(validateIdentifierTagRelayTag(genericEventRecord)));
   }
 
+  @JsonIgnore
+  public List<EventTag> getEventTags() {
+    return getTypeSpecificTags(EventTag.class);
+  }
+  
   @JsonIgnore
   public final IdentifierTag getIdentifierTag() {
     return requireFirstTag(IdentifierTag.class);

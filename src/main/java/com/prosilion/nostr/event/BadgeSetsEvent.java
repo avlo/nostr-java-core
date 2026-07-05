@@ -9,6 +9,7 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -71,27 +72,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
        identity,
        Kind.BADGE_SETS_EVENT,
        badgeDefinitionReputationEvent.getIdentifierTag(),
-       Stream.concat(
-          Stream.concat(
-             Stream.concat(
-                Stream.of(
-                   new PubKeyTag(curationSetsEventList.getFirst().getAwardRecipientPublicKey())),
-                curationSetsEventList
-                   .stream()
-                   .map(curationSetsEvent ->
-                      new EventTag(
-                         curationSetsEvent.getId(),
-                         curationSetsEvent.getRelay().map(Relay::getUrl).orElse(null)))),
-             Stream.of(
-                new AddressTag(
-                   badgeDefinitionReputationEvent.getKind(),
-                   badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey(),
-                   badgeDefinitionReputationEvent.getIdentifierTag(),
-                   badgeDefinitionReputationEvent.getRelay().orElse(null)))),
-          baseTags.stream()
-             .filter(Predicate.not(PubKeyTag.class::isInstance))
-             .filter(Predicate.not(EventTag.class::isInstance))
-             .filter(Predicate.not(AddressTag.class::isInstance))).toList(),
+       mapStream(badgeDefinitionReputationEvent, curationSetsEventList, baseTags),
        content, relay);
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
     this.curationSetsEventList = curationSetsEventList;
@@ -106,13 +87,56 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
     this.curationSetsEventList = curationSetsEventList;
   }
 
-  @JsonIgnore
-  public List<EventTag> getEventTags() {
-    return getTypeSpecificTags(EventTag.class);
+  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull CurationSetsEvent curationSetsEvent) {
+    return createNewFromExisting(identity, List.of(curationSetsEvent));
   }
 
+  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<CurationSetsEvent> curationSetsEvents) {
+    getCurationSetsEventList().addAll(curationSetsEvents);
+    return new BadgeSetsEvent(
+       identity,
+       getBadgeDefinitionReputationEvent(),
+       getCurationSetsEventList().stream().distinct().toList(),
+       getTags(),
+       getContent(),
+       getRelay().orElseThrow(() -> 
+          new NostrException("createNewFromExisting BadgeSetsEvent is missing a Relay")));
+  }
+  
   @JsonIgnore
   public List<CurationSetsEvent> getCurationSetsEventList() {
     return curationSetsEventList;
+  }
+
+  @JsonIgnore
+  public final PublicKey getAwardRecipientPublicKey() {
+    return curationSetsEventList.getFirst().getAwardRecipientPublicKey();
+  }
+
+  private static List<BaseTag> mapStream(
+     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
+     List<CurationSetsEvent> curationSetsEventList,
+     List<BaseTag> baseTags) {
+    return Stream.concat(
+       Stream.concat(
+          Stream.concat(
+             Stream.of(
+                new PubKeyTag(curationSetsEventList.getFirst().getAwardRecipientPublicKey())),
+             curationSetsEventList
+                .stream()
+                .map(curationSetsEvent ->
+                   new EventTag(
+                      curationSetsEvent.getId(),
+                      curationSetsEvent.getRelay().map(Relay::getUrl).orElse(null)))),
+          Stream.of(
+             new AddressTag(
+                badgeDefinitionReputationEvent.getKind(),
+                badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey(),
+                badgeDefinitionReputationEvent.getIdentifierTag(),
+                badgeDefinitionReputationEvent.getRelay().orElse(null)))),
+       baseTags.stream()
+          .filter(Predicate.not(PubKeyTag.class::isInstance))
+          .filter(Predicate.not(EventTag.class::isInstance))
+          .filter(Predicate.not(AddressTag.class::isInstance))).toList();
   }
 }

@@ -68,7 +68,7 @@ public class CurationSetsEventTest extends BaseEventTest {
        aImgIdentity, eventAuxNo_award_NoNo_defn_NoNo_Upvote);
 
     assertEquals(curationSetsUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
-    assertEquals(curationSetsUpvoteEvent.getAddressTagEventTagPair(), newFromExisting.getAddressTagEventTagPair());
+    assertEquals(curationSetsUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newFromExisting.getAddressTagEventTagPairAsBaseTags());
     assertEquals(curationSetsUpvoteEvent.getBadgeDefinitionGenericEvent(), newFromExisting.getBadgeDefinitionGenericEvent());
     assertEquals(curationSetsUpvoteEvent.getEventTag(), newFromExisting.getEventTag());
     assertEquals(curationSetsUpvoteEvent.asAddressableEventAddressTag(), newFromExisting.asAddressableEventAddressTag());
