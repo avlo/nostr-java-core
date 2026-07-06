@@ -38,10 +38,9 @@ public class BaseEventTest {
   static final Relay auxRelay = new Relay(auxRelayUrl);
   static final RelayTag auxRelayTag = new RelayTag(auxRelay);
 
-  //  static final Identity submitter = Identity.generateRandomIdentity();
   static final Identity aImgIdentity =
-     Identity.generateRandomIdentity();
-//     Identity.create("aaa4585483196998204846989544737603523651520600328805626488477202");
+ // below produces e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04
+     Identity.create("fa11661b5f43c8f18f11861b4d553c47337dac9e351083b27320e311b7b324ac"); 
 
   //  static final Identity submitter = Identity.generateRandomIdentity();
   static final Identity submitter =

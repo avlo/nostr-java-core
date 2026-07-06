@@ -36,7 +36,7 @@ public class BadgeSetsEventTest extends BaseEventTest {
 
     this.badgeDefinitionReputationEvent =
        new BadgeDefinitionReputationEvent(
-          submitter,
+          aImgIdentity,
           upvoteDefnCreator.getPublicKey(),
           reputationIdentifierTag,
           relayArgRelay,
@@ -64,7 +64,8 @@ public class BadgeSetsEventTest extends BaseEventTest {
        List.of(curationSetsUpvoteEvent, curationSetsDownvoteEvent),
        relayArgRelay);
 
-    assertEquals(badgeSetsEvent.getIdentifierTag(), badgeDefinitionReputationEvent.getIdentifierTag());
+    assertEquals(badgeSetsEvent.getIdentifierTag().getUuid(), badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey().toHexString());
+    assertEquals(badgeSetsEvent.requireFirstTag(AddressTag.class), badgeDefinitionReputationEvent.asAddressableEventAddressTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
 
     List<SetsPairedEvent> setsPairedEventList = badgeSetsEvent
