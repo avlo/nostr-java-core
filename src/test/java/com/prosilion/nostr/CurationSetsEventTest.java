@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CurationSetsEventTest extends BaseEventTest {
@@ -74,7 +75,7 @@ public class CurationSetsEventTest extends BaseEventTest {
 
     CurationSetsEvent newFromExisting = curationSetsUpvoteEvent.createNewFromExisting(
        aImgIdentity, eventAuxNo_award_NoNo_defn_NoNo_Upvote);
-
+    
     assertEquals(curationSetsUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
     assertEquals(curationSetsUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newFromExisting.getAddressTagEventTagPairAsBaseTags());
     assertEquals(curationSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
@@ -84,6 +85,18 @@ public class CurationSetsEventTest extends BaseEventTest {
     assertEquals(curationSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
     assertEquals(curationSetsUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl),
        newFromExisting.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
+
+    CurationSetsEvent newDownvoteFromExistingUpvote = curationSetsUpvoteEvent.createNewFromExisting(
+       aImgIdentity, eventAuxNo_award_NoNo_defn_NoNo_Downvote);
+    assertEquals(curationSetsUpvoteEvent.getAwardRecipientPublicKey(), newDownvoteFromExistingUpvote.getAwardRecipientPublicKey());
+    assertEquals(curationSetsUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl),
+       newDownvoteFromExistingUpvote.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
+    assertNotEquals(curationSetsUpvoteEvent.getAddressTag(), newDownvoteFromExistingUpvote.getAddressTag());
+    assertNotEquals(curationSetsUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newDownvoteFromExistingUpvote.getAddressTagEventTagPairAsBaseTags());
+    assertNotEquals(curationSetsUpvoteEvent.getIdentifierTag(), newDownvoteFromExistingUpvote.getIdentifierTag());
+    assertNotEquals(curationSetsUpvoteEvent.getEventTag(), newDownvoteFromExistingUpvote.getEventTag());
+    assertNotEquals(curationSetsUpvoteEvent.asAddressableEventAddressTag(), newDownvoteFromExistingUpvote.asAddressableEventAddressTag());
+    assertNotEquals(curationSetsUpvoteEvent.getIdentifierTag(), newDownvoteFromExistingUpvote.getIdentifierTag());
   }
 
   @Test

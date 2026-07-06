@@ -96,11 +96,12 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   }
 
   public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<CurationSetsEvent> curationSetsEvents) {
-    getCurationSetsEventList().addAll(curationSetsEvents);
     return new BadgeSetsEvent(
        identity,
        getBadgeDefinitionReputationEvent(),
-       getCurationSetsEventList().stream().distinct().toList(),
+       Stream.concat(
+          getCurationSetsEventList().stream(),
+          curationSetsEvents.stream()).toList(),
        getTags(),
        getContent(),
        getRelay().orElseThrow(() ->

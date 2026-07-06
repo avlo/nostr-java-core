@@ -383,23 +383,40 @@ public class FollowSetsEventTest extends BaseEventTest {
        curationSetsUpvoteEvent,
        relayArgRelay);
 
-    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
+    FollowSetsEvent followSetsUpvoteEvent = new FollowSetsEvent(
        aImgIdentity,
        List.of(badgeSetsEvent, badgeSetsEvent),
        auxRelay);
 
-
-    FollowSetsEvent newFromExisting = followSetsEvent.createNewFromExisting(
+    FollowSetsEvent newFromExisting = followSetsUpvoteEvent.createNewFromExisting(
        aImgIdentity, badgeSetsEvent);
 
-    assertEquals(followSetsEvent.getBadgeSetsEventList(), newFromExisting.getBadgeSetsEventList());
-    assertEquals(followSetsEvent.getEventTags(), newFromExisting.getEventTags());
-    assertEquals(followSetsEvent.asAddressableEventAddressTag(), newFromExisting.asAddressableEventAddressTag());
-    assertEquals(followSetsEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
-    assertEquals(followSetsEvent.getAwardRecipientPublicKey(), newFromExisting.getAwardRecipientPublicKey());
-    assertEquals(followSetsEvent.getBadgeSetsEventList().size(), newFromExisting.getBadgeSetsEventList().size());
-    assertEquals(1, followSetsEvent.getBadgeSetsEventList().size());
+    assertEquals(followSetsUpvoteEvent.getBadgeSetsEventList(), newFromExisting.getBadgeSetsEventList());
+    assertEquals(followSetsUpvoteEvent.getEventTags(), newFromExisting.getEventTags());
+    assertEquals(followSetsUpvoteEvent.asAddressableEventAddressTag(), newFromExisting.asAddressableEventAddressTag());
+    assertEquals(followSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
+    assertEquals(followSetsUpvoteEvent.getAwardRecipientPublicKey(), newFromExisting.getAwardRecipientPublicKey());
+    assertEquals(followSetsUpvoteEvent.getBadgeSetsEventList().size(), newFromExisting.getBadgeSetsEventList().size());
+    assertEquals(1, followSetsUpvoteEvent.getBadgeSetsEventList().size());
     assertEquals(1, newFromExisting.getBadgeSetsEventList().size());
+
+    CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
+       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
+       relayArgRelay);
+    
+    BadgeSetsEvent badgeSetsHasUpvoteDownvoteEvents = new BadgeSetsEvent(
+       aImgIdentity,
+       badgeDefinitionReputationEventPlusOneFormula,
+       curationSetsDownvoteEvent,
+       relayArgRelay);
+    
+    FollowSetsEvent newpUpvoteDownvoteEventsFromExistingUpvote = followSetsUpvoteEvent.createNewFromExisting(
+       aImgIdentity, badgeSetsHasUpvoteDownvoteEvents);
+
+    assertTrue(newpUpvoteDownvoteEventsFromExistingUpvote.getBadgeSetsEventList().contains(badgeSetsEvent));
+    assertTrue(newpUpvoteDownvoteEventsFromExistingUpvote.getBadgeSetsEventList().contains(badgeSetsHasUpvoteDownvoteEvents));
   }
 //
 //  @Test

@@ -76,7 +76,7 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
 
   @JsonIgnore
   public List<BaseTag> getAddressTagEventTagPairAsBaseTags() {
-    return List.of(getEventTag(), getAddressTag());
+    return List.of(getAddressTag(), getEventTag());
   }
 
   protected static List<BaseTag> buildTags(
