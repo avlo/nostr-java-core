@@ -1,14 +1,22 @@
 package com.prosilion.nostr;
 
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.CurationSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
+import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.nostr.util.Util;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CurationSetsEventTest extends BaseEventTest {
 
@@ -69,13 +77,117 @@ public class CurationSetsEventTest extends BaseEventTest {
 
     assertEquals(curationSetsUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
     assertEquals(curationSetsUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newFromExisting.getAddressTagEventTagPairAsBaseTags());
-    assertEquals(curationSetsUpvoteEvent.getBadgeDefinitionGenericEvent(), newFromExisting.getBadgeDefinitionGenericEvent());
+    assertEquals(curationSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
     assertEquals(curationSetsUpvoteEvent.getEventTag(), newFromExisting.getEventTag());
     assertEquals(curationSetsUpvoteEvent.asAddressableEventAddressTag(), newFromExisting.asAddressableEventAddressTag());
     assertEquals(curationSetsUpvoteEvent.getAwardRecipientPublicKey(), newFromExisting.getAwardRecipientPublicKey());
     assertEquals(curationSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
     assertEquals(curationSetsUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl),
        newFromExisting.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
+  }
+
+  @Test
+  final void testNewFromGenericEventRecord() {
+    CurationSetsEvent expected = new CurationSetsEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
+       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       relayArgRelay);
+
+    CurationSetsEvent actual = new CurationSetsEvent(expected.asGenericEventRecord());
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  final void testManualConstruction() {
+    Identity identity = Identity.generateRandomIdentity();
+    Relay relay = new Relay("ws://localhost:5555");
+    PublicKey publicKey = new PublicKey(Util.generateRandomHex64String());
+    EventTag eventTagWithUrl = new EventTag(Util.generateRandomHex64String(), relay.getUrl());
+    IdentifierTag identifierTag = new IdentifierTag("UUID");
+
+    AddressTag addressTagWithUrl = new AddressTag(
+       Kind.CURATION_SETS,
+       publicKey,
+       identifierTag,
+       relay);
+
+    CurationSetsEvent expected = new CurationSetsEvent(
+       identity,
+       publicKey,
+       identifierTag,
+       addressTagWithUrl,
+       eventTagWithUrl,
+       List.of(),
+       "",
+       relay);
+
+    CurationSetsEvent actual = new CurationSetsEvent(expected.asGenericEventRecord());
+
+    assertEquals(expected, actual);
+
+    EventTag extraEventTagWithUrl = new EventTag(Util.generateRandomHex64String(), relay.getUrl());
+    IdentifierTag extraIdentifierTag = new IdentifierTag("UUID-extra");
+
+    AddressTag extraAddressTagWithUrl = new AddressTag(
+       Kind.CURATION_SETS,
+       publicKey,
+       extraIdentifierTag,
+       relay);
+
+    CurationSetsEvent actualWithExtraBaseTags = new CurationSetsEvent(
+       identity,
+       publicKey,
+       identifierTag,
+       addressTagWithUrl,
+       eventTagWithUrl,
+       List.of(extraIdentifierTag, extraAddressTagWithUrl, extraEventTagWithUrl),
+       "",
+       relay);
+
+    assertEquals(
+       expected.getTags(),
+       actualWithExtraBaseTags.getTags());
+    
+//    EventTag eventTagWithoutUrl = new EventTag(Util.generateRandomHex64String());
+//    AddressTag addressTagWithoutUrl = new AddressTag(
+//       Kind.CURATION_SETS,
+//       publicKey,
+//       identifierTag);
+  }
+
+  @Test
+  final void testThrowsException() {
+    Identity identity = Identity.generateRandomIdentity();
+    Relay relay = new Relay("ws://localhost:5555");
+    PublicKey publicKey = new PublicKey(Util.generateRandomHex64String());
+    IdentifierTag identifierTag = new IdentifierTag("UUID");
+    EventTag eventTagNullUrl = new EventTag(Util.generateRandomHex64String(), null);
+
+    AddressTag addressTagWithUrl = new AddressTag(
+       Kind.CURATION_SETS,
+       publicKey,
+       identifierTag,
+       relay);
+
+    assertThrows(NostrException.class, () -> new CurationSetsEvent(
+       identity,
+       publicKey,
+       identifierTag,
+       addressTagWithUrl,
+       eventTagNullUrl,
+       "",
+       relay));
+    
+    assertThrows(NostrException.class, () -> new CurationSetsEvent(
+       identity,
+       publicKey,
+       identifierTag,
+       addressTagWithUrl,
+       eventTagNullUrl,
+       List.of(),
+       "",
+       relay));
   }
 
 //  @Test
