@@ -1,11 +1,15 @@
 package com.prosilion.nostr;
 
-import com.google.common.base.Supplier;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;
+import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.util.Util;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,4 +129,34 @@ public class EventMessageDeserializerTest {
     assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encodedBaseMessage).getResult());
     assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(json, encodedEventMessage).getResult());
   }
+
+  @Test
+  void testTaglessDecodeReEncode() throws IOException {
+    EventMessage eventMessageHeaderString = tester.parseObject(headerString);
+    EventMessage reEncodedEventMessage = new EventMessage(eventMessageHeaderString.getEvent().asGenericEventRecord());
+    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(reEncodedEventMessage.encode(), headerString).getResult());
+  }
+
+  private final static String headerString = """
+["EVENT",{"id":"94bdf419d9c250ff4b0c8f66892c949174f79be713b6589d5475c27f2fe8adee","pubkey":"e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04","created_at":1783384757054,"kind":30008,"tags":[],"content":"AfterImage generated BadgeSetsEvent","sig":"e8895b652f1e0688b2f8afee19ed1c0cf43cbb8a085651e74cfa6a767943e230aa48c325209955e7ec83046206248c71355b67e935dcef68647401413eb432ac"}]""";
+
+  @Test
+  void testHashCode() throws IOException {
+    assertEquals(JsonComparison.Result.MATCH, jsonComparator.compare(order_1, order_2).getResult());
+
+    EventMessage eventMessage_order_1 = tester.parseObject(order_1);
+    EventMessage eventMessage_order_2 = tester.parseObject(order_2);
+
+    int event1_hashCode = eventMessage_order_1.getEvent().hashCode();
+    int event2_hashCode = eventMessage_order_2.getEvent().hashCode();
+    Util.debug(log, "event_hashCode:\n {}", String.valueOf(event1_hashCode), true, 'Y');
+    Util.debug(log, "event_getHash:\n {}", String.valueOf(event2_hashCode), true, 'Z');
+    assertEquals(event1_hashCode, event2_hashCode);
+  }
+  
+  private final static String order_1 = """
+["EVENT",{"id":"94bdf419d9c250ff4b0c8f66892c949174f79be713b6589d5475c27f2fe8adee","pubkey":"e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04","created_at":1783384757054,"kind":30008,"tags":[["d","a604b698a84a4117d750f69a243a1fb895c70871ce4dee10249a67a6ca70684d"],["p","985a5b9ea911bb8f9d9dca82c03f776d68fdc452b774295a874423a0fa5e8879"],["e","b419a6020b498e48f263ea71b0c189c7a7d33b88e51e4de02107d7a2ab14eb3c","ws://localhost:5555"],["a","30009:e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04:TEST_REPUTATION","ws://localhost:5555"],["relay","ws://localhost:5555"]],"content":"AfterImagegeneratedBadgeSetsEvent","sig":"e8895b652f1e0688b2f8afee19ed1c0cf43cbb8a085651e74cfa6a767943e230aa48c325209955e7ec83046206248c71355b67e935dcef68647401413eb432ac"}]""";
+
+  private final static String order_2 = """
+["EVENT",{"id":"94bdf419d9c250ff4b0c8f66892c949174f79be713b6589d5475c27f2fe8adee","pubkey":"e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04","created_at":1783384757054,"kind":30008,"tags":[["p","985a5b9ea911bb8f9d9dca82c03f776d68fdc452b774295a874423a0fa5e8879"],["a","30009:e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04:TEST_REPUTATION","ws://localhost:5555"],["d","a604b698a84a4117d750f69a243a1fb895c70871ce4dee10249a67a6ca70684d"],["e","b419a6020b498e48f263ea71b0c189c7a7d33b88e51e4de02107d7a2ab14eb3c","ws://localhost:5555"],["relay","ws://localhost:5555"]],"content":"AfterImagegeneratedBadgeSetsEvent","sig":"e8895b652f1e0688b2f8afee19ed1c0cf43cbb8a085651e74cfa6a767943e230aa48c325209955e7ec83046206248c71355b67e935dcef68647401413eb432ac"}]""";
 }
