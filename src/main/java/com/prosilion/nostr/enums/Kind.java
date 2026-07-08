@@ -41,6 +41,8 @@ public enum Kind {
   FOLLOW_SETS(30_000, "follow_sets"),
   RELAY_SETS(30_002, "relay_sets"),
   CURATION_SETS(30_004, "curation_sets"),
+  BADGE_SETS_EVENT(30_008, "badge_sets_event"),
+  BADGE_DEFINITION_EVENT(30_009, "badge_definition_event"),
   ARBITRARY_CUSTOM_APP_DATA(30_078, "arbitrary_custom_app_data"),
   RELAY_DISCOVERY(30_166, "relay_discovery"),
   CLASSIFIED_LISTING_ACTIVE(30_402, "classified_listing_active"),
@@ -49,8 +51,6 @@ public enum Kind {
   CALENDAR_DATE_BASED_EVENT(31_922, "calendar_date_based_event"),
   CALENDAR_TIME_BASED_EVENT(31_923, "calendar_time_based_event"),
   CALENDAR_RSVP_EVENT(31_925, "calendar_rsvp_event"),  
-  BADGE_SETS_EVENT(30_008, "badge_sets_event"),
-  BADGE_DEFINITION_EVENT(30_009, "badge_definition_event"),
   WALLET(37_375, "wallet"),
   GROUP_ADMINS(39_001, "relay_based_groups_admins"),
   GROUP_MEMBERS(39_002, "relay_based_groups_members");

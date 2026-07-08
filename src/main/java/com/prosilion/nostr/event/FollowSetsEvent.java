@@ -100,12 +100,12 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   public FollowSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<BadgeSetsEvent> newBadgeSetsEvents) {
     List<BadgeSetsEvent> appendList = new ArrayList<>(getBadgeSetsEventList());
     appendList.addAll(newBadgeSetsEvents);
-    List<BadgeSetsEvent> distinctList = appendList.stream().distinct().toList();
-    if (getBadgeSetsEventList().equals(distinctList))
+    List<BadgeSetsEvent> distinctBadgeSetsEventList = appendList.stream().distinct().toList();
+    if (getBadgeSetsEventList().equals(distinctBadgeSetsEventList))
       return this;
     return new FollowSetsEvent(
        identity,
-       distinctList,
+       distinctBadgeSetsEventList,
        getTags(),
        getContent(),
        getRelay().orElseThrow(() ->

@@ -11,6 +11,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -96,16 +97,18 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   }
 
   public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<CurationSetsEvent> curationSetsEvents) {
-    return new BadgeSetsEvent(
+    List<CurationSetsEvent> appendList = new ArrayList<>(getCurationSetsEventList());
+    appendList.addAll(curationSetsEvents);
+    List<CurationSetsEvent> distinctCurationSetsEventList = appendList.stream().distinct().toList();
+    BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        identity,
        getBadgeDefinitionReputationEvent(),
-       Stream.concat(
-          getCurationSetsEventList().stream(),
-          curationSetsEvents.stream()).toList(),
+       distinctCurationSetsEventList,
        getTags(),
        getContent(),
        getRelay().orElseThrow(() ->
           new NostrException("createNewFromExisting BadgeSetsEvent is missing a Relay")));
+    return badgeSetsEvent;
   }
 
   @JsonIgnore
