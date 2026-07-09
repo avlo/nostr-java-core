@@ -9,7 +9,6 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
-import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import java.util.List;
 import java.util.UUID;
@@ -158,7 +157,7 @@ public class BadgeSetsEventTest extends BaseEventTest {
     assertTrue(newFromExistingHasUpvoteAndDownvote.getCurationSetsEventList().contains(curationSetsDownvoteEvent));
 
     List<CurationSetsEvent> curationSetsEventList = List.of(curationSetsUpvoteEvent, curationSetsDownvoteEvent);
-    
+
     BadgeSetsEvent badgeSetsEventWithUpvoteAndDownvoteCurationSetsEvents = new BadgeSetsEvent(
        aImgIdentity,
        badgeDefinitionReputationEvent,

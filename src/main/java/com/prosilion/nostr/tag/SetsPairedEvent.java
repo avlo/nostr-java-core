@@ -17,17 +17,19 @@ public class SetsPairedEvent {
   public static final String NULL_EVENT_TAG_RELAY = "SetsPairedEvent EventTag relay cannot be null";
   private final ATagETagPair aTagETagPair;
   private final PublicKey awardRecipientPublicKey;
+  private final Relay backupRelay;
 
-  public SetsPairedEvent(@NonNull AddressTag addressTag, Relay backupRelay, @NonNull EventTag eventTag, @NonNull PublicKey awardRecipientPublicKey) {
+  //  TODO: since backupRelay is/always/likely obtained from EventTag relay, possibly remove backupRelay and use eventTag.relay
+  public SetsPairedEvent(
+     @NonNull AddressTag addressTag,
+     Relay backupRelay,
+     @NonNull EventTag eventTag,
+     @NonNull PublicKey awardRecipientPublicKey) {
     if (eventTag.findRelay().isEmpty())
       throw new NostrException(NULL_EVENT_TAG_RELAY);
-    this.aTagETagPair = new ATagETagPair(
-       new AddressTag(
-          addressTag.getKind(),
-          addressTag.getPublicKey(),
-          addressTag.getIdentifierTag(),
-          addressTag.findRelay().orElse(backupRelay)), eventTag);
+    this.aTagETagPair = new ATagETagPair(addressTag, eventTag);
     this.awardRecipientPublicKey = awardRecipientPublicKey;
+    this.backupRelay = backupRelay;
   }
 
   @JsonIgnore
@@ -66,8 +68,9 @@ public class SetsPairedEvent {
   }
 
   @JsonIgnore
-  public final Optional<Relay> getDefinitionEventRelay() {
-    return getAddressTag().findRelay();
+  public final Relay getDefinitionEventRelay() {
+    //    Util.debug(log, "relay: [{}]", orElse.getUrl(), true, '1');
+    return getAddressTag().findRelay().or(() -> Optional.ofNullable(backupRelay)).orElse(getEventTag().requireRelay());
   }
 
   @JsonIgnore

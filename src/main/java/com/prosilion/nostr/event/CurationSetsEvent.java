@@ -52,6 +52,20 @@ public class CurationSetsEvent extends AbstractSetsEvent implements SetsPairedEv
 
   public CurationSetsEvent(
      @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull SetsPairedEvent setsPairedEvent,
+     @NonNull Relay relay) throws NostrException {
+    this(
+       identity,
+       identifierTag,
+       setsPairedEvent,
+       List.of(),
+       DEFAULT_CONTENT,
+       relay);
+  }
+
+  public CurationSetsEvent(
+     @NonNull Identity identity,
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
      @NonNull SetsPairedEvent setsPairedEvent,
      @NonNull List<BaseTag> baseTags,
@@ -74,15 +88,33 @@ public class CurationSetsEvent extends AbstractSetsEvent implements SetsPairedEv
      @NonNull List<BaseTag> baseTags,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
-    super(
+    this(
        identity,
-       Kind.CURATION_SETS,
+       setsPairedEvent.getAwardRecipientPublicKey(),
        identifierTag,
-       setsPairedEvent,
-       mapStream(identifierTag, setsPairedEvent, baseTags),
+       setsPairedEvent.getAddressTag(),
+       setsPairedEvent.getEventTag(),
+       baseTags,
        content,
        relay);
 //    this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
+  }
+
+  public CurationSetsEvent(
+     @NonNull Identity identity,
+     @NonNull PublicKey recipientPublicKey,
+     @NonNull IdentifierTag identifierTag,
+     @NonNull AddressTag addressTag,
+     @NonNull EventTag eventTag,
+     @NonNull Relay relay) throws NostrException {
+    this(
+       identity,
+       recipientPublicKey,
+       identifierTag,
+       addressTag,
+       eventTag,
+       DEFAULT_CONTENT,
+       relay);
   }
 
   public CurationSetsEvent(

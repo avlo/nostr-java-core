@@ -80,7 +80,7 @@ public class AddressableEvent extends BaseEvent {
   }
 
   @JsonIgnore
-  public final AddressTag asAddressableEventAddressTag() {
+  public AddressTag asAddressableEventAddressTag() {
     return new AddressTag(
        getKind(),
        getPublicKey(),

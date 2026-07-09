@@ -33,8 +33,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @JsonTest
 @ActiveProfiles("test")
 public class EventMessageBadgeAwardReputationEventDeserializerTest {
-  private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
-      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
+  public final static Identity aImgIdentity =
+//     Identity.generateRandomIdentity();
+     Identity.create("2684585483196998204846989544737603523651520600328805626488477202");
+  
+  public final static Identity submitter =
+//     Identity.generateRandomIdentity();
+     Identity.create("aaa4585483196998204846989544737603523651520600328805626488477202");
+
+  public final static Identity upvoteDefnCreator =
+//     Identity.generateRandomIdentity();
+     Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202");
+
+  public final static Identity recipient =
+//     Identity.generateRandomIdentity();
+     Identity.create("ccc4585483196998204846989544737603523651520600328805626488477202");
+
+  public final static Identity formulaCreator =
+//     Identity.generateRandomIdentity();
+     Identity.create("ddd4585483196998204846989544737603523651520600328805626488477202");
+
+  public final static Identity repDefnCreator =
+//     Identity.generateRandomIdentity();
+     Identity.create("eee4585483196998204846989544737603523651520600328805626488477202");
   
   private final JsonComparator jsonComparator = (expected, actual) -> JsonComparison.match();
   @Autowired
@@ -61,53 +82,45 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
 
   @Test
   void testDeserializeBadgeAwardReputationEventObject() throws IOException, ParseException {
-    String subscriberId = Factory.generateRandomHex64String();
     String url = "ws://localhost:5555";
     Relay relay = new Relay(url);
-    String TEST_UNIT_UPVOTE = "TEST_UNIT_UPVOTE";
-    String REPUTATION = "REPUTATION";
+    String BADGE_DEFINITION_UPVOTE_UUID = "BDG_DEF_UNIT_UP";
+    String BADGE_DEFINITION_REPUTATION_UUID = "BADGE_DEFN_UNIT_REP";
+    String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
 
-    IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
-    IdentifierTag upvoteIdentifierTag = new IdentifierTag(TEST_UNIT_UPVOTE);
-
-    Identity platformIdentity = Identity.generateRandomIdentity();
-    Identity aImgIdentity = Identity.generateRandomIdentity();
-    Identity recipient = Identity.generateRandomIdentity();
-    PublicKey recipientPubkey = recipient.getPublicKey();
+    IdentifierTag reputationIdentifierTag = new IdentifierTag(BADGE_DEFINITION_REPUTATION_UUID);
+    IdentifierTag upvoteIdentifierTag = new IdentifierTag(BADGE_DEFINITION_UPVOTE_UUID);
 
     ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag("platform", "identity", "proof");
-    String FORMULA_PLUS_ONE = "+1";
-    IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_PLUS_ONE);
+    IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_UNIT_UPVOTE);
 
-    BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(platformIdentity, reputationIdentifierTag, relay);
+    BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, relay);
 
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgIdentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, FORMULA_PLUS_ONE);
+    String CONTENT = "+1";
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(formulaCreator, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, CONTENT);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
         aImgIdentity,
-        definitionCreatorPublicKey,
+        repDefnCreator.getPublicKey(),
         reputationIdentifierTag,
         relay,
         externalIdentityTag,
         plusOneFormulaEvent);
 
     BadgeAwardReputationEvent actualBadgeAwardReputationEvent = new BadgeAwardReputationEvent(
-        platformIdentity,
-        recipientPubkey,
+        aImgIdentity,
+        recipient.getPublicKey(),
        externalIdentityTag, badgeDefinitionReputationEvent, new BigDecimal("+1"), relay
     );
 
     String eventId = actualBadgeAwardReputationEvent.getId();
-    String authorPubkey = actualBadgeAwardReputationEvent.getPublicKey().toHexString();
     String createdAt = actualBadgeAwardReputationEvent.getCreatedAt().toString();
-    String badgeCreatorPubkey = actualBadgeAwardReputationEvent.getBadgeDefinitionEvent().getPublicKey().toHexString();
-    String uuid = actualBadgeAwardReputationEvent.getBadgeDefinitionEvent().getFormulaEvents().getFirst().getBadgeDefinitionGenericEvent().getIdentifierTag().getUuid();
     String content = "1";
     String signature = actualBadgeAwardReputationEvent.getSignature().toString();
 
-    String json = "[\"EVENT\",{\"id\":\"" + eventId + "\",\"pubkey\":\"" + authorPubkey + "\",\"created_at\":" + createdAt + ",\"kind\":8,\"tags\":[" +
-        "[\"a\",\"30009:" + badgeCreatorPubkey + ":" + uuid + "\",\"" + url + "\"]," +
-        "[\"p\",\"" + recipientPubkey + "\"]," +
+    String json = "[\"EVENT\",{\"id\":\"" + eventId + "\",\"pubkey\":\"" + aImgIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + createdAt + ",\"kind\":8,\"tags\":[" +
+        "[\"a\",\"30009:" + repDefnCreator.getPublicKey().toHexString() + ":" + BADGE_DEFINITION_REPUTATION_UUID + "\",\"" + url + "\"]," +
+        "[\"p\",\"" + recipient.getPublicKey().toHexString() + "\"]," +
         "[\"relay\",\"" + relay.getUrl() + "\"]," +
         "[\"i\",\"platform:identity\",\"proof\"]" +
         "],\"content\":\"" + content + "\",\"sig\":\"" + signature + "\"}]";

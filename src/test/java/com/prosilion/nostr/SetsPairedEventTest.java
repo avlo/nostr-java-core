@@ -1,9 +1,14 @@
 package com.prosilion.nostr;
 
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
+import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.user.PublicKey;
+import com.prosilion.util.Factory;
 import org.junit.jupiter.api.Test;
 
 import static com.prosilion.nostr.tag.SetsPairedEvent.NULL_EVENT_TAG_RELAY;
@@ -46,7 +51,8 @@ public class SetsPairedEventTest extends BaseEventTest {
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().getKind(),
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().getPublicKey(),
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().getIdentifierTag(),
-    null);
+       null);
+    
     SetsPairedEvent setsPairedEvent = new SetsPairedEvent(
        addressTag,
        relayArgRelay,
@@ -55,7 +61,8 @@ public class SetsPairedEventTest extends BaseEventTest {
           award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
              new NostrException(NULL_EVENT_TAG_RELAY))),
        award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
-    assertEquals(relayArgRelay, setsPairedEvent.getAddressTag().getRelay());
+    assertEquals(null, setsPairedEvent.getAddressTag().getRelay());
+    assertEquals(relayArgRelay, setsPairedEvent.getDefinitionEventRelay());
   }
 
   @Test
@@ -111,7 +118,7 @@ public class SetsPairedEventTest extends BaseEventTest {
           award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
              new NostrException(NULL_EVENT_TAG_RELAY))),
        award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
-    
+
     assertEquals(expectedEquals, actualEquals);
 
     SetsPairedEvent actualNotEqualsHasAddressTagRelay = new SetsPairedEvent(
@@ -122,8 +129,53 @@ public class SetsPairedEventTest extends BaseEventTest {
           award_YesNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
              new NostrException(NULL_EVENT_TAG_RELAY))),
        award_YesNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
-    
+
     assertNotEquals(expectedEquals, actualNotEqualsHasAddressTagRelay);
+  }
+
+  @Test
+  void testRelayVariants() {
+    PublicKey publicKey = Identity.generateRandomIdentity().getPublicKey();
+    AddressTag addressTagNullRelay = new AddressTag(
+       Kind.CURATION_SETS,
+       publicKey,
+       new IdentifierTag("random"),
+       null);
+
+    Relay eventRelay = new Relay("ws://localhost-event-tag-relay:5555");
+    EventTag eventTag = new EventTag(
+       Factory.generateRandomHex64String(),
+       eventRelay.getUrl());
+
+    Relay backupRelay = new Relay("ws://localhost-backup-relay:5555");
+
+    SetsPairedEvent setsPairedEventWithNonNullBackupRelay = new SetsPairedEvent(
+       addressTagNullRelay,
+       backupRelay,
+       eventTag,
+       publicKey);
+    assertEquals(backupRelay, setsPairedEventWithNonNullBackupRelay.getDefinitionEventRelay());
+
+    SetsPairedEvent setsPairedEventWithNullBackupRelay = new SetsPairedEvent(
+       addressTagNullRelay,
+       null,
+       eventTag,
+       publicKey);
+    assertEquals(eventRelay, setsPairedEventWithNullBackupRelay.getDefinitionEventRelay());
+
+    Relay addressTagRelay = new Relay("ws://localhost-address-tag-relay:5555");
+    AddressTag addressTagNonNullRelay = new AddressTag(
+       Kind.CURATION_SETS,
+       publicKey,
+       new IdentifierTag("random"),
+       addressTagRelay);
+
+    SetsPairedEvent setsPairedEventWithNonNullAddressTagRelayAndNonNullBackupRelay = new SetsPairedEvent(
+       addressTagNonNullRelay,
+       backupRelay,
+       eventTag,
+       publicKey);
+    assertEquals(addressTagRelay, setsPairedEventWithNonNullAddressTagRelayAndNonNullBackupRelay.getDefinitionEventRelay());
   }
 }
 
