@@ -5,6 +5,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import java.util.stream.Stream;
@@ -61,6 +62,13 @@ public class BadgeDefinitionGenericEvent extends AddressableEvent {
   public BadgeDefinitionGenericEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
+     @NonNull List<BaseTag> baseTags) throws NostrException {
+    this(identity, identifierTag, baseTags.stream(), "");
+  }
+
+  public BadgeDefinitionGenericEvent(
+     @NonNull Identity identity,
+     @NonNull IdentifierTag identifierTag,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content) throws NostrException {
     this(identity, identifierTag, baseTags.stream(), content);
@@ -74,7 +82,40 @@ public class BadgeDefinitionGenericEvent extends AddressableEvent {
     super(identity, Kind.BADGE_DEFINITION_EVENT, identifierTag, baseTags, content);
   }
 
+  public BadgeDefinitionGenericEvent(@NonNull GenericEventRecord genericEventRecord, @NonNull Relay backupRelay) {
+    this(
+       new GenericEventRecord(
+          genericEventRecord.getId(),
+          genericEventRecord.getPublicKey(),
+          genericEventRecord.getCreatedAt(),
+          genericEventRecord.getKind(),
+          Stream.concat(
+             genericEventRecord.getTags().stream(),
+             Stream.of(new RelayTag(backupRelay))).toList(),
+          genericEventRecord.getContent(),
+          genericEventRecord.getSignature()));
+  }
+
   public BadgeDefinitionGenericEvent(@NonNull GenericEventRecord genericEventRecord) {
-    super(genericEventRecord);
+    super(
+       new GenericEventRecord(
+          genericEventRecord.getId(),
+          genericEventRecord.getPublicKey(),
+          genericEventRecord.getCreatedAt(),
+          genericEventRecord.getKind(),
+          genericEventRecord.getTags(),
+          genericEventRecord.getContent(),
+          genericEventRecord.getSignature()));
+  }
+
+  public BadgeDefinitionGenericEvent createNewFromExisting(
+     @NonNull Identity identity,
+     @NonNull Relay appendRelay) {
+    return new BadgeDefinitionGenericEvent(
+       identity,
+       this.getIdentifierTag(),
+       this.getTags(),
+       this.getContent(),
+       appendRelay);
   }
 }

@@ -1,6 +1,7 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.RelayTag;
@@ -61,9 +62,12 @@ public class BadgeDefinitionGenericEventTest extends BaseEventTest {
   @Test
   final void Z_testEventNullRelayMultipleRelayTags() {
     RelayTag relayTag = new RelayTag(new Relay("ws://localhost-from-another-relay-tag:5555"));
+
+    testTags(baseTagsRelayTag,
+       new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag)));
+    
     testTags(baseTagsRelayTag,
        new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag), ""));
-
     testTags(relayTag,
        new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(relayTag, baseTagsRelayTag), ""));
   }
@@ -76,21 +80,56 @@ public class BadgeDefinitionGenericEventTest extends BaseEventTest {
   }
 
   @Test
-  final void testBadgeDefinitionGenericEventCtor() {
-    RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-should-not-appear:5555"));
-    testTags(relayArgRelayTag,
+  final void testBadgeDefinitionGenericEventCtorThrowsException() {
+    assertThrows(NostrException.class, () ->
        new BadgeDefinitionGenericEvent(
-          new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay).asGenericEventRecord()));
+          new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag).asGenericEventRecord()));
   }
 
   @Test
-  final void testEventValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTagContaingNullRelay() {
-    assertThrows(IllegalArgumentException.class, () ->
-       new BadgeDefinitionGenericEvent(
-          upvoteDefnCreator,
-          upvoteIdentifierTag,
-          List.of(new RelayTag(null)),
-          "testValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTag"));
+  final void testEventValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTagContainingNullRelay() {
+    assertThrows(
+       IllegalArgumentException.class, () ->
+          new BadgeDefinitionGenericEvent(
+             upvoteDefnCreator,
+             upvoteIdentifierTag,
+             List.of(new RelayTag(null)),
+             "testValidBadgeDefinitionGenericEventWithoutRelayTagWithRelayBaseTag"));
+  }
+
+  @Test
+  final void testEventCreateNewFromGenericEventRecord() {
+    BadgeDefinitionGenericEvent tempSetupWithoutRelayTag = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
+    GenericEventRecord genericEventRecord = new GenericEventRecord(
+       tempSetupWithoutRelayTag.getId(),
+       tempSetupWithoutRelayTag.getPublicKey(),
+       tempSetupWithoutRelayTag.getCreatedAt(),
+       tempSetupWithoutRelayTag.getKind(),
+       tempSetupWithoutRelayTag.getTags(),
+       tempSetupWithoutRelayTag.getContent(),
+       tempSetupWithoutRelayTag.getSignature());
+
+    RelayTag auxTagsRelayTag = new RelayTag(auxRelay);
+    BadgeDefinitionGenericEvent withAuxRelay = new BadgeDefinitionGenericEvent(
+       genericEventRecord, auxTagsRelayTag.getRelay());
+    testTags(auxTagsRelayTag, withAuxRelay);
+  }
+
+  @Test
+  final void testEventCreateNewFromExisting() {
+    BadgeDefinitionGenericEvent withoutRelayTag = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
+    new GenericEventRecord(
+       withoutRelayTag.getId(),
+       withoutRelayTag.getPublicKey(),
+       withoutRelayTag.getCreatedAt(),
+       withoutRelayTag.getKind(),
+       withoutRelayTag.getTags().stream().filter(RelayTag.class::isInstance).toList(),
+       withoutRelayTag.getContent(),
+       withoutRelayTag.getSignature());
+
+    RelayTag auxTagsRelayTag = new RelayTag(auxRelay);
+    BadgeDefinitionGenericEvent withAuxRelay = withoutRelayTag.createNewFromExisting(upvoteDefnCreator, auxTagsRelayTag.getRelay());
+    testTags(auxTagsRelayTag, withAuxRelay);
   }
 
   private void testTags(RelayTag relayTag, BadgeDefinitionGenericEvent event) {
