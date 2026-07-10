@@ -13,16 +13,14 @@ import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.util.Factory;
 import java.io.IOException;
 import java.math.BigDecimal;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
-import lombok.NonNull;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.json.JsonComparator;
 import org.springframework.test.json.JsonComparison;
@@ -36,7 +34,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
   public final static Identity aImgIdentity =
 //     Identity.generateRandomIdentity();
      Identity.create("2684585483196998204846989544737603523651520600328805626488477202");
-  
+
   public final static Identity submitter =
 //     Identity.generateRandomIdentity();
      Identity.create("aaa4585483196998204846989544737603523651520600328805626488477202");
@@ -56,7 +54,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
   public final static Identity repDefnCreator =
 //     Identity.generateRandomIdentity();
      Identity.create("eee4585483196998204846989544737603523651520600328805626488477202");
-  
+
   private final JsonComparator jsonComparator = (expected, actual) -> JsonComparison.match();
   @Autowired
   JacksonTester<EventMessage> tester;
@@ -64,7 +62,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
   @Test
   void testDeserializeBadgeAwardReputationEventJson() throws IOException {
     String json = """
-        ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["a","30009:5fdd11ce985348f48d552ac5060d855652d33d389b0f47c72b2269e59cfeba6e:TEST_UNIT_UPVOTE","ws://localhost:5555"],["p","fd2f8f36bbbc889b34494a1b630bd2a45e7ea8bfae09a02133ab1567014f206d"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
+       ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["a","30009:5fdd11ce985348f48d552ac5060d855652d33d389b0f47c72b2269e59cfeba6e:TEST_UNIT_UPVOTE","ws://localhost:5555"],["p","fd2f8f36bbbc889b34494a1b630bd2a45e7ea8bfae09a02133ab1567014f206d"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
 
     EventMessage expected = tester.parseObject(json);
     BaseMessage message = BaseMessageDecoder.decode(json);
@@ -100,16 +98,16 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(formulaCreator, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, CONTENT);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
-        aImgIdentity,
-        repDefnCreator.getPublicKey(),
-        reputationIdentifierTag,
-        relay,
-        externalIdentityTag,
-        plusOneFormulaEvent);
+       repDefnCreator,
+       aImgIdentity.getPublicKey(),
+       reputationIdentifierTag,
+       relay,
+       externalIdentityTag,
+       plusOneFormulaEvent);
 
     BadgeAwardReputationEvent actualBadgeAwardReputationEvent = new BadgeAwardReputationEvent(
-        aImgIdentity,
-        recipient.getPublicKey(),
+       aImgIdentity,
+       recipient.getPublicKey(),
        externalIdentityTag, badgeDefinitionReputationEvent, new BigDecimal("+1"), relay
     );
 
@@ -119,11 +117,11 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     String signature = actualBadgeAwardReputationEvent.getSignature().toString();
 
     String json = "[\"EVENT\",{\"id\":\"" + eventId + "\",\"pubkey\":\"" + aImgIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + createdAt + ",\"kind\":8,\"tags\":[" +
-        "[\"a\",\"30009:" + repDefnCreator.getPublicKey().toHexString() + ":" + BADGE_DEFINITION_REPUTATION_UUID + "\",\"" + url + "\"]," +
-        "[\"p\",\"" + recipient.getPublicKey().toHexString() + "\"]," +
-        "[\"relay\",\"" + relay.getUrl() + "\"]," +
-        "[\"i\",\"platform:identity\",\"proof\"]" +
-        "],\"content\":\"" + content + "\",\"sig\":\"" + signature + "\"}]";
+       "[\"a\",\"30009:" + repDefnCreator.getPublicKey().toHexString() + ":" + BADGE_DEFINITION_REPUTATION_UUID + "\",\"" + url + "\"]," +
+       "[\"p\",\"" + recipient.getPublicKey().toHexString() + "\"]," +
+       "[\"relay\",\"" + relay.getUrl() + "\"]," +
+       "[\"i\",\"platform:identity\",\"proof\"]" +
+       "],\"content\":\"" + content + "\",\"sig\":\"" + signature + "\"}]";
 
     logDebug(0);
     EventMessage expectedBadgeAwardReputationEventEventMessage = tester.parseObject(json);
@@ -167,7 +165,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
   private @NonNull EventMessage getEventMessageWithSubscriberNoId(BadgeAwardReputationEvent badgeAwardReputationEvent) {
     return new EventMessage(badgeAwardReputationEvent);
   }
-  
+
   private void logDebug(int s) {
     String newString = String.valueOf(s).repeat(10);
     log.debug(newString);

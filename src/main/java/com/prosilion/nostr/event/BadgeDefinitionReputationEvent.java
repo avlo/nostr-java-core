@@ -141,13 +141,4 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
        .append(")"));
     return sb.toString();
   }
-
-  @JsonIgnore
-  public final AddressTag asAddressableEventAddressTag() {
-    return new AddressTag(
-       getKind(),
-       getTypeSpecificTags(PubKeyTag.class).getFirst().getPublicKey(),
-       getIdentifierTag(),
-       getRelay().orElse(null));
-  }
 }
