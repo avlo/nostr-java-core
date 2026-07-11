@@ -4,6 +4,7 @@ import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.RelayTag;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class BadgeDefinitionGenericEventTest extends BaseEventTest {
 
     testTags(baseTagsRelayTag,
        new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag)));
-    
+
     testTags(baseTagsRelayTag,
        new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag, relayTag), ""));
     testTags(relayTag,
@@ -111,8 +112,11 @@ public class BadgeDefinitionGenericEventTest extends BaseEventTest {
 
     RelayTag auxTagsRelayTag = new RelayTag(auxRelay);
     BadgeDefinitionGenericEvent withAuxRelay = new BadgeDefinitionGenericEvent(
-       genericEventRecord, auxTagsRelayTag.getRelay());
+       aImgIdentity,
+       genericEventRecord,
+       auxTagsRelayTag.getRelay());
     testTags(auxTagsRelayTag, withAuxRelay);
+    assertEquals(genericEventRecord.getId(), withAuxRelay.requireFirstTag(EventTag.class).eventId());
   }
 
   @Test
