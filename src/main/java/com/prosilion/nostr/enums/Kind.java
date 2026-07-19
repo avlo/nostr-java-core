@@ -41,6 +41,7 @@ public enum Kind {
   FOLLOW_SETS(30_000, "follow_sets"),
   RELAY_SETS(30_002, "relay_sets"),
   CURATION_SETS(30_004, "curation_sets"),
+  REFERENCED_SET(30_005, "referenced_set"),
   BADGE_SETS_EVENT(30_008, "badge_sets_event"),
   BADGE_DEFINITION_EVENT(30_009, "badge_definition_event"),
   ARBITRARY_CUSTOM_APP_DATA(30_078, "arbitrary_custom_app_data"),

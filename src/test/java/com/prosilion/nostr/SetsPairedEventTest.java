@@ -23,12 +23,11 @@ public class SetsPairedEventTest extends BaseEventTest {
   void testConstructionNullRelay() {
     SetsPairedEvent setsPairedEvent = new SetsPairedEvent(
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
-       null,
        new EventTag(
           award_NoNo_Defn_NoNo_Upvote.getId(),
           award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
     assertNull(setsPairedEvent.getAddressTag().getRelay());
   }
 
@@ -36,12 +35,11 @@ public class SetsPairedEventTest extends BaseEventTest {
   void testConstructionWithRelay() {
     SetsPairedEvent setsPairedEvent = new SetsPairedEvent(
        award_YesNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
-       auxRelay,
        new EventTag(
           award_YesNo_Defn_NoNo_Upvote.getId(),
           award_YesNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       award_YesNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
     assertEquals(relayArgRelay, setsPairedEvent.getAddressTag().getRelay());
   }
 
@@ -55,12 +53,11 @@ public class SetsPairedEventTest extends BaseEventTest {
     
     SetsPairedEvent setsPairedEvent = new SetsPairedEvent(
        addressTag,
-       relayArgRelay,
        new EventTag(
           award_NoNo_Defn_NoNo_Upvote.getId(),
           award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
     assertEquals(null, setsPairedEvent.getAddressTag().getRelay());
     assertEquals(relayArgRelay, setsPairedEvent.getDefinitionEventRelay());
   }
@@ -74,12 +71,11 @@ public class SetsPairedEventTest extends BaseEventTest {
        auxRelay);
     SetsPairedEvent setsPairedEvent = new SetsPairedEvent(
        addressTag,
-       relayArgRelay,
        new EventTag(
           award_NoNo_Defn_NoNo_Upvote.getId(),
           award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
     assertEquals(auxRelay, setsPairedEvent.getAddressTag().getRelay());
   }
 
@@ -92,43 +88,39 @@ public class SetsPairedEventTest extends BaseEventTest {
        auxRelay);
     assertThrows(NostrException.class, () -> new SetsPairedEvent(
        addressTag,
-       relayArgRelay,
        new EventTag(
           award_NoNo_Defn_NoNo_Upvote.getId(),
-          null),
-       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey()));
+          null)
+    ));
   }
 
   @Test
   void testEquals() {
     SetsPairedEvent expectedEquals = new SetsPairedEvent(
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
-       null,
        new EventTag(
           award_NoNo_Defn_NoNo_Upvote.getId(),
           award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
 
     SetsPairedEvent actualEquals = new SetsPairedEvent(
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
-       null,
        new EventTag(
           award_NoNo_Defn_NoNo_Upvote.getId(),
           award_NoNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
 
     assertEquals(expectedEquals, actualEquals);
 
     SetsPairedEvent actualNotEqualsHasAddressTagRelay = new SetsPairedEvent(
        award_YesNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
-       auxRelay,
        new EventTag(
           award_YesNo_Defn_NoNo_Upvote.getId(),
           award_YesNo_Defn_NoNo_Upvote.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       award_YesNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
 
     assertNotEquals(expectedEquals, actualNotEqualsHasAddressTagRelay);
   }
@@ -147,20 +139,9 @@ public class SetsPairedEventTest extends BaseEventTest {
        Factory.generateRandomHex64String(),
        eventRelay.getUrl());
 
-    Relay backupRelay = new Relay("ws://localhost-backup-relay:5555");
-
-    SetsPairedEvent setsPairedEventWithNonNullBackupRelay = new SetsPairedEvent(
-       addressTagNullRelay,
-       backupRelay,
-       eventTag,
-       publicKey);
-    assertEquals(backupRelay, setsPairedEventWithNonNullBackupRelay.getDefinitionEventRelay());
-
     SetsPairedEvent setsPairedEventWithNullBackupRelay = new SetsPairedEvent(
        addressTagNullRelay,
-       null,
-       eventTag,
-       publicKey);
+       eventTag);
     assertEquals(eventRelay, setsPairedEventWithNullBackupRelay.getDefinitionEventRelay());
 
     Relay addressTagRelay = new Relay("ws://localhost-address-tag-relay:5555");
@@ -172,9 +153,8 @@ public class SetsPairedEventTest extends BaseEventTest {
 
     SetsPairedEvent setsPairedEventWithNonNullAddressTagRelayAndNonNullBackupRelay = new SetsPairedEvent(
        addressTagNonNullRelay,
-       backupRelay,
-       eventTag,
-       publicKey);
+       eventTag
+    );
     assertEquals(addressTagRelay, setsPairedEventWithNonNullAddressTagRelayAndNonNullBackupRelay.getDefinitionEventRelay());
   }
 }

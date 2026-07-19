@@ -5,7 +5,7 @@ import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
-import com.prosilion.nostr.event.CurationSetsEvent;
+import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -16,7 +16,6 @@ import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
@@ -82,7 +81,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
        "matching kind, author, identity-tag filter test",
        new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
 
-    this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
+    this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
     this.badgeAwardGenericEventWithAddressTagCreatedAt = award_NoNo_Defn_NoNo_Upvote.getCreatedAt().toString();
     this.upvotedUserPubkey = recipient.getPublicKey().toHexString();
     this.badgeAwardGenericEventWithAddressTagSignature = award_NoNo_Defn_NoNo_Upvote.getSignature().toString();
@@ -115,10 +114,9 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
        new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
        plusOneFormulaEvent);
 
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
     this.badgeSetsEvent = new BadgeSetsEvent(
@@ -135,7 +133,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ba
     this.followSetsEventWithEventTagEventId = followSetsEvent.getId();
     this.followSetsEventWithEventTagCreatedAt = followSetsEvent.getCreatedAt().toString();
     this.followSetsEventWithEventTagSignature = followSetsEvent.getSignature().toString();
-    this.followSetsEventReferencedEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
+    this.followSetsEventReferencedEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
   }
 
   @Test

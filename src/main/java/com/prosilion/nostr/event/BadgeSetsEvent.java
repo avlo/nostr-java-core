@@ -26,47 +26,47 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
   @JsonIgnore
-  private final List<CurationSetsEvent> curationSetsEventList;
+  private final List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList;
 
   public BadgeSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull CurationSetsEvent curationSetsEvent,
+     @NonNull CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent,
      @NonNull Relay relay) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, List.of(curationSetsEvent), List.of(), DEFAULT_CONTENT, relay);
+    this(identity, badgeDefinitionReputationEvent, List.of(curatedBadgeAwardGenericEvent), List.of(), DEFAULT_CONTENT, relay);
   }
 
   public BadgeSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull List<CurationSetsEvent> curationSetsEventList,
+     @NonNull List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList,
      @NonNull Relay relay) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, curationSetsEventList, List.of(), DEFAULT_CONTENT, relay);
+    this(identity, badgeDefinitionReputationEvent, curatedBadgeAwardGenericEventList, List.of(), DEFAULT_CONTENT, relay);
   }
 
   public BadgeSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull CurationSetsEvent curationSetsEvent,
+     @NonNull CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, List.of(curationSetsEvent), List.of(), content, relay);
+    this(identity, badgeDefinitionReputationEvent, List.of(curatedBadgeAwardGenericEvent), List.of(), content, relay);
   }
 
   public BadgeSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull CurationSetsEvent curationSetsEvent,
+     @NonNull CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
-    this(identity, badgeDefinitionReputationEvent, List.of(curationSetsEvent), baseTags, content, relay);
+    this(identity, badgeDefinitionReputationEvent, List.of(curatedBadgeAwardGenericEvent), baseTags, content, relay);
   }
 
   public BadgeSetsEvent(
      @NonNull Identity identity,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull List<CurationSetsEvent> curationSetsEventList,
+     @NonNull List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
@@ -77,33 +77,33 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
        new IdentifierTag(
           badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey().toHexString()),
 // re: IdentifierTag's value, see above note 
-       mapStream(badgeDefinitionReputationEvent, curationSetsEventList, baseTags),
+       mapStream(badgeDefinitionReputationEvent, curatedBadgeAwardGenericEventList, baseTags),
        content, relay);
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
-    this.curationSetsEventList = curationSetsEventList;
+    this.curatedBadgeAwardGenericEventList = curatedBadgeAwardGenericEventList;
   }
 
   public BadgeSetsEvent(
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull List<CurationSetsEvent> curationSetsEventList) throws NostrException {
+     @NonNull List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList) throws NostrException {
     super(genericEventRecord);
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
-    this.curationSetsEventList = curationSetsEventList;
+    this.curatedBadgeAwardGenericEventList = curatedBadgeAwardGenericEventList;
   }
 
-  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull CurationSetsEvent curationSetsEvent) {
-    return createNewFromExisting(identity, List.of(curationSetsEvent));
+  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent) {
+    return createNewFromExisting(identity, List.of(curatedBadgeAwardGenericEvent));
   }
 
-  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<CurationSetsEvent> curationSetsEvents) {
-    List<CurationSetsEvent> appendList = new ArrayList<>(getCurationSetsEventList());
-    appendList.addAll(curationSetsEvents);
-    List<CurationSetsEvent> distinctCurationSetsEventList = appendList.stream().distinct().toList();
+  public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEvents) {
+    List<CuratedBadgeAwardGenericEvent> appendList = new ArrayList<>(getCuratedBadgeAwardGenericEventList());
+    appendList.addAll(curatedBadgeAwardGenericEvents);
+    List<CuratedBadgeAwardGenericEvent> distinctCuratedBadgeAwardGenericEventList = appendList.stream().distinct().toList();
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        identity,
        getBadgeDefinitionReputationEvent(),
-       distinctCurationSetsEventList,
+       distinctCuratedBadgeAwardGenericEventList,
        getTags(),
        getContent(),
        getRelay().orElseThrow(() ->
@@ -112,25 +112,25 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   }
 
   @JsonIgnore
-  public List<CurationSetsEvent> getCurationSetsEventList() {
-    return curationSetsEventList;
+  public List<CuratedBadgeAwardGenericEvent> getCuratedBadgeAwardGenericEventList() {
+    return curatedBadgeAwardGenericEventList;
   }
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
-    return curationSetsEventList.getFirst().getAwardRecipientPublicKey();
+    return curatedBadgeAwardGenericEventList.getFirst().getAwardRecipientPublicKey();
   }
 
   private static List<BaseTag> mapStream(
      BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     List<CurationSetsEvent> curationSetsEventList,
+     List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList,
      List<BaseTag> baseTags) {
     return Stream.concat(
        Stream.concat(
           Stream.concat(
              Stream.of(
-                new PubKeyTag(curationSetsEventList.getFirst().getAwardRecipientPublicKey())),
-             curationSetsEventList
+                new PubKeyTag(curatedBadgeAwardGenericEventList.getFirst().getAwardRecipientPublicKey())),
+             curatedBadgeAwardGenericEventList
                 .stream()
                 .map(curationSetsEvent ->
                    new EventTag(

@@ -122,7 +122,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
        Stream.concat(
           Stream.of(
              new PubKeyTag(badgeSetsEventList.getFirst()
-                .getCurationSetsEventList().getFirst()
+                .getCuratedBadgeAwardGenericEventList().getFirst()
                 .getAwardRecipientPublicKey())),
           badgeSetsEventList.stream().distinct()
              .map(badgeSetsEvent ->

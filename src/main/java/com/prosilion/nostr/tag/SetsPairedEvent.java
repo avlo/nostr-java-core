@@ -6,7 +6,6 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -16,16 +15,12 @@ import org.apache.commons.lang3.tuple.Pair;
 public class SetsPairedEvent {
   public static final String NULL_EVENT_TAG_RELAY = "SetsPairedEvent EventTag relay cannot be null";
   private final ATagETagPair aTagETagPair;
-  private final PublicKey awardRecipientPublicKey;
-  private final Relay addressTagBackupRelay;
 
   //  TODO: since addressTagBackupRelay is/always/likely obtained from EventTag relay, possibly remove addressTagBackupRelay and use eventTag.relay
-  public SetsPairedEvent(@NonNull AddressTag addressTag, Relay addressTagBackupRelay, @NonNull EventTag eventTag, @NonNull PublicKey awardRecipientPublicKey) {
+  public SetsPairedEvent(@NonNull AddressTag addressTag, @NonNull EventTag eventTag) {
     if (eventTag.findRelay().isEmpty())
       throw new NostrException(NULL_EVENT_TAG_RELAY);
     this.aTagETagPair = new ATagETagPair(addressTag, eventTag);
-    this.awardRecipientPublicKey = awardRecipientPublicKey;
-    this.addressTagBackupRelay = addressTagBackupRelay;
   }
 
   @JsonIgnore
@@ -66,12 +61,7 @@ public class SetsPairedEvent {
   @JsonIgnore
   public final Relay getDefinitionEventRelay() {
     //    Util.debug(log, "relay: [{}]", orElse.getUrl(), true, '1');
-    return getAddressTag().findRelay().or(() -> Optional.ofNullable(addressTagBackupRelay)).orElse(getEventTag().requireRelay());
-  }
-
-  @JsonIgnore
-  public final PublicKey getAwardRecipientPublicKey() {
-    return awardRecipientPublicKey;
+    return getAddressTag().findRelay().orElse(getEventTag().requireRelay());
   }
 
   private static class ATagETagPair extends ImmutablePair<AddressTag, EventTag> implements Comparable<Pair<AddressTag, EventTag>> {
@@ -92,12 +82,11 @@ public class SetsPairedEvent {
   public final boolean equals(Object that) {
     if (that == null || getClass() != that.getClass()) return false;
     SetsPairedEvent thatSetsPairedEvent = (SetsPairedEvent) that;
-    return Objects.equals(awardRecipientPublicKey, thatSetsPairedEvent.awardRecipientPublicKey) &&
-       Objects.equals(aTagETagPair, thatSetsPairedEvent.aTagETagPair);
+    return Objects.equals(aTagETagPair, thatSetsPairedEvent.aTagETagPair);
   }
 
   @Override
   public final int hashCode() {
-    return Objects.hash(awardRecipientPublicKey, aTagETagPair);
+    return Objects.hash(aTagETagPair);
   }
 }

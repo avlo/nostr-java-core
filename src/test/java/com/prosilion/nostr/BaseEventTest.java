@@ -4,7 +4,6 @@ import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -76,7 +75,7 @@ public class BaseEventTest {
 //  _NoNo_NoNo_   = _NoNo_  Defn, Award No  relayArgRelayTag, Award No baseTagsRelayTag
   static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
   static final SetsPairedEvent defnAuxNo_defnEvent_NoNo_Upvote = create(award_NoNo_Defn_NoNo_Upvote, null);
-  static final SetsPairedEvent eventAuxNo_award_NoNo_defn_NoNo_Upvote = create(award_NoNo_Defn_NoNo_Upvote, null);
+  static final SetsPairedEvent eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent = create(award_NoNo_Defn_NoNo_Upvote, null);
 
   static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoNo_Downvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
   static final SetsPairedEvent defnAuxNo_defnEvent_NoNo_Downvote = create(award_NoNo_Defn_NoNo_Downvote, null);
@@ -84,6 +83,7 @@ public class BaseEventTest {
 
   //  _NoNo_NoYes_  = _NoNo_  Defn, Award No  relayArgRelayTag, Award Yes baseTagsRelayTag
   static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, List.of(baseTagsRelayTag));
+  static final SetsPairedEvent eventAuxNo_award_NoNo_defn_YesNo_UpvoteSetsPairedEvent = create(award_NoNo_Defn_NoYes_Upvote, null);
 
   //  _NoNo_YesNo_  = _NoNo_  Defn, Award Yes relayArgRelayTag, Award No  baseTagsRelayTag
   static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
@@ -143,6 +143,7 @@ public class BaseEventTest {
 
   //  _YesYes_YesYes_  = _YesYes Defn, Award Yes relayArgRelayTag, Award Yes  baseTagsRelayTag
   static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
+  static final SetsPairedEvent defnAuxYes_defnEvent_YesYes_Upvote = create(award_YesYes_Defn_YesYes_Upvote, auxRelay);
   static final SetsPairedEvent eventAuxYes_award_YesNo_Defn_YesYes_Upvote = create(award_YesNo_Defn_YesYes_Upvote, auxRelay);
 
   static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoYes_UpvoteExtraRelayTag = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag, relayArgRelayTag));
@@ -154,14 +155,15 @@ public class BaseEventTest {
   static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTag = create(award_YesNo_Defn_NoYes_UpvoteExtraRelayTag, null);
   static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed = create(award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed, null);
 
+  static final SetsPairedEvent eventAuxYes_award_YesYes_Defn_YesYes_Upvote = create(award_YesYes_Defn_YesYes_Upvote, auxRelay);
+
   public static SetsPairedEvent create(BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> event, Relay backupRelay) {
     return new SetsPairedEvent(
        event.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
-       backupRelay,
        new EventTag(
           event.getId(),
           event.getRelay().map(Relay::getUrl).orElseThrow(() ->
-             new NostrException(NULL_EVENT_TAG_RELAY))),
-       event.getAwardRecipientPublicKey());
+             new NostrException(NULL_EVENT_TAG_RELAY)))
+    );
   }
 }

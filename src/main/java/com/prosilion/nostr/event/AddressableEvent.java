@@ -65,7 +65,8 @@ public class AddressableEvent extends BaseEvent {
   public AddressableEvent(@NonNull GenericEventRecord genericEventRecord) throws NostrException {
     super(
        validateRequiredTags(
-          validateKind(genericEventRecord),
+          validateKind(
+             genericEventRecord, addressableKindPredicate, errorMessage),
           List.of(IdentifierTag.class, RelayTag.class)));
   }
 
@@ -95,43 +96,4 @@ public class AddressableEvent extends BaseEvent {
 
   private static final IntPredicate addressableKindPredicate = kindValue -> !(30_000 > kindValue || kindValue > 40_000);
   private static final Function<Kind, String> errorMessage = kind -> String.format("Intended AddressableEvent invalid kind [%s] value [%s] is not between 30000 and 40000", kind, kind.getValue());
-
-  private static final String MISSING_TAG = "ctor() genericEventRecord parameter:\n%s\nis missing required [%s]";
-  private static final String MULTIPLE_TAG = "ctor() genericEventRecord parameter:\n%s\nhas multiple [%s]";
-
-  public static GenericEventRecord validateKind(@NonNull GenericEventRecord genericEventRecord) {
-    validateKind(genericEventRecord.getKind(), addressableKindPredicate, errorMessage);
-    return genericEventRecord;
-  }
-
-  public static GenericEventRecord validateRequiredTags(
-     @NonNull GenericEventRecord genericEventRecord,
-     @NonNull List<Class<? extends BaseTag>> baseTags) {
-    baseTags.forEach(baseTagClass -> validateRequiredTags(genericEventRecord.getTags(), baseTags));
-
-//    baseTags.forEach(baseTagClass -> {
-//      List<?> tag = genericEventRecord.getTypeSpecificTags(baseTagClass);
-//      if (tag.isEmpty()) throw exceptionMessage(MISSING_TAG, genericEventRecord, baseTagClass.getSimpleName());
-//      if (tag.size() > 1) throw exceptionMessage(MULTIPLE_TAG, genericEventRecord, baseTagClass.getSimpleName());
-//    });
-    return genericEventRecord;
-  }
-
-  public static void validateRequiredTags(
-     @NonNull List<BaseTag> existingBaseTags,
-     @NonNull List<Class<? extends BaseTag>> mandatoryBaseTags) {
-    mandatoryBaseTags.forEach(baseTagClass -> {
-      List<? extends Class<?>> list1 = existingBaseTags.stream().map(Object::getClass).toList().stream().filter(aClass -> aClass.equals(baseTagClass)).toList();
-      if (list1.isEmpty()) throw exceptionMessage(MISSING_TAG, existingBaseTags, baseTagClass.getSimpleName());
-      if (list1.size() > 1) throw exceptionMessage(MULTIPLE_TAG, existingBaseTags, baseTagClass.getSimpleName());
-    });
-  }
-
-  private static NostrException exceptionMessage(String s, List<BaseTag> baseTags, String tag) {
-    return new NostrException(String.format(s, baseTags, tag));
-  }
-
-  private static NostrException exceptionMessage(String s, GenericEventRecord ger, String tag) {
-    return new NostrException(String.format(s, ger.createPrettyPrintJson(), tag));
-  }
 }

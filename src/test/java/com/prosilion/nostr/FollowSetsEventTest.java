@@ -3,7 +3,7 @@ package com.prosilion.nostr;
 import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
-import com.prosilion.nostr.event.CurationSetsEvent;
+import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -80,16 +80,14 @@ public class FollowSetsEventTest extends BaseEventTest {
 
   @Test
   final void testValidFollowSetsEvent() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
-    CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
+       award_NoNo_Defn_NoNo_Downvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -107,10 +105,9 @@ public class FollowSetsEventTest extends BaseEventTest {
 
   @Test
   final void testValidFollowSetsEventBadgeSetsEventContainsDuplicate() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -129,10 +126,9 @@ public class FollowSetsEventTest extends BaseEventTest {
 
   @Test
   final void testFollowSetsEventEquality() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -165,16 +161,14 @@ public class FollowSetsEventTest extends BaseEventTest {
 
   @Test
   final void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
-    CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
+       award_NoNo_Defn_NoNo_Downvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -195,11 +189,11 @@ public class FollowSetsEventTest extends BaseEventTest {
     assertEquals(1, expectedFollowSetsEvent.getTypeSpecificTags(EventTag.class).size());
 
     List<BadgeSetsEvent> expectedBadgeSetsEventList = expectedFollowSetsEvent.getBadgeSetsEventList();
-    List<CurationSetsEvent> expectedCurationSetsEventList = expectedBadgeSetsEventList.stream().map(BadgeSetsEvent::getCurationSetsEventList).flatMap(Collection::stream).toList();
-    List<EventTag> eventTags = expectedCurationSetsEventList.stream()
-       .map(CurationSetsEvent::getEventTags).flatMap(Collection::stream).toList();
+    List<CuratedBadgeAwardGenericEvent> expectedCuratedBadgeAwardGenericEventList = expectedBadgeSetsEventList.stream().map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList).flatMap(Collection::stream).toList();
+    List<EventTag> eventTags = expectedCuratedBadgeAwardGenericEventList.stream()
+       .map(CuratedBadgeAwardGenericEvent::getEventTags).flatMap(Collection::stream).toList();
 
-    assertTrue(eventTags.contains(eventAuxNo_award_NoNo_defn_NoNo_Upvote.getEventTag()));
+    assertTrue(eventTags.contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTag()));
     assertTrue(eventTags.contains(eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag()));
 
     FollowSetsEvent followSetsEvent = new FollowSetsEvent(
@@ -212,10 +206,9 @@ public class FollowSetsEventTest extends BaseEventTest {
 
   @Test
   final void eventTagCountAsListTest() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -237,16 +230,14 @@ public class FollowSetsEventTest extends BaseEventTest {
 
   @Test
   final void testContains() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
-    CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
+       award_NoNo_Defn_NoNo_Downvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsUpvoteEvent = new BadgeSetsEvent(
@@ -276,9 +267,9 @@ public class FollowSetsEventTest extends BaseEventTest {
        .filter(followSetsEvent ->
           followSetsEvent
              .getBadgeSetsEventList().stream()
-             .map(BadgeSetsEvent::getCurationSetsEventList)
+             .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
              .flatMap(Collection::stream)
-             .map(CurationSetsEvent::getSetsPairedEvent)
+             .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
              .map(SetsPairedEvent::getAddressTag).toList()
              .contains(defnUpvoteAsAddressTag)).toList();
     assertEquals(1, upvoteFollowSetsEvent.size());
@@ -286,9 +277,9 @@ public class FollowSetsEventTest extends BaseEventTest {
     List<FollowSetsEvent> downvoteFollowSetsEvent = Stream.of(followSetsUpEvent, followSetsDownEvent)
        .filter(followSetsEvent -> followSetsEvent
           .getBadgeSetsEventList().stream()
-          .map(BadgeSetsEvent::getCurationSetsEventList)
+          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
           .flatMap(Collection::stream)
-          .map(CurationSetsEvent::getSetsPairedEvent)
+          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
           .map(SetsPairedEvent::getAddressTag).toList()
           .contains(defnDownvoteAsAddressTag)).toList();
     assertEquals(1, downvoteFollowSetsEvent.size());
@@ -301,17 +292,16 @@ public class FollowSetsEventTest extends BaseEventTest {
     List<FollowSetsEvent> downvoteFollowSetsEvent_2 = Stream.of(followSetsBothEvents)
        .filter(followSetsEvent -> followSetsEvent
           .getBadgeSetsEventList().stream()
-          .map(BadgeSetsEvent::getCurationSetsEventList)
+          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
           .flatMap(Collection::stream)
-          .map(CurationSetsEvent::getSetsPairedEvent)
+          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
           .map(SetsPairedEvent::getAddressTag).toList()
           .contains(defnDownvoteAsAddressTag)).toList();
     assertEquals(1, downvoteFollowSetsEvent_2.size());
 
-    CurationSetsEvent curationSetsUpvoteEvent2 = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent2 = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_YesNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_Defn_YesNo_Upvote,
+       award_NoNo_Defn_YesNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsUpvoteEvent2 = new BadgeSetsEvent(
@@ -327,9 +317,9 @@ public class FollowSetsEventTest extends BaseEventTest {
     List<FollowSetsEvent> upvoteFollowSetsEvent_3 = Stream.of(followSetsBothEvents, followSetsBothEventsWithVariant)
        .filter(followSetsEvent -> followSetsEvent
           .getBadgeSetsEventList().stream().peek(event -> System.out.println("BadgeSetsEvents: \n  " + event.createPrettyPrintJson()))
-          .map(BadgeSetsEvent::getCurationSetsEventList)
+          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
           .flatMap(Collection::stream).peek(event -> System.out.println("CurationSetsEvents:\n " + event.createPrettyPrintJson()))
-          .map(CurationSetsEvent::getSetsPairedEvent).peek(event -> System.out.println("SetsPairedEvents:\n  " + event))
+          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent).peek(event -> System.out.println("SetsPairedEvents:\n  " + event))
           .map(SetsPairedEvent::getAddressTag).toList()
           .contains(defnUpvoteAsAddressTag)).toList();
     assertEquals(2, upvoteFollowSetsEvent_3.size());
@@ -337,9 +327,9 @@ public class FollowSetsEventTest extends BaseEventTest {
     List<FollowSetsEvent> downvoteFollowSetsEvent_3 = Stream.of(followSetsBothEvents, followSetsBothEventsWithVariant)
        .filter(followSetsEvent -> followSetsEvent
           .getBadgeSetsEventList().stream()
-          .map(BadgeSetsEvent::getCurationSetsEventList)
+          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
           .flatMap(Collection::stream)
-          .map(CurationSetsEvent::getSetsPairedEvent)
+          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
           .map(SetsPairedEvent::getAddressTag).toList()
           .contains(defnDownvoteAsAddressTag)).toList();
     assertEquals(1, downvoteFollowSetsEvent_3.size());
@@ -349,32 +339,31 @@ public class FollowSetsEventTest extends BaseEventTest {
        List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
        auxRelay);
 
-    String voteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
+    String voteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
     assertTrue(Stream.of(followSetsUpEvent, followSetsContainingMatchingUpvoteEvent)
        .allMatch(followSetsEvent ->
           followSetsEvent.getBadgeSetsEventList().stream()
-             .map(BadgeSetsEvent::getCurationSetsEventList)
+             .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
              .flatMap(Collection::stream)
-             .map(CurationSetsEvent::getSetsPairedEvent)
+             .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
              .map(SetsPairedEvent::getAwardEventId).toList()
              .contains(voteEventId)));
 
     assertFalse(Stream.of(followSetsDownEvent, followSetsContainingMatchingUpvoteEvent)
        .allMatch(followSetsEvent ->
           followSetsEvent.getBadgeSetsEventList().stream()
-             .map(BadgeSetsEvent::getCurationSetsEventList)
+             .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
              .flatMap(Collection::stream)
-             .map(CurationSetsEvent::getSetsPairedEvent)
+             .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
              .map(SetsPairedEvent::getAwardEventId).toList()
              .contains(voteEventId)));
   }
 
   @Test
   final void testNewFromExisting() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -400,18 +389,17 @@ public class FollowSetsEventTest extends BaseEventTest {
     assertEquals(1, followSetsUpvoteEvent.getBadgeSetsEventList().size());
     assertEquals(1, newFromExisting.getBadgeSetsEventList().size());
 
-    CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
+    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
+       award_NoNo_Defn_NoNo_Downvote,
        relayArgRelay);
-    
+
     BadgeSetsEvent badgeSetsHasUpvoteDownvoteEvents = new BadgeSetsEvent(
        aImgIdentity,
        badgeDefinitionReputationEventPlusOneFormula,
        curationSetsDownvoteEvent,
        relayArgRelay);
-    
+
     FollowSetsEvent newpUpvoteDownvoteEventsFromExistingUpvote = followSetsUpvoteEvent.createNewFromExisting(
        aImgIdentity, badgeSetsHasUpvoteDownvoteEvents);
 
@@ -491,7 +479,8 @@ public class FollowSetsEventTest extends BaseEventTest {
 //       authorIdentity,
 //       nonMatchingPublicKey,
 //       auxRelay,
-//       eventAuxNo_award_NoNo_defn_NoNo_Upvote.getBadgeDefinitionEvent());
+//       eventAuxNo_award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey(),
+//    award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),);
 //
 //    assertTrue(
 //       assertThrows(NostrException.class, () ->

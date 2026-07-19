@@ -1,47 +1,85 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-import com.prosilion.nostr.event.BadgeSetsEvent;
+import com.prosilion.nostr.event.BadgeAwardGenericEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
-import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.EventTag;
-import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.MINUS_ONE_FORMULA;
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BadgeSetsEventTest extends BaseEventTest {
-  private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
-  private static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
-  private static final IdentifierTag formulaUnitUpvote = new IdentifierTag(FORMULA_UNIT_UPVOTE);
-  private static final IdentifierTag formulaUnitDownvote = new IdentifierTag(FORMULA_UNIT_DOWNVOTE);
+public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
 
-  public static final String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
-  public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
+  @Test
+  final void testValidBadgeSetsEventUsingBadgeAwardGenericEvent() {
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote =
+       new BadgeAwardGenericEvent<>(
+          submitter,
+          recipient.getPublicKey(),
+          defnEvent_YesYes_Upvote,
+          List.of(baseTagsRelayTag),
+          relayArgRelay);
 
-  private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       award_YesYes_Defn_YesYes_Upvote,
+       relayArgRelay);
 
-  public BadgeSetsEventTest() throws ParseException {
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, relayArgRelay, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA);
-    FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, relayArgRelay, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA);
+    SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
+    SetsPairedEvent setsPairedEvent = create(award_YesYes_Defn_YesYes_Upvote, relayArgRelay);
+    String upvoteEventId = setsPairedEvent.getAwardEventId();
 
-    this.badgeDefinitionReputationEvent =
-       new BadgeDefinitionReputationEvent(
-          aImgIdentity,
-          upvoteDefnCreator.getPublicKey(),
-          reputationIdentifierTag,
-          relayArgRelay,
-          EXTERNAL_IDENTITY_TAG,
-          List.of(plusOneFormulaEvent, minusOneFormulaEvent));
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(recipient.getPublicKey(), award_YesYes_Defn_YesYes_Upvote.getAwardRecipientPublicKey());
+    assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
+
+    AddressTag upvoteAsAddressTag = award_YesYes_Defn_YesYes_Upvote.getAddressTag();
+    assertEquals(curationSetsUpvoteEvent.getAddressTag(), upvoteAsAddressTag);
+    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedEvent.getDefinitionEventRelay());
+  }
+
+  @Test
+  final void testValidBadgeSetsEventUsingCuratedBadgeDefinitionEvent() {
+    CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent = new CuratedBadgeDefinitionGenericEvent(
+       aImgIdentity,
+       new BadgeDefinitionGenericEvent(
+          upvoteDefnCreator,
+          upvoteIdentifierTag,
+          List.of(baseTagsRelayTag),
+          "",
+          relayArgRelay),
+       relayArgRelay);
+
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote =
+       new BadgeAwardGenericEvent<>(
+          submitter,
+          recipient.getPublicKey(),
+          defnEvent_YesYes_Upvote,
+          List.of(baseTagsRelayTag),
+          relayArgRelay);
+
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       award_YesYes_Defn_YesYes_Upvote,
+       relayArgRelay);
+
+    SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
+    SetsPairedEvent setsPairedEvent = create(award_YesYes_Defn_YesYes_Upvote, relayArgRelay);
+    String upvoteEventId = setsPairedEvent.getAwardEventId();
+
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(recipient.getPublicKey(), award_YesYes_Defn_YesYes_Upvote.getAwardRecipientPublicKey());
+    assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
+
+    AddressTag upvoteAsAddressTag = award_YesYes_Defn_YesYes_Upvote.getAddressTag();
+    assertEquals(curationSetsUpvoteEvent.getAddressTag(), upvoteAsAddressTag);
+    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedEvent.getDefinitionEventRelay());
   }
 
   @Test
@@ -56,129 +94,98 @@ public class BadgeSetsEventTest extends BaseEventTest {
        award_NoNo_Defn_NoNo_Downvote,
        relayArgRelay);
 
-    BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEvent,
-       List.of(curationSetsUpvoteEvent, curationSetsDownvoteEvent),
-       relayArgRelay);
+    SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
+    SetsPairedEvent setsPairedDownvoteEvent = curationSetsDownvoteEvent.getSetsPairedEvent();
 
-    assertEquals(badgeSetsEvent.getIdentifierTag().getUuid(), badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey().toHexString());
-    assertEquals(badgeSetsEvent.requireFirstTag(AddressTag.class), badgeDefinitionReputationEvent.asAddressableEventAddressTag());
-    assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
-
-    List<SetsPairedEvent> setsPairedEventList = badgeSetsEvent
-       .getCuratedBadgeAwardGenericEventList().stream().map(
-          CuratedBadgeAwardGenericEvent::getSetsPairedEvent).toList();
-
-    assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent));
-    assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_Downvote));
+    assertEquals(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent, setsPairedUpvoteEvent);
+    assertEquals(eventAuxNo_award_NoNo_defn_NoNo_Downvote, setsPairedDownvoteEvent);
     String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
     String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardEventId();
 
-    assertEquals(
-       upvoteEventId,
-       setsPairedEventList.stream().map(SetsPairedEvent::getAwardEventId).findFirst().orElseThrow());
-    assertEquals(
-       defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag(),
-       setsPairedEventList.stream().map(SetsPairedEvent::getAddressTag).findFirst().orElseThrow());
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag(), setsPairedDownvoteEvent.getAddressTag());
 
     assertEquals(recipient.getPublicKey(), award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());
 
-    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(curationSetsUpvoteEvent.getEventId()));
-    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::getEventId).toList().contains(curationSetsDownvoteEvent.getEventId()));
+    assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
+    assertEquals(setsPairedDownvoteEvent.getEventTag().getEventId(), downvoteEventId);
 
     AddressTag upvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag();
     AddressTag downvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag();
 
-    assertTrue(badgeSetsEvent.getCuratedBadgeAwardGenericEventList().stream().map(CuratedBadgeAwardGenericEvent::getAddressTag).anyMatch(upvoteAsAddressTag::equals));
-    assertTrue(badgeSetsEvent.getCuratedBadgeAwardGenericEventList().stream().map(CuratedBadgeAwardGenericEvent::getAddressTag).anyMatch(downvoteAsAddressTag::equals));
+    assertEquals(curationSetsUpvoteEvent.getAddressTag(), upvoteAsAddressTag);
+    assertEquals(curationSetsDownvoteEvent.getAddressTag(), downvoteAsAddressTag);
 
-    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Upvote.getDefinitionEventRelay()));
-    assertTrue(setsPairedEventList.stream().map(SetsPairedEvent::getDefinitionEventRelay).toList().contains(defnAuxNo_defnEvent_NoNo_Downvote.getDefinitionEventRelay()));
-
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag(),
-          badgeSetsEvent.getRelay().orElse(null)),
-       badgeSetsEvent.asAddressableEventAddressTag());
-
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag()),
-       badgeSetsEvent.asAddressableEventAddressTag());
-
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag(),
-          null),
-       badgeSetsEvent.asAddressableEventAddressTag());
-
-    assertEquals(
-       new AddressTag(
-          badgeSetsEvent.getKind(),
-          badgeSetsEvent.getPublicKey(),
-          badgeSetsEvent.getIdentifierTag(),
-          new Relay("ws://localhost-nomatch:5555")),
-       badgeSetsEvent.asAddressableEventAddressTag());
-
-//    assertTrue(badgeSetsEvent.getEventTags().stream().map(EventTag::requireRelay).toList().contains(eventTagRelay));
+    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Upvote.getDefinitionEventRelay());
+    assertEquals(setsPairedDownvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Downvote.getDefinitionEventRelay());
   }
 
   @Test
-  final void testEquality() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+  final void testNewFromExisting() {
+    CuratedBadgeAwardGenericEvent curatedUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
-       aImgIdentity,
-       award_NoNo_Defn_NoNo_Downvote,
-       relayArgRelay);
+    CuratedBadgeAwardGenericEvent newFromExisting = new CuratedBadgeAwardGenericEvent(curatedUpvoteEvent.asGenericEventRecord());
 
-    BadgeSetsEvent badgeSetsEventWithUpvoteCurationEvent = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEvent,
-       curationSetsUpvoteEvent,
-       relayArgRelay);
-
-    BadgeSetsEvent newFromExistingHasUpvoteAndDownvote = badgeSetsEventWithUpvoteCurationEvent.createNewFromExisting(aImgIdentity, curationSetsDownvoteEvent);
-    assertTrue(newFromExistingHasUpvoteAndDownvote.getCuratedBadgeAwardGenericEventList().contains(curationSetsUpvoteEvent));
-    assertTrue(newFromExistingHasUpvoteAndDownvote.getCuratedBadgeAwardGenericEventList().contains(curationSetsDownvoteEvent));
-
-    List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList = List.of(curationSetsUpvoteEvent, curationSetsDownvoteEvent);
-
-    BadgeSetsEvent badgeSetsEventWithUpvoteAndDownvoteCurationSetsEvents = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEvent,
-       curatedBadgeAwardGenericEventList,
-       relayArgRelay);
-
-    BadgeSetsEvent fromGenericEventRecord = new BadgeSetsEvent(
-       badgeSetsEventWithUpvoteAndDownvoteCurationSetsEvents.asGenericEventRecord(),
-       badgeDefinitionReputationEvent,
-       curatedBadgeAwardGenericEventList);
-    assertEquals(badgeSetsEventWithUpvoteAndDownvoteCurationSetsEvents, fromGenericEventRecord);
-
-    BadgeSetsEvent reversedOrder = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEvent,
-       List.of(curationSetsDownvoteEvent, curationSetsUpvoteEvent),
-       relayArgRelay);
-    assertTrue(badgeSetsEventWithUpvoteAndDownvoteCurationSetsEvents.getTags().containsAll(reversedOrder.getTags()));
-
-    BadgeSetsEvent newFromExisting = reversedOrder.createNewFromExisting(
-       aImgIdentity,
-       curatedBadgeAwardGenericEventList);
-
-    assertTrue(reversedOrder.getTags().containsAll(newFromExisting.getTags()));
+    assertEquals(curatedUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
+    assertEquals(curatedUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newFromExisting.getAddressTagEventTagPairAsBaseTags());
+    assertEquals(curatedUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
+    assertEquals(curatedUpvoteEvent.getEventTag(), newFromExisting.getEventTag());
+    assertEquals(curatedUpvoteEvent.asAddressableEventAddressTag(), newFromExisting.asAddressableEventAddressTag());
+    assertEquals(curatedUpvoteEvent.getAwardRecipientPublicKey(), newFromExisting.getAwardRecipientPublicKey());
+    assertEquals(curatedUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
+    assertEquals(curatedUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl),
+       newFromExisting.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
   }
+
+  @Test
+  final void testNewFromGenericEventRecord() {
+    CuratedBadgeAwardGenericEvent expected = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote,
+       relayArgRelay);
+
+    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(expected.asGenericEventRecord());
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  final void testManualConstruction() {
+    CuratedBadgeAwardGenericEvent expected = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote,
+       relayArgRelay);
+
+    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(expected.asGenericEventRecord());
+    assertEquals(expected, actual);
+  }
+
+  final void testThrowsException() {
+
+  }
+
+//  @Test
+//  final void testFollowSetsEventEquality() {
+//    List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+//    FollowSetsEvent expected = new FollowSetsEvent(
+//       aImgIdentity,
+//       badgeDefinitionReputationEventPlusOneFormula,
+//       relay,
+//       badgeAwardAbstractEvents);
+//
+//    FollowSetsEvent followSetsEvent = new FollowSetsEvent(
+//       expected.getGenericEventRecord(),
+//       eventTag ->
+//          badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
+//             FollowSetsEvent.badgeAwardGenericEventAsEventTag(badgeAwardAbstractEvent).equals(eventTag)).findFirst().orElseThrow(),
+//       addressTag -> badgeDefinitionReputationEventPlusOneFormula);
+//
+//    assertEquals(expected.getAddressTag(), followSetsEvent.getAddressTag());
+//    assertEquals(expected.getBadgeDefinitionReputationEvent(), badgeDefinitionReputationEventPlusOneFormula);
+//    assertEquals(expected, followSetsEvent);
+//  }
 //
 //  @Test
 //  final void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {

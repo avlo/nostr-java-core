@@ -10,7 +10,6 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -38,7 +37,8 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
        kind,
        identifierTag,
        buildTags(setsPairedEvent, tags),
-       content, relay);
+       content,
+       relay);
     this.setsPairedEvent = setsPairedEvent;
   }
 
@@ -67,11 +67,6 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
   @JsonIgnore
   public final EventTag getEventTag() {
     return setsPairedEvent.getEventTag();
-  }
-
-  @JsonIgnore
-  public final PublicKey getAwardRecipientPublicKey() {
-    return setsPairedEvent.getAwardRecipientPublicKey();
   }
 
   @JsonIgnore

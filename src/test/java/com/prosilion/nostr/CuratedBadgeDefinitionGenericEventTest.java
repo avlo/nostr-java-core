@@ -1,206 +1,51 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.CurationSetsEvent;
-import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.EventTag;
-import com.prosilion.nostr.tag.IdentifierTag;
-import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
-import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
-import com.prosilion.nostr.util.Util;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CurationSetsEventTest extends BaseEventTest {
+public class CuratedBadgeDefinitionGenericEventTest extends BaseEventTest {
 
   @Test
-  final void testValidBadgeSetsEvent() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
+  final void testValidBadgeSetsEventUsingBadgeAwardGenericEvent() {
+    CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent = new CuratedBadgeDefinitionGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       defnEvent_YesYes_Upvote,
        relayArgRelay);
 
-    CurationSetsEvent curationSetsDownvoteEvent = new CurationSetsEvent(
-       aImgIdentity,
-       award_NoNo_Defn_NoNo_Downvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Downvote,
-       relayArgRelay);
-
-    SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
-    SetsPairedEvent setsPairedDownvoteEvent = curationSetsDownvoteEvent.getSetsPairedEvent();
-
-    assertEquals(eventAuxNo_award_NoNo_defn_NoNo_Upvote, setsPairedUpvoteEvent);
-    assertEquals(eventAuxNo_award_NoNo_defn_NoNo_Downvote, setsPairedDownvoteEvent);
-    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardEventId();
-    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardEventId();
-
-    assertEquals(
-       upvoteEventId,
-       setsPairedUpvoteEvent.getAwardEventId());
-    assertEquals(
-       defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag(),
-       setsPairedDownvoteEvent.getAddressTag());
-
-    assertEquals(recipient.getPublicKey(), eventAuxNo_award_NoNo_defn_NoNo_Upvote.getAwardRecipientPublicKey());
-
-    assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
-    assertEquals(setsPairedDownvoteEvent.getEventTag().getEventId(), downvoteEventId);
-
-    AddressTag upvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag();
-    AddressTag downvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag();
-
-    assertEquals(curationSetsUpvoteEvent.getAddressTag(), upvoteAsAddressTag);
-    assertEquals(curationSetsDownvoteEvent.getAddressTag(), downvoteAsAddressTag);
-
-    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Upvote.getDefinitionEventRelay());
-    assertEquals(setsPairedDownvoteEvent.getDefinitionEventRelay(), defnAuxNo_defnEvent_NoNo_Downvote.getDefinitionEventRelay());
-  }
-
-  @Test
-  final void testNewFromExisting() {
-    CurationSetsEvent curationSetsUpvoteEvent = new CurationSetsEvent(
-       aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
-       relayArgRelay);
-
-    CurationSetsEvent newFromExisting = curationSetsUpvoteEvent.createNewFromExisting(
-       aImgIdentity, eventAuxNo_award_NoNo_defn_NoNo_Upvote);
-    
-    assertEquals(curationSetsUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
-    assertEquals(curationSetsUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newFromExisting.getAddressTagEventTagPairAsBaseTags());
-    assertEquals(curationSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
-    assertEquals(curationSetsUpvoteEvent.getEventTag(), newFromExisting.getEventTag());
-    assertEquals(curationSetsUpvoteEvent.asAddressableEventAddressTag(), newFromExisting.asAddressableEventAddressTag());
-    assertEquals(curationSetsUpvoteEvent.getAwardRecipientPublicKey(), newFromExisting.getAwardRecipientPublicKey());
-    assertEquals(curationSetsUpvoteEvent.getIdentifierTag(), newFromExisting.getIdentifierTag());
-    assertEquals(curationSetsUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl),
-       newFromExisting.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
-
-    CurationSetsEvent newDownvoteFromExistingUpvote = curationSetsUpvoteEvent.createNewFromExisting(
-       aImgIdentity, eventAuxNo_award_NoNo_defn_NoNo_Downvote);
-    assertEquals(curationSetsUpvoteEvent.getAwardRecipientPublicKey(), newDownvoteFromExistingUpvote.getAwardRecipientPublicKey());
-    assertEquals(curationSetsUpvoteEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl),
-       newDownvoteFromExistingUpvote.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl));
-    assertNotEquals(curationSetsUpvoteEvent.getAddressTag(), newDownvoteFromExistingUpvote.getAddressTag());
-    assertNotEquals(curationSetsUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newDownvoteFromExistingUpvote.getAddressTagEventTagPairAsBaseTags());
-    assertNotEquals(curationSetsUpvoteEvent.getIdentifierTag(), newDownvoteFromExistingUpvote.getIdentifierTag());
-    assertNotEquals(curationSetsUpvoteEvent.getEventTag(), newDownvoteFromExistingUpvote.getEventTag());
-    assertNotEquals(curationSetsUpvoteEvent.asAddressableEventAddressTag(), newDownvoteFromExistingUpvote.asAddressableEventAddressTag());
-    assertNotEquals(curationSetsUpvoteEvent.getIdentifierTag(), newDownvoteFromExistingUpvote.getIdentifierTag());
+    SetsPairedEvent setsPairedUpvoteEvent = curatedBadgeDefinitionGenericEvent.getSetsPairedEvent();
+    assertEquals(defnEvent_YesYes_Upvote.asGenericEventRecord().getId(), setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(curatedBadgeDefinitionGenericEvent.getAddressTag(), defnEvent_YesYes_Upvote.asAddressableEventAddressTag());
   }
 
   @Test
   final void testNewFromGenericEventRecord() {
-    CurationSetsEvent expected = new CurationSetsEvent(
+    CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent = new CuratedBadgeDefinitionGenericEvent(
        aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       eventAuxNo_award_NoNo_defn_NoNo_Upvote,
+       defnEvent_YesYes_Upvote,
        relayArgRelay);
 
-    CurationSetsEvent actual = new CurationSetsEvent(expected.asGenericEventRecord());
-    assertEquals(expected, actual);
+    CuratedBadgeDefinitionGenericEvent newFromExisting = new CuratedBadgeDefinitionGenericEvent(
+       curatedBadgeDefinitionGenericEvent.asGenericEventRecord());
+
+    SetsPairedEvent setsPairedUpvoteEvent = newFromExisting.getSetsPairedEvent();
+    String upvoteEventId = setsPairedUpvoteEvent.getAwardEventId();
+
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(recipient.getPublicKey(), award_YesYes_Defn_YesYes_Upvote.getAwardRecipientPublicKey());
+    assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
+
+    AddressTag upvoteAsAddressTag = award_YesYes_Defn_YesYes_Upvote.getAddressTag();
+    assertEquals(newFromExisting.getAddressTag(), upvoteAsAddressTag);
+    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedUpvoteEvent.getDefinitionEventRelay());
   }
 
-  @Test
-  final void testManualConstruction() {
-    Identity identity = Identity.generateRandomIdentity();
-    Relay relay = new Relay("ws://localhost:5555");
-    PublicKey publicKey = new PublicKey(Util.generateRandomHex64String());
-    EventTag eventTagWithUrl = new EventTag(Util.generateRandomHex64String(), relay.getUrl());
-    IdentifierTag identifierTag = new IdentifierTag("UUID");
-
-    AddressTag addressTagWithUrl = new AddressTag(
-       Kind.CURATION_SETS,
-       publicKey,
-       identifierTag,
-       relay);
-
-    CurationSetsEvent expected = new CurationSetsEvent(
-       identity,
-       publicKey,
-       identifierTag,
-       addressTagWithUrl,
-       eventTagWithUrl,
-       List.of(),
-       "",
-       relay);
-
-    CurationSetsEvent actual = new CurationSetsEvent(expected.asGenericEventRecord());
-
-    assertEquals(expected, actual);
-
-    EventTag extraEventTagWithUrl = new EventTag(Util.generateRandomHex64String(), relay.getUrl());
-    IdentifierTag extraIdentifierTag = new IdentifierTag("UUID-extra");
-
-    AddressTag extraAddressTagWithUrl = new AddressTag(
-       Kind.CURATION_SETS,
-       publicKey,
-       extraIdentifierTag,
-       relay);
-
-    CurationSetsEvent actualWithExtraBaseTags = new CurationSetsEvent(
-       identity,
-       publicKey,
-       identifierTag,
-       addressTagWithUrl,
-       eventTagWithUrl,
-       List.of(extraIdentifierTag, extraAddressTagWithUrl, extraEventTagWithUrl),
-       "",
-       relay);
-
-    assertEquals(
-       expected.getTags(),
-       actualWithExtraBaseTags.getTags());
-    
-//    EventTag eventTagWithoutUrl = new EventTag(Util.generateRandomHex64String());
-//    AddressTag addressTagWithoutUrl = new AddressTag(
-//       Kind.CURATION_SETS,
-//       publicKey,
-//       identifierTag);
-  }
-
-  @Test
   final void testThrowsException() {
-    Identity identity = Identity.generateRandomIdentity();
-    Relay relay = new Relay("ws://localhost:5555");
-    PublicKey publicKey = new PublicKey(Util.generateRandomHex64String());
-    IdentifierTag identifierTag = new IdentifierTag("UUID");
-    EventTag eventTagNullUrl = new EventTag(Util.generateRandomHex64String(), null);
 
-    AddressTag addressTagWithUrl = new AddressTag(
-       Kind.CURATION_SETS,
-       publicKey,
-       identifierTag,
-       relay);
-
-    assertThrows(NostrException.class, () -> new CurationSetsEvent(
-       identity,
-       publicKey,
-       identifierTag,
-       addressTagWithUrl,
-       eventTagNullUrl,
-       "",
-       relay));
-    
-    assertThrows(NostrException.class, () -> new CurationSetsEvent(
-       identity,
-       publicKey,
-       identifierTag,
-       addressTagWithUrl,
-       eventTagNullUrl,
-       List.of(),
-       "",
-       relay));
   }
 
 //  @Test
