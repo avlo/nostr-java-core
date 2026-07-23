@@ -14,6 +14,7 @@ import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
@@ -74,6 +75,8 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Bas
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
     
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(

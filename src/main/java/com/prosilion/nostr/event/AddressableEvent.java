@@ -27,6 +27,8 @@ import org.jspecify.annotations.NonNull;
  * ["a", "KIND:EVENT_CREATOR_PUBKEY:UUID", "URL"]
  */
 public class AddressableEvent extends BaseEvent {
+  public static final String MISSING_REFERENCE_TAG = "CuratedBadgeDefinitionGenericEvent requires a ReferenceTag (URL) associated with BadgeDefinitionGenericEvent";
+
   public AddressableEvent(
      @NonNull Identity identity,
      @NonNull Kind kind,

@@ -2,6 +2,7 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,15 @@ public class CuratedBadgeDefinitionGenericEventTest extends BaseEventTest {
     CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent = new CuratedBadgeDefinitionGenericEvent(
        aImgIdentity,
        defnEvent_YesYes_Upvote,
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     SetsPairedEvent setsPairedUpvoteEvent = curatedBadgeDefinitionGenericEvent.getSetsPairedEvent();
     assertEquals(defnEvent_YesYes_Upvote.asGenericEventRecord().getId(), setsPairedUpvoteEvent.getAwardEventId());
     assertEquals(curatedBadgeDefinitionGenericEvent.getAddressTag(), defnEvent_YesYes_Upvote.asAddressableEventAddressTag());
+    assertEquals(
+       curatedBadgeDefinitionGenericEvent.getIdentifierTag().getUuid(), 
+       String.valueOf(defnEvent_YesYes_Upvote.asAddressableEventAddressTag().hashCode()));
   }
 
   @Test
@@ -27,6 +32,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends BaseEventTest {
     CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent = new CuratedBadgeDefinitionGenericEvent(
        aImgIdentity,
        defnEvent_YesYes_Upvote,
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     CuratedBadgeDefinitionGenericEvent newFromExisting = new CuratedBadgeDefinitionGenericEvent(

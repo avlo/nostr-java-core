@@ -10,6 +10,7 @@ import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
@@ -83,11 +84,15 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -108,6 +113,8 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -129,6 +136,8 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -164,11 +173,15 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -209,6 +222,8 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -233,11 +248,15 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsUpvoteEvent = new BadgeSetsEvent(
@@ -302,6 +321,8 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent2 = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_YesNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsUpvoteEvent2 = new BadgeSetsEvent(
@@ -364,6 +385,8 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -392,6 +415,8 @@ public class FollowSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsHasUpvoteDownvoteEvents = new BadgeSetsEvent(

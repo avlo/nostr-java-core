@@ -4,11 +4,13 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import java.util.List;
 import java.util.UUID;
@@ -49,11 +51,19 @@ public class BadgeSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new CuratedBadgeDefinitionGenericEvent(
+          aImgIdentity,
+          award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
+          new ReferenceTag(relayArgRelay.getUrl()),
+          relayArgRelay),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),       
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
@@ -135,11 +145,15 @@ public class BadgeSetsEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEventWithUpvoteCurationEvent = new BadgeSetsEvent(

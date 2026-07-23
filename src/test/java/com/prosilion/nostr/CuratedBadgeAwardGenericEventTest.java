@@ -6,12 +6,14 @@ import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
+import static com.prosilion.nostr.BadgeAwardReputationEventTest.relay;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
@@ -29,6 +31,8 @@ public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_YesYes_Defn_YesYes_Upvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
@@ -54,6 +58,7 @@ public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
           List.of(baseTagsRelayTag),
           "",
           relayArgRelay),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote =
@@ -67,6 +72,8 @@ public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_YesYes_Defn_YesYes_Upvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
@@ -87,11 +94,15 @@ public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
@@ -125,6 +136,8 @@ public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent curatedUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent newFromExisting = new CuratedBadgeAwardGenericEvent(curatedUpvoteEvent.asGenericEventRecord());
@@ -145,6 +158,8 @@ public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent expected = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(expected.asGenericEventRecord());
@@ -156,10 +171,37 @@ public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
     CuratedBadgeAwardGenericEvent expected = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
     CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(expected.asGenericEventRecord());
     assertEquals(expected, actual);
+  }
+
+  @Test
+  final void testMissingRelayTag() {
+    BadgeDefinitionGenericEvent badgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(
+       upvoteDefnCreator,
+       upvoteIdentifierTag,
+       relay);
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+       submitter,
+       recipient.getPublicKey(),
+       badgeDefinitionGenericEvent);            // <------------------------- no relay
+
+    CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       badgeAwardGenericEvent,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
+       relay);
+
+    assertEquals(recipient.getPublicKey(), curatedBadgeAwardGenericEvent.getAwardRecipientPublicKey());
+    assertEquals(curatedBadgeAwardGenericEvent.getAddressTag(), badgeDefinitionGenericEvent.asAddressableEventAddressTag());
+    assertEquals(
+       curatedBadgeAwardGenericEvent.getIdentifierTag().getUuid(),
+       String.valueOf(badgeDefinitionGenericEvent.asAddressableEventAddressTag().hashCode()));
   }
 
   final void testThrowsException() {
