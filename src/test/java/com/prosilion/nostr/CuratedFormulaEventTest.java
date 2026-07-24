@@ -4,6 +4,8 @@ import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
@@ -61,16 +63,22 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
     GenericEventRecord genericEventRecordAlpha = mockGenericEventRecordWithContent("A");
     assertThrows(ParseException.class, () -> new CuratedFormulaEvent(genericEventRecordAlpha));
 
-//    GenericEventRecord genericEventRecordPlusOne = mockGenericEventRecordWithContent("+1");
-//    assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusOne));
-    
-//    GenericEventRecord genericEventRecordPlusDecimal = mockGenericEventRecordWithContent("+.5");
-//    assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusDecimal));
-
     GenericEventRecord genericEventRecordMinusAlpha = mockGenericEventRecordWithContent("@");
     assertThrows(ParseException.class, () -> new CuratedFormulaEvent(genericEventRecordMinusAlpha));
   }
 
+  @Test
+  final void testGenericRecordDoesNotThrowUsingValidContentValueOfPlusOne() throws ParseException {
+    GenericEventRecord genericEventRecordPlusOne = mockGenericEventRecordWithContent("+1");
+    assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusOne));
+  }
+
+  @Test
+  final void testGenericRecordDoesNotThrowUsingValidContentValueOfPlusPointFive() throws ParseException {
+    GenericEventRecord genericEventRecordPlusDecimal = mockGenericEventRecordWithContent("+.5");
+    assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusDecimal));
+  }
+  
   private GenericEventRecord mockGenericEventRecordWithContent(String content) throws ParseException {
     FormulaEvent formulaEvent = new FormulaEvent(
        submitter,
@@ -85,6 +93,13 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
        relayArgRelay);
     GenericEventRecord genericEventRecord = mock(GenericEventRecord.class);
     when(genericEventRecord.getTags()).thenReturn(curatedFormulaEvent.getTags());
+    when(genericEventRecord.getKind()).thenReturn(curatedFormulaEvent.getKind());
+    when(genericEventRecord.getId()).thenReturn(curatedFormulaEvent.getId());
+    when(genericEventRecord.getPublicKey()).thenReturn(curatedFormulaEvent.getPublicKey());
+    when(genericEventRecord.getCreatedAt()).thenReturn(curatedFormulaEvent.getCreatedAt());
+    when(genericEventRecord.getSignature()).thenReturn(curatedFormulaEvent.getSignature());
+    when(genericEventRecord.requireFirstTag(AddressTag.class)).thenReturn(curatedFormulaEvent.getSetsPairedEvent().getAddressTag());
+    when(genericEventRecord.requireFirstTag(EventTag.class)).thenReturn(curatedFormulaEvent.getSetsPairedEvent().getEventTag());
     when(genericEventRecord.getContent()).thenReturn(content);
     return genericEventRecord;
   }
