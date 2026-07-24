@@ -3,6 +3,7 @@ package com.prosilion.nostr.event;
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -41,7 +42,7 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
           new PubKeyTag(formulaEvent.getPublicKey())), formulaEvent.getFormula(), relay);
   }
 
-  public CuratedFormulaEvent(@NonNull GenericEventRecord genericEventRecord) throws ParseException {
+  public CuratedFormulaEvent(@NonNull GenericEventRecord genericEventRecord) {
     super(
        validateFormula(
           validateRequiredTags(
@@ -73,12 +74,16 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
   A description tag whose value contain meaning behind the badge, or the reason of its issuance.
   https://github.com/nostr-protocol/nips/blob/master/58.md    
 */
-  private static GenericEventRecord validateFormula(GenericEventRecord formulaEvent) throws ParseException {
+  private static GenericEventRecord validateFormula(GenericEventRecord formulaEvent) {
     if (StringUtils.isBlank(formulaEvent.getContent()))
-      throw new ParseException(formulaEvent.getContent(), "supplied formula is blank");
+      throw new NostrException("formula event supplied formula is blank:\n  " + formulaEvent.createPrettyPrintJson());
 //    TODO: store expression in global expression map
-    new Expression(
-       String.format("%s %s", "validate", formulaEvent.getContent())).validate();
+    try {
+      new Expression(
+         String.format("%s %s", "validate", formulaEvent.getContent())).validate();
+    } catch (ParseException e) {
+      throw new NostrException(e);
+    }
     return formulaEvent;
   }
 }
