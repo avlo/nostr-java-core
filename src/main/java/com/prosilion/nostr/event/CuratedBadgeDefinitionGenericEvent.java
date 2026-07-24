@@ -1,6 +1,5 @@
 package com.prosilion.nostr.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
@@ -12,7 +11,6 @@ import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.user.Identity;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import lombok.NonNull;
@@ -31,7 +29,7 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
      @NonNull Relay relay) {
     super(
        identity,
-       Kind.REFERENCED_SET,
+       Kind.CURATION_SETS_BADGE_DEFINITION_EVENT,
        new IdentifierTag(
           String.valueOf(badgeDefinitionGenericEvent.asAddressableEventAddressTag().hashCode())),
        new SetsPairedEvent(

@@ -52,7 +52,7 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
      @NonNull Relay relay) {
     super(
        identity,
-       Kind.CURATION_SETS,
+       Kind.CURATION_SETS_BADGE_AWARD_EVENT,
        new IdentifierTag(
           String.valueOf(curatedBadgeDefinitionGenericEvent.getAddressTag().hashCode())),
        new SetsPairedEvent(

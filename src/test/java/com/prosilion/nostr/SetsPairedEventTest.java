@@ -129,7 +129,7 @@ public class SetsPairedEventTest extends BaseEventTest {
   void testRelayVariants() {
     PublicKey publicKey = Identity.generateRandomIdentity().getPublicKey();
     AddressTag addressTagNullRelay = new AddressTag(
-       Kind.CURATION_SETS,
+       Kind.CURATION_SETS_BADGE_AWARD_EVENT,
        publicKey,
        new IdentifierTag("random"),
        null);
@@ -146,7 +146,7 @@ public class SetsPairedEventTest extends BaseEventTest {
 
     Relay addressTagRelay = new Relay("ws://localhost-address-tag-relay:5555");
     AddressTag addressTagNonNullRelay = new AddressTag(
-       Kind.CURATION_SETS,
+       Kind.CURATION_SETS_BADGE_AWARD_EVENT,
        publicKey,
        new IdentifierTag("random"),
        addressTagRelay);
