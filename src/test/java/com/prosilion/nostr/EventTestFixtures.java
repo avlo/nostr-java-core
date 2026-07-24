@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.prosilion.nostr.tag.SetsPairedEvent.NULL_EVENT_TAG_RELAY;
 
-public class BaseEventTest {
+public class EventTestFixtures {
   static final String relayArgUrl = "ws://localhost:5555";
   static final String baseTagsRelayUrl = "ws://localhost-from-relay-tag:5555";
 

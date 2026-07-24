@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import static com.prosilion.nostr.BadgeAwardReputationEventTest.relay;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CuratedBadgeAwardGenericEventTest extends BaseEventTest {
+public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
   @Test
   final void testValidBadgeSetsEventUsingBadgeAwardGenericEvent() {

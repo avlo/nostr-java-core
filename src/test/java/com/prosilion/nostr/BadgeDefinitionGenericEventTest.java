@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BadgeDefinitionGenericEventTest extends BaseEventTest {
+public class BadgeDefinitionGenericEventTest extends EventTestFixtures {
   @Test
   final void A_NoNo__testEventNullRelayNoRelayTag() {
     assertEquals(Optional.empty(), defnEvent_NoNo_Upvote.getRelayTag());

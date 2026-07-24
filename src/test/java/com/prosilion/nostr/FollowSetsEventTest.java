@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-public class FollowSetsEventTest extends BaseEventTest {
+public class FollowSetsEventTest extends EventTestFixtures {
   public static final Relay auxRelay = new Relay("ws://localhost:5555");
   public static final Identity authorIdentity = Identity.generateRandomIdentity();
   public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);

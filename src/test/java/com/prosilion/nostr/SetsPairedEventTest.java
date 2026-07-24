@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SetsPairedEventTest extends BaseEventTest {
+public class SetsPairedEventTest extends EventTestFixtures {
 
   @Test
   void testConstructionNullRelay() {

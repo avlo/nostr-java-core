@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ActiveProfiles("test")
-public class EventMessageSerializerWithContainedAddressableEventsTest extends BaseEventTest {
+public class EventMessageSerializerWithContainedAddressableEventsTest extends EventTestFixtures {
   private final static String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
 
   private final GenericEventRecord genericEventRecordWithAddressTag;

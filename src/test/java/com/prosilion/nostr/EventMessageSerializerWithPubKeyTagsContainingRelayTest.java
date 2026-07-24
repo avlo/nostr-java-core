@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ActiveProfiles("test")
-public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends BaseEventTest {
+public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends EventTestFixtures {
   private final Identity platformIdentity = Identity.generateRandomIdentity();
 
   private final static String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";

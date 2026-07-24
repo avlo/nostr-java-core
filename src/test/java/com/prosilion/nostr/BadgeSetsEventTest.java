@@ -21,7 +21,7 @@ import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BadgeSetsEventTest extends BaseEventTest {
+public class BadgeSetsEventTest extends EventTestFixtures {
   private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
   private static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
   private static final IdentifierTag formulaUnitUpvote = new IdentifierTag(FORMULA_UNIT_UPVOTE);
