@@ -60,6 +60,11 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
   }
 
   @JsonIgnore
+  public final PubKeyTag getPubKeyTag() {
+    return super.requireFirstTag(PubKeyTag.class);
+  }
+
+  @JsonIgnore
   public final String getFormula() {
     return super.getContent();
   }

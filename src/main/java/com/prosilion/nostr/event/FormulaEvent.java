@@ -63,6 +63,11 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   }
 
   @JsonIgnore
+  public final AddressTag getAddressTag() {
+    return badgeDefinitionGenericEvent.asAddressableEventAddressTag();
+  }
+  
+  @JsonIgnore
   public final String getFormula() {
     return super.getContent();
   }
