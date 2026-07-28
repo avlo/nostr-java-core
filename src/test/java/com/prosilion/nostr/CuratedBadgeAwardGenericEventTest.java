@@ -204,6 +204,24 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        String.valueOf(badgeDefinitionGenericEvent.asAddressableEventAddressTag().hashCode()));
   }
 
+  @Test
+  final void testEventCreateNewFromBadgeAwardGenericEventAsGenericEventRecordWithoutRelayTag() {
+    BadgeDefinitionGenericEvent badgeDefinitionGenericEventWithoutRelayTag = new BadgeDefinitionGenericEvent(
+       upvoteDefnCreator, 
+       upvoteIdentifierTag);  // <------------------------- no relay
+    
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEventAndBadgeDefinitionEventBothWithoutRelayTag = new BadgeAwardGenericEvent<>(
+       submitter,
+       recipient.getPublicKey(),
+       badgeDefinitionGenericEventWithoutRelayTag);  // <------------------------- no relay
+
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> setupBadgeAwardGenericEventWithoutRelayTag = new BadgeAwardGenericEvent<>(
+       badgeAwardGenericEventAndBadgeDefinitionEventBothWithoutRelayTag.asGenericEventRecord(),
+       addressTag -> badgeDefinitionGenericEventWithoutRelayTag);
+    
+    assertEquals(badgeAwardGenericEventAndBadgeDefinitionEventBothWithoutRelayTag, setupBadgeAwardGenericEventWithoutRelayTag);
+  }
+  
   final void testThrowsException() {
 
   }

@@ -111,6 +111,13 @@ public class BadgeDefinitionGenericEventTest extends EventTestFixtures {
   }
 
   @Test
+  final void testEventCreateNewFromBadgeDefinitionGenericEventAsGenericEventRecordWithoutRelayTag() {
+    BadgeDefinitionGenericEvent expectedWithoutRelayTag = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
+    BadgeDefinitionGenericEvent badgeDefinitionAsGenericEventRecord = new BadgeDefinitionGenericEvent(expectedWithoutRelayTag.asGenericEventRecord());
+    assertEquals(expectedWithoutRelayTag, badgeDefinitionAsGenericEventRecord);
+  }
+
+  @Test
   final void testEventCreateNewFromExisting() {
     BadgeDefinitionGenericEvent withoutRelayTag = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
     new GenericEventRecord(
