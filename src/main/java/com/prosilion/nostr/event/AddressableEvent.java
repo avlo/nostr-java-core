@@ -69,7 +69,7 @@ public class AddressableEvent extends BaseEvent {
        validateRequiredTags(
           validateKind(
              genericEventRecord, addressableKindPredicate, errorMessage),
-          List.of(IdentifierTag.class, RelayTag.class)));
+          List.of(IdentifierTag.class)));
   }
 
   @JsonIgnore

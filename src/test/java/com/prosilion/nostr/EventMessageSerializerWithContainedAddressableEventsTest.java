@@ -82,7 +82,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
        "matching kind, author, identity-tag filter test",
        new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
 
-    this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
+    this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
     this.badgeAwardGenericEventWithAddressTagCreatedAt = award_NoNo_Defn_NoNo_Upvote.getCreatedAt().toString();
     this.upvotedUserPubkey = recipient.getPublicKey().toHexString();
     this.badgeAwardGenericEventWithAddressTagSignature = award_NoNo_Defn_NoNo_Upvote.getSignature().toString();
@@ -136,7 +136,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
     this.followSetsEventWithEventTagEventId = followSetsEvent.getId();
     this.followSetsEventWithEventTagCreatedAt = followSetsEvent.getCreatedAt().toString();
     this.followSetsEventWithEventTagSignature = followSetsEvent.getSignature().toString();
-    this.followSetsEventReferencedEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
+    this.followSetsEventReferencedEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
   }
 
   @Test

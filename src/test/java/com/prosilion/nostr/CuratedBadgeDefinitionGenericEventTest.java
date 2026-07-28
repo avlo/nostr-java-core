@@ -1,13 +1,17 @@
 package com.prosilion.nostr;
 
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 
@@ -20,7 +24,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
        relayArgRelay);
 
     SetsPairedEvent setsPairedUpvoteEvent = curatedBadgeDefinitionGenericEvent.getSetsPairedEvent();
-    assertEquals(defnEvent_YesYes_Upvote.asGenericEventRecord().getId(), setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(defnEvent_YesYes_Upvote.asGenericEventRecord().getId(), setsPairedUpvoteEvent.getEventTagEventId());
     assertEquals(curatedBadgeDefinitionGenericEvent.getAddressTag(), defnEvent_YesYes_Upvote.asAddressableEventAddressTag());
     assertEquals(
        curatedBadgeDefinitionGenericEvent.getIdentifierTag().getUuid(), 
@@ -39,14 +43,34 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
        curatedBadgeDefinitionGenericEvent.asGenericEventRecord());
 
     SetsPairedEvent setsPairedUpvoteEvent = newFromExisting.getSetsPairedEvent();
-    String upvoteEventId = setsPairedUpvoteEvent.getAwardEventId();
+    String upvoteEventId = setsPairedUpvoteEvent.getEventTagEventId();
 
-    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getEventTagEventId());
     assertEquals(recipient.getPublicKey(), award_YesYes_Defn_YesYes_Upvote.getAwardRecipientPublicKey());
     assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
 
     AddressTag upvoteAsAddressTag = award_YesYes_Defn_YesYes_Upvote.getAddressTag();
     assertEquals(newFromExisting.getAddressTag(), upvoteAsAddressTag);
+    assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedUpvoteEvent.getDefinitionEventRelay());
+  }
+  
+  @Test
+  final void testCtorFromBadgeDefinitionGenericEventWoRelayTag() {
+    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEventWithoutRelayTag = new BadgeDefinitionGenericEvent(
+       aImgIdentity,
+       upvoteIdentifierTag);
+    
+    CuratedBadgeDefinitionGenericEvent newFromExisting = new CuratedBadgeDefinitionGenericEvent(
+       aImgIdentity,
+       new BadgeDefinitionGenericEvent(badgeDefinitionUpvoteEventWithoutRelayTag.asGenericEventRecord()),
+       new ReferenceTag(new Relay("ws://localhost-simualted-from-relay:5555").getUrl()),
+       new Relay("ws://localhost-relay-generating-new-curated-event:5555"));
+
+    SetsPairedEvent setsPairedUpvoteEvent = newFromExisting.getSetsPairedEvent();
+    assertEquals(badgeDefinitionUpvoteEventWithoutRelayTag.getId(), setsPairedUpvoteEvent.getEventTagEventId());
+
+    IdentifierTag upvoteDefinitionIdentifierTag = badgeDefinitionUpvoteEventWithoutRelayTag.getIdentifierTag();
+    assertEquals(newFromExisting.getAddressTag().getIdentifierTag(), upvoteDefinitionIdentifierTag);
     assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedUpvoteEvent.getDefinitionEventRelay());
   }
 

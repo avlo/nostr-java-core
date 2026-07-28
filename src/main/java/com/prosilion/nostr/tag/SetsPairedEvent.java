@@ -29,12 +29,12 @@ public class SetsPairedEvent {
   }
 
   @JsonIgnore
-  public final String getAwardEventId() {
+  public final String getEventTagEventId() {
     return getEventTag().getEventId();
   }
 
   @JsonIgnore
-  public final Relay getAwardEventRelay() {
+  public final Relay getEventTagRelay() {
     return getEventTag().requireRelay();
   }
 

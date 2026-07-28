@@ -37,9 +37,9 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
     SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
     SetsPairedEvent setsPairedEvent = create(award_YesYes_Defn_YesYes_Upvote, relayArgRelay);
-    String upvoteEventId = setsPairedEvent.getAwardEventId();
+    String upvoteEventId = setsPairedEvent.getEventTagEventId();
 
-    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getEventTagEventId());
     assertEquals(recipient.getPublicKey(), award_YesYes_Defn_YesYes_Upvote.getAwardRecipientPublicKey());
     assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
 
@@ -78,9 +78,9 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
     SetsPairedEvent setsPairedUpvoteEvent = curationSetsUpvoteEvent.getSetsPairedEvent();
     SetsPairedEvent setsPairedEvent = create(award_YesYes_Defn_YesYes_Upvote, relayArgRelay);
-    String upvoteEventId = setsPairedEvent.getAwardEventId();
+    String upvoteEventId = setsPairedEvent.getEventTagEventId();
 
-    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getEventTagEventId());
     assertEquals(recipient.getPublicKey(), award_YesYes_Defn_YesYes_Upvote.getAwardRecipientPublicKey());
     assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
 
@@ -110,10 +110,10 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
     assertEquals(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent, setsPairedUpvoteEvent);
     assertEquals(eventAuxNo_award_NoNo_defn_NoNo_Downvote, setsPairedDownvoteEvent);
-    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
-    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardEventId();
+    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
+    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTagEventId();
 
-    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getAwardEventId());
+    assertEquals(upvoteEventId, setsPairedUpvoteEvent.getEventTagEventId());
     assertEquals(defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag(), setsPairedDownvoteEvent.getAddressTag());
 
     assertEquals(recipient.getPublicKey(), award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey());

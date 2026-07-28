@@ -82,12 +82,12 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 
     assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent));
     assertTrue(setsPairedEventList.contains(eventAuxNo_award_NoNo_defn_NoNo_Downvote));
-    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
-    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getAwardEventId();
+    String upvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
+    String downvoteEventId = eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTagEventId();
 
     assertEquals(
        upvoteEventId,
-       setsPairedEventList.stream().map(SetsPairedEvent::getAwardEventId).findFirst().orElseThrow());
+       setsPairedEventList.stream().map(SetsPairedEvent::getEventTagEventId).findFirst().orElseThrow());
     assertEquals(
        defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag(),
        setsPairedEventList.stream().map(SetsPairedEvent::getAddressTag).findFirst().orElseThrow());

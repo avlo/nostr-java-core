@@ -360,14 +360,14 @@ public class FollowSetsEventTest extends EventTestFixtures {
        List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
        auxRelay);
 
-    String voteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getAwardEventId();
+    String voteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
     assertTrue(Stream.of(followSetsUpEvent, followSetsContainingMatchingUpvoteEvent)
        .allMatch(followSetsEvent ->
           followSetsEvent.getBadgeSetsEventList().stream()
              .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
              .flatMap(Collection::stream)
              .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
-             .map(SetsPairedEvent::getAwardEventId).toList()
+             .map(SetsPairedEvent::getEventTagEventId).toList()
              .contains(voteEventId)));
 
     assertFalse(Stream.of(followSetsDownEvent, followSetsContainingMatchingUpvoteEvent)
@@ -376,7 +376,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
              .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
              .flatMap(Collection::stream)
              .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
-             .map(SetsPairedEvent::getAwardEventId).toList()
+             .map(SetsPairedEvent::getEventTagEventId).toList()
              .contains(voteEventId)));
   }
 

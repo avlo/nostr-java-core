@@ -4,7 +4,6 @@ import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.RelayTag;
 import java.util.List;
 import java.util.Optional;
@@ -78,13 +77,6 @@ public class BadgeDefinitionGenericEventTest extends EventTestFixtures {
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-should-not-appear:5555"));
     testTags(relayArgRelayTag,
        new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(anotherRelayTag), "content", relayArgRelay));
-  }
-
-  @Test
-  final void testBadgeDefinitionGenericEventCtorThrowsException() {
-    assertThrows(NostrException.class, () ->
-       new BadgeDefinitionGenericEvent(
-          new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag).asGenericEventRecord()));
   }
 
   @Test
