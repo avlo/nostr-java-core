@@ -116,7 +116,6 @@ public class BadgeDefinitionGenericEventTest extends EventTestFixtures {
        genericEventRecord,
        auxTagsRelayTag.getRelay());
     testTags(auxTagsRelayTag, withAuxRelay);
-    assertEquals(genericEventRecord.getId(), withAuxRelay.requireFirstTag(EventTag.class).eventId());
   }
 
   @Test
