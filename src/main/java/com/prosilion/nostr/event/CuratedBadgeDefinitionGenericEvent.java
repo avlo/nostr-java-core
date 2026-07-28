@@ -31,9 +31,14 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
        identity,
        Kind.CURATION_SETS_BADGE_DEFINITION_EVENT,
        new IdentifierTag(
-          String.valueOf(badgeDefinitionGenericEvent.asAddressableEventAddressTag().hashCode())),
+          String.valueOf(
+             fillAddressTag(
+                badgeDefinitionGenericEvent.asAddressableEventAddressTag(),
+                badgeDefinitionGenericEventReferenceTag).hashCode())),
        new SetsPairedEvent(
-          badgeDefinitionGenericEvent.asAddressableEventAddressTag(),
+          fillAddressTag(
+             badgeDefinitionGenericEvent.asAddressableEventAddressTag(),
+             badgeDefinitionGenericEventReferenceTag),
           new EventTag(
              badgeDefinitionGenericEvent.getId(),
              badgeDefinitionGenericEvent.getRelay().map(Relay::getUrl).orElse(
@@ -54,9 +59,27 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
                 RelayTag.class,
                 ReferenceTag.class))),
        new SetsPairedEvent(
-          genericEventRecord.requireFirstTag(AddressTag.class),
-          genericEventRecord.requireFirstTag(EventTag.class)
-       ));
+          fillAddressTag(
+             genericEventRecord.requireFirstTag(AddressTag.class),
+             genericEventRecord.requireFirstTag(ReferenceTag.class)),
+          fillEventTag(
+             genericEventRecord.requireFirstTag(EventTag.class),
+             genericEventRecord.requireFirstTag(ReferenceTag.class))));
+  }
+
+  private static AddressTag fillAddressTag(AddressTag addressTag, ReferenceTag referenceTag) {
+    return new AddressTag(
+       addressTag.getKind(),
+       addressTag.getPublicKey(),
+       addressTag.getIdentifierTag(),
+       new Relay(
+          addressTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl())));
+  }
+
+  private static EventTag fillEventTag(EventTag eventTag, ReferenceTag referenceTag) {
+    return new EventTag(
+       eventTag.getEventId(),
+       eventTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl()));
   }
 
   protected static GenericEventRecord validateIdentifierTagHash(GenericEventRecord genericEventRecord) {

@@ -11,7 +11,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 
@@ -27,7 +26,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
     assertEquals(defnEvent_YesYes_Upvote.asGenericEventRecord().getId(), setsPairedUpvoteEvent.getEventTagEventId());
     assertEquals(curatedBadgeDefinitionGenericEvent.getAddressTag(), defnEvent_YesYes_Upvote.asAddressableEventAddressTag());
     assertEquals(
-       curatedBadgeDefinitionGenericEvent.getIdentifierTag().getUuid(), 
+       curatedBadgeDefinitionGenericEvent.getIdentifierTag().getUuid(),
        String.valueOf(defnEvent_YesYes_Upvote.asAddressableEventAddressTag().hashCode()));
   }
 
@@ -53,13 +52,13 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
     assertEquals(newFromExisting.getAddressTag(), upvoteAsAddressTag);
     assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedUpvoteEvent.getDefinitionEventRelay());
   }
-  
+
   @Test
   final void testCtorFromBadgeDefinitionGenericEventWoRelayTag() {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEventWithoutRelayTag = new BadgeDefinitionGenericEvent(
        aImgIdentity,
        upvoteIdentifierTag);
-    
+
     CuratedBadgeDefinitionGenericEvent newFromExisting = new CuratedBadgeDefinitionGenericEvent(
        aImgIdentity,
        new BadgeDefinitionGenericEvent(badgeDefinitionUpvoteEventWithoutRelayTag.asGenericEventRecord()),
