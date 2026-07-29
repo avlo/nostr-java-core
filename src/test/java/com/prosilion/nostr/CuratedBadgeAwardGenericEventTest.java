@@ -4,6 +4,7 @@ import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.ReferenceTag;
@@ -46,6 +47,35 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
     AddressTag upvoteAsAddressTag = award_YesYes_Defn_YesYes_Upvote.getAddressTag();
     assertEquals(curationSetsUpvoteEvent.getAddressTag(), upvoteAsAddressTag);
     assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedEvent.getDefinitionEventRelay());
+  }
+
+  @Test
+  final void testValidBadgeSetsEventUsingGenericEventRecord() {
+    GenericEventRecord badgeAwardGenericEvent = award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord();
+    ReferenceTag badgeAwardGenericEventReferenceTag = new ReferenceTag(relayArgUrl);
+
+    CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       badgeAwardGenericEvent,
+       badgeAwardGenericEventReferenceTag,
+       relayArgRelay);
+
+    assertEquals(
+       badgeAwardGenericEvent.requireFirstTag(AddressTag.class),
+       curatedBadgeAwardGenericEvent.getAddressTag());
+    assertEquals(badgeAwardGenericEvent.getId(), curatedBadgeAwardGenericEvent.getEventTag().getEventId());
+    assertEquals(
+       badgeAwardGenericEvent.requireFirstTag(RelayTag.class).getRelay(),
+       curatedBadgeAwardGenericEvent.getEventTag().requireRelay());
+    assertEquals(
+       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey(),
+       curatedBadgeAwardGenericEvent.getAwardRecipientPublicKey());
+    assertEquals(
+       String.valueOf(badgeAwardGenericEvent.requireFirstTag(AddressTag.class).hashCode()),
+       curatedBadgeAwardGenericEvent.getIdentifierTag().getUuid());
+    assertEquals(
+       badgeAwardGenericEventReferenceTag,
+       curatedBadgeAwardGenericEvent.requireFirstTag(ReferenceTag.class));
   }
 
   @Test
