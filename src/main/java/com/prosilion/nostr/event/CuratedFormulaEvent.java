@@ -32,7 +32,9 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
        Kind.CURATION_SETS_FORMULA_EVENT,
        formulaEvent.getIdentifierTag(),
        new SetsPairedEvent(
-          formulaEvent.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag(),
+          fillAddressTag(
+             formulaEvent.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag(),
+             formulaEventReferenceTag),
           new EventTag(
              formulaEvent.getId(),
              formulaEvent.getRelay().map(Relay::getUrl).orElse(
@@ -55,8 +57,12 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
                 RelayTag.class,
                 ReferenceTag.class))),
        new SetsPairedEvent(
-          genericEventRecord.requireFirstTag(AddressTag.class),
-          genericEventRecord.requireFirstTag(EventTag.class)));
+          fillAddressTag(
+             genericEventRecord.requireFirstTag(AddressTag.class),
+             genericEventRecord.requireFirstTag(ReferenceTag.class)),
+          fillEventTag(
+             genericEventRecord.requireFirstTag(EventTag.class),
+             genericEventRecord.requireFirstTag(ReferenceTag.class))));
   }
 
   @JsonIgnore

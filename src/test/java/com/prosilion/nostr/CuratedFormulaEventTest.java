@@ -117,6 +117,7 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
     when(genericEventRecord.getSignature()).thenReturn(curatedFormulaEvent.getSignature());
     when(genericEventRecord.requireFirstTag(AddressTag.class)).thenReturn(curatedFormulaEvent.getSetsPairedEvent().getAddressTag());
     when(genericEventRecord.requireFirstTag(EventTag.class)).thenReturn(curatedFormulaEvent.getSetsPairedEvent().getEventTag());
+    when(genericEventRecord.requireFirstTag(ReferenceTag.class)).thenReturn(curatedFormulaEvent.requireFirstTag(ReferenceTag.class));
     when(genericEventRecord.getContent()).thenReturn(content);
     return genericEventRecord;
   }
