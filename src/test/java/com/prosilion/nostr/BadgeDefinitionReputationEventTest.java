@@ -51,8 +51,8 @@ public class BadgeDefinitionReputationEventTest {
 
   public static final String PLUS_ONE_FORMULA = "+1";
   public static final String MINUS_ONE_FORMULA = "-1";
-  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
-  private final FormulaEvent minusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaMinusOneIdentifierTag, relay, badgeDefnDownvoteEvent, MINUS_ONE_FORMULA);
+  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA, relay);
+  private final FormulaEvent minusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaMinusOneIdentifierTag, badgeDefnDownvoteEvent, MINUS_ONE_FORMULA, relay);
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   public BadgeDefinitionReputationEventTest() throws ParseException {
@@ -123,7 +123,7 @@ public class BadgeDefinitionReputationEventTest {
 
     assertTrue(expected.getFormulaEvents().stream().map(FormulaEvent::getContent).anyMatch("+1"::equals));
     assertTrue(expected.getFormulaEvents().stream().map(FormulaEvent::getContent).anyMatch("-1"::equals));
-    
+
     assertEquals(
        expected.getFormulaEvents(),
        badgeDefinitionReputationEvent.getFormulaEvents());
@@ -138,12 +138,12 @@ public class BadgeDefinitionReputationEventTest {
     FormulaEvent minusOneFormulaEvent = new FormulaEvent(
        aImgidentity,
        formulaMinusOneIdentifierTag,
-       relay,
        new BadgeDefinitionGenericEvent(
           aImgidentity,
           new IdentifierTag("UNIT_DOWNVOTE"),
           relay),
-       MINUS_ONE_FORMULA);
+       MINUS_ONE_FORMULA,
+       relay);
 
     List<FormulaEvent> plusOneMinusOneFormulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
@@ -185,7 +185,7 @@ public class BadgeDefinitionReputationEventTest {
   @Test
   void testInequalityEventCopies() throws ParseException {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
@@ -217,13 +217,13 @@ public class BadgeDefinitionReputationEventTest {
           reputationIdentifierTag,
           relay,
           externalIdentityTag,
-          new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA)));
+          new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay)));
   }
 
   @Test
   void testInequality() throws ParseException {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
@@ -255,7 +255,7 @@ public class BadgeDefinitionReputationEventTest {
           reputationIdentifierTag,
           relay,
           externalIdentityTag,
-          new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefinitionUpvoteEvent, "+2")));
+          new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, "+2", relay)));
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
@@ -273,7 +273,7 @@ public class BadgeDefinitionReputationEventTest {
   @Test
   void uniqueIdentifierTags() throws ParseException {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
     List<BaseTag> baseTags = new ArrayList<>();
     baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
@@ -305,7 +305,7 @@ public class BadgeDefinitionReputationEventTest {
 
   @Test
   void testDuplicateFormulaEventIdentifierTagsThrowsException() throws ParseException {
-    FormulaEvent duplicatePlusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, "+2");
+    FormulaEvent duplicatePlusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, "+2", relay);
 
     assertTrue(
        assertThrows(
@@ -326,18 +326,18 @@ public class BadgeDefinitionReputationEventTest {
        aImgidentity, definitionCreatorPublicKey, reputationIdentifierTag, relay, externalIdentityTag,
        List.of(
           new FormulaEvent(
-             aImgidentity, new IdentifierTag(FORMULA_PLUS_ONE), relay,
-             new BadgeDefinitionGenericEvent(
-                aImgidentity,
-                upvoteIdentifierTag,
-                relay),
-             PLUS_ONE_FORMULA),
-          new FormulaEvent(aImgidentity, new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), relay,
-             new BadgeDefinitionGenericEvent(
-                aImgidentity,
-                new IdentifierTag(UNIT_UPVOTE + "_AGAIN"),
-                relay),
-             PLUS_ONE_FORMULA)));
+             aImgidentity, new IdentifierTag(FORMULA_PLUS_ONE), new BadgeDefinitionGenericEvent(
+             aImgidentity,
+             upvoteIdentifierTag,
+             relay),
+             PLUS_ONE_FORMULA,
+             relay),
+          new FormulaEvent(aImgidentity, new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), new BadgeDefinitionGenericEvent(
+             aImgidentity,
+             new IdentifierTag(UNIT_UPVOTE + "_AGAIN"),
+             relay),
+             PLUS_ONE_FORMULA,
+             relay)));
 
     assertEquals(2, event.getFormulaEvents().size());
     assertTrue(event.getFormulaEvents().stream().map(BaseEvent::getContent).allMatch("+1"::equals));

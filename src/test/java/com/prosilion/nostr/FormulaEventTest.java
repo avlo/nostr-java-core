@@ -40,17 +40,32 @@ public class FormulaEventTest {
   @Test
   void testValidFormulaEventWithPopulatedBadgeDefinitionAwardEvent() throws ParseException {
     FormulaEvent expected = new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        awardUpvoteEvent,
-        "+1");
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent,
+       "+1",
+       relay);
 
     assertEquals(
-        expected.getBadgeDefinitionGenericEvent(),
-        new FormulaEvent(
-            expected.getGenericEventRecord(),
-            fxn).getBadgeDefinitionGenericEvent());
+       expected.getBadgeDefinitionGenericEvent(),
+       new FormulaEvent(
+          expected.getGenericEventRecord(),
+          fxn).getBadgeDefinitionGenericEvent());
+  }
+
+  @Test
+  void testValidFormulaEventWithoutRelayTag() throws ParseException {
+    FormulaEvent expectedWithoutDefinedRelayTag = new FormulaEvent(
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent,
+       "+1");
+
+    assertEquals(
+       expectedWithoutDefinedRelayTag.getBadgeDefinitionGenericEvent(),
+       new FormulaEvent(
+          expectedWithoutDefinedRelayTag.getGenericEventRecord(),
+          fxn).getBadgeDefinitionGenericEvent());
   }
 
   @Test
@@ -58,29 +73,29 @@ public class FormulaEventTest {
     IdentifierTag filteredIdentifierTag = new IdentifierTag("IDENTIFIER_SHOULD_GET_FILTERED");
 
     FormulaEvent expected = new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        awardUpvoteEvent,
-        List.of(filteredIdentifierTag),
-        "+1");
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent,
+       List.of(filteredIdentifierTag),
+       "+1",
+       relay);
 
     assertEquals(1, expected.getTypeSpecificTags(RelayTag.class).size());
     assertEquals(1, expected.getTypeSpecificTags(IdentifierTag.class).size());
     assertEquals(0,
-        expected.getTypeSpecificTags(IdentifierTag.class).stream()
-            .filter(filteredIdentifierTag::equals).toList().size());
+       expected.getTypeSpecificTags(IdentifierTag.class).stream()
+          .filter(filteredIdentifierTag::equals).toList().size());
   }
 
   Function<AddressTag, BadgeDefinitionGenericEvent> fxn = addressTag ->
-      Stream.of(awardUpvoteEvent).filter(awardUpvoteEventIter ->
-          awardUpvoteEventIter.asAddressableEventAddressTag().equals(addressTag)).findFirst().orElseThrow();
+     Stream.of(awardUpvoteEvent).filter(awardUpvoteEventIter ->
+        awardUpvoteEventIter.asAddressableEventAddressTag().equals(addressTag)).findFirst().orElseThrow();
 
   @Test
   public void formulaValidationTestUnitAdd() throws ParseException {
     String formula = "+1";
     new Expression(
-        String.format("%s %s", "validate", formula)
+       String.format("%s %s", "validate", formula)
     ).validate();
   }
 
@@ -88,7 +103,7 @@ public class FormulaEventTest {
   public void formulaValidationTestUnitSubtract() throws ParseException {
     String formula = "-1";
     new Expression(
-        String.format("%s %s", "validate", formula)
+       String.format("%s %s", "validate", formula)
     ).validate();
   }
 
@@ -96,7 +111,7 @@ public class FormulaEventTest {
   public void formulaValidationFailDueToNonFormulaTest() {
     String formula = "b";
     assertThrows(ParseException.class, () -> new Expression(
-        String.format("%s %s", "validate", formula)
+       String.format("%s %s", "validate", formula)
     ).validate());
   }
 
@@ -104,30 +119,30 @@ public class FormulaEventTest {
   public void formulaValidationFailDueToMissingOperatorTest() {
     String formula = "1";
     assertThrows(ParseException.class, () -> new Expression(
-        String.format("%s %s", "validate", formula)
+       String.format("%s %s", "validate", formula)
     ).validate());
   }
 
   @Test
   public void testInequalityEventCopies() throws NostrException, ParseException {
-    FormulaEvent formulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, relay, awardUpvoteEvent, "+1");
+    FormulaEvent formulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, awardUpvoteEvent, "+1", relay);
     FormulaEvent upvoteFormulaEventDuplicate = new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        new BadgeDefinitionGenericEvent(
-            identity,
-            upvoteIdentifierTag,
-            relay),
-        "+1");
+       identity,
+       formulaPlusOneIdentifierTag,
+       new BadgeDefinitionGenericEvent(
+          identity,
+          upvoteIdentifierTag,
+          relay),
+       "+1",
+       relay);
 
     assertNotEquals(formulaEvent, upvoteFormulaEventDuplicate);
   }
 
   @Test
   void testInequality() throws ParseException {
-    FormulaEvent formulaEvent = new FormulaEvent(Identity.generateRandomIdentity(), formulaPlusOneIdentifierTag, relay, awardUpvoteEvent, "+1");
-    FormulaEvent differentUpvoteFormula = new FormulaEvent(identity, formulaPlusOneIdentifierTag, relay, awardUpvoteEvent, "+2");
+    FormulaEvent formulaEvent = new FormulaEvent(Identity.generateRandomIdentity(), formulaPlusOneIdentifierTag, awardUpvoteEvent, "+1", relay);
+    FormulaEvent differentUpvoteFormula = new FormulaEvent(identity, formulaPlusOneIdentifierTag, awardUpvoteEvent, "+2", relay);
     assertNotEquals(formulaEvent, differentUpvoteFormula);
     assertNotEquals(formulaEvent, awardDownvoteEvent);
   }
@@ -135,114 +150,102 @@ public class FormulaEventTest {
   @Test
   public void arbitraryCustomAppDataFormulaEventTest() throws ParseException {
     validateReturnedFormula(
-        new FormulaEvent(
-            identity,
-            formulaPlusOneIdentifierTag,
-            relay,
-            awardUpvoteEvent,
-            "+1").getFormula());
+       new FormulaEvent(
+          identity,
+          formulaPlusOneIdentifierTag,
+          awardUpvoteEvent, "+1", relay
+       ).getFormula());
 
     validateReturnedFormula(
-        new FormulaEvent(
-            identity,
-            formulaMinusOneIdentifierTag,
-            relay,
-            awardDownvoteEvent,
-            "-1").getFormula());
+       new FormulaEvent(
+          identity,
+          formulaMinusOneIdentifierTag,
+          awardDownvoteEvent, "-1", relay
+       ).getFormula());
 
     validateReturnedFormula(
-        new FormulaEvent(
-            identity,
-            formulaPlusOneIdentifierTag,
-            relay,
-            awardDownvoteEvent,
-            "+-1").getFormula());
+       new FormulaEvent(
+          identity,
+          formulaPlusOneIdentifierTag,
+          awardDownvoteEvent, "+-1", relay
+       ).getFormula());
 
     validateReturnedFormula(
-        new FormulaEvent(
-            identity,
-            formulaMinusOneIdentifierTag,
-            relay,
-            awardDownvoteEvent,
-            "--1").getFormula());
+       new FormulaEvent(
+          identity,
+          formulaMinusOneIdentifierTag,
+          awardDownvoteEvent, "--1", relay
+       ).getFormula());
 
     validateReturnedFormula(
-        new FormulaEvent(
-            identity,
-            formulaMinusOneIdentifierTag,
-            relay,
-            awardUpvoteEvent,
-            "+(-1)").getFormula());
+       new FormulaEvent(
+          identity,
+          formulaMinusOneIdentifierTag,
+          awardUpvoteEvent, "+(-1)", relay
+       ).getFormula());
 
     validateReturnedFormula(
-        new FormulaEvent(
-            identity,
-            formulaPlusOneIdentifierTag,
-            relay,
-            awardDownvoteEvent,
-            "-(-1)").getFormula());
+       new FormulaEvent(
+          identity,
+          formulaPlusOneIdentifierTag,
+          awardDownvoteEvent, "-(-1)", relay
+       ).getFormula());
 
     validateReturnedFormula(
-        new FormulaEvent(
-            identity,
-            formulaMinusOneIdentifierTag,
-            relay,
-            awardUpvoteEvent,
-            "-(+1)").getFormula());
+       new FormulaEvent(
+          identity,
+          formulaMinusOneIdentifierTag,
+          awardUpvoteEvent, "-(+1)", relay
+       ).getFormula());
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        awardUpvoteEvent,
-        "a"));
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent, "a", relay
+    ));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        awardUpvoteEvent,
-        ""));
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent, "", relay
+    ));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        awardUpvoteEvent,
-        " "));
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent, " ", relay
+    ));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        awardUpvoteEvent,
-        " "));
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent, " ", relay
+    ));
 
     assertThrows(ParseException.class, () -> new FormulaEvent(
-        identity,
-        formulaPlusOneIdentifierTag,
-        relay,
-        awardUpvoteEvent,
-        "1"));
+       identity,
+       formulaPlusOneIdentifierTag,
+       awardUpvoteEvent, "1", relay
+    ));
   }
 
   @Test
   void testBlankFormulaEvent() {
     assertTrue(
-        assertThrows(
-            ParseException.class, () ->
-                new FormulaEvent(
-                    identity,
-                    formulaPlusOneIdentifierTag,
-                    relay,
-                    awardUpvoteEvent,
-                    ""))
-            .getMessage().contains("supplied formula is blank"));
+       assertThrows(
+          ParseException.class, () ->
+             new FormulaEvent(
+                identity,
+                formulaPlusOneIdentifierTag,
+                awardUpvoteEvent,
+                "",
+                relay))
+          .getMessage().contains("supplied formula is blank"));
   }
 
   private void validateReturnedFormula(String formula) throws ParseException {
     new Expression(
-        String.format("%s %s", "validate", formula)
+       String.format("%s %s", "validate", formula)
     ).validate();
   }
 }

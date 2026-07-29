@@ -45,9 +45,9 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Eve
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(
        upvoteDefnCreator,
        upvoteIdentifierTag,
-       relayArgRelay,
        defnEvent_NoNo_Upvote,
-       PLUS_ONE_FORMULA);
+       PLUS_ONE_FORMULA,
+       relayArgRelay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
        platformIdentity,

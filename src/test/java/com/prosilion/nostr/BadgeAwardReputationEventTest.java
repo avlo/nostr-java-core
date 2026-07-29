@@ -43,7 +43,7 @@ public class BadgeAwardReputationEventTest {
 
   public static final String PLUS_ONE_FORMULA = "+1";
   public static final String MINUS_ONE_FORMULA = "-1";
-  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA);
+  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA, relay);
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();

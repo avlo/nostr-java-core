@@ -103,9 +103,9 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(
        upvoteDefnCreator,
        new IdentifierTag(FORMULA_UNIT_UPVOTE),
-       relayArgRelay,
        award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       PLUS_ONE_FORMULA);
+       PLUS_ONE_FORMULA,
+       relayArgRelay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
        platformIdentity,

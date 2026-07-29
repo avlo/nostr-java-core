@@ -95,7 +95,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
     BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, relay);
 
     String CONTENT = "+1";
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(formulaCreator, formulaPlusOneIdentifierTag, relay, badgeDefnUpvoteEvent, CONTENT);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(formulaCreator, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, CONTENT, relay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
        repDefnCreator,

@@ -51,16 +51,16 @@ public class FollowSetsEventTest extends EventTestFixtures {
     this.plusOneFormulaEvent = new FormulaEvent(
        authorIdentity,
        formulaUnitUpvote,
-       auxRelay,
        defnEvent_NoNo_Upvote,
-       PLUS_ONE_FORMULA);
+       PLUS_ONE_FORMULA,
+       auxRelay);
 
     this.minusOneFormulaEvent = new FormulaEvent(
        authorIdentity,
        formulaUnitDownvote,
-       auxRelay,
        defnEvent_NoNo_Downvote,
-       MINUS_ONE_FORMULA);
+       MINUS_ONE_FORMULA,
+       auxRelay);
 
     this.badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
        aImgIdentity,

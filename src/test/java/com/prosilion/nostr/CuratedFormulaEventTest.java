@@ -24,9 +24,9 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
     FormulaEvent formulaEvent = new FormulaEvent(
        submitter,
        new IdentifierTag("UNIT_FORMULA"),
-       relayArgRelay,
        defnEvent_YesYes_Upvote,
-       "+1");
+       "+1",
+       relayArgRelay);
     ReferenceTag referenceTag = new ReferenceTag(relayArgUrl);
 
     CuratedFormulaEvent expected = new CuratedFormulaEvent(
@@ -83,7 +83,7 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
     GenericEventRecord genericEventRecordPlusOne = mockGenericEventRecordWithContent("/1/2");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusOne));
   }
-  
+
   @Test
   final void testGenericRecordDoesNotThrowUsingPositiveDecimal() throws ParseException {
     GenericEventRecord genericEventRecordPlusDecimal = mockGenericEventRecordWithContent("+.5");
@@ -95,14 +95,13 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
     GenericEventRecord genericEventRecordPlusDecimal = mockGenericEventRecordWithContent("+-.5");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusDecimal));
   }
-  
+
   private GenericEventRecord mockGenericEventRecordWithContent(String content) throws ParseException {
     FormulaEvent formulaEvent = new FormulaEvent(
        submitter,
        new IdentifierTag("UNIT_FORMULA"),
-       relayArgRelay,
-       defnEvent_YesYes_Upvote,
-       "+1");
+       defnEvent_YesYes_Upvote, "+1", relayArgRelay
+    );
     CuratedFormulaEvent curatedFormulaEvent = new CuratedFormulaEvent(
        aImgIdentity,
        formulaEvent,

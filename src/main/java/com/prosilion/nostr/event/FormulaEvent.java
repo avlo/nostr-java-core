@@ -25,25 +25,24 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   public FormulaEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
-     @NonNull String formula) throws NostrException, ParseException {
+     @NonNull String formula,
+     Relay... relay) throws NostrException, ParseException {
     this(
        identity,
        identifierTag,
-       relay,
-       badgeDefinitionGenericEvent,
-       List.of(),
-       formula);
+       badgeDefinitionGenericEvent, List.of(),
+       formula,
+       relay);
   }
 
   public FormulaEvent(
      @NonNull Identity identity,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
      @NonNull List<BaseTag> baseTags,
-     @NonNull String formula) throws NostrException, ParseException {
+     @NonNull String formula,
+     Relay... relay) throws NostrException, ParseException {
     super(
        identity,
        identifierTag,
@@ -51,7 +50,9 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
           Stream.of(
              badgeDefinitionGenericEvent.asAddressableEventAddressTag()),
           baseTags.stream()
-             .filter(Predicate.not(AddressTag.class::isInstance))).toList(), validate(formula), relay);
+             .filter(Predicate.not(AddressTag.class::isInstance))).toList(),
+       validate(formula),
+       relay);
     this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
   }
 
@@ -66,7 +67,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   public final AddressTag getAddressTag() {
     return badgeDefinitionGenericEvent.asAddressableEventAddressTag();
   }
-  
+
   @JsonIgnore
   public final String getFormula() {
     return super.getContent();

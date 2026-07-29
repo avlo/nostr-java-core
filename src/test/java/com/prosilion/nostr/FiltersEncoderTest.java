@@ -507,7 +507,7 @@ public class FiltersEncoderTest {
     Identity aImgIdentity = Identity.generateRandomIdentity();
 
     BadgeDefinitionGenericEvent awardUpvoteDefinitionEvent = new BadgeDefinitionGenericEvent(aImgIdentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgIdentity, upvoteIdentifierTag, relay, awardUpvoteDefinitionEvent, PLUS_ONE_FORMULA);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgIdentity, upvoteIdentifierTag, awardUpvoteDefinitionEvent, PLUS_ONE_FORMULA, relay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
         aImgIdentity,

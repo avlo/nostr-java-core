@@ -33,8 +33,8 @@ public class BadgeSetsEventTest extends EventTestFixtures {
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
   public BadgeSetsEventTest() throws ParseException {
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, relayArgRelay, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA);
-    FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, relayArgRelay, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA);
+    FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA, relayArgRelay);
+    FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA, relayArgRelay);
 
     this.badgeDefinitionReputationEvent =
        new BadgeDefinitionReputationEvent(
