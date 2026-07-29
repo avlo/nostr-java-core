@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
@@ -58,7 +57,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
   private final String followSetsEventWithEventTagSignature;
   private final String followSetsEventReferencedEventId;
 
-  public EventMessageSerializerWithContainedAddressableEventsTest() throws ParseException {
+  public EventMessageSerializerWithContainedAddressableEventsTest() {
     this.genericEventRecordWithAddressTag = new GenericEventRecord(
        "5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001",
        new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),

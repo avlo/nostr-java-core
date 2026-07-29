@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.event.BadgeAwardReputationEvent;
@@ -79,7 +78,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest {
   }
 
   @Test
-  void testDeserializeBadgeAwardReputationEventObject() throws IOException, ParseException {
+  void testDeserializeBadgeAwardReputationEventObject() throws IOException {
     String url = "ws://localhost:5555";
     Relay relay = new Relay(url);
     String BADGE_DEFINITION_UPVOTE_UUID = "BDG_DEF_UNIT_UP";

@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
@@ -47,7 +46,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula;
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventMinusOneFormula;
 
-  public FollowSetsEventTest() throws ParseException {
+  public FollowSetsEventTest() {
     this.plusOneFormulaEvent = new FormulaEvent(
        authorIdentity,
        formulaUnitUpvote,

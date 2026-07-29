@@ -27,7 +27,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
      @NonNull IdentifierTag identifierTag,
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
      @NonNull String formula,
-     Relay... relay) throws NostrException, ParseException {
+     Relay... relay) throws NostrException {
     this(
        identity,
        identifierTag,

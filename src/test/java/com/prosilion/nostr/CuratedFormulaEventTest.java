@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class CuratedFormulaEventTest extends EventTestFixtures {
 
   @Test
-  final void testCanonicalCtorAgainstGenericEventRecordCtor() throws ParseException {
+  final void testCanonicalCtorAgainstGenericEventRecordCtor() {
     FormulaEvent formulaEvent = new FormulaEvent(
        submitter,
        new IdentifierTag("UNIT_FORMULA"),
@@ -46,13 +45,13 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
   }
 
   @Test
-  final void testGenericEventRecordCtorRejectsBlankFormula() throws ParseException {
+  final void testGenericEventRecordCtorRejectsBlankFormula() {
     GenericEventRecord genericEventRecord = mockGenericEventRecordWithContent("");
     assertThrows(NostrException.class, () -> new CuratedFormulaEvent(genericEventRecord));
   }
 
   @Test
-  final void testGenericEventRecordCtorRejectsInvalidFormula() throws ParseException {
+  final void testGenericEventRecordCtorRejectsInvalidFormula() {
     GenericEventRecord genericEventRecordPlus = mockGenericEventRecordWithContent("+");
     assertThrows(NostrException.class, () -> new CuratedFormulaEvent(genericEventRecordPlus));
 
@@ -67,36 +66,36 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
   }
 
   @Test
-  final void testGenericRecordDoesNotThrowUsingDivision() throws ParseException {
+  final void testGenericRecordDoesNotThrowUsingDivision() {
     GenericEventRecord genericEventRecordPlusOne = mockGenericEventRecordWithContent("/2");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusOne));
   }
 
   @Test
-  final void testGenericRecordDoesNotThrowUsingMultiplication() throws ParseException {
+  final void testGenericRecordDoesNotThrowUsingMultiplication() {
     GenericEventRecord genericEventRecordPlusOne = mockGenericEventRecordWithContent("*2");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusOne));
   }
 
   @Test
-  final void testGenericRecordDoesNotThrowUsingFraction() throws ParseException {
+  final void testGenericRecordDoesNotThrowUsingFraction() {
     GenericEventRecord genericEventRecordPlusOne = mockGenericEventRecordWithContent("/1/2");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusOne));
   }
 
   @Test
-  final void testGenericRecordDoesNotThrowUsingPositiveDecimal() throws ParseException {
+  final void testGenericRecordDoesNotThrowUsingPositiveDecimal() {
     GenericEventRecord genericEventRecordPlusDecimal = mockGenericEventRecordWithContent("+.5");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusDecimal));
   }
 
   @Test
-  final void testGenericRecordDoesNotThrowUsingNegativeDecimal() throws ParseException {
+  final void testGenericRecordDoesNotThrowUsingNegativeDecimal() {
     GenericEventRecord genericEventRecordPlusDecimal = mockGenericEventRecordWithContent("+-.5");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusDecimal));
   }
 
-  private GenericEventRecord mockGenericEventRecordWithContent(String content) throws ParseException {
+  private GenericEventRecord mockGenericEventRecordWithContent(String content) {
     FormulaEvent formulaEvent = new FormulaEvent(
        submitter,
        new IdentifierTag("UNIT_FORMULA"),

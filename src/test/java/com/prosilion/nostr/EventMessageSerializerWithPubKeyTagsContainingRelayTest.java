@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
@@ -41,7 +40,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Eve
   private final FollowSetsEvent followSetsEvent;
   private final GenericEventRecord followSetsAsGenericEventEventWithEventTag;
 
-  public EventMessageSerializerWithPubKeyTagsContainingRelayTest() throws ParseException {
+  public EventMessageSerializerWithPubKeyTagsContainingRelayTest() {
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(
        upvoteDefnCreator,
        upvoteIdentifierTag,
@@ -78,7 +77,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Eve
        new ReferenceTag(relayArgRelay.getUrl()),
        new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
-    
+
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        submitter,
        badgeDefinitionReputationEventPlusOneFormula,

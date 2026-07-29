@@ -38,7 +38,7 @@ public class FormulaEventTest {
   private final IdentifierTag formulaMinusOneIdentifierTag = new IdentifierTag(FORMULA_MINUS_ONE);
 
   @Test
-  void testValidFormulaEventWithPopulatedBadgeDefinitionAwardEvent() throws ParseException {
+  void testValidFormulaEventWithPopulatedBadgeDefinitionAwardEvent() {
     FormulaEvent expected = new FormulaEvent(
        identity,
        formulaPlusOneIdentifierTag,
@@ -54,7 +54,7 @@ public class FormulaEventTest {
   }
 
   @Test
-  void testValidFormulaEventWithoutRelayTag() throws ParseException {
+  void testValidFormulaEventWithoutRelayTag() {
     FormulaEvent expectedWithoutDefinedRelayTag = new FormulaEvent(
        identity,
        formulaPlusOneIdentifierTag,
@@ -69,7 +69,7 @@ public class FormulaEventTest {
   }
 
   @Test
-  void testFormulaEventDoesNotFilterRelayTag() throws ParseException {
+  void testFormulaEventDoesNotFilterRelayTag() {
     IdentifierTag filteredIdentifierTag = new IdentifierTag("IDENTIFIER_SHOULD_GET_FILTERED");
 
     FormulaEvent expected = new FormulaEvent(
@@ -124,7 +124,7 @@ public class FormulaEventTest {
   }
 
   @Test
-  public void testInequalityEventCopies() throws NostrException, ParseException {
+  public void testInequalityEventCopies() throws NostrException {
     FormulaEvent formulaEvent = new FormulaEvent(identity, formulaPlusOneIdentifierTag, awardUpvoteEvent, "+1", relay);
     FormulaEvent upvoteFormulaEventDuplicate = new FormulaEvent(
        identity,
@@ -140,7 +140,7 @@ public class FormulaEventTest {
   }
 
   @Test
-  void testInequality() throws ParseException {
+  void testInequality() {
     FormulaEvent formulaEvent = new FormulaEvent(Identity.generateRandomIdentity(), formulaPlusOneIdentifierTag, awardUpvoteEvent, "+1", relay);
     FormulaEvent differentUpvoteFormula = new FormulaEvent(identity, formulaPlusOneIdentifierTag, awardUpvoteEvent, "+2", relay);
     assertNotEquals(formulaEvent, differentUpvoteFormula);

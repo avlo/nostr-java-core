@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.AddressableEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
@@ -55,7 +54,7 @@ public class BadgeDefinitionReputationEventTest {
   private final FormulaEvent minusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaMinusOneIdentifierTag, badgeDefnDownvoteEvent, MINUS_ONE_FORMULA, relay);
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
-  public BadgeDefinitionReputationEventTest() throws ParseException {
+  public BadgeDefinitionReputationEventTest() {
   }
 
   @Test
@@ -130,7 +129,7 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void testValidBadgeDefinitionReputationEventWithPopulatedFormulaEvents() throws ParseException {
+  void testValidBadgeDefinitionReputationEventWithPopulatedFormulaEvents() {
     final String FORMULA_MINUS_ONE = "FORMULA_PLUS_ONE";
     IdentifierTag formulaMinusOneIdentifierTag = new IdentifierTag(FORMULA_MINUS_ONE);
     final String MINUS_ONE_FORMULA = "-1";
@@ -183,7 +182,7 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void testInequalityEventCopies() throws ParseException {
+  void testInequalityEventCopies() {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
 
@@ -221,7 +220,7 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void testInequality() throws ParseException {
+  void testInequality() {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
 
@@ -271,7 +270,7 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void uniqueIdentifierTags() throws ParseException {
+  void uniqueIdentifierTags() {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
     List<BaseTag> baseTags = new ArrayList<>();
@@ -304,7 +303,7 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void testDuplicateFormulaEventIdentifierTagsThrowsException() throws ParseException {
+  void testDuplicateFormulaEventIdentifierTagsThrowsException() {
     FormulaEvent duplicatePlusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, "+2", relay);
 
     assertTrue(
@@ -321,7 +320,7 @@ public class BadgeDefinitionReputationEventTest {
   }
 
   @Test
-  void testDifferentFormulaUuidsWithDuplicateFormulaContentsDoNotThrowException() throws ParseException {
+  void testDifferentFormulaUuidsWithDuplicateFormulaContentsDoNotThrowException() {
     BadgeDefinitionReputationEvent event = new BadgeDefinitionReputationEvent(
        aImgidentity, definitionCreatorPublicKey, reputationIdentifierTag, relay, externalIdentityTag,
        List.of(

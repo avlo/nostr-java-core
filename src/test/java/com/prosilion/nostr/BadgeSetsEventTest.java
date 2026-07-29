@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
@@ -32,7 +31,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
-  public BadgeSetsEventTest() throws ParseException {
+  public BadgeSetsEventTest() {
     FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA, relayArgRelay);
     FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA, relayArgRelay);
 
@@ -63,7 +62,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
        new ReferenceTag(relayArgRelay.getUrl()),
-       new ReferenceTag(relayArgRelay.getUrl()),       
+       new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(

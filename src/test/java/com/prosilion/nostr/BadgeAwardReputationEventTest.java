@@ -1,6 +1,5 @@
 package com.prosilion.nostr;
 
-import com.ezylang.evalex.parser.ParseException;
 import com.prosilion.nostr.event.BadgeAwardReputationEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
@@ -32,8 +31,8 @@ public class BadgeAwardReputationEventTest {
   private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
 
   private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
-      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
-  
+     Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
+
   public static final String PLATFORM = BadgeAwardReputationEventTest.class.getPackageName();
   public static final String IDENTITY = BadgeAwardReputationEventTest.class.getSimpleName();
   public static final String PROOF = String.valueOf(BadgeAwardReputationEventTest.class.hashCode());
@@ -50,27 +49,27 @@ public class BadgeAwardReputationEventTest {
 
   BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
-  public BadgeAwardReputationEventTest() throws ParseException {
+  public BadgeAwardReputationEventTest() {
     this.badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
-        aImgidentity,
-        definitionCreatorPublicKey,
-        reputationIdentifierTag,
-        relay,
-        externalIdentityTag,
-        plusOneFormulaEvent);
+       aImgidentity,
+       definitionCreatorPublicKey,
+       reputationIdentifierTag,
+       relay,
+       externalIdentityTag,
+       plusOneFormulaEvent);
   }
 
   @Test
   void testValidBadgeAwardReputationEvent() {
     BadgeAwardReputationEvent expected = new BadgeAwardReputationEvent(
-        aImgidentity,
-        badgeReceiverPublicKey,
+       aImgidentity,
+       badgeReceiverPublicKey,
        externalIdentityTag, badgeDefinitionReputationEvent, BigDecimal.ZERO, relay
     );
 
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
-        expected.getGenericEventRecord(),
-        addressTag -> badgeDefinitionReputationEvent);
+       expected.getGenericEventRecord(),
+       addressTag -> badgeDefinitionReputationEvent);
 
     assertEquals(expected, badgeAwardReputationEvent);
     assertEquals(expected.getBadgeDefinitionEvent(), badgeAwardReputationEvent.getBadgeDefinitionEvent());
@@ -82,8 +81,8 @@ public class BadgeAwardReputationEventTest {
   @Test
   void testSingularAddressTag() {
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
-        aImgidentity,
-        badgeReceiverPublicKey,
+       aImgidentity,
+       badgeReceiverPublicKey,
        externalIdentityTag, badgeDefinitionReputationEvent, List.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag()), BigDecimal.ZERO, relay
     );
 
