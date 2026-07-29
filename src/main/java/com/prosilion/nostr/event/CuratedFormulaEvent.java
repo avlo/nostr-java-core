@@ -35,7 +35,7 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
              formulaEvent.getId(),
              formulaEvent.getRelayTag().map(RelayTag::relay).map(Relay::getUrl).orElse(formulaEventReferenceTag.getUrl()))),
        List.of(
-          formulaEvent.requireFirstTag(PubKeyTag.class),
+          new PubKeyTag(formulaEvent.getPublicKey()),
           formulaEventReferenceTag),
        formulaEvent.getContent(),
        relay);
