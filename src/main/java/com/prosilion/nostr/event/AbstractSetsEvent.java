@@ -112,7 +112,7 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
        eventTag.getEventId(),
        eventTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl()));
   }
-  
+
   private static Stream<BaseTag> setsPairsToBaseTags(@NonNull SetsPairedEvent sets) {
     return Stream.of(sets.getAddressTag(), sets.getEventTag());
   }

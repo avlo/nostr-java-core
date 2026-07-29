@@ -53,9 +53,12 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
        identity,
        Kind.CURATION_SETS_BADGE_AWARD_EVENT,
        new IdentifierTag(
-          String.valueOf(badgeAwardGenericEvent.requireFirstTag(AddressTag.class).hashCode())),
+          String.valueOf(
+             badgeAwardGenericEvent.requireFirstTag(AddressTag.class).hashCode())),
        new SetsPairedEvent(
-          badgeAwardGenericEvent.requireFirstTag(AddressTag.class),
+          fillAddressTag(
+             badgeAwardGenericEvent.requireFirstTag(AddressTag.class),
+             badgeAwardGenericEventReferenceTag),
           new EventTag(
              badgeAwardGenericEvent.getId(),
              badgeAwardGenericEvent.getRelayTag().map(RelayTag::relay).map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),

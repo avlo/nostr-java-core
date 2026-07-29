@@ -20,6 +20,29 @@ import lombok.NonNull;
 public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
   public CuratedFormulaEvent(
      @NonNull Identity identity,
+     @NonNull GenericEventRecord formulaEvent,
+     @NonNull ReferenceTag formulaEventReferenceTag,
+     @NonNull Relay relay) {
+    super(
+       identity,
+       Kind.CURATION_SETS_FORMULA_EVENT,
+       formulaEvent.requireFirstTag(IdentifierTag.class),
+       new SetsPairedEvent(
+          fillAddressTag(
+             formulaEvent.requireFirstTag(AddressTag.class),
+             formulaEventReferenceTag),
+          new EventTag(
+             formulaEvent.getId(),
+             formulaEvent.getRelayTag().map(RelayTag::relay).map(Relay::getUrl).orElse(formulaEventReferenceTag.getUrl()))),
+       List.of(
+          formulaEvent.requireFirstTag(PubKeyTag.class),
+          formulaEventReferenceTag),
+       formulaEvent.getContent(),
+       relay);
+  }
+
+  public CuratedFormulaEvent(
+     @NonNull Identity identity,
      @NonNull FormulaEvent formulaEvent,
      @NonNull ReferenceTag formulaEventReferenceTag,
      @NonNull Relay relay) {
