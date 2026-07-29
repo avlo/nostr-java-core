@@ -67,21 +67,6 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
              genericEventRecord.requireFirstTag(ReferenceTag.class))));
   }
 
-  private static AddressTag fillAddressTag(AddressTag addressTag, ReferenceTag referenceTag) {
-    return new AddressTag(
-       addressTag.getKind(),
-       addressTag.getPublicKey(),
-       addressTag.getIdentifierTag(),
-       new Relay(
-          addressTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl())));
-  }
-
-  private static EventTag fillEventTag(EventTag eventTag, ReferenceTag referenceTag) {
-    return new EventTag(
-       eventTag.getEventId(),
-       eventTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl()));
-  }
-
   protected static GenericEventRecord validateIdentifierTagHash(GenericEventRecord genericEventRecord) {
     if (
        !Objects.equals(genericEventRecord.requireFirstTag(IdentifierTag.class).getUuid(),

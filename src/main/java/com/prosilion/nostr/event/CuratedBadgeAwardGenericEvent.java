@@ -46,6 +46,29 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
 
   public CuratedBadgeAwardGenericEvent(
      @NonNull Identity identity,
+     @NonNull GenericEventRecord badgeAwardGenericEvent,
+     @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
+     @NonNull Relay relay) {
+    super(
+       identity,
+       Kind.CURATION_SETS_BADGE_AWARD_EVENT,
+       new IdentifierTag(
+          String.valueOf(badgeAwardGenericEvent.requireFirstTag(AddressTag.class).hashCode())),
+       new SetsPairedEvent(
+          badgeAwardGenericEvent.requireFirstTag(AddressTag.class),
+          new EventTag(
+             badgeAwardGenericEvent.getId(),
+             badgeAwardGenericEvent.getRelayTag().map(RelayTag::relay).map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),
+       List.of(
+          badgeAwardGenericEvent.requireFirstTag(PubKeyTag.class),
+          badgeAwardGenericEventReferenceTag),
+       DEFAULT_CONTENT,
+       relay);
+//    this.curatedBadgeDefinitionGenericEvent = curatedBadgeDefinitionGenericEvent;
+  }
+
+  public CuratedBadgeAwardGenericEvent(
+     @NonNull Identity identity,
      @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent,
      @NonNull CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent,
      @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
@@ -54,9 +77,14 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
        identity,
        Kind.CURATION_SETS_BADGE_AWARD_EVENT,
        new IdentifierTag(
-          String.valueOf(curatedBadgeDefinitionGenericEvent.getAddressTag().hashCode())),
+          String.valueOf(
+             fillAddressTag(
+                curatedBadgeDefinitionGenericEvent.getAddressTag(),
+                badgeAwardGenericEventReferenceTag).hashCode())),
        new SetsPairedEvent(
-          curatedBadgeDefinitionGenericEvent.getAddressTag(),
+          fillAddressTag(
+             curatedBadgeDefinitionGenericEvent.getAddressTag(),
+             badgeAwardGenericEventReferenceTag),
           new EventTag(
              badgeAwardGenericEvent.getId(),
              badgeAwardGenericEvent.getRelay().map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),
@@ -81,15 +109,12 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
                 RelayTag.class,
                 ReferenceTag.class))),
        new SetsPairedEvent(
-          genericEventRecord.requireFirstTag(AddressTag.class),
-          genericEventRecord.requireFirstTag(EventTag.class)
-       ));
-//    this.curatedBadgeDefinitionGenericEvent =
-//       new CuratedBadgeDefinitionGenericEvent(
-//          identity,
-//          award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-//          genericEventRecord.requireFirstTag(ReferenceTag.class),
-//          genericEventRecord.requireFirstTag(RelayTag.class).getRelay());
+          fillAddressTag(
+             genericEventRecord.requireFirstTag(AddressTag.class),
+             genericEventRecord.requireFirstTag(ReferenceTag.class)),
+          fillEventTag(
+             genericEventRecord.requireFirstTag(EventTag.class),
+             genericEventRecord.requireFirstTag(ReferenceTag.class))));
   }
 
   @JsonIgnore

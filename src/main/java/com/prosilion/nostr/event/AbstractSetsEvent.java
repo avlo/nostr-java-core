@@ -98,6 +98,21 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
           .filter(Predicate.not(AddressTag.class::isInstance))).toList();
   }
 
+  protected static AddressTag fillAddressTag(AddressTag addressTag, ReferenceTag referenceTag) {
+    return new AddressTag(
+       addressTag.getKind(),
+       addressTag.getPublicKey(),
+       addressTag.getIdentifierTag(),
+       new Relay(
+          addressTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl())));
+  }
+
+  protected static EventTag fillEventTag(EventTag eventTag, ReferenceTag referenceTag) {
+    return new EventTag(
+       eventTag.getEventId(),
+       eventTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl()));
+  }
+  
   private static Stream<BaseTag> setsPairsToBaseTags(@NonNull SetsPairedEvent sets) {
     return Stream.of(sets.getAddressTag(), sets.getEventTag());
   }
