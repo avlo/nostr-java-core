@@ -1,9 +1,6 @@
 package com.prosilion.nostr.event;
 
-import com.ezylang.evalex.Expression;
-import com.ezylang.evalex.parser.ParseException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -18,7 +15,6 @@ import com.prosilion.nostr.user.Identity;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.StringUtils;
 
 @Getter
 public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
@@ -86,15 +82,7 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
   https://github.com/nostr-protocol/nips/blob/master/58.md    
 */
   private static GenericEventRecord validateFormula(GenericEventRecord formulaEvent) {
-    if (StringUtils.isBlank(formulaEvent.getContent()))
-      throw new NostrException("formula event supplied formula is blank:\n  " + formulaEvent.createPrettyPrintJson());
-//    TODO: store expression in global expression map
-    try {
-      new Expression(
-         String.format("%s %s", "validate", formulaEvent.getContent())).validate();
-    } catch (ParseException e) {
-      throw new NostrException(e);
-    }
+    FormulaEvent.validate(formulaEvent.getContent());
     return formulaEvent;
   }
 }

@@ -42,7 +42,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
      @NonNull BadgeDefinitionGenericEvent badgeDefinitionGenericEvent,
      @NonNull List<BaseTag> baseTags,
      @NonNull String formula,
-     Relay... relay) throws NostrException, ParseException {
+     Relay... relay) throws NostrException {
     super(
        identity,
        identifierTag,
@@ -83,12 +83,16 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   A description tag whose value contain meaning behind the badge, or the reason of its issuance.
   https://github.com/nostr-protocol/nips/blob/master/58.md    
 */
-  private static String validate(String formula) throws ParseException {
+  public static String validate(String formula) throws NostrException {
     if (StringUtils.isBlank(formula))
-      throw new ParseException(formula, "supplied formula is blank");
+      throw new NostrException("supplied formula is blank");
 //    TODO: store expression in global expression map
-    new Expression(
-       String.format("%s %s", "validate", formula)).validate();
+    try {
+      new Expression(
+         String.format("%s %s", "validate", formula)).validate();
+    } catch (ParseException e) {
+      throw new NostrException(e);
+    }
     return formula;
   }
 }

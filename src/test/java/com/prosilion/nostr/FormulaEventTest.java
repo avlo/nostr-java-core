@@ -198,31 +198,31 @@ public class FormulaEventTest {
           awardUpvoteEvent, "-(+1)", relay
        ).getFormula());
 
-    assertThrows(ParseException.class, () -> new FormulaEvent(
+    assertThrows(NostrException.class, () -> new FormulaEvent(
        identity,
        formulaPlusOneIdentifierTag,
        awardUpvoteEvent, "a", relay
     ));
 
-    assertThrows(ParseException.class, () -> new FormulaEvent(
+    assertThrows(NostrException.class, () -> new FormulaEvent(
        identity,
        formulaPlusOneIdentifierTag,
        awardUpvoteEvent, "", relay
     ));
 
-    assertThrows(ParseException.class, () -> new FormulaEvent(
+    assertThrows(NostrException.class, () -> new FormulaEvent(
        identity,
        formulaPlusOneIdentifierTag,
        awardUpvoteEvent, " ", relay
     ));
 
-    assertThrows(ParseException.class, () -> new FormulaEvent(
+    assertThrows(NostrException.class, () -> new FormulaEvent(
        identity,
        formulaPlusOneIdentifierTag,
        awardUpvoteEvent, " ", relay
     ));
 
-    assertThrows(ParseException.class, () -> new FormulaEvent(
+    assertThrows(NostrException.class, () -> new FormulaEvent(
        identity,
        formulaPlusOneIdentifierTag,
        awardUpvoteEvent, "1", relay
@@ -233,7 +233,7 @@ public class FormulaEventTest {
   void testBlankFormulaEvent() {
     assertTrue(
        assertThrows(
-          ParseException.class, () ->
+          NostrException.class, () ->
              new FormulaEvent(
                 identity,
                 formulaPlusOneIdentifierTag,
