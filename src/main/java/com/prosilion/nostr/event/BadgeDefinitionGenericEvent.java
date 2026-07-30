@@ -51,7 +51,7 @@ public class BadgeDefinitionGenericEvent extends AddressableEvent {
     this(
        identity,
        identifierTag,
-       prependNullableRelayTagStream(baseTags, relay),
+       prependVariadRelayTagStream(baseTags, relay),
        content);
   }
 

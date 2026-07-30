@@ -28,7 +28,7 @@ public class ArbitraryCustomAppDataEvent extends AddressableEvent {
        identity,
        Kind.ARBITRARY_CUSTOM_APP_DATA,
        identifierTag,
-       prependNullableRelayTag(baseTags, relay),
+       prependVariadRelayTag(baseTags, relay),
        content);
   }
 

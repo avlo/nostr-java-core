@@ -38,7 +38,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
        identity,
        awardRecipientPublicKey,
        badgeDefinitionGenericEvent,
-       prependNullableRelayTagStream(tags.stream(), relay),
+       prependVariadRelayTag(tags, relay).stream(),
        content);
   }
 

@@ -20,15 +20,6 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
      @NonNull PublicKey badgeReceiverPubkey,
      @NonNull ExternalIdentityTag externalIdentityTag,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull BigDecimal score) {
-    this(aImgIdentity, badgeReceiverPubkey, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score);
-  }
-
-  public BadgeAwardReputationEvent(
-     @NonNull Identity aImgIdentity,
-     @NonNull PublicKey badgeReceiverPubkey,
-     @NonNull ExternalIdentityTag externalIdentityTag,
-     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull BigDecimal score,
      @NonNull Relay relay) {
     this(aImgIdentity, badgeReceiverPubkey, externalIdentityTag, badgeDefinitionReputationEvent, List.of(), score, relay);
@@ -42,22 +33,6 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
      @NonNull List<BaseTag> tags,
      @NonNull BigDecimal score,
      @NonNull Relay relay) {
-    this(
-       aImgIdentity,
-       badgeReceiverPubkey,
-       externalIdentityTag,
-       badgeDefinitionReputationEvent,
-       prependNullableRelayTag(tags, new Relay[]{relay}),
-       score);
-  }
-
-  public BadgeAwardReputationEvent(
-     @NonNull Identity aImgIdentity,
-     @NonNull PublicKey badgeReceiverPubkey,
-     @NonNull ExternalIdentityTag externalIdentityTag,
-     @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
-     @NonNull List<BaseTag> tags,
-     @NonNull BigDecimal score) {
     super(
        aImgIdentity,
        badgeReceiverPubkey,
@@ -65,7 +40,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
        Stream.concat(
              Stream.of(
                 externalIdentityTag),
-             tags.stream()
+             prependVariadRelayTagStream(tags.stream(), new Relay[]{relay})
                 .filter(Predicate.not(ExternalIdentityTag.class::isInstance)))
           .toList(),
        score.toString());

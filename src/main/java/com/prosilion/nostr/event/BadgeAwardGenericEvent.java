@@ -48,7 +48,7 @@ public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> exten
        authorIdentity,
        awardRecipientPublicKey,
        badgeDefinitionGenericEvent,
-       prependNullableRelayTagStream(tags.stream(), relay),
+       prependVariadRelayTag(tags, relay).stream(),
        content);
   }
 

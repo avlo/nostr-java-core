@@ -40,7 +40,7 @@ public class AddressableEvent extends BaseEvent {
        identity,
        kind,
        identifierTag,
-       prependNullableRelayTag(baseTags, relay),
+       prependVariadRelayTag(baseTags, relay),
        content);
   }
 

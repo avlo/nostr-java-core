@@ -104,11 +104,11 @@ public abstract class BaseEvent implements EventIF {
     return Objects.hashCode(genericEventRecord);
   }
 
-  protected static List<BaseTag> prependNullableRelayTag(@NonNull List<BaseTag> baseTags, Relay[] relay) {
-    return prependNullableRelayTagStream(baseTags.stream(), relay).toList();
+  protected static List<BaseTag> prependVariadRelayTag(@NonNull List<BaseTag> baseTags, Relay[] relay) {
+    return prependVariadRelayTagStream(baseTags.stream(), relay).toList();
   }
 
-  protected static Stream<BaseTag> prependNullableRelayTagStream(@NonNull Stream<BaseTag> baseTags, Relay[] relay) {
+  protected static Stream<BaseTag> prependVariadRelayTagStream(@NonNull Stream<BaseTag> baseTags, Relay[] relay) {
     return Arrays.stream(relay).findFirst()
        .map(r -> Stream.concat(
           baseTags.filter(Predicate.not(RelayTag.class::isInstance)),
