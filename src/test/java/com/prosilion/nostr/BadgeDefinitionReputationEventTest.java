@@ -4,11 +4,13 @@ import com.prosilion.nostr.event.AddressableEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BaseEvent;
+import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BadgeDefinitionReputationEventTest {
+public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   public static final Relay relay = new Relay("ws://localhost:5555");
 
   public static final String REPUTATION = "REPUTATION";
@@ -50,8 +52,30 @@ public class BadgeDefinitionReputationEventTest {
 
   public static final String PLUS_ONE_FORMULA = "+1";
   public static final String MINUS_ONE_FORMULA = "-1";
-  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA, relay);
-  private final FormulaEvent minusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaMinusOneIdentifierTag, badgeDefnDownvoteEvent, MINUS_ONE_FORMULA, relay);
+  private final CuratedFormulaEvent plusOneFormulaEvent =
+     new CuratedFormulaEvent(
+        aImgIdentity,
+        new FormulaEvent(
+           formulaCreator,
+           formulaPlusOneIdentifierTag,
+           badgeDefnUpvoteEvent,
+           PLUS_ONE_FORMULA,
+           relay),
+        new ReferenceTag(relayArgUrl),
+        relayArgRelay);
+
+  private final CuratedFormulaEvent minusOneFormulaEvent =
+     new CuratedFormulaEvent(
+        aImgIdentity,
+        new FormulaEvent(
+           formulaCreator,
+           formulaMinusOneIdentifierTag,
+           badgeDefnDownvoteEvent,
+           MINUS_ONE_FORMULA,
+           relay),
+        new ReferenceTag(relayArgUrl),
+        relayArgRelay);
+
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   public BadgeDefinitionReputationEventTest() {
@@ -72,13 +96,13 @@ public class BadgeDefinitionReputationEventTest {
        addressTag -> plusOneFormulaEvent);
 
     assertEquals(
-       expected.getFormulaEvents(),
-       badgeDefinitionReputationEvent.getFormulaEvents());
+       expected.getCuratedFormulaEvents(),
+       badgeDefinitionReputationEvent.getCuratedFormulaEvents());
   }
 
   @Test
   void testValidBadgeDefinitionReputationEventWithPlusOneMinusOneFormulaEvent() {
-    List<FormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
+    List<CuratedFormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
        aImgidentity,
        definitionCreatorPublicKey,
@@ -95,8 +119,8 @@ public class BadgeDefinitionReputationEventTest {
              .findFirst().orElseThrow());
 
     assertEquals(
-       expected.getFormulaEvents(),
-       badgeDefinitionReputationEvent.getFormulaEvents());
+       expected.getCuratedFormulaEvents(),
+       badgeDefinitionReputationEvent.getCuratedFormulaEvents());
   }
 
   @Test
@@ -109,7 +133,7 @@ public class BadgeDefinitionReputationEventTest {
        externalIdentityTag,
        plusOneFormulaEvent, minusOneFormulaEvent);
 
-    List<FormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
+    List<CuratedFormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
        expected.getGenericEventRecord(),
        addressTag ->
@@ -117,15 +141,15 @@ public class BadgeDefinitionReputationEventTest {
                 addressTag.equals(formulaEvent.asAddressableEventAddressTag()))
              .findFirst().orElseThrow());
 
-    assertEquals(2, expected.getFormulaEvents().size());
-    assertEquals(2, badgeDefinitionReputationEvent.getFormulaEvents().size());
+    assertEquals(2, expected.getCuratedFormulaEvents().size());
+    assertEquals(2, badgeDefinitionReputationEvent.getCuratedFormulaEvents().size());
 
-    assertTrue(expected.getFormulaEvents().stream().map(FormulaEvent::getContent).anyMatch("+1"::equals));
-    assertTrue(expected.getFormulaEvents().stream().map(FormulaEvent::getContent).anyMatch("-1"::equals));
+    assertTrue(expected.getCuratedFormulaEvents().stream().map(CuratedFormulaEvent::getContent).anyMatch("+1"::equals));
+    assertTrue(expected.getCuratedFormulaEvents().stream().map(CuratedFormulaEvent::getContent).anyMatch("-1"::equals));
 
     assertEquals(
-       expected.getFormulaEvents(),
-       badgeDefinitionReputationEvent.getFormulaEvents());
+       expected.getCuratedFormulaEvents(),
+       badgeDefinitionReputationEvent.getCuratedFormulaEvents());
   }
 
   @Test
@@ -134,17 +158,21 @@ public class BadgeDefinitionReputationEventTest {
     IdentifierTag formulaMinusOneIdentifierTag = new IdentifierTag(FORMULA_MINUS_ONE);
     final String MINUS_ONE_FORMULA = "-1";
 
-    FormulaEvent minusOneFormulaEvent = new FormulaEvent(
-       aImgidentity,
-       formulaMinusOneIdentifierTag,
-       new BadgeDefinitionGenericEvent(
-          aImgidentity,
-          new IdentifierTag("UNIT_DOWNVOTE"),
+    CuratedFormulaEvent minusOneFormulaEvent = new CuratedFormulaEvent(
+       aImgIdentity,
+       new FormulaEvent(
+          formulaCreator,
+          formulaMinusOneIdentifierTag,
+          new BadgeDefinitionGenericEvent(
+             aImgidentity,
+             new IdentifierTag("UNIT_DOWNVOTE"),
+             relay),
+          MINUS_ONE_FORMULA,
           relay),
-       MINUS_ONE_FORMULA,
-       relay);
+       new ReferenceTag(relayArgUrl),
+       relayArgRelay);
 
-    List<FormulaEvent> plusOneMinusOneFormulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
+    List<CuratedFormulaEvent> plusOneMinusOneFormulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
        aImgidentity,
        definitionCreatorPublicKey,
@@ -153,7 +181,7 @@ public class BadgeDefinitionReputationEventTest {
        externalIdentityTag,
        plusOneMinusOneFormulaEvents);
 
-    List<FormulaEvent> expectedFormulaEvents = expected.getFormulaEvents();
+    List<CuratedFormulaEvent> expectedFormulaEvents = expected.getCuratedFormulaEvents();
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
        expected.getGenericEventRecord(),
@@ -161,7 +189,7 @@ public class BadgeDefinitionReputationEventTest {
           Stream.of(plusOneFormulaEvent, minusOneFormulaEvent).filter(formulaEvent ->
              formulaEvent.asAddressableEventAddressTag().equals(addressTag)).findFirst().orElseThrow());
 
-    List<FormulaEvent> actualFormulaEvents = badgeDefinitionReputationEvent.getFormulaEvents();
+    List<CuratedFormulaEvent> actualFormulaEvents = badgeDefinitionReputationEvent.getCuratedFormulaEvents();
 
     assertTrue(expectedFormulaEvents.stream()
        .map(AddressableEvent::asAddressableEventAddressTag).toList()
@@ -184,7 +212,16 @@ public class BadgeDefinitionReputationEventTest {
   @Test
   void testInequalityEventCopies() {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
+    CuratedFormulaEvent plusOneFormulaEvent = new CuratedFormulaEvent(
+       aImgidentity,
+       new FormulaEvent(
+          formulaCreator,
+          formulaPlusOneIdentifierTag,
+          badgeDefinitionUpvoteEvent,
+          PLUS_ONE_FORMULA,
+          relay),
+       new ReferenceTag(relayArgUrl),
+       relayArgRelay);
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
@@ -216,13 +253,32 @@ public class BadgeDefinitionReputationEventTest {
           reputationIdentifierTag,
           relay,
           externalIdentityTag,
-          new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay)));
+          new CuratedFormulaEvent(
+             aImgIdentity,
+             new FormulaEvent(
+                formulaCreator,
+                formulaPlusOneIdentifierTag,
+                badgeDefinitionUpvoteEvent,
+                PLUS_ONE_FORMULA,
+                relay),
+             new ReferenceTag(relayArgUrl),
+             relayArgRelay)));
   }
 
   @Test
   void testInequality() {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
+    CuratedFormulaEvent plusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          aImgidentity,
+          new FormulaEvent(
+             formulaCreator,
+             formulaPlusOneIdentifierTag,
+             badgeDefinitionUpvoteEvent,
+             PLUS_ONE_FORMULA,
+             relay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
@@ -254,7 +310,16 @@ public class BadgeDefinitionReputationEventTest {
           reputationIdentifierTag,
           relay,
           externalIdentityTag,
-          new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, "+2", relay)));
+          new CuratedFormulaEvent(
+             aImgidentity,
+             new FormulaEvent(
+                formulaCreator,
+                formulaPlusOneIdentifierTag,
+                badgeDefinitionUpvoteEvent,
+                "+2",
+                relay),
+             new ReferenceTag(relayArgUrl),
+             relayArgRelay)));
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
@@ -272,7 +337,16 @@ public class BadgeDefinitionReputationEventTest {
   @Test
   void uniqueIdentifierTags() {
     BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefinitionUpvoteEvent, PLUS_ONE_FORMULA, relay);
+    CuratedFormulaEvent plusOneFormulaEvent =
+       new CuratedFormulaEvent(aImgidentity,
+          new FormulaEvent(
+             formulaCreator,
+             formulaPlusOneIdentifierTag,
+             badgeDefinitionUpvoteEvent,
+             PLUS_ONE_FORMULA,
+             relay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
     List<BaseTag> baseTags = new ArrayList<>();
     baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
@@ -304,7 +378,17 @@ public class BadgeDefinitionReputationEventTest {
 
   @Test
   void testDuplicateFormulaEventIdentifierTagsThrowsException() {
-    FormulaEvent duplicatePlusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, "+2", relay);
+    CuratedFormulaEvent duplicatePlusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          aImgidentity,
+          new FormulaEvent(
+             formulaCreator,
+             formulaPlusOneIdentifierTag,
+             badgeDefnUpvoteEvent,
+             "+2",
+             relay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
 
     assertTrue(
        assertThrows(
@@ -324,22 +408,34 @@ public class BadgeDefinitionReputationEventTest {
     BadgeDefinitionReputationEvent event = new BadgeDefinitionReputationEvent(
        aImgidentity, definitionCreatorPublicKey, reputationIdentifierTag, relay, externalIdentityTag,
        List.of(
-          new FormulaEvent(
-             aImgidentity, new IdentifierTag(FORMULA_PLUS_ONE), new BadgeDefinitionGenericEvent(
+          new CuratedFormulaEvent(
              aImgidentity,
-             upvoteIdentifierTag,
-             relay),
-             PLUS_ONE_FORMULA,
-             relay),
-          new FormulaEvent(aImgidentity, new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), new BadgeDefinitionGenericEvent(
+             new FormulaEvent(
+                formulaCreator,
+                new IdentifierTag(FORMULA_PLUS_ONE),
+                new BadgeDefinitionGenericEvent(
+                   aImgidentity,
+                   upvoteIdentifierTag,
+                   relay),
+                PLUS_ONE_FORMULA,
+                relay),
+             new ReferenceTag(relayArgUrl),
+             relayArgRelay),
+          new CuratedFormulaEvent(
              aImgidentity,
-             new IdentifierTag(UNIT_UPVOTE + "_AGAIN"),
-             relay),
-             PLUS_ONE_FORMULA,
-             relay)));
+             new FormulaEvent(
+                formulaCreator,
+                new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), new BadgeDefinitionGenericEvent(
+                aImgidentity,
+                new IdentifierTag(UNIT_UPVOTE + "_AGAIN"),
+                relay),
+                PLUS_ONE_FORMULA,
+                relay),
+             new ReferenceTag(relayArgUrl),
+             relayArgRelay)));
 
-    assertEquals(2, event.getFormulaEvents().size());
-    assertTrue(event.getFormulaEvents().stream().map(BaseEvent::getContent).allMatch("+1"::equals));
+    assertEquals(2, event.getCuratedFormulaEvents().size());
+    assertTrue(event.getCuratedFormulaEvents().stream().map(BaseEvent::getContent).allMatch("+1"::equals));
   }
 
   @Test

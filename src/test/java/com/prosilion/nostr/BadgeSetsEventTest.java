@@ -5,36 +5,49 @@ import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
-import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
-import com.prosilion.nostr.tag.SetsPairedEvent;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.MINUS_ONE_FORMULA;
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BadgeSetsEventTest extends EventTestFixtures {
-  private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
-  private static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
-  private static final IdentifierTag formulaUnitUpvote = new IdentifierTag(FORMULA_UNIT_UPVOTE);
-  private static final IdentifierTag formulaUnitDownvote = new IdentifierTag(FORMULA_UNIT_DOWNVOTE);
-
   public static final String FOLLOW_SETS_EVENT = "FOLLOW_SETS_EVENT";
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
 
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
   public BadgeSetsEventTest() {
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitUpvote, defnEvent_NoNo_Upvote, PLUS_ONE_FORMULA, relayArgRelay);
-    FormulaEvent minusOneFormulaEvent = new FormulaEvent(upvoteDefnCreator, formulaUnitDownvote, defnEvent_NoNo_Downvote, MINUS_ONE_FORMULA, relayArgRelay);
+
+    CuratedFormulaEvent plusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          aImgIdentity,
+          new FormulaEvent(
+             formulaCreator,
+             formulaUpvoteIdentifierTag,
+             defnEvent_NoNo_Upvote,
+             PLUS_ONE_FORMULA,
+             relayArgRelay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
+
+    CuratedFormulaEvent minusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          aImgIdentity,
+          new FormulaEvent(
+             formulaCreator,
+             formulaDownvoteIdentifierTag,
+             defnEvent_NoNo_Downvote,
+             MINUS_ONE_FORMULA,
+             relayArgRelay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
 
     this.badgeDefinitionReputationEvent =
        new BadgeDefinitionReputationEvent(

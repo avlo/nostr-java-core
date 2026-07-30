@@ -5,6 +5,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -26,7 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.json.JsonComparator;
 import org.springframework.test.json.JsonComparison;
 
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
@@ -41,12 +41,17 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Eve
   private final GenericEventRecord followSetsAsGenericEventEventWithEventTag;
 
   public EventMessageSerializerWithPubKeyTagsContainingRelayTest() {
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(
-       upvoteDefnCreator,
-       upvoteIdentifierTag,
-       defnEvent_NoNo_Upvote,
-       PLUS_ONE_FORMULA,
-       relayArgRelay);
+    CuratedFormulaEvent plusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          formulaCreator,
+          new FormulaEvent(
+             upvoteDefnCreator,
+             upvoteIdentifierTag,
+             defnEvent_NoNo_Upvote,
+             PLUS_ONE_FORMULA,
+             relayArgRelay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
        platformIdentity,

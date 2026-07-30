@@ -15,6 +15,8 @@ import java.util.List;
 import static com.prosilion.nostr.tag.SetsPairedEvent.NULL_EVENT_TAG_RELAY;
 
 public class EventTestFixtures {
+  static final String relayUrl = "ws://localhost:5555";
+  static final Relay relay = new Relay(relayUrl);
   static final String relayArgUrl = "ws://localhost:5555";
   static final String baseTagsRelayUrl = "ws://localhost-from-relay-tag:5555";
 
@@ -24,33 +26,42 @@ public class EventTestFixtures {
   static final Relay baseTagsRelay = new Relay(baseTagsRelayUrl);
   static final RelayTag baseTagsRelayTag = new RelayTag(baseTagsRelay);
 
-  static final String UNIT_UPVOTE = "UNIT_UPVOTE";
-  static final String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
-
-  static final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-  static final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
   static final ExternalIdentityTag EXTERNAL_IDENTITY_TAG = new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode()));
-  static final String REPUTATION = "TEST_REPUTATION";
-  static final IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
 
   static final String auxRelayUrl = "ws://localhost-aux-event-relay:5555";
   static final Relay auxRelay = new Relay(auxRelayUrl);
   static final RelayTag auxRelayTag = new RelayTag(auxRelay);
 
-  static final Identity aImgIdentity =
- // below produces e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04
-     Identity.create("fa11661b5f43c8f18f11861b4d553c47337dac9e351083b27320e311b7b324ac"); 
+  public static final String TEST_UNIT_REPUTATION = "BADGE_DEFN_UNIT_REP";
+  public static final String AWARD_UNIT_UPVOTE = "BDG_DEF_UNIT_UP";
+  public static final String AWARD_UNIT_DOWNVOTE = "BDG_DEF_UNIT_DOWN";
+  public static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
+  public static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
+  public static final String PLUS_ONE_FORMULA = "+1";
+  public static final String MINUS_ONE_FORMULA = "-1";
 
-  //  static final Identity submitter = Identity.generateRandomIdentity();
-  static final Identity submitter =
+  public static final IdentifierTag reputationIdentifierTag = new IdentifierTag(TEST_UNIT_REPUTATION);
+  public static final IdentifierTag upvoteIdentifierTag = new IdentifierTag(AWARD_UNIT_UPVOTE);
+  public static final IdentifierTag downvoteIdentifierTag = new IdentifierTag(AWARD_UNIT_DOWNVOTE);
+  public static final IdentifierTag formulaUpvoteIdentifierTag = new IdentifierTag(FORMULA_UNIT_UPVOTE);
+  public static final IdentifierTag formulaDownvoteIdentifierTag = new IdentifierTag(FORMULA_UNIT_DOWNVOTE);
+  public static final Identity submitter =
 //     Identity.generateRandomIdentity();
      Identity.create("aaa4585483196998204846989544737603523651520600328805626488477202");
-  static final Identity upvoteDefnCreator =
+  public static final Identity upvoteDefnCreator =
 //     Identity.generateRandomIdentity();
      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202");
-  static final Identity recipient =
+  public static final Identity recipient =
 //     Identity.generateRandomIdentity();
      Identity.create("ccc4585483196998204846989544737603523651520600328805626488477202");
+  public static final Identity formulaCreator =
+//     Identity.generateRandomIdentity();
+     Identity.create("ddd4585483196998204846989544737603523651520600328805626488477202");
+  public static final Identity repDefnCreator =
+//     Identity.generateRandomIdentity();
+     Identity.create("eee4585483196998204846989544737603523651520600328805626488477202");
+  public static final Identity aImgIdentity =
+     Identity.create("fa11661b5f43c8f18f11861b4d553c47337dac9e351083b27320e311b7b324ac");
 
   //  BadgeDefinitionGenericEvent
 //  _NoNo_   = Defn No  relayArgRelayTag, Defn No  baseTagsRelayTag

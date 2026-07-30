@@ -3,6 +3,7 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -19,8 +20,6 @@ import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.MINUS_ONE_FORMULA;
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,8 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FollowSetsEventTest extends EventTestFixtures {
   public static final Relay auxRelay = new Relay("ws://localhost:5555");
   public static final Identity authorIdentity = Identity.generateRandomIdentity();
-  public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-  public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
+  public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(EventTestFixtures.FORMULA_UNIT_UPVOTE);
+  public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(EventTestFixtures.FORMULA_UNIT_DOWNVOTE);
   private static final String FORMULA_UNIT_UPVOTE = "FORMULA_UNIT_UPVOTE";
   private static final String FORMULA_UNIT_DOWNVOTE = "FORMULA_UNIT_DOWNVOTE";
   private static final IdentifierTag formulaUnitUpvote = new IdentifierTag(FORMULA_UNIT_UPVOTE);
@@ -40,24 +39,33 @@ public class FollowSetsEventTest extends EventTestFixtures {
   public final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT);
   public final Identity aImgIdentity = Identity.generateRandomIdentity();
 
-  private final FormulaEvent plusOneFormulaEvent;
-  private final FormulaEvent minusOneFormulaEvent;
+  private final CuratedFormulaEvent plusOneFormulaEvent;
+  private final CuratedFormulaEvent minusOneFormulaEvent;
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula;
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEventMinusOneFormula;
 
   public FollowSetsEventTest() {
-    this.plusOneFormulaEvent = new FormulaEvent(
-       authorIdentity,
-       formulaUnitUpvote,
-       defnEvent_NoNo_Upvote,
-       PLUS_ONE_FORMULA,
-       auxRelay);
+    this.plusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          aImgIdentity,
+          new FormulaEvent(
+             formulaCreator,
+             formulaUnitUpvote,
+             defnEvent_NoNo_Upvote,
+             PLUS_ONE_FORMULA,
+             auxRelay),
+          new ReferenceTag(auxRelay.getUrl()),
+          auxRelay);
 
-    this.minusOneFormulaEvent = new FormulaEvent(
-       authorIdentity,
-       formulaUnitDownvote,
-       defnEvent_NoNo_Downvote,
-       MINUS_ONE_FORMULA,
+    this.minusOneFormulaEvent = new CuratedFormulaEvent(
+       aImgIdentity,
+       new FormulaEvent(
+          formulaCreator,
+          formulaUnitDownvote,
+          defnEvent_NoNo_Downvote,
+          MINUS_ONE_FORMULA,
+          auxRelay),
+       new ReferenceTag(auxRelay.getUrl()),
        auxRelay);
 
     this.badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(

@@ -8,6 +8,7 @@ import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.HashSet;
@@ -23,12 +24,12 @@ import org.apache.logging.log4j.util.Strings;
 
 @Getter
 public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent implements TagMappedEventIF {
-  public static final String MISSING_FORMULA_EVENTS = "BadgeDefinitionReputationEvent ctor() is missing FormulaEvent(s) parameter";
+  public static final String MISSING_FORMULA_EVENTS = "BadgeDefinitionReputationEvent Ctor() is missing CuratedFormulaEvent(s) parameter";
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found: ";
   public static final String CONCAT_INVALID_MATCHING_TAGS = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " %s");
 
   @JsonIgnore
-  private final List<FormulaEvent> formulaEvents; // aTags
+  private final List<CuratedFormulaEvent> curatedFormulaEvents; // aTags
 
   public BadgeDefinitionReputationEvent(
      @NonNull Identity aImgIdentity,
@@ -36,7 +37,7 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
      @NonNull IdentifierTag identifierTag,
      @NonNull Relay relay,
      @NonNull ExternalIdentityTag externalIdentityTag,
-     @NonNull FormulaEvent... formulaEvent) throws NostrException {
+     @NonNull CuratedFormulaEvent... formulaEvent) throws NostrException {
     this(
        aImgIdentity,
        reputationDefinitionCreatorPublicKey,
@@ -52,8 +53,8 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
      @NonNull IdentifierTag identifierTag,
      @NonNull Relay relay,
      @NonNull ExternalIdentityTag externalIdentityTag,
-     @NonNull List<FormulaEvent> formulaEvents) throws NostrException {
-    this(aImgIdentity, reputationDefinitionCreatorPublicKey, identifierTag, relay, externalIdentityTag, formulaEvents, List.of());
+     @NonNull List<CuratedFormulaEvent> curatedFormulaEvents) throws NostrException {
+    this(aImgIdentity, reputationDefinitionCreatorPublicKey, identifierTag, relay, externalIdentityTag, curatedFormulaEvents, List.of());
   }
 
   public BadgeDefinitionReputationEvent(
@@ -62,14 +63,14 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
      @NonNull IdentifierTag identifierTag,
      @NonNull Relay relay,
      @NonNull ExternalIdentityTag externalIdentityTag,
-     @NonNull List<FormulaEvent> formulaEvents,
+     @NonNull List<CuratedFormulaEvent> curatedFormulaEvents,
      @NonNull List<BaseTag> baseTags) throws NostrException {
     super(
        aImgIdentity,
        identifierTag,
        Stream.concat(
           Stream.concat(
-             TagMappedEventIF.throwIfEmpty(formulaEvents, MISSING_FORMULA_EVENTS)
+             TagMappedEventIF.throwIfEmpty(curatedFormulaEvents, MISSING_FORMULA_EVENTS)
                 .map(AddressableEvent::asAddressableEventAddressTag),
              Stream.of(new PubKeyTag(reputationDefinitionCreatorPublicKey))),
           Stream.concat(
@@ -78,15 +79,15 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
                 .filter(Predicate.not(IdentifierTag.class::isInstance))
                 .filter(Predicate.not(AddressTag.class::isInstance))
                 .filter(Predicate.not(PubKeyTag.class::isInstance)))),
-       defaultContentFromFormulaOperators(identifierTag, formulaEvents), relay);
-    this.formulaEvents = formulaEvents;
+       defaultContentFromFormulaOperators(identifierTag, curatedFormulaEvents), relay);
+    this.curatedFormulaEvents = curatedFormulaEvents;
   }
 
   public BadgeDefinitionReputationEvent(
      @NonNull GenericEventRecord genericEventRecord,
-     @NonNull Function<AddressTag, FormulaEvent> eventTagFormulaEventFunction) {
+     @NonNull Function<AddressTag, CuratedFormulaEvent> eventTagFormulaEventFunction) {
     super(genericEventRecord);
-    this.formulaEvents = mapTagsToEvents(this, eventTagFormulaEventFunction, AddressTag.class);
+    this.curatedFormulaEvents = mapTagsToEvents(this, eventTagFormulaEventFunction, AddressTag.class);
   }
 
   @JsonIgnore
@@ -99,19 +100,19 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
     return requireFirstTag(PubKeyTag.class).publicKey();
   }
 
-  private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<FormulaEvent> formulaEvents) {
-    final Set<FormulaEvent> distinctFormulaEvents = new HashSet<>(formulaEvents);
+  private static String defaultContentFromFormulaOperators(IdentifierTag identifierTag, List<CuratedFormulaEvent> formulaEvents) {
+    final Set<CuratedFormulaEvent> distinctFormulaEvents = new HashSet<>(formulaEvents);
     NostrException.testBoolean(
        Objects.equals(
           Long.valueOf(
              distinctFormulaEvents.stream()
-                .map(FormulaEvent::getBadgeDefinitionGenericEvent)
-                .map(BadgeDefinitionGenericEvent::getIdentifierTag)
+                .map(CuratedFormulaEvent::getSetsPairedEvent)
+                .map(SetsPairedEvent::getDefinitionEventIdentifierTag)
                 .distinct().count()).intValue(),
           formulaEvents.size()),
        String.format(CONCAT_INVALID_MATCHING_TAGS, distinctFormulaEvents.stream()
-          .map(FormulaEvent::getBadgeDefinitionGenericEvent)
-          .map(BadgeDefinitionGenericEvent::getIdentifierTag)
+          .map(CuratedFormulaEvent::getSetsPairedEvent)
+          .map(SetsPairedEvent::getDefinitionEventIdentifierTag)
           .toList()));
 
 //  TODO (potentially): to accommodate both (necessary) formula as well as (optional) user-defined comment/text,
@@ -125,19 +126,19 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   https://github.com/nostr-protocol/nips/blob/master/58.md    
 */
     return String.format("%s: %s == (previous)%s%s",
-       "BadgeDefinitionReputationEvent FormulaEvent(s) operator(s) default content",
+       "BadgeDefinitionReputationEvent CuratedFormulaEvent(s) operator(s) default content",
        identifierTag.getUuid(),
        identifierTag.getUuid(),
        operatorFormatDisplayIterator(formulaEvents));
   }
 
-  private static String operatorFormatDisplayIterator(List<FormulaEvent> formulaEvents) {
+  private static String operatorFormatDisplayIterator(List<CuratedFormulaEvent> formulaEvents) {
     StringBuilder sb = new StringBuilder();
     formulaEvents.forEach(formula -> sb
        .append(" ")
        .append(formula.getFormula())
        .append("(")
-       .append(formula.getBadgeDefinitionGenericEvent().getIdentifierTag().getUuid())
+       .append(formula.getSetsPairedEvent().getDefinitionEventIdentifierTag().getUuid())
        .append(")"));
     return sb.toString();
   }

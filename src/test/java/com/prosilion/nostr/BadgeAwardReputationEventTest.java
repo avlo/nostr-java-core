@@ -3,12 +3,13 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.event.BadgeAwardReputationEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
-import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
@@ -18,17 +19,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BadgeAwardReputationEventTest {
-  public static final Relay relay = new Relay("ws://localhost:5555");
-
-  public static final String REPUTATION = "REPUTATION";
-  public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
-
-  public final IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
-  public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-
-  public final Identity aImgidentity = Identity.generateRandomIdentity();
-  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
+public class BadgeAwardReputationEventTest extends EventTestFixtures {
+  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent =
+     new BadgeDefinitionGenericEvent(aImgIdentity, upvoteIdentifierTag, relayArgRelay);
 
   private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
@@ -42,7 +35,16 @@ public class BadgeAwardReputationEventTest {
 
   public static final String PLUS_ONE_FORMULA = "+1";
   public static final String MINUS_ONE_FORMULA = "-1";
-  private final FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgidentity, formulaPlusOneIdentifierTag, badgeDefnUpvoteEvent, PLUS_ONE_FORMULA, relay);
+  private final CuratedFormulaEvent plusOneFormulaEvent =
+     new CuratedFormulaEvent(
+        aImgIdentity,
+        new FormulaEvent(
+           formulaCreator,
+           formulaPlusOneIdentifierTag,
+           badgeDefnUpvoteEvent,
+           PLUS_ONE_FORMULA, relay),
+        new ReferenceTag(relayArgUrl),
+        relayArgRelay);
   private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
@@ -51,7 +53,7 @@ public class BadgeAwardReputationEventTest {
 
   public BadgeAwardReputationEventTest() {
     this.badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
-       aImgidentity,
+       aImgIdentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
        relay,
@@ -62,7 +64,7 @@ public class BadgeAwardReputationEventTest {
   @Test
   void testValidBadgeAwardReputationEvent() {
     BadgeAwardReputationEvent expected = new BadgeAwardReputationEvent(
-       aImgidentity,
+       aImgIdentity,
        badgeReceiverPublicKey,
        externalIdentityTag, badgeDefinitionReputationEvent, BigDecimal.ZERO, relay
     );
@@ -81,7 +83,7 @@ public class BadgeAwardReputationEventTest {
   @Test
   void testSingularAddressTag() {
     BadgeAwardReputationEvent badgeAwardReputationEvent = new BadgeAwardReputationEvent(
-       aImgidentity,
+       repDefnCreator,
        badgeReceiverPublicKey,
        externalIdentityTag, badgeDefinitionReputationEvent, List.of(badgeDefinitionReputationEvent.asAddressableEventAddressTag()), BigDecimal.ZERO, relay
     );

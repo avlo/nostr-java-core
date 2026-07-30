@@ -5,6 +5,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BadgeSetsEvent;
 import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -27,7 +28,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.json.JsonComparator;
 import org.springframework.test.json.JsonComparison;
 
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.PLUS_ONE_FORMULA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
@@ -66,7 +66,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
        List.of(
           new AddressTag(Kind.BADGE_DEFINITION_EVENT,
              new PublicKey("bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"),
-             new IdentifierTag(UNIT_UPVOTE),
+             upvoteIdentifierTag,
              relayArgRelay)),
        "matching kind, author, identity-tag filter test",
        new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
@@ -99,12 +99,17 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
        "AfterImage generated FollowSetsEvent",
        new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
 
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(
-       upvoteDefnCreator,
-       new IdentifierTag(FORMULA_UNIT_UPVOTE),
-       award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
-       PLUS_ONE_FORMULA,
-       relayArgRelay);
+    CuratedFormulaEvent plusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          aImgIdentity,
+          new FormulaEvent(
+             upvoteDefnCreator,
+             new IdentifierTag(FORMULA_UNIT_UPVOTE),
+             award_NoNo_Defn_NoNo_Upvote.getBadgeDefinitionEvent(),
+             PLUS_ONE_FORMULA,
+             relayArgRelay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
        platformIdentity,
@@ -223,7 +228,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
 
   private String expectedStringEventMessageAddressTagGenericEventRecord() {
     return """
-       ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["a","30009:bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984:UNIT_UPVOTE","ws://localhost:5555"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
+       ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["a","30009:bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984:BDG_DEF_UNIT_UP","ws://localhost:5555"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
   }
 
   private String expectedStringWithEventTagShouldMatch() {
@@ -232,9 +237,9 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
   }
 
   private String expectedStringEventMessageAddressTagBadgeAwardGenericEvent() {
-    String withUrl = "\"" + UNIT_UPVOTE + "\",\"" + relayArgUrl + "\"";
+    String withUrl = "\"" + EventTestFixtures.FORMULA_UNIT_UPVOTE + "\",\"" + relayArgUrl + "\"";
     String relayTag = ",[\"relay\",\"ws://localhost:5555\"]";
-    return "[\"EVENT\",{\"id\":\"" + badgeAwardGenericEventWithAddressTagEventId + "\",\"pubkey\":\"" + submitter.getPublicKey().toHexString() + "\",\"created_at\":" + badgeAwardGenericEventWithAddressTagCreatedAt + ",\"kind\":8,\"tags\":[[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + UNIT_UPVOTE + "\"],[\"p\",\"" + upvotedUserPubkey + "\"]" + relayTag + "],\"content\":\"\",\"sig\":\"" + badgeAwardGenericEventWithAddressTagSignature + "\"}]";
+    return "[\"EVENT\",{\"id\":\"" + badgeAwardGenericEventWithAddressTagEventId + "\",\"pubkey\":\"" + submitter.getPublicKey().toHexString() + "\",\"created_at\":" + badgeAwardGenericEventWithAddressTagCreatedAt + ",\"kind\":8,\"tags\":[[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + EventTestFixtures.AWARD_UNIT_UPVOTE + "\"],[\"p\",\"" + upvotedUserPubkey + "\"]" + relayTag + "],\"content\":\"\",\"sig\":\"" + badgeAwardGenericEventWithAddressTagSignature + "\"}]";
   }
 
   private String expectedStringFollowSetsEventMessageAddressTagGenericEventRecord() {

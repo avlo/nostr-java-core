@@ -5,6 +5,7 @@ import com.prosilion.nostr.codec.FiltersEncoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventId;
 import com.prosilion.nostr.event.internal.Relay;
@@ -31,6 +32,7 @@ import com.prosilion.nostr.tag.GeohashTag;
 import com.prosilion.nostr.tag.HashtagTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
+import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.time.Instant;
@@ -45,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
-public class FiltersEncoderTest {
+public class FiltersEncoderTest extends EventTestFixtures {
   private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
      Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
 
@@ -497,16 +499,18 @@ public class FiltersEncoderTest {
        "badge_definition_reputation",
        proof);
 
-    String REPUTATION = "TEST_REPUTATION";
-    String UNIT_UPVOTE = "TEST_UNIT_UPVOTE";
-    String PLUS_ONE_FORMULA = "+1";
-
-    IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
-    IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-    Identity aImgIdentity = Identity.generateRandomIdentity();
-
     BadgeDefinitionGenericEvent awardUpvoteDefinitionEvent = new BadgeDefinitionGenericEvent(aImgIdentity, upvoteIdentifierTag, relay);
-    FormulaEvent plusOneFormulaEvent = new FormulaEvent(aImgIdentity, upvoteIdentifierTag, awardUpvoteDefinitionEvent, PLUS_ONE_FORMULA, relay);
+    CuratedFormulaEvent plusOneFormulaEvent =
+       new CuratedFormulaEvent(
+          aImgIdentity,
+          new FormulaEvent(
+             formulaCreator,
+             upvoteIdentifierTag,
+             awardUpvoteDefinitionEvent,
+             PLUS_ONE_FORMULA,
+             relay),
+          new ReferenceTag(relayArgUrl),
+          relayArgRelay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
        aImgIdentity,
