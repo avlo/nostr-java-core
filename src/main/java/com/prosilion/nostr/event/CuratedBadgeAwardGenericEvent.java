@@ -52,9 +52,8 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
     super(
        identity,
        Kind.CURATION_SETS_BADGE_AWARD_EVENT,
-       new IdentifierTag(
-          String.valueOf(
-             badgeAwardGenericEvent.requireFirstTag(AddressTag.class).hashCode())),
+       hashedAddressTag(
+          badgeAwardGenericEvent.requireFirstTag(AddressTag.class)),
        new SetsPairedEvent(
           fillAddressTag(
              badgeAwardGenericEvent.requireFirstTag(AddressTag.class),
@@ -79,14 +78,11 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
     super(
        identity,
        Kind.CURATION_SETS_BADGE_AWARD_EVENT,
-       new IdentifierTag(
-          String.valueOf(
-             fillAddressTag(
-                curatedBadgeDefinitionGenericEvent.getAddressTag(),
-                badgeAwardGenericEventReferenceTag).hashCode())),
+       hashedAddressTag(
+          curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag()),
        new SetsPairedEvent(
           fillAddressTag(
-             curatedBadgeDefinitionGenericEvent.getAddressTag(),
+             curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag(),
              badgeAwardGenericEventReferenceTag),
           new EventTag(
              badgeAwardGenericEvent.getId(),

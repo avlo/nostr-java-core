@@ -107,6 +107,16 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
           addressTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl())));
   }
 
+  public static IdentifierTag hashedAddressTag(AddressTag addressTag) {
+    return
+       new IdentifierTag(
+          String.valueOf(new AddressTag(
+             addressTag.getKind(),
+             addressTag.getPublicKey(),
+             addressTag.getIdentifierTag()
+          ).hashCode()));
+  }
+
   protected static EventTag fillEventTag(EventTag eventTag, ReferenceTag referenceTag) {
     return new EventTag(
        eventTag.getEventId(),

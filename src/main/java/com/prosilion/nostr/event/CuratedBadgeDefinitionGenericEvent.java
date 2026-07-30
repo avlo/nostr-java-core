@@ -30,11 +30,8 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
     super(
        identity,
        Kind.CURATION_SETS_BADGE_DEFINITION_EVENT,
-       new IdentifierTag(
-          String.valueOf(
-             fillAddressTag(
-                badgeDefinitionGenericEvent.asAddressableEventAddressTag(),
-                badgeDefinitionGenericEventReferenceTag).hashCode())),
+       hashedAddressTag(
+          badgeDefinitionGenericEvent.asAddressableEventAddressTag()),
        new SetsPairedEvent(
           fillAddressTag(
              badgeDefinitionGenericEvent.asAddressableEventAddressTag(),
@@ -69,9 +66,15 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
 
   protected static GenericEventRecord validateIdentifierTagHash(GenericEventRecord genericEventRecord) {
     if (
-       !Objects.equals(genericEventRecord.requireFirstTag(IdentifierTag.class).getUuid(),
-          String.valueOf(genericEventRecord.requireFirstTag(AddressTag.class).hashCode())))
-      throw new NostrException("IdentifierTag UUID != hashcode(AddressTag)");
+       !Objects.equals(
+          genericEventRecord.requireFirstTag(IdentifierTag.class).getUuid(),
+          hashedAddressTag(
+             genericEventRecord.requireFirstTag(AddressTag.class)).getUuid()))
+      throw new NostrException(
+         String.format("IdentifierTag UUID [%s] != hashcode(AddressTag) [%s]",
+            genericEventRecord.requireFirstTag(IdentifierTag.class).getUuid(),
+            hashedAddressTag(
+               genericEventRecord.requireFirstTag(AddressTag.class)).getUuid()));
     return genericEventRecord;
   }
 }

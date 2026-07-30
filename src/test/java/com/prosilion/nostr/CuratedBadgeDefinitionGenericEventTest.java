@@ -1,5 +1,6 @@
 package com.prosilion.nostr;
 
+import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -27,7 +28,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
     assertEquals(curatedBadgeDefinitionGenericEvent.getAddressTag(), defnEvent_YesYes_Upvote.asAddressableEventAddressTag());
     assertEquals(
        curatedBadgeDefinitionGenericEvent.getIdentifierTag().getUuid(),
-       String.valueOf(defnEvent_YesYes_Upvote.asAddressableEventAddressTag().hashCode()));
+          AbstractSetsEvent.hashedAddressTag(defnEvent_YesYes_Upvote.asAddressableEventAddressTag()).getUuid());
   }
 
   @Test

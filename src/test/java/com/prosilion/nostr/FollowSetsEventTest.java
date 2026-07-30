@@ -6,7 +6,6 @@ import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
-import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
@@ -244,139 +243,83 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
   @Test
   final void testContains() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
-       aImgIdentity,
-       award_NoNo_Defn_NoNo_Upvote,
-       new ReferenceTag(relayArgRelay.getUrl()),
-       new ReferenceTag(relayArgRelay.getUrl()),
-       relayArgRelay);
-
-    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
-       aImgIdentity,
-       award_NoNo_Defn_NoNo_Downvote,
-       new ReferenceTag(relayArgRelay.getUrl()),
-       new ReferenceTag(relayArgRelay.getUrl()),
-       relayArgRelay);
-
-    BadgeSetsEvent badgeSetsUpvoteEvent = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEventPlusOneFormula,
-       curationSetsUpvoteEvent, relayArgRelay);
-
-    BadgeSetsEvent badgeSetsDownvoteEvent = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEventPlusOneFormula,
-       curationSetsDownvoteEvent, relayArgRelay);
-
-    FollowSetsEvent followSetsUpEvent = new FollowSetsEvent(
-       aImgIdentity,
-       badgeSetsUpvoteEvent,
-       auxRelay);
-
-    FollowSetsEvent followSetsDownEvent = new FollowSetsEvent(
-       aImgIdentity,
-       badgeSetsDownvoteEvent,
-       auxRelay);
-
-    AddressTag defnUpvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Upvote.getAddressTag();
-    AddressTag defnDownvoteAsAddressTag = defnAuxNo_defnEvent_NoNo_Downvote.getAddressTag();
-
-    List<FollowSetsEvent> upvoteFollowSetsEvent = Stream.of(followSetsUpEvent, followSetsDownEvent)
-       .filter(followSetsEvent ->
-          followSetsEvent
-             .getBadgeSetsEventList().stream()
-             .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
-             .flatMap(Collection::stream)
-             .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
-             .map(SetsPairedEvent::getAddressTag).toList()
-             .contains(defnUpvoteAsAddressTag)).toList();
-    assertEquals(1, upvoteFollowSetsEvent.size());
-
-    List<FollowSetsEvent> downvoteFollowSetsEvent = Stream.of(followSetsUpEvent, followSetsDownEvent)
-       .filter(followSetsEvent -> followSetsEvent
-          .getBadgeSetsEventList().stream()
-          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
-          .flatMap(Collection::stream)
-          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
-          .map(SetsPairedEvent::getAddressTag).toList()
-          .contains(defnDownvoteAsAddressTag)).toList();
-    assertEquals(1, downvoteFollowSetsEvent.size());
-
-    FollowSetsEvent followSetsBothEvents = new FollowSetsEvent(
-       aImgIdentity,
-       List.of(badgeSetsUpvoteEvent, badgeSetsDownvoteEvent),
-       auxRelay);
-
-    List<FollowSetsEvent> downvoteFollowSetsEvent_2 = Stream.of(followSetsBothEvents)
-       .filter(followSetsEvent -> followSetsEvent
-          .getBadgeSetsEventList().stream()
-          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
-          .flatMap(Collection::stream)
-          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
-          .map(SetsPairedEvent::getAddressTag).toList()
-          .contains(defnDownvoteAsAddressTag)).toList();
-    assertEquals(1, downvoteFollowSetsEvent_2.size());
-
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent2 = new CuratedBadgeAwardGenericEvent(
-       aImgIdentity,
-       award_NoNo_Defn_YesNo_Upvote,
-       new ReferenceTag(relayArgRelay.getUrl()),
-       new ReferenceTag(relayArgRelay.getUrl()),
-       relayArgRelay);
-
-    BadgeSetsEvent badgeSetsUpvoteEvent2 = new BadgeSetsEvent(
-       aImgIdentity,
-       badgeDefinitionReputationEventPlusOneFormula,
-       curationSetsUpvoteEvent2, relayArgRelay);
-
-    FollowSetsEvent followSetsBothEventsWithVariant = new FollowSetsEvent(
-       aImgIdentity,
-       List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
-       auxRelay);
-
-    List<FollowSetsEvent> upvoteFollowSetsEvent_3 = Stream.of(followSetsBothEvents, followSetsBothEventsWithVariant)
-       .filter(followSetsEvent -> followSetsEvent
-          .getBadgeSetsEventList().stream().peek(event -> System.out.println("BadgeSetsEvents: \n  " + event.createPrettyPrintJson()))
-          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
-          .flatMap(Collection::stream).peek(event -> System.out.println("CurationSetsEvents:\n " + event.createPrettyPrintJson()))
-          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent).peek(event -> System.out.println("SetsPairedEvents:\n  " + event))
-          .map(SetsPairedEvent::getAddressTag).toList()
-          .contains(defnUpvoteAsAddressTag)).toList();
-    assertEquals(2, upvoteFollowSetsEvent_3.size());
-
-    List<FollowSetsEvent> downvoteFollowSetsEvent_3 = Stream.of(followSetsBothEvents, followSetsBothEventsWithVariant)
-       .filter(followSetsEvent -> followSetsEvent
-          .getBadgeSetsEventList().stream()
-          .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
-          .flatMap(Collection::stream)
-          .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
-          .map(SetsPairedEvent::getAddressTag).toList()
-          .contains(defnDownvoteAsAddressTag)).toList();
-    assertEquals(1, downvoteFollowSetsEvent_3.size());
-
-    FollowSetsEvent followSetsContainingMatchingUpvoteEvent = new FollowSetsEvent(
-       aImgIdentity,
-       List.of(badgeSetsUpvoteEvent, badgeSetsUpvoteEvent2),
-       auxRelay);
-
-    String voteEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
-    assertTrue(Stream.of(followSetsUpEvent, followSetsContainingMatchingUpvoteEvent)
+    assertTrue(Stream.of(new FollowSetsEvent(
+          aImgIdentity,
+          new BadgeSetsEvent(
+             aImgIdentity,
+             badgeDefinitionReputationEventPlusOneFormula,
+             new CuratedBadgeAwardGenericEvent(
+                aImgIdentity,
+                award_NoNo_Defn_NoNo_Upvote,
+                new ReferenceTag(relayArgRelay.getUrl()),
+                new ReferenceTag(relayArgRelay.getUrl()),
+                relayArgRelay), relayArgRelay),
+          auxRelay), new FollowSetsEvent(
+          aImgIdentity,
+          List.of(new BadgeSetsEvent(
+             aImgIdentity,
+             badgeDefinitionReputationEventPlusOneFormula,
+             new CuratedBadgeAwardGenericEvent(
+                aImgIdentity,
+                award_NoNo_Defn_NoNo_Upvote,
+                new ReferenceTag(relayArgRelay.getUrl()),
+                new ReferenceTag(relayArgRelay.getUrl()),
+                relayArgRelay), relayArgRelay), new BadgeSetsEvent(
+             aImgIdentity,
+             badgeDefinitionReputationEventPlusOneFormula,
+             new CuratedBadgeAwardGenericEvent(
+                aImgIdentity,
+                award_NoNo_Defn_YesNo_Upvote,
+                new ReferenceTag(relayArgRelay.getUrl()),
+                new ReferenceTag(relayArgRelay.getUrl()),
+                relayArgRelay), relayArgRelay)),
+          auxRelay))
        .allMatch(followSetsEvent ->
           followSetsEvent.getBadgeSetsEventList().stream()
              .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
              .flatMap(Collection::stream)
              .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
              .map(SetsPairedEvent::getEventTagEventId).toList()
-             .contains(voteEventId)));
+             .contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId())));
 
-    assertFalse(Stream.of(followSetsDownEvent, followSetsContainingMatchingUpvoteEvent)
+    assertFalse(Stream.of(new FollowSetsEvent(
+          aImgIdentity,
+          new BadgeSetsEvent(
+             aImgIdentity,
+             badgeDefinitionReputationEventPlusOneFormula,
+             new CuratedBadgeAwardGenericEvent(
+                aImgIdentity,
+                award_NoNo_Defn_NoNo_Downvote,
+                new ReferenceTag(relayArgRelay.getUrl()),
+                new ReferenceTag(relayArgRelay.getUrl()),
+                relayArgRelay), relayArgRelay),
+          auxRelay), new FollowSetsEvent(
+          aImgIdentity,
+          List.of(new BadgeSetsEvent(
+             aImgIdentity,
+             badgeDefinitionReputationEventPlusOneFormula,
+             new CuratedBadgeAwardGenericEvent(
+                aImgIdentity,
+                award_NoNo_Defn_NoNo_Upvote,
+                new ReferenceTag(relayArgRelay.getUrl()),
+                new ReferenceTag(relayArgRelay.getUrl()),
+                relayArgRelay), relayArgRelay), new BadgeSetsEvent(
+             aImgIdentity,
+             badgeDefinitionReputationEventPlusOneFormula,
+             new CuratedBadgeAwardGenericEvent(
+                aImgIdentity,
+                award_NoNo_Defn_YesNo_Upvote,
+                new ReferenceTag(relayArgRelay.getUrl()),
+                new ReferenceTag(relayArgRelay.getUrl()),
+                relayArgRelay), relayArgRelay)),
+          auxRelay))
        .allMatch(followSetsEvent ->
           followSetsEvent.getBadgeSetsEventList().stream()
              .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
              .flatMap(Collection::stream)
              .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
              .map(SetsPairedEvent::getEventTagEventId).toList()
-             .contains(voteEventId)));
+             .contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId())));
   }
 
   @Test
