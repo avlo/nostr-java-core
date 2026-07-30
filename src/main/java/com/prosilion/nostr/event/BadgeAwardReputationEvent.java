@@ -47,7 +47,7 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
        badgeReceiverPubkey,
        externalIdentityTag,
        badgeDefinitionReputationEvent,
-       prependExplicitRelayTag(tags, relay),
+       prependNullableRelayTag(tags, new Relay[]{relay}),
        score);
   }
 

@@ -21,29 +21,25 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull Relay relay,
      @NonNull T badgeDefinitionGenericEvent,
-     @NonNull String content) throws NostrException {
-    this(identity, awardRecipientPublicKey, relay, badgeDefinitionGenericEvent, List.of(), content);
+     @NonNull String content,
+     Relay... relay) throws NostrException {
+    this(identity, awardRecipientPublicKey, badgeDefinitionGenericEvent, List.of(), content, relay);
   }
 
   public BadgeAwardAbstractEvent(
      @NonNull Identity identity,
      @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull T badgeDefinitionGenericEvent,
-     @NonNull String content) throws NostrException {
-    this(identity, awardRecipientPublicKey, badgeDefinitionGenericEvent, Stream.of(), content);
-  }
-
-  public BadgeAwardAbstractEvent(
-     @NonNull Identity identity,
-     @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull Relay relay,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull List<BaseTag> tags,
-     @NonNull String content) throws NostrException {
-    this(identity, awardRecipientPublicKey, badgeDefinitionGenericEvent,
-       prependExplicitRelayTag(tags, relay).stream(), content);
+     @NonNull String content,
+     Relay... relay) throws NostrException {
+    this(
+       identity,
+       awardRecipientPublicKey,
+       badgeDefinitionGenericEvent,
+       prependNullableRelayTagStream(tags.stream(), relay),
+       content);
   }
 
   public BadgeAwardAbstractEvent(

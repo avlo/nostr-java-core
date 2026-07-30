@@ -35,8 +35,13 @@ public class AddressableEvent extends BaseEvent {
      @NonNull IdentifierTag identifierTag,
      @NonNull List<BaseTag> baseTags,
      @NonNull String content,
-     @NonNull Relay relay) throws NostrException {
-    this(identity, kind, identifierTag, prependExplicitRelayTag(baseTags, relay), content);
+     Relay... relay) throws NostrException {
+    this(
+       identity,
+       kind,
+       identifierTag,
+       prependNullableRelayTag(baseTags, relay),
+       content);
   }
 
   public AddressableEvent(

@@ -11,19 +11,11 @@ import java.util.stream.Stream;
 import lombok.NonNull;
 
 public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> extends BadgeAwardAbstractEvent<T> {
-
-  public BadgeAwardGenericEvent(
-     @NonNull Identity authorIdentity,
-     @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull T badgeDefinitionGenericEvent) {
-    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, List.of());
-  }
-
   public BadgeAwardGenericEvent(
      @NonNull Identity authorIdentity,
      @NonNull PublicKey awardRecipientPublicKey,
      @NonNull T badgeDefinitionGenericEvent,
-     @NonNull Relay relay) {
+     Relay... relay) {
     this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, "", relay);
   }
 
@@ -31,16 +23,8 @@ public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> exten
      @NonNull Identity authorIdentity,
      @NonNull PublicKey awardRecipientPublicKey,
      @NonNull T badgeDefinitionGenericEvent,
-     @NonNull List<BaseTag> tags) {
-    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, tags, "");
-  }
-
-  public BadgeAwardGenericEvent(
-     @NonNull Identity authorIdentity,
-     @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull T badgeDefinitionGenericEvent,
      @NonNull List<BaseTag> tags,
-     @NonNull Relay relay) {
+     Relay... relay) {
     this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, tags, "", relay);
   }
 
@@ -49,7 +33,7 @@ public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> exten
      @NonNull PublicKey awardRecipientPublicKey,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull String content,
-     @NonNull Relay relay) {
+     Relay... relay) {
     this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, List.of(), content, relay);
   }
 
@@ -58,19 +42,14 @@ public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> exten
      @NonNull PublicKey awardRecipientPublicKey,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull List<BaseTag> tags,
-     @NonNull String content) {
-    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, tags.stream(), content);
-  }
-
-  public BadgeAwardGenericEvent(
-     @NonNull Identity authorIdentity,
-     @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull T badgeDefinitionGenericEvent,
-     @NonNull List<BaseTag> tags,
      @NonNull String content,
-     @NonNull Relay relay) {
-    this(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent,
-       prependExplicitRelayTag(tags, relay).stream(), content);
+     Relay... relay) {
+    this(
+       authorIdentity,
+       awardRecipientPublicKey,
+       badgeDefinitionGenericEvent,
+       prependNullableRelayTagStream(tags.stream(), relay),
+       content);
   }
 
   public BadgeAwardGenericEvent(

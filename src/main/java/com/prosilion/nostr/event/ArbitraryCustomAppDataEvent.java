@@ -5,11 +5,8 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
-import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.NonNull;
 
 public class ArbitraryCustomAppDataEvent extends AddressableEvent {
@@ -31,9 +28,7 @@ public class ArbitraryCustomAppDataEvent extends AddressableEvent {
        identity,
        Kind.ARBITRARY_CUSTOM_APP_DATA,
        identifierTag,
-       Stream.concat(
-          Arrays.stream(relay).findFirst().map(RelayTag::new).stream(),
-          baseTags.stream()).toList(),
+       prependNullableRelayTag(baseTags, relay),
        content);
   }
 

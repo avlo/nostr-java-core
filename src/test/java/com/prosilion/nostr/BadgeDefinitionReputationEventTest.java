@@ -439,6 +439,19 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   }
 
   @Test
+  void testAddressTagCount() {
+    BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
+       aImgidentity,
+       repDefnCreator.getPublicKey(),
+       reputationIdentifierTag,
+       relay,
+       externalIdentityTag,
+       plusOneFormulaEvent);
+    
+    assertEquals(1, expected.getCuratedFormulaEvents().size());
+  }
+  
+  @Test
   void testGetTypeSpecificTags() {
     assertEquals(1,
        new BadgeDefinitionGenericEvent(

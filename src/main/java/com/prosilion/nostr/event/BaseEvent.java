@@ -8,9 +8,9 @@ import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -18,7 +18,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 public abstract class BaseEvent implements EventIF {
   @Getter
@@ -105,12 +104,12 @@ public abstract class BaseEvent implements EventIF {
     return Objects.hashCode(genericEventRecord);
   }
 
-  protected static List<BaseTag> prependExplicitRelayTag(@NonNull List<BaseTag> baseTags, @Nullable Relay relay) {
-    return prependExtraRelayTagStream(baseTags.stream(), relay).toList();
+  protected static List<BaseTag> prependNullableRelayTag(@NonNull List<BaseTag> baseTags, Relay[] relay) {
+    return prependNullableRelayTagStream(baseTags.stream(), relay).toList();
   }
 
-  protected static Stream<BaseTag> prependExtraRelayTagStream(@NonNull Stream<BaseTag> baseTags, @Nullable Relay relay) {
-    return Optional.ofNullable(relay)
+  protected static Stream<BaseTag> prependNullableRelayTagStream(@NonNull Stream<BaseTag> baseTags, Relay[] relay) {
+    return Arrays.stream(relay).findFirst()
        .map(r -> Stream.concat(
           baseTags.filter(Predicate.not(RelayTag.class::isInstance)),
           Stream.of(new RelayTag(r))))
