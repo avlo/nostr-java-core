@@ -56,8 +56,7 @@ public class BadgeAwardReputationEventTest extends EventTestFixtures {
        aImgIdentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        plusOneFormulaEvent);
   }
 

@@ -34,12 +34,7 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
      @NonNull List<BaseTag> tags,
      @NonNull String content,
      Relay... relay) throws NostrException {
-    this(
-       identity,
-       awardRecipientPublicKey,
-       badgeDefinitionGenericEvent,
-       prependVariadRelayTag(tags, relay).stream(),
-       content);
+    this(identity, awardRecipientPublicKey, badgeDefinitionGenericEvent, tags.stream(), content, relay);
   }
 
   public BadgeAwardAbstractEvent(
@@ -47,14 +42,16 @@ public abstract class BadgeAwardAbstractEvent<T extends AddressableEvent> extend
      @NonNull PublicKey awardRecipientPublicKey,
      @NonNull T badgeDefinitionGenericEvent,
      @NonNull Stream<BaseTag> tags,
-     @NonNull String content) throws NostrException {
+     @NonNull String content,
+     Relay... relay) throws NostrException {
     super(
        identity,
        Kind.BADGE_AWARD_EVENT,
        badgeDefinitionGenericEvent,
        Stream.concat(
              Stream.of(new PubKeyTag(awardRecipientPublicKey)),
-             useFirstRelayTag(tags)
+             useFirstRelayTag(
+                prependVariadRelayTagStream(tags, relay))
                 .filter(Predicate.not(AddressTag.class::isInstance))
                 .filter(Predicate.not(PubKeyTag.class::isInstance)))
           .toList(),

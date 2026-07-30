@@ -115,8 +115,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
        platformIdentity,
        upvoteDefnCreator.getPublicKey(),
        FollowSetsEvent.defaultIdentifierTag,
-       relayArgRelay,
-       new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
+       new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())), relayArgRelay,
        plusOneFormulaEvent);
 
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(

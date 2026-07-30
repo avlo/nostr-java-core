@@ -35,36 +35,30 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
      @NonNull Identity aImgIdentity,
      @NonNull PublicKey reputationDefinitionCreatorPublicKey,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
      @NonNull ExternalIdentityTag externalIdentityTag,
+     @NonNull Relay relay,
      @NonNull CuratedFormulaEvent... formulaEvent) throws NostrException {
-    this(
-       aImgIdentity,
-       reputationDefinitionCreatorPublicKey,
-       identifierTag,
-       relay,
-       externalIdentityTag,
-       List.of(formulaEvent));
+    this(aImgIdentity, reputationDefinitionCreatorPublicKey, identifierTag, externalIdentityTag, relay, List.of(formulaEvent));
   }
 
   public BadgeDefinitionReputationEvent(
      @NonNull Identity aImgIdentity,
      @NonNull PublicKey reputationDefinitionCreatorPublicKey,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
      @NonNull ExternalIdentityTag externalIdentityTag,
+     @NonNull Relay relay,
      @NonNull List<CuratedFormulaEvent> curatedFormulaEvents) throws NostrException {
-    this(aImgIdentity, reputationDefinitionCreatorPublicKey, identifierTag, relay, externalIdentityTag, curatedFormulaEvents, List.of());
+    this(aImgIdentity, reputationDefinitionCreatorPublicKey, identifierTag, externalIdentityTag, List.of(), relay, curatedFormulaEvents);
   }
 
   public BadgeDefinitionReputationEvent(
      @NonNull Identity aImgIdentity,
      @NonNull PublicKey reputationDefinitionCreatorPublicKey,
      @NonNull IdentifierTag identifierTag,
-     @NonNull Relay relay,
      @NonNull ExternalIdentityTag externalIdentityTag,
-     @NonNull List<CuratedFormulaEvent> curatedFormulaEvents,
-     @NonNull List<BaseTag> baseTags) throws NostrException {
+     @NonNull List<BaseTag> baseTags,
+     @NonNull Relay relay,
+     @NonNull List<CuratedFormulaEvent> curatedFormulaEvents) throws NostrException {
     super(
        aImgIdentity,
        identifierTag,

@@ -36,21 +36,7 @@ public class AddressableEvent extends BaseEvent {
      @NonNull List<BaseTag> baseTags,
      @NonNull String content,
      Relay... relay) throws NostrException {
-    this(
-       identity,
-       kind,
-       identifierTag,
-       prependVariadRelayTag(baseTags, relay),
-       content);
-  }
-
-  public AddressableEvent(
-     @NonNull Identity identity,
-     @NonNull Kind kind,
-     @NonNull IdentifierTag identifierTag,
-     @NonNull List<BaseTag> baseTags,
-     @NonNull String content) throws NostrException {
-    this(identity, kind, identifierTag, baseTags.stream(), content);
+    this(identity, kind, identifierTag, baseTags.stream(), content, relay);
   }
 
   public AddressableEvent(
@@ -58,13 +44,15 @@ public class AddressableEvent extends BaseEvent {
      @NonNull Kind kind,
      @NonNull IdentifierTag identifierTag,
      @NonNull Stream<BaseTag> baseTags,
-     @NonNull String content) throws NostrException {
+     @NonNull String content,
+     Relay... relay) throws NostrException {
     super(
        identity,
        validateKind(kind, addressableKindPredicate, errorMessage),
        Stream.concat(
           Stream.of(identifierTag),
-          useFirstRelayTag(baseTags)
+          useFirstRelayTag(
+             prependVariadRelayTagStream(baseTags, relay))
              .filter(Predicate.not(IdentifierTag.class::isInstance))),
        content);
   }

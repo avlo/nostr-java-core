@@ -72,16 +72,14 @@ public class FollowSetsEventTest extends EventTestFixtures {
        aImgIdentity,
        authorIdentity.getPublicKey(),
        FollowSetsEvent.defaultIdentifierTag,
-       auxRelay,
-       EXTERNAL_IDENTITY_TAG,
+       EXTERNAL_IDENTITY_TAG, auxRelay,
        plusOneFormulaEvent);
 
     this.badgeDefinitionReputationEventMinusOneFormula = new BadgeDefinitionReputationEvent(
        aImgIdentity,
        authorIdentity.getPublicKey(),
        FollowSetsEvent.defaultIdentifierTag,
-       auxRelay,
-       EXTERNAL_IDENTITY_TAG,
+       EXTERNAL_IDENTITY_TAG, auxRelay,
        minusOneFormulaEvent);
   }
 

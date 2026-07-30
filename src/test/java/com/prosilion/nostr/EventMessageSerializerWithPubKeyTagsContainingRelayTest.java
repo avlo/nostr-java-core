@@ -57,8 +57,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Eve
        platformIdentity,
        upvoteDefnCreator.getPublicKey(),
        FollowSetsEvent.defaultIdentifierTag,
-       relayArgRelay,
-       new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())),
+       new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())), relayArgRelay,
        plusOneFormulaEvent);
 
     this.followSetsAsGenericEventEventWithEventTag = new GenericEventRecord(

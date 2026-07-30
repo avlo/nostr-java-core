@@ -102,8 +102,7 @@ public class EventMessageBadgeAwardReputationEventDeserializerTest extends Event
        repDefnCreator,
        aImgIdentity.getPublicKey(),
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        plusOneFormulaEvent);
 
     BadgeAwardReputationEvent actualBadgeAwardReputationEvent = new BadgeAwardReputationEvent(

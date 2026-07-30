@@ -516,8 +516,7 @@ public class FiltersEncoderTest extends EventTestFixtures {
        aImgIdentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       BADGE_DEFINITION_REPUTATION_EXTERNAL_IDENTITY_TAG,
+       BADGE_DEFINITION_REPUTATION_EXTERNAL_IDENTITY_TAG, relay,
        plusOneFormulaEvent);
 
     ReqMessage reqMessage = new ReqMessage(

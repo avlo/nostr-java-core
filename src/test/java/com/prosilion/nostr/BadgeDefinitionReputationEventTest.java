@@ -87,8 +87,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        aImgidentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        plusOneFormulaEvent);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
@@ -107,8 +106,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        aImgidentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        formulaEvents);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
@@ -129,8 +127,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        aImgidentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        plusOneFormulaEvent, minusOneFormulaEvent);
 
     List<CuratedFormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
@@ -177,8 +174,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        aImgidentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        plusOneMinusOneFormulaEvents);
 
     List<CuratedFormulaEvent> expectedFormulaEvents = expected.getCuratedFormulaEvents();
@@ -202,8 +198,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        aImgidentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        plusOneFormulaEvent);
 
     assertEquals(externalIdentityTag, badgeDefinitionReputationEvent.getExternalIdentityTag());
@@ -228,15 +223,13 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           plusOneFormulaEvent));
 
     assertNotEquals(
@@ -244,15 +237,13 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           new CuratedFormulaEvent(
              aImgIdentity,
              new FormulaEvent(
@@ -285,15 +276,13 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
           aImgidentity,
           definitionCreatorPublicKey,
           new IdentifierTag("DIFFERENT_REPUTATION"),
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           plusOneFormulaEvent));
 
     assertNotEquals(
@@ -301,15 +290,13 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           new CuratedFormulaEvent(
              aImgidentity,
              new FormulaEvent(
@@ -326,8 +313,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
           aImgidentity,
           definitionCreatorPublicKey,
           reputationIdentifierTag,
-          relay,
-          externalIdentityTag,
+          externalIdentityTag, relay,
           plusOneFormulaEvent),
        plusOneFormulaEvent);
 
@@ -353,10 +339,8 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        aImgidentity,
        definitionCreatorPublicKey,
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
-       List.of(plusOneFormulaEvent),
-       baseTags);
+       externalIdentityTag, baseTags, relay, List.of(plusOneFormulaEvent)
+    );
 
     assertEquals(1, badgeDefinitionReputationEvent.getTypeSpecificTags(IdentifierTag.class).size());
   }
@@ -369,10 +353,8 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
              aImgidentity,
              definitionCreatorPublicKey,
              reputationIdentifierTag,
-             relay,
-             externalIdentityTag,
-             List.of(),
-             List.of(new IdentifierTag("DIFFERENT_REPUTATION")))
+             externalIdentityTag, List.of(new IdentifierTag("DIFFERENT_REPUTATION")), relay, List.of()
+          )
        ).getMessage().contains(BadgeDefinitionReputationEvent.MISSING_FORMULA_EVENTS));
   }
 
@@ -397,8 +379,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
                 aImgidentity,
                 definitionCreatorPublicKey,
                 reputationIdentifierTag,
-                relay,
-                externalIdentityTag,
+                externalIdentityTag, relay,
                 List.of(plusOneFormulaEvent, duplicatePlusOneFormulaEvent))).getMessage().contains(
           BadgeDefinitionReputationEvent.MATCHING_IDENTIFIER_TAGS_FOUND));
   }
@@ -406,7 +387,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   @Test
   void testDifferentFormulaUuidsWithDuplicateFormulaContentsDoNotThrowException() {
     BadgeDefinitionReputationEvent event = new BadgeDefinitionReputationEvent(
-       aImgidentity, definitionCreatorPublicKey, reputationIdentifierTag, relay, externalIdentityTag,
+       aImgidentity, definitionCreatorPublicKey, reputationIdentifierTag, externalIdentityTag, relay,
        List.of(
           new CuratedFormulaEvent(
              aImgidentity,
@@ -444,8 +425,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        aImgidentity,
        repDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       relay,
-       externalIdentityTag,
+       externalIdentityTag, relay,
        plusOneFormulaEvent);
     
     assertEquals(1, expected.getCuratedFormulaEvents().size());

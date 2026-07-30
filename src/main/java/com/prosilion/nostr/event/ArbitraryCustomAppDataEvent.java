@@ -24,12 +24,7 @@ public class ArbitraryCustomAppDataEvent extends AddressableEvent {
      @NonNull List<BaseTag> baseTags,
      @NonNull String content,
      Relay... relay) throws NostrException {
-    super(
-       identity,
-       Kind.ARBITRARY_CUSTOM_APP_DATA,
-       identifierTag,
-       prependVariadRelayTag(baseTags, relay),
-       content);
+    super(identity, Kind.ARBITRARY_CUSTOM_APP_DATA, identifierTag, baseTags, content, relay);
   }
 
 //  public ArbitraryCustomAppDataEvent(

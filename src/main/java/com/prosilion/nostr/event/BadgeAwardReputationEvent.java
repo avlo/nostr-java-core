@@ -40,10 +40,11 @@ public class BadgeAwardReputationEvent extends BadgeAwardGenericEvent<BadgeDefin
        Stream.concat(
              Stream.of(
                 externalIdentityTag),
-             prependVariadRelayTagStream(tags.stream(), new Relay[]{relay})
+             tags.stream()
                 .filter(Predicate.not(ExternalIdentityTag.class::isInstance)))
           .toList(),
-       score.toString());
+       score.toString(),
+       relay);
   }
 
   public BadgeAwardReputationEvent(

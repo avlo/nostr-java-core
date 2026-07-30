@@ -54,8 +54,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
           aImgIdentity,
           upvoteDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          relayArgRelay,
-          EXTERNAL_IDENTITY_TAG,
+          EXTERNAL_IDENTITY_TAG, relayArgRelay,
           List.of(plusOneFormulaEvent, minusOneFormulaEvent));
   }
 

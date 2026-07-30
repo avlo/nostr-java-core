@@ -7,7 +7,6 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Stream;
 import lombok.NonNull;
 
 public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> extends BadgeAwardAbstractEvent<T> {
@@ -44,21 +43,7 @@ public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> exten
      @NonNull List<BaseTag> tags,
      @NonNull String content,
      Relay... relay) {
-    this(
-       authorIdentity,
-       awardRecipientPublicKey,
-       badgeDefinitionGenericEvent,
-       prependVariadRelayTag(tags, relay).stream(),
-       content);
-  }
-
-  public BadgeAwardGenericEvent(
-     @NonNull Identity authorIdentity,
-     @NonNull PublicKey awardRecipientPublicKey,
-     @NonNull T badgeDefinitionGenericEvent,
-     @NonNull Stream<BaseTag> tags,
-     @NonNull String content) {
-    super(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, tags, content);
+    super(authorIdentity, awardRecipientPublicKey, badgeDefinitionGenericEvent, tags, content, relay);
   }
 
   public BadgeAwardGenericEvent(
