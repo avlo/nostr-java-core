@@ -4,6 +4,7 @@ import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
@@ -51,7 +52,7 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
              badgeDefinitionGenericEvent.asAddressableEventAddressTag()),
           baseTags.stream()
              .filter(Predicate.not(AddressTag.class::isInstance))).toList(),
-       validate(formula),
+       validate(formula, Kind.ARBITRARY_CUSTOM_APP_DATA, Kind.ARBITRARY_CUSTOM_APP_DATA),
        relay);
     this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
   }
@@ -83,7 +84,11 @@ public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMapp
   A description tag whose value contain meaning behind the badge, or the reason of its issuance.
   https://github.com/nostr-protocol/nips/blob/master/58.md    
 */
-  public static String validate(String formula) throws NostrException {
+  public static String validate(String formula, Kind expectedKind, Kind actualKind) throws NostrException {
+    if (!expectedKind.equals(actualKind))
+      throw new NostrException(
+         String.format("expected kind [%s] mismatch actual kind [%s]", expectedKind, actualKind));
+
     if (StringUtils.isBlank(formula))
       throw new NostrException("supplied formula is blank");
 //    TODO: store expression in global expression map

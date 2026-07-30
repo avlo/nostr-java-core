@@ -12,12 +12,21 @@ import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.user.Identity;
+import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
 public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
+  public CuratedFormulaEvent(
+     @NonNull Identity identity,
+     @NonNull FormulaEvent formulaEvent,
+     @NonNull ReferenceTag formulaEventReferenceTag,
+     @NonNull Relay relay) {
+    this(identity, formulaEvent.asGenericEventRecord(), formulaEventReferenceTag, relay);
+  }
+
   public CuratedFormulaEvent(
      @NonNull Identity identity,
      @NonNull GenericEventRecord formulaEvent,
@@ -35,32 +44,10 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
              formulaEvent.getId(),
              formulaEvent.getRelayTag().map(RelayTag::relay).map(Relay::getUrl).orElse(formulaEventReferenceTag.getUrl()))),
        List.of(
-          new PubKeyTag(formulaEvent.getPublicKey()),
-          formulaEventReferenceTag),
+          formulaEventReferenceTag,
+          new PubKeyTag(formulaEvent.getPublicKey())),
        formulaEvent.getContent(),
        relay);
-  }
-
-  public CuratedFormulaEvent(
-     @NonNull Identity identity,
-     @NonNull FormulaEvent formulaEvent,
-     @NonNull ReferenceTag formulaEventReferenceTag,
-     @NonNull Relay relay) {
-    super(
-       identity,
-       Kind.CURATION_SETS_FORMULA_EVENT,
-       formulaEvent.getIdentifierTag(),
-       new SetsPairedEvent(
-          fillAddressTag(
-             formulaEvent.getBadgeDefinitionGenericEvent().asAddressableEventAddressTag(),
-             formulaEventReferenceTag),
-          new EventTag(
-             formulaEvent.getId(),
-             formulaEvent.getRelay().map(Relay::getUrl).orElse(
-                formulaEventReferenceTag.getUrl()))),
-       List.of(
-          formulaEventReferenceTag,
-          new PubKeyTag(formulaEvent.getPublicKey())), formulaEvent.getFormula(), relay);
   }
 
   public CuratedFormulaEvent(@NonNull GenericEventRecord genericEventRecord) {
@@ -85,8 +72,13 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
   }
 
   @JsonIgnore
-  public final PubKeyTag getPubKeyTag() {
-    return super.requireFirstTag(PubKeyTag.class);
+  public final PublicKey getFormulaEventCreatorPublicKey() {
+    return super.requireFirstTag(PubKeyTag.class).publicKey();
+  }
+
+  @JsonIgnore
+  public final String getFormulaEventId() {
+    return super.getEventTag().eventId();
   }
 
   @JsonIgnore
@@ -105,7 +97,7 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
   https://github.com/nostr-protocol/nips/blob/master/58.md    
 */
   private static GenericEventRecord validateFormula(GenericEventRecord formulaEvent) {
-    FormulaEvent.validate(formulaEvent.getContent());
+    FormulaEvent.validate(formulaEvent.getContent(), Kind.CURATION_SETS_FORMULA_EVENT, formulaEvent.getKind());
     return formulaEvent;
   }
 }
