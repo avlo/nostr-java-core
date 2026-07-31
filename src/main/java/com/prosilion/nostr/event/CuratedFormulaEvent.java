@@ -35,7 +35,7 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
     super(
        identity,
        Kind.CURATION_SETS_FORMULA_EVENT,
-       formulaEvent.requireFirstTag(IdentifierTag.class),
+       hashedAddressTag(formulaEvent.requireFirstTag(AddressTag.class)),
        new SetsPairedEvent(
           fillAddressTag(
              formulaEvent.requireFirstTag(AddressTag.class),
