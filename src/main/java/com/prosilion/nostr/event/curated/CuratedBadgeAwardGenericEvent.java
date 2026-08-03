@@ -1,7 +1,11 @@
-package com.prosilion.nostr.event;
+package com.prosilion.nostr.event.curated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.AbstractSetsEvent;
+import com.prosilion.nostr.event.BadgeAwardGenericEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
@@ -16,7 +20,7 @@ import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import lombok.NonNull;
 
-import static com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent.validateIdentifierTagHash;
+import static com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent.validateIdentifierTagHash;
 
 public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated CuratedBadgeAwardEvent";

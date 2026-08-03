@@ -2,10 +2,10 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.BaseMessageDecoder;
 import com.prosilion.nostr.codec.IDecoder;
-import com.prosilion.nostr.event.BadgeAwardReputationEvent;
+import com.prosilion.nostr.event.curated.BadgeAwardReputationEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-import com.prosilion.nostr.event.CuratedFormulaEvent;
+import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.message.BaseMessage;
 import com.prosilion.nostr.message.EventMessage;

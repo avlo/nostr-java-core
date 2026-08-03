@@ -3,6 +3,7 @@ package com.prosilion.nostr.event;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
@@ -114,7 +115,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
-    return badgeSetsEventList.getFirst().getAwardRecipientPublicKey();
+    return requireFirstTag(PubKeyTag.class).getPublicKey();
   }
 
   private static List<BaseTag> mapStream(@NonNull List<BadgeSetsEvent> badgeSetsEventList, @NonNull List<BaseTag> baseTags) {

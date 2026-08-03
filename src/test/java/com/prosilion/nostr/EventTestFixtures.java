@@ -2,7 +2,7 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;
@@ -15,22 +15,22 @@ import java.util.List;
 import static com.prosilion.nostr.tag.SetsPairedEvent.NULL_EVENT_TAG_RELAY;
 
 public class EventTestFixtures {
-  static final String relayUrl = "ws://localhost:5555";
-  static final Relay relay = new Relay(relayUrl);
-  static final String relayArgUrl = "ws://localhost:5555";
-  static final String baseTagsRelayUrl = "ws://localhost-from-relay-tag:5555";
+  public static final String relayUrl = "ws://localhost:5555";
+  public static final Relay relay = new Relay(relayUrl);
+  public static final String relayArgUrl = "ws://localhost:5555";
+  public static final String baseTagsRelayUrl = "ws://localhost-from-relay-tag:5555";
 
-  static final Relay relayArgRelay = new Relay(relayArgUrl);
-  static final RelayTag relayArgRelayTag = new RelayTag(relayArgRelay);
+  public static final Relay relayArgRelay = new Relay(relayArgUrl);
+  public static final RelayTag relayArgRelayTag = new RelayTag(relayArgRelay);
 
-  static final Relay baseTagsRelay = new Relay(baseTagsRelayUrl);
-  static final RelayTag baseTagsRelayTag = new RelayTag(baseTagsRelay);
+  public static final Relay baseTagsRelay = new Relay(baseTagsRelayUrl);
+  public static final RelayTag baseTagsRelayTag = new RelayTag(baseTagsRelay);
 
-  static final ExternalIdentityTag EXTERNAL_IDENTITY_TAG = new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode()));
+  public static final ExternalIdentityTag EXTERNAL_IDENTITY_TAG = new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode()));
 
-  static final String auxRelayUrl = "ws://localhost-aux-event-relay:5555";
-  static final Relay auxRelay = new Relay(auxRelayUrl);
-  static final RelayTag auxRelayTag = new RelayTag(auxRelay);
+  public static final String auxRelayUrl = "ws://localhost-aux-event-relay:5555";
+  public static final Relay auxRelay = new Relay(auxRelayUrl);
+  public static final RelayTag auxRelayTag = new RelayTag(auxRelay);
 
   public static final String TEST_UNIT_REPUTATION = "BADGE_DEFN_UNIT_REP";
   public static final String AWARD_UNIT_UPVOTE = "BDG_DEF_UNIT_UP";
@@ -65,108 +65,108 @@ public class EventTestFixtures {
 
   //  BadgeDefinitionGenericEvent
 //  _NoNo_   = Defn No  relayArgRelayTag, Defn No  baseTagsRelayTag
-  static final BadgeDefinitionGenericEvent defnEvent_NoNo_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
-  static final BadgeDefinitionGenericEvent defnEvent_NoNo_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag);
+  public static final BadgeDefinitionGenericEvent defnEvent_NoNo_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
+  public static final BadgeDefinitionGenericEvent defnEvent_NoNo_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag);
 
   //  _NoYes_  = Defn No  relayArgRelayTag, Defn Yes baseTagsRelayTag
-  static final BadgeDefinitionGenericEvent defnEvent_NoYes_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag), "");
+  public static final BadgeDefinitionGenericEvent defnEvent_NoYes_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag), "");
 
-  static final BadgeDefinitionGenericEvent defnEvent_NoYes_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, List.of(baseTagsRelayTag), "");
+  public static final BadgeDefinitionGenericEvent defnEvent_NoYes_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, List.of(baseTagsRelayTag), "");
 
   //  _YesNo_  = Defn Yes relayArgRelayTag, Defn No  baseTagsRelayTag
-  static final BadgeDefinitionGenericEvent defnEvent_YesNo_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, relayArgRelay);
-  static final BadgeDefinitionGenericEvent defnEvent_YesNo_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, relayArgRelay);
+  public static final BadgeDefinitionGenericEvent defnEvent_YesNo_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, relayArgRelay);
+  public static final BadgeDefinitionGenericEvent defnEvent_YesNo_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, relayArgRelay);
 
   //  _YesYes_ = Defn Yes relayArgRelayTag, Defn Yes baseTagsRelayTag
-  static final BadgeDefinitionGenericEvent defnEvent_YesYes_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay);
+  public static final BadgeDefinitionGenericEvent defnEvent_YesYes_Upvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay);
 
-  static final BadgeDefinitionGenericEvent defnEvent_YesYes_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay);
+  public static final BadgeDefinitionGenericEvent defnEvent_YesYes_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay);
 
   //  BadgeAwardGenericEvent
 //  _NoNo_NoNo_   = _NoNo_  Defn, Award No  relayArgRelayTag, Award No baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
-  static final SetsPairedEvent defnAuxNo_defnEvent_NoNo_Upvote = create(award_NoNo_Defn_NoNo_Upvote, null);
-  static final SetsPairedEvent eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent = create(award_NoNo_Defn_NoNo_Upvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
+  public static final SetsPairedEvent defnAuxNo_defnEvent_NoNo_Upvote = create(award_NoNo_Defn_NoNo_Upvote, null);
+  public static final SetsPairedEvent eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent = create(award_NoNo_Defn_NoNo_Upvote, null);
 
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoNo_Downvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
-  static final SetsPairedEvent defnAuxNo_defnEvent_NoNo_Downvote = create(award_NoNo_Defn_NoNo_Downvote, null);
-  static final SetsPairedEvent eventAuxNo_award_NoNo_defn_NoNo_Downvote = create(award_NoNo_Defn_NoNo_Downvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoNo_Downvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
+  public static final SetsPairedEvent defnAuxNo_defnEvent_NoNo_Downvote = create(award_NoNo_Defn_NoNo_Downvote, null);
+  public static final SetsPairedEvent eventAuxNo_award_NoNo_defn_NoNo_Downvote = create(award_NoNo_Defn_NoNo_Downvote, null);
 
   //  _NoNo_NoYes_  = _NoNo_  Defn, Award No  relayArgRelayTag, Award Yes baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, List.of(baseTagsRelayTag));
-  static final SetsPairedEvent eventAuxNo_award_NoNo_defn_YesNo_UpvoteSetsPairedEvent = create(award_NoNo_Defn_NoYes_Upvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, List.of(baseTagsRelayTag));
+  public static final SetsPairedEvent eventAuxNo_award_NoNo_defn_YesNo_UpvoteSetsPairedEvent = create(award_NoNo_Defn_NoYes_Upvote, null);
 
   //  _NoNo_YesNo_  = _NoNo_  Defn, Award Yes relayArgRelayTag, Award No  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_YesNo_Downvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_YesNo_Downvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
 
   //  _NoNo_YesYes_ = _NoNo_  Defn, Award Yes relayArgRelayTag, Award Yes baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoNo_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
 
 
   //  _NoYes_NoNo_    = _NoYes_ Defn, Award No  relayArgRelayTag, Award No  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, relayArgRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, relayArgRelay);
 
   //  _NoYes_NoYes_   = _NoYes_ Defn, Award No  relayArgRelayTag, Award Yes baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, List.of(baseTagsRelayTag));
-  static final SetsPairedEvent defnAuxNo_defnEvent_NoYes_Downvote = create(award_NoYes_Defn_NoYes_Upvote, null);
-  static final SetsPairedEvent defnAuxYes_defnEvent_NoYes_Downvote = create(award_NoYes_Defn_NoYes_Upvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, List.of(baseTagsRelayTag));
+  public static final SetsPairedEvent defnAuxNo_defnEvent_NoYes_Downvote = create(award_NoYes_Defn_NoYes_Upvote, null);
+  public static final SetsPairedEvent defnAuxYes_defnEvent_NoYes_Downvote = create(award_NoYes_Defn_NoYes_Upvote, auxRelay);
 
   //  _NoYes_YesNo_   = _NoYes_ Defn, Award Yes relayArgRelayTag, Award No  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, relayArgRelay);
-  static final SetsPairedEvent defnAuxNo_defnEvent_NoYes_Upvote = create(award_NoYes_Defn_NoNo_Upvote, null);
-  static final SetsPairedEvent defnAuxYes_defnEvent_NoYes_Upvote = create(award_NoYes_Defn_YesNo_Upvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, relayArgRelay);
+  public static final SetsPairedEvent defnAuxNo_defnEvent_NoYes_Upvote = create(award_NoYes_Defn_NoNo_Upvote, null);
+  public static final SetsPairedEvent defnAuxYes_defnEvent_NoYes_Upvote = create(award_NoYes_Defn_YesNo_Upvote, auxRelay);
 
   //  _NoYes_YesYes_  = _NoYes_ Defn, Award Yes relayArgRelayTag, Award Yes  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
-  static final SetsPairedEvent defnAuxYes_defnEvent_NoNo_Upvote = create(award_NoYes_Defn_YesYes_Upvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_NoYes_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoYes_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
+  public static final SetsPairedEvent defnAuxYes_defnEvent_NoNo_Upvote = create(award_NoYes_Defn_YesYes_Upvote, auxRelay);
 
 
   //  _YesNo_NoNo_   = _YesNo_  Defn, Award No  relayArgRelayTag, Award No baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, relayArgRelay);
-  static final SetsPairedEvent defnAuxYes_defnEvent_NoNo_Downvote = create(award_YesNo_Defn_NoNo_Upvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, relayArgRelay);
+  public static final SetsPairedEvent defnAuxYes_defnEvent_NoNo_Downvote = create(award_YesNo_Defn_NoNo_Upvote, auxRelay);
 
   //  _YesNo_NoYes_  = _YesNo_  Defn, Award No  relayArgRelayTag, Award Yes baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag));
-  static final SetsPairedEvent eventAuxYes_award_NoNo_defn_NoNo_Upvote = create(award_NoNo_Defn_NoNo_Upvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag));
+  public static final SetsPairedEvent eventAuxYes_award_NoNo_defn_NoNo_Upvote = create(award_NoNo_Defn_NoNo_Upvote, auxRelay);
 
   //  _YesNo_YesNo_  = _YesNo_  Defn, Award Yes relayArgRelayTag, Award No  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, relayArgRelay);
-  static final SetsPairedEvent eventAuxYes_award_NoNo_defn_NoNo_Downvote = create(award_NoNo_Defn_NoNo_Downvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, relayArgRelay);
+  public static final SetsPairedEvent eventAuxYes_award_NoNo_defn_NoNo_Downvote = create(award_NoNo_Defn_NoNo_Downvote, auxRelay);
 
   //  _YesNo_YesYes_ = _YesNo_  Defn, Award Yes relayArgRelayTag, Award Yes baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
-  static final SetsPairedEvent defnAuxNo_defnEvent_YesNo_Upvote = create(award_YesNo_Defn_YesYes_Upvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
+  public static final SetsPairedEvent defnAuxNo_defnEvent_YesNo_Upvote = create(award_YesNo_Defn_YesYes_Upvote, null);
 
   //  _YesYes_NoNo_    = _YesYes Defn, Award No  relayArgRelayTag, Award No  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, relayArgRelay);
-  static final SetsPairedEvent defnAuxNo_defnEvent_YesNo_Downvote = create(award_YesYes_Defn_NoNo_Upvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_NoNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, relayArgRelay);
+  public static final SetsPairedEvent defnAuxNo_defnEvent_YesNo_Downvote = create(award_YesYes_Defn_NoNo_Upvote, null);
 
-  static final SetsPairedEvent eventAuxNo_award_NoNo_Defn_YesNo_Upvote = create(award_NoNo_Defn_YesNo_Upvote, null);
+  public static final SetsPairedEvent eventAuxNo_award_NoNo_Defn_YesNo_Upvote = create(award_NoNo_Defn_YesNo_Upvote, null);
 
   //  _YesYes_NoYes_   = _YesYes Defn, Award No  relayArgRelayTag, Award Yes baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, List.of(baseTagsRelayTag));
-  static final SetsPairedEvent eventAuxNo_award_NoNo_Defn_YesNo_Downvote = create(award_NoNo_Defn_YesNo_Downvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_NoYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, List.of(baseTagsRelayTag));
+  public static final SetsPairedEvent eventAuxNo_award_NoNo_Defn_YesNo_Downvote = create(award_NoNo_Defn_YesNo_Downvote, null);
 
   //  _YesYes_YesNo_   = _YesYes Defn, Award Yes relayArgRelayTag, Award No  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, relayArgRelay);
-  static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_YesYes_Upvote = create(award_YesNo_Defn_YesYes_Upvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesNo_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, relayArgRelay);
+  public static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_YesYes_Upvote = create(award_YesNo_Defn_YesYes_Upvote, null);
 
   //  _YesYes_YesYes_  = _YesYes Defn, Award Yes relayArgRelayTag, Award Yes  baseTagsRelayTag
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
-  static final SetsPairedEvent defnAuxYes_defnEvent_YesYes_Upvote = create(award_YesYes_Defn_YesYes_Upvote, auxRelay);
-  static final SetsPairedEvent eventAuxYes_award_YesNo_Defn_YesYes_Upvote = create(award_YesNo_Defn_YesYes_Upvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesYes_Upvote, List.of(baseTagsRelayTag), relayArgRelay);
+  public static final SetsPairedEvent defnAuxYes_defnEvent_YesYes_Upvote = create(award_YesYes_Defn_YesYes_Upvote, auxRelay);
+  public static final SetsPairedEvent eventAuxYes_award_YesNo_Defn_YesYes_Upvote = create(award_YesNo_Defn_YesYes_Upvote, auxRelay);
 
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoYes_UpvoteExtraRelayTag = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag, relayArgRelayTag));
-  static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_YesNo_Upvote = create(award_YesNo_Defn_YesNo_Upvote, null);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoYes_UpvoteExtraRelayTag = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(baseTagsRelayTag, relayArgRelayTag));
+  public static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_YesNo_Upvote = create(award_YesNo_Defn_YesNo_Upvote, null);
 
-  static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag));
-  static final SetsPairedEvent eventAuxYes_award_YesNo_Defn_YesNo_Upvote = create(award_YesNo_Defn_YesNo_Upvote, auxRelay);
+  public static final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed = new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_YesNo_Upvote, List.of(relayArgRelayTag, baseTagsRelayTag));
+  public static final SetsPairedEvent eventAuxYes_award_YesNo_Defn_YesNo_Upvote = create(award_YesNo_Defn_YesNo_Upvote, auxRelay);
 
-  static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTag = create(award_YesNo_Defn_NoYes_UpvoteExtraRelayTag, null);
-  static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed = create(award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed, null);
+  public static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTag = create(award_YesNo_Defn_NoYes_UpvoteExtraRelayTag, null);
+  public static final SetsPairedEvent eventAuxNo_award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed = create(award_YesNo_Defn_NoYes_UpvoteExtraRelayTagReversed, null);
 
-  static final SetsPairedEvent eventAuxYes_award_YesYes_Defn_YesYes_Upvote = create(award_YesYes_Defn_YesYes_Upvote, auxRelay);
+  public static final SetsPairedEvent eventAuxYes_award_YesYes_Defn_YesYes_Upvote = create(award_YesYes_Defn_YesYes_Upvote, auxRelay);
 
   public static SetsPairedEvent create(BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> event, Relay backupRelay) {
     return new SetsPairedEvent(

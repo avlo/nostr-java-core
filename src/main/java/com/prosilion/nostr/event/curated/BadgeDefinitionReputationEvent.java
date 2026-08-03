@@ -1,7 +1,11 @@
-package com.prosilion.nostr.event;
+package com.prosilion.nostr.event.curated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.event.AddressableEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.TagMappedEventIF;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
@@ -32,41 +36,41 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   private final List<CuratedFormulaEvent> curatedFormulaEvents; // aTags
 
   public BadgeDefinitionReputationEvent(
-     @NonNull Identity aImgIdentity,
-     @NonNull PublicKey reputationDefinitionCreatorPublicKey,
+     @NonNull Identity reputationDefinitionCreatorIdentity,
+     @NonNull PublicKey reputationHostPublicKey,
      @NonNull IdentifierTag identifierTag,
      @NonNull ExternalIdentityTag externalIdentityTag,
      @NonNull Relay relay,
      @NonNull CuratedFormulaEvent... formulaEvent) throws NostrException {
-    this(aImgIdentity, reputationDefinitionCreatorPublicKey, identifierTag, externalIdentityTag, relay, List.of(formulaEvent));
+    this(reputationDefinitionCreatorIdentity, reputationHostPublicKey, identifierTag, externalIdentityTag, relay, List.of(formulaEvent));
   }
 
   public BadgeDefinitionReputationEvent(
-     @NonNull Identity aImgIdentity,
-     @NonNull PublicKey reputationDefinitionCreatorPublicKey,
+     @NonNull Identity reputationDefinitionCreatorIdentity,
+     @NonNull PublicKey reputationHostPublicKey,
      @NonNull IdentifierTag identifierTag,
      @NonNull ExternalIdentityTag externalIdentityTag,
      @NonNull Relay relay,
      @NonNull List<CuratedFormulaEvent> curatedFormulaEvents) throws NostrException {
-    this(aImgIdentity, reputationDefinitionCreatorPublicKey, identifierTag, externalIdentityTag, List.of(), relay, curatedFormulaEvents);
+    this(reputationDefinitionCreatorIdentity, reputationHostPublicKey, identifierTag, externalIdentityTag, List.of(), relay, curatedFormulaEvents);
   }
 
   public BadgeDefinitionReputationEvent(
-     @NonNull Identity aImgIdentity,
-     @NonNull PublicKey reputationDefinitionCreatorPublicKey,
+     @NonNull Identity reputationDefinitionCreatorIdentity,
+     @NonNull PublicKey reputationHostPublicKey,
      @NonNull IdentifierTag identifierTag,
      @NonNull ExternalIdentityTag externalIdentityTag,
      @NonNull List<BaseTag> baseTags,
      @NonNull Relay relay,
      @NonNull List<CuratedFormulaEvent> curatedFormulaEvents) throws NostrException {
     super(
-       aImgIdentity,
+       reputationDefinitionCreatorIdentity,
        identifierTag,
        Stream.concat(
           Stream.concat(
              TagMappedEventIF.throwIfEmpty(curatedFormulaEvents, MISSING_FORMULA_EVENTS)
                 .map(AddressableEvent::asAddressableEventAddressTag),
-             Stream.of(new PubKeyTag(reputationDefinitionCreatorPublicKey))),
+             Stream.of(new PubKeyTag(reputationHostPublicKey))),
           Stream.concat(
              Stream.of(externalIdentityTag),
              baseTags.stream()
@@ -91,6 +95,11 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
 
   @JsonIgnore
   public final PublicKey getReputationDefinitionCreatorPublicKey() {
+    return getPublicKey();
+  }
+
+  @JsonIgnore
+  public final PublicKey getReputationHostPublicKey() {
     return requireFirstTag(PubKeyTag.class).publicKey();
   }
 

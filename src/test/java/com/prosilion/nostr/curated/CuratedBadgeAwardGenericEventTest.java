@@ -1,9 +1,10 @@
-package com.prosilion.nostr;
+package com.prosilion.nostr.curated;
 
+import com.prosilion.nostr.EventTestFixtures;
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
-import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-import static com.prosilion.nostr.BadgeAwardReputationEventTest.relay;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {

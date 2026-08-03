@@ -1,11 +1,12 @@
-package com.prosilion.nostr;
+package com.prosilion.nostr.curated;
 
+import com.prosilion.nostr.EventTestFixtures;
 import com.prosilion.nostr.event.AbstractSetsEvent;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-import com.prosilion.nostr.event.BadgeSetsEvent;
-import com.prosilion.nostr.event.CuratedBadgeAwardGenericEvent;
-import com.prosilion.nostr.event.CuratedBadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.CuratedFormulaEvent;
+import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.curated.BadgeSetsEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -51,8 +52,8 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 
     this.badgeDefinitionReputationEvent =
        new BadgeDefinitionReputationEvent(
-          aImgIdentity,
-          upvoteDefnCreator.getPublicKey(),
+          repDefnCreator,
+          aImgIdentity.getPublicKey(),
           reputationIdentifierTag,
           EXTERNAL_IDENTITY_TAG, relayArgRelay,
           List.of(plusOneFormulaEvent, minusOneFormulaEvent));

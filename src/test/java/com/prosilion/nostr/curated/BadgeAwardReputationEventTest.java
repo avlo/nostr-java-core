@@ -1,9 +1,10 @@
-package com.prosilion.nostr;
+package com.prosilion.nostr.curated;
 
-import com.prosilion.nostr.event.BadgeAwardReputationEvent;
+import com.prosilion.nostr.EventTestFixtures;
+import com.prosilion.nostr.event.curated.BadgeAwardReputationEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionReputationEvent;
-import com.prosilion.nostr.event.CuratedFormulaEvent;
+import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.ExternalIdentityTag;

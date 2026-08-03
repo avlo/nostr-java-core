@@ -1,6 +1,8 @@
-package com.prosilion.nostr;
+package com.prosilion.nostr.curated;
 
-import com.prosilion.nostr.event.CuratedFormulaEvent;
+import com.prosilion.nostr.EventTestFixtures;
+import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.tag.AddressTag;

@@ -1,8 +1,11 @@
-package com.prosilion.nostr.event;
+package com.prosilion.nostr.event.curated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.AddressableEvent;
+import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.TagMappedEventIF;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
