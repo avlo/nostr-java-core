@@ -63,58 +63,93 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
   }
 
   public CuratedBadgeDefinitionGenericEvent(@NonNull GenericEventRecord genericEventRecord) {
+    this(genericEventRecord, requireTags(genericEventRecord));
+  }
+
+  private CuratedBadgeDefinitionGenericEvent(
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull RequiredTags requiredTags) {
     super(
-       validateIdentifierTagHash(
-          validateRequiredTags(
-             genericEventRecord,
-             List.of(
-                IdentifierTag.class,
-                AddressTag.class,
-                EventTag.class,
-                RelayTag.class,
-                ReferenceTag.class))),
+       genericEventRecord,
        new SetsPairedEvent(
           fillAddressTag(
-             genericEventRecord.requireFirstTag(AddressTag.class),
-             genericEventRecord.requireFirstTag(ReferenceTag.class)),
+             requiredTags.addressTag(),
+             requiredTags.referenceTag()),
           fillEventTag(
-             genericEventRecord.requireFirstTag(EventTag.class),
-             genericEventRecord.requireFirstTag(ReferenceTag.class))));
+             requiredTags.eventTag(),
+             requiredTags.referenceTag())));
 
     this.badgeDefinitionGenericEvent =
        new BadgeDefinitionGenericEvent(
           new GenericEventRecord(
-             genericEventRecord.requireFirstTag(EventTag.class).getEventId(),
-             genericEventRecord.requireFirstTag(AddressTag.class).getPublicKey(),
+             requiredTags.eventTag().getEventId(),
+             requiredTags.addressTag().getPublicKey(),
              genericEventRecord.getCreatedAt(),
-             genericEventRecord.requireFirstTag(AddressTag.class).getKind(),
-             curateBadgeDefinitionEventTags(genericEventRecord),
+             requiredTags.addressTag().getKind(),
+             curateBadgeDefinitionEventTags(requiredTags),
              genericEventRecord.getContent(),
              genericEventRecord.getSignature()).asGenericEventRecord());
   }
 
   protected static GenericEventRecord validateIdentifierTagHash(GenericEventRecord genericEventRecord) {
-    if (
-       !Objects.equals(
-          genericEventRecord.requireFirstTag(IdentifierTag.class).getUuid(),
-          hashedAddressTag(
-             genericEventRecord.requireFirstTag(AddressTag.class)).getUuid()))
+    return validateIdentifierTagHash(
+       genericEventRecord,
+       genericEventRecord.requireFirstTag(IdentifierTag.class),
+       genericEventRecord.requireFirstTag(AddressTag.class));
+  }
+
+  static GenericEventRecord validateIdentifierTagHash(
+     GenericEventRecord genericEventRecord,
+     IdentifierTag identifierTag,
+     AddressTag addressTag) {
+
+    IdentifierTag hashedAddressTag = hashedAddressTag(addressTag);
+    if (!Objects.equals(identifierTag.getUuid(), hashedAddressTag.getUuid()))
       throw new NostrException(
-         String.format("IdentifierTag UUID [%s] != hashcode(AddressTag) [%s]",
-            genericEventRecord.requireFirstTag(IdentifierTag.class).getUuid(),
-            hashedAddressTag(
-               genericEventRecord.requireFirstTag(AddressTag.class)).getUuid()));
+         String.format("IdentifierTag UUID [%s] != hashcode(AddressTag) [%s]", identifierTag.getUuid(), hashedAddressTag.getUuid()));
+
     return genericEventRecord;
   }
 
-  private static List<BaseTag> curateBadgeDefinitionEventTags(@NonNull GenericEventRecord genericEventRecord) {
-    AddressTag addressTag = genericEventRecord.requireFirstTag(AddressTag.class);
-    IdentifierTag identifierTag = addressTag.requireIdentifierTag();
+  private static final List<Class<? extends BaseTag>> REQUIRED_TAG_TYPES =
+     List.of(
+        IdentifierTag.class,
+        AddressTag.class,
+        EventTag.class,
+        RelayTag.class,
+        ReferenceTag.class);
 
-    return genericEventRecord.requireFirstTag(EventTag.class).findRelay()
-       .or(addressTag::findRelay)
+  private static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
+    validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
+    RequiredTags requiredTags =
+       new RequiredTags(
+          genericEventRecord.requireFirstTag(IdentifierTag.class),
+          genericEventRecord.requireFirstTag(AddressTag.class),
+          genericEventRecord.requireFirstTag(EventTag.class),
+          genericEventRecord.requireFirstTag(RelayTag.class),
+          genericEventRecord.requireFirstTag(ReferenceTag.class));
+    validateIdentifierTagHash(
+       genericEventRecord,
+       requiredTags.identifierTag(),
+       requiredTags.addressTag());
+    return requiredTags;
+  }
+
+  private static List<BaseTag> curateBadgeDefinitionEventTags(@NonNull RequiredTags requiredTags) {
+    IdentifierTag identifierTag = requiredTags.addressTag().requireIdentifierTag();
+
+    return requiredTags.eventTag().findRelay()
+       .or(requiredTags.addressTag()::findRelay)
        .<List<BaseTag>>map(relay -> List.of(identifierTag, new RelayTag(relay)))
        .orElseGet(() -> List.of(identifierTag));
   }
-}
 
+  private record RequiredTags(
+     IdentifierTag identifierTag,
+     AddressTag addressTag,
+     EventTag eventTag,
+     RelayTag relayTag,
+     ReferenceTag referenceTag) {
+
+  }
+}

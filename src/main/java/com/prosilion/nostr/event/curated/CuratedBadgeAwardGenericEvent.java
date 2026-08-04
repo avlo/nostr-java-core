@@ -8,6 +8,7 @@ import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
@@ -25,11 +26,10 @@ import static com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEve
 public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
   public static final String DEFAULT_CONTENT = "AfterImage generated CuratedBadgeAwardEvent";
 
-//  TODO: investigate readd below
+  //  TODO: investigate readd below
 //  @Getter
 //  @JsonIgnore
 //  protected final CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent;
-
   public CuratedBadgeAwardGenericEvent(
      @NonNull Identity identity,
      @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent,
@@ -100,29 +100,61 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
   }
 
   public CuratedBadgeAwardGenericEvent(@NonNull GenericEventRecord genericEventRecord) {
+    this(genericEventRecord, requireTags(genericEventRecord));
+  }
+
+  private CuratedBadgeAwardGenericEvent(
+     @NonNull GenericEventRecord genericEventRecord,
+     @NonNull RequiredTags requiredTags) {
     super(
-       validateIdentifierTagHash(
-          validateRequiredTags(
-             genericEventRecord,
-             List.of(
-                IdentifierTag.class,
-                PubKeyTag.class,
-                AddressTag.class,
-                EventTag.class,
-                RelayTag.class,
-                ReferenceTag.class))),
+       genericEventRecord,
        new SetsPairedEvent(
           fillAddressTag(
-             genericEventRecord.requireFirstTag(AddressTag.class),
-             genericEventRecord.requireFirstTag(ReferenceTag.class)),
+             requiredTags.addressTag(),
+             requiredTags.referenceTag()),
           fillEventTag(
-             genericEventRecord.requireFirstTag(EventTag.class),
-             genericEventRecord.requireFirstTag(ReferenceTag.class))));
+             requiredTags.eventTag(),
+             requiredTags.referenceTag())));
+  }
+
+  private static final List<Class<? extends BaseTag>> REQUIRED_TAG_TYPES =
+     List.of(
+        IdentifierTag.class,
+        PubKeyTag.class,
+        AddressTag.class,
+        EventTag.class,
+        RelayTag.class,
+        ReferenceTag.class);
+
+  private static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
+    validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
+    RequiredTags requiredTags =
+       new RequiredTags(
+          genericEventRecord.requireFirstTag(IdentifierTag.class),
+          genericEventRecord.requireFirstTag(PubKeyTag.class),
+          genericEventRecord.requireFirstTag(AddressTag.class),
+          genericEventRecord.requireFirstTag(EventTag.class),
+          genericEventRecord.requireFirstTag(RelayTag.class),
+          genericEventRecord.requireFirstTag(ReferenceTag.class));
+    validateIdentifierTagHash(
+       genericEventRecord,
+       requiredTags.identifierTag(),
+       requiredTags.addressTag());
+    return requiredTags;
   }
 
   @JsonIgnore
   public final PublicKey getAwardRecipientPublicKey() {
     return requireFirstTag(PubKeyTag.class).getPublicKey();
   }
-}
 
+  private record RequiredTags(
+     IdentifierTag identifierTag,
+     PubKeyTag pubKeyTag,
+     AddressTag addressTag,
+     EventTag eventTag,
+     RelayTag relayTag,
+     ReferenceTag referenceTag) {
+
+  }
+}

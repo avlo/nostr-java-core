@@ -133,7 +133,7 @@ public abstract class BaseEvent implements EventIF {
   public static GenericEventRecord validateRequiredTags(
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull List<Class<? extends BaseTag>> baseTags) {
-    baseTags.forEach(baseTagClass -> validateRequiredTags(genericEventRecord.getTags(), baseTags));
+    validateRequiredTags(genericEventRecord.getTags(), baseTags);
 
 //    baseTags.forEach(baseTagClass -> {
 //      List<?> tag = genericEventRecord.getTypeSpecificTags(baseTagClass);
