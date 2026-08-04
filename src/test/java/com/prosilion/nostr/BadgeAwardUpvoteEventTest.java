@@ -1,6 +1,7 @@
 package com.prosilion.nostr;
 
 import com.google.common.base.Function;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.EventIF;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
@@ -120,6 +120,91 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
        methodInstance_AsGenericEventRecord.apply(award_NoNo_Defn_NoNo_Upvote));
   }
 
+  @Test
+  final void testEqualsPureGenericVariantLenientCreationTimeNoRelayTag() {
+    BadgeDefinitionGenericEvent expectedBadgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, auxRelay);
+    BadgeDefinitionGenericEvent actualBadgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(
+       new GenericEventRecord(
+          expectedBadgeDefinitionGenericEvent.getId(),
+          expectedBadgeDefinitionGenericEvent.getPublicKey(),
+          System.currentTimeMillis(),
+          Kind.BADGE_DEFINITION_EVENT,
+          expectedBadgeDefinitionGenericEvent.getTags(),
+          expectedBadgeDefinitionGenericEvent.getContent(),
+          expectedBadgeDefinitionGenericEvent.getSignature()));
+
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> expectedBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+       submitter,
+       recipient.getPublicKey(),
+       expectedBadgeDefinitionGenericEvent,
+       relay);
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> actualBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+       new GenericEventRecord(
+          expectedBadgeAwardGenericEvent.getId(),
+          expectedBadgeAwardGenericEvent.getPublicKey(),
+          System.currentTimeMillis(),
+          Kind.BADGE_AWARD_EVENT,
+          expectedBadgeAwardGenericEvent.getTags(),
+          expectedBadgeAwardGenericEvent.getContent(),
+          expectedBadgeAwardGenericEvent.getSignature()),
+       addressTag -> actualBadgeDefinitionGenericEvent);
+
+    assertEquals(expectedBadgeAwardGenericEvent, actualBadgeAwardGenericEvent);
+    assertEquals(expectedBadgeAwardGenericEvent.getId(), actualBadgeAwardGenericEvent.getId());
+    assertEquals(expectedBadgeAwardGenericEvent.getSignature(), actualBadgeAwardGenericEvent.getSignature());
+    assertEquals(expectedBadgeAwardGenericEvent.getTags(), actualBadgeAwardGenericEvent.getTags());
+    assertTrue(actualBadgeAwardGenericEvent.getRelay().isPresent());
+    assertEquals(relay, actualBadgeAwardGenericEvent.getRelay().orElseThrow());
+    assertNotEquals(expectedBadgeAwardGenericEvent.getCreatedAt(), actualBadgeAwardGenericEvent.getCreatedAt());
+    
+    assertEquals(actualBadgeAwardGenericEvent.getAddressTag(), actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag());
+    assertEquals(actualBadgeAwardGenericEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
+    assertNotEquals(actualBadgeAwardGenericEvent.getRelay().orElseThrow(), actualBadgeDefinitionGenericEvent.getRelay().orElseThrow());
+    assertNotEquals(actualBadgeAwardGenericEvent.getId(), actualBadgeDefinitionGenericEvent.getId());
+    assertEquals(auxRelay, actualBadgeAwardGenericEvent.getAddressTag().getRelay());
+    assertEquals(auxRelay, actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag().getRelay());
+  }
+
+  @Test
+  final void testEqualsPureGenericVariantLenientCreationTimeWithRelayTag() {
+    BadgeDefinitionGenericEvent expectedBadgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
+    BadgeDefinitionGenericEvent actualBadgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(
+       new GenericEventRecord(
+          expectedBadgeDefinitionGenericEvent.getId(),
+          expectedBadgeDefinitionGenericEvent.getPublicKey(),
+          System.currentTimeMillis(),
+          Kind.BADGE_DEFINITION_EVENT,
+          expectedBadgeDefinitionGenericEvent.getTags(),
+          expectedBadgeDefinitionGenericEvent.getContent(),
+          expectedBadgeDefinitionGenericEvent.getSignature()));
+
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> expectedBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+       submitter,
+       recipient.getPublicKey(),
+       expectedBadgeDefinitionGenericEvent);
+    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> actualBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+       new GenericEventRecord(
+          expectedBadgeAwardGenericEvent.getId(),
+          expectedBadgeAwardGenericEvent.getPublicKey(),
+          System.currentTimeMillis(),
+          Kind.BADGE_AWARD_EVENT,
+          expectedBadgeAwardGenericEvent.getTags(),
+          expectedBadgeAwardGenericEvent.getContent(),
+          expectedBadgeAwardGenericEvent.getSignature()),
+       addressTag -> actualBadgeDefinitionGenericEvent);
+
+    assertEquals(expectedBadgeAwardGenericEvent, actualBadgeAwardGenericEvent);
+    assertEquals(expectedBadgeAwardGenericEvent.getId(), actualBadgeAwardGenericEvent.getId());
+    assertEquals(expectedBadgeAwardGenericEvent.getSignature(), actualBadgeAwardGenericEvent.getSignature());
+    assertEquals(expectedBadgeAwardGenericEvent.getTags(), actualBadgeAwardGenericEvent.getTags());
+    assertTrue(actualBadgeAwardGenericEvent.getRelay().isEmpty());
+    assertNotEquals(expectedBadgeAwardGenericEvent.getCreatedAt(), actualBadgeAwardGenericEvent.getCreatedAt());
+
+    assertEquals(actualBadgeAwardGenericEvent.getAddressTag(), actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag());
+    assertEquals(actualBadgeAwardGenericEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
+    assertNotEquals(actualBadgeAwardGenericEvent.getId(), actualBadgeDefinitionGenericEvent.getId());
+  }
+  
   private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {
     assertEquals(award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord(), genericEventRecordVariant);
   }

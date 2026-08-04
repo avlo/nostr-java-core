@@ -16,7 +16,6 @@ public class SetsPairedEvent {
   public static final String NULL_EVENT_TAG_RELAY = "SetsPairedEvent EventTag relay cannot be null";
   private final ATagETagPair aTagETagPair;
 
-  //  TODO: since addressTagBackupRelay is/always/likely obtained from EventTag relay, possibly remove addressTagBackupRelay and use eventTag.relay
   public SetsPairedEvent(@NonNull AddressTag addressTag, @NonNull EventTag eventTag) {
     if (eventTag.findRelay().isEmpty())
       throw new NostrException(NULL_EVENT_TAG_RELAY);

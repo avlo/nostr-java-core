@@ -1,5 +1,6 @@
 package com.prosilion.nostr;
 
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -115,6 +117,55 @@ public class BadgeDefinitionGenericEventTest extends EventTestFixtures {
     BadgeDefinitionGenericEvent expectedWithoutRelayTag = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
     BadgeDefinitionGenericEvent badgeDefinitionAsGenericEventRecord = new BadgeDefinitionGenericEvent(expectedWithoutRelayTag.asGenericEventRecord());
     assertEquals(expectedWithoutRelayTag, badgeDefinitionAsGenericEventRecord);
+  }
+
+  @Test
+  final void testEqualsPureGenericVariantLenientCreationTimeNoRelayTag() {
+    BadgeDefinitionGenericEvent expectedWithoutRelayTag = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag);
+    long epochSecond = System.currentTimeMillis();
+    GenericEventRecord genericEventRecord = new GenericEventRecord(
+       expectedWithoutRelayTag.getId(),
+       expectedWithoutRelayTag.getPublicKey(),
+       epochSecond,
+       Kind.BADGE_DEFINITION_EVENT,
+       expectedWithoutRelayTag.getTags(),
+       expectedWithoutRelayTag.getContent(),
+       expectedWithoutRelayTag.getSignature());
+
+    BadgeDefinitionGenericEvent actual = new BadgeDefinitionGenericEvent(genericEventRecord);
+    assertEquals(expectedWithoutRelayTag, actual);
+    assertEquals(expectedWithoutRelayTag.getId(), actual.getId());
+    assertEquals(expectedWithoutRelayTag.getSignature(), actual.getSignature());
+    assertEquals(expectedWithoutRelayTag.getTags(), actual.getTags());
+    assertTrue(actual.getRelay().isEmpty());
+    assertTrue(actual.asAddressableEventAddressTag().findRelay().isEmpty());
+
+    assertNotEquals(expectedWithoutRelayTag.getCreatedAt(), actual.getCreatedAt());
+  }
+
+  @Test
+  final void testEqualsPureGenericVariantLenientCreationTimeWithRelayTag() {
+    BadgeDefinitionGenericEvent expectedBadgeDefinitionGenericEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, relay);
+
+    BadgeDefinitionGenericEvent actual =
+       new BadgeDefinitionGenericEvent(
+          new GenericEventRecord(
+             expectedBadgeDefinitionGenericEvent.getId(),
+             expectedBadgeDefinitionGenericEvent.getPublicKey(),
+             System.currentTimeMillis(),
+             Kind.BADGE_DEFINITION_EVENT,
+             expectedBadgeDefinitionGenericEvent.getTags(),
+             expectedBadgeDefinitionGenericEvent.getContent(),
+             expectedBadgeDefinitionGenericEvent.getSignature()));
+
+    assertEquals(expectedBadgeDefinitionGenericEvent, actual);
+    assertEquals(expectedBadgeDefinitionGenericEvent.getId(), actual.getId());
+    assertEquals(expectedBadgeDefinitionGenericEvent.getSignature(), actual.getSignature());
+    assertEquals(expectedBadgeDefinitionGenericEvent.getTags(), actual.getTags());
+    assertTrue(actual.getRelay().isPresent());
+    assertEquals(relay, actual.getRelay().orElseThrow());
+    assertEquals(relay, actual.asAddressableEventAddressTag().getRelay());
+    assertNotEquals(expectedBadgeDefinitionGenericEvent.getCreatedAt(), actual.getCreatedAt());
   }
 
   @Test
