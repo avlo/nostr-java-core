@@ -13,6 +13,7 @@ import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -98,15 +99,6 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
           .filter(Predicate.not(AddressTag.class::isInstance))).toList();
   }
 
-  protected static AddressTag fillAddressTag(AddressTag addressTag, ReferenceTag referenceTag) {
-    return new AddressTag(
-       addressTag.getKind(),
-       addressTag.getPublicKey(),
-       addressTag.getIdentifierTag(),
-       new Relay(
-          addressTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl())));
-  }
-
   public static IdentifierTag hashedAddressTag(AddressTag addressTag) {
     return
        new IdentifierTag(
@@ -117,6 +109,15 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
           ).hashCode()));
   }
 
+  protected static AddressTag fillAddressTag(AddressTag addressTag, ReferenceTag referenceTag) {
+    return new AddressTag(
+       addressTag.getKind(),
+       addressTag.getPublicKey(),
+       addressTag.getIdentifierTag(),
+       new Relay(
+          addressTag.findRelay().map(Relay::getUrl).orElse(referenceTag.getUrl())));
+  }
+
   protected static EventTag fillEventTag(EventTag eventTag, ReferenceTag referenceTag) {
     return new EventTag(
        eventTag.getEventId(),
@@ -125,5 +126,13 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
 
   private static Stream<BaseTag> setsPairsToBaseTags(@NonNull SetsPairedEvent sets) {
     return Stream.of(sets.getAddressTag(), sets.getEventTag());
+  }
+
+  public static void validateIdentifierTagHash(GenericEventRecord genericEventRecord) {
+    IdentifierTag hashedAddressTag = hashedAddressTag(genericEventRecord.requireFirstTag(AddressTag.class));
+    IdentifierTag genericEventRecordIdentifierTag = genericEventRecord.requireFirstTag(IdentifierTag.class);
+    if (!Objects.equals(genericEventRecordIdentifierTag, hashedAddressTag))
+      throw new NostrException(
+         String.format("IdentifierTag UUID [%s] != hashcode(AddressTag) [%s]", genericEventRecordIdentifierTag, hashedAddressTag));
   }
 }

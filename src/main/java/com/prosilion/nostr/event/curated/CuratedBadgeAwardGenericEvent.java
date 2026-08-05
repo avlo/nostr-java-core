@@ -21,15 +21,18 @@ import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import lombok.NonNull;
 
-import static com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent.validateIdentifierTagHash;
-
 public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
-  public static final String DEFAULT_CONTENT = "AfterImage generated CuratedBadgeAwardEvent";
-
-  //  TODO: investigate readd below
+  public static final String DEFAULT_CONTENT =
+     "AfterImage generated CuratedBadgeAwardGenericEvent- appending BadgeAwardGenericEvent content: %s";
+// TODO: potentially re-add later if can resolve generic ctor variant
+//  @Getter
+//  @JsonIgnore
+//  protected final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent;
+//
 //  @Getter
 //  @JsonIgnore
 //  protected final CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent;
+
   public CuratedBadgeAwardGenericEvent(
      @NonNull Identity identity,
      @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent,
@@ -50,31 +53,6 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
 
   public CuratedBadgeAwardGenericEvent(
      @NonNull Identity identity,
-     @NonNull GenericEventRecord badgeAwardGenericEvent,
-     @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
-     @NonNull Relay relay) {
-    super(
-       identity,
-       Kind.CURATION_SETS_BADGE_AWARD_EVENT,
-       hashedAddressTag(
-          badgeAwardGenericEvent.requireFirstTag(AddressTag.class)),
-       new SetsPairedEvent(
-          fillAddressTag(
-             badgeAwardGenericEvent.requireFirstTag(AddressTag.class),
-             badgeAwardGenericEventReferenceTag),
-          new EventTag(
-             badgeAwardGenericEvent.getId(),
-             badgeAwardGenericEvent.getRelayTag().map(RelayTag::relay).map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),
-       List.of(
-          badgeAwardGenericEvent.requireFirstTag(PubKeyTag.class),
-          badgeAwardGenericEventReferenceTag),
-       DEFAULT_CONTENT,
-       relay);
-//    this.curatedBadgeDefinitionGenericEvent = curatedBadgeDefinitionGenericEvent;
-  }
-
-  public CuratedBadgeAwardGenericEvent(
-     @NonNull Identity identity,
      @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent,
      @NonNull CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent,
      @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
@@ -82,20 +60,23 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
     super(
        identity,
        Kind.CURATION_SETS_BADGE_AWARD_EVENT,
-       hashedAddressTag(
-          curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag()),
+       new IdentifierTag(curatedBadgeDefinitionGenericEvent.getId()),
        new SetsPairedEvent(
           fillAddressTag(
-             curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag(),
+             new AddressTag(
+                curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag().getKind(),
+                identity.getPublicKey(),
+                curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag().getIdentifierTag()),
              badgeAwardGenericEventReferenceTag),
           new EventTag(
              badgeAwardGenericEvent.getId(),
              badgeAwardGenericEvent.getRelay().map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),
        List.of(
-          new PubKeyTag(badgeAwardGenericEvent.getAwardRecipientPublicKey()),
-          badgeAwardGenericEventReferenceTag),
-       DEFAULT_CONTENT,
+          new PubKeyTag(badgeAwardGenericEvent.getAwardRecipientPublicKey())),
+       String.format(DEFAULT_CONTENT, badgeAwardGenericEvent.getContent()),
        relay);
+// TODO: potentially re-add later if can resolve below Generic variant    
+//    this.badgeAwardGenericEvent = badgeAwardGenericEvent;
 //    this.curatedBadgeDefinitionGenericEvent = curatedBadgeDefinitionGenericEvent;
   }
 
@@ -109,38 +90,26 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
     super(
        genericEventRecord,
        new SetsPairedEvent(
-          fillAddressTag(
-             requiredTags.addressTag(),
-             requiredTags.referenceTag()),
-          fillEventTag(
-             requiredTags.eventTag(),
-             requiredTags.referenceTag())));
-  }
-
-  private static final List<Class<? extends BaseTag>> REQUIRED_TAG_TYPES =
-     List.of(
-        IdentifierTag.class,
-        PubKeyTag.class,
-        AddressTag.class,
-        EventTag.class,
-        RelayTag.class,
-        ReferenceTag.class);
-
-  private static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
-    validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
-    RequiredTags requiredTags =
-       new RequiredTags(
-          genericEventRecord.requireFirstTag(IdentifierTag.class),
-          genericEventRecord.requireFirstTag(PubKeyTag.class),
-          genericEventRecord.requireFirstTag(AddressTag.class),
-          genericEventRecord.requireFirstTag(EventTag.class),
-          genericEventRecord.requireFirstTag(RelayTag.class),
-          genericEventRecord.requireFirstTag(ReferenceTag.class));
-    validateIdentifierTagHash(
-       genericEventRecord,
-       requiredTags.identifierTag(),
-       requiredTags.addressTag());
-    return requiredTags;
+          requiredTags.addressTag(),
+          requiredTags.eventTag()));
+// TODO: potentially re-add later    
+//    this.curatedBadgeDefinitionGenericEvent =
+//       new CuratedBadgeDefinitionGenericEvent(
+//          new GenericEventRecord(
+//             
+//          ));
+//
+//    this.badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//       genericEventRecord, addressTag ->
+//       new BadgeDefinitionGenericEvent(
+//          new GenericEventRecord(
+//             requiredTags.identifierTag().getUuid(),
+//             requiredTags.addressTag().getPublicKey(),
+//             genericEventRecord.getCreatedAt(),
+//             Kind.BADGE_DEFINITION_EVENT,
+//             genericEventRecord.getTags(),
+//             genericEventRecord.getContent(),
+//             genericEventRecord.getSignature())));
   }
 
   @JsonIgnore
@@ -148,13 +117,24 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
     return requireFirstTag(PubKeyTag.class).getPublicKey();
   }
 
+  private static final List<Class<? extends BaseTag>> REQUIRED_TAG_TYPES =
+     List.of(IdentifierTag.class, PubKeyTag.class, AddressTag.class, EventTag.class, RelayTag.class);
+
+  private static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
+    validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
+    return new RequiredTags(
+       genericEventRecord.requireFirstTag(IdentifierTag.class),
+       genericEventRecord.requireFirstTag(PubKeyTag.class),
+       genericEventRecord.requireFirstTag(AddressTag.class),
+       genericEventRecord.requireFirstTag(EventTag.class),
+       genericEventRecord.requireFirstTag(RelayTag.class));
+  }
+
   private record RequiredTags(
      IdentifierTag identifierTag,
      PubKeyTag pubKeyTag,
      AddressTag addressTag,
      EventTag eventTag,
-     RelayTag relayTag,
-     ReferenceTag referenceTag) {
-
+     RelayTag relayTag) {
   }
 }

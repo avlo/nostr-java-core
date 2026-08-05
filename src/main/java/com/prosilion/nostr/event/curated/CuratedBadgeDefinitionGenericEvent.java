@@ -1,7 +1,6 @@
 package com.prosilion.nostr.event.curated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
@@ -17,14 +16,12 @@ import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.tag.SetsPairedEventTagIF;
 import com.prosilion.nostr.user.Identity;
 import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 
 public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
   public static final String DEFAULT_CONTENT =
      "AfterImage generated CuratedBadgeDefinitionGenericEvent- appending BadgeDefinitionGenericEvent content: %s";
-
   @Getter
   @JsonIgnore
   protected final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent;
@@ -88,51 +85,21 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
              requiredTags.addressTag().getKind(),
              curateBadgeDefinitionEventTags(requiredTags),
              genericEventRecord.getContent(),
-             genericEventRecord.getSignature()).asGenericEventRecord());
-  }
-
-  protected static GenericEventRecord validateIdentifierTagHash(GenericEventRecord genericEventRecord) {
-    return validateIdentifierTagHash(
-       genericEventRecord,
-       genericEventRecord.requireFirstTag(IdentifierTag.class),
-       genericEventRecord.requireFirstTag(AddressTag.class));
-  }
-
-  static GenericEventRecord validateIdentifierTagHash(
-     GenericEventRecord genericEventRecord,
-     IdentifierTag identifierTag,
-     AddressTag addressTag) {
-
-    IdentifierTag hashedAddressTag = hashedAddressTag(addressTag);
-    if (!Objects.equals(identifierTag.getUuid(), hashedAddressTag.getUuid()))
-      throw new NostrException(
-         String.format("IdentifierTag UUID [%s] != hashcode(AddressTag) [%s]", identifierTag.getUuid(), hashedAddressTag.getUuid()));
-
-    return genericEventRecord;
+             genericEventRecord.getSignature()));
   }
 
   private static final List<Class<? extends BaseTag>> REQUIRED_TAG_TYPES =
-     List.of(
-        IdentifierTag.class,
-        AddressTag.class,
-        EventTag.class,
-        RelayTag.class,
-        ReferenceTag.class);
+     List.of(IdentifierTag.class, AddressTag.class, EventTag.class, RelayTag.class, ReferenceTag.class);
 
-  private static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
+  static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
     validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
-    RequiredTags requiredTags =
-       new RequiredTags(
-          genericEventRecord.requireFirstTag(IdentifierTag.class),
-          genericEventRecord.requireFirstTag(AddressTag.class),
-          genericEventRecord.requireFirstTag(EventTag.class),
-          genericEventRecord.requireFirstTag(RelayTag.class),
-          genericEventRecord.requireFirstTag(ReferenceTag.class));
-    validateIdentifierTagHash(
-       genericEventRecord,
-       requiredTags.identifierTag(),
-       requiredTags.addressTag());
-    return requiredTags;
+    validateIdentifierTagHash(genericEventRecord);
+    return new RequiredTags(
+       genericEventRecord.requireFirstTag(IdentifierTag.class),
+       genericEventRecord.requireFirstTag(AddressTag.class),
+       genericEventRecord.requireFirstTag(EventTag.class),
+       genericEventRecord.requireFirstTag(RelayTag.class),
+       genericEventRecord.requireFirstTag(ReferenceTag.class));
   }
 
   private static List<BaseTag> curateBadgeDefinitionEventTags(@NonNull RequiredTags requiredTags) {
@@ -144,12 +111,11 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
        .orElseGet(() -> List.of(identifierTag));
   }
 
-  private record RequiredTags(
+  record RequiredTags(
      IdentifierTag identifierTag,
      AddressTag addressTag,
      EventTag eventTag,
      RelayTag relayTag,
      ReferenceTag referenceTag) {
-
   }
 }

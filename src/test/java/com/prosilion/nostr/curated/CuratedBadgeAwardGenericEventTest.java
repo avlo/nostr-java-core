@@ -1,13 +1,18 @@
 package com.prosilion.nostr.curated;
 
 import com.prosilion.nostr.EventTestFixtures;
+import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.BaseTag;
+import com.prosilion.nostr.tag.EventTag;
+import com.prosilion.nostr.tag.IdentifierTag;
+import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
@@ -16,6 +21,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
@@ -51,31 +57,46 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
   @Test
   final void testValidBadgeSetsEventUsingGenericEventRecord() {
-    GenericEventRecord badgeAwardGenericEvent = award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord();
-    ReferenceTag badgeAwardGenericEventReferenceTag = new ReferenceTag(relayArgUrl);
-
-    CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardGenericEvent expectedCurationBadgeAwardGenericEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
-       badgeAwardGenericEvent,
-       badgeAwardGenericEventReferenceTag,
+       award_YesYes_Defn_YesYes_Upvote,
+       new ReferenceTag(relayArgUrl),
+       new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    assertEquals(
-       badgeAwardGenericEvent.requireFirstTag(AddressTag.class),
-       curatedBadgeAwardGenericEvent.getAddressTag());
-    assertEquals(badgeAwardGenericEvent.getId(), curatedBadgeAwardGenericEvent.getEventTag().getEventId());
-    assertEquals(
-       badgeAwardGenericEvent.requireFirstTag(RelayTag.class).getRelay(),
-       curatedBadgeAwardGenericEvent.getEventTag().requireRelay());
-    assertEquals(
-       award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey(),
-       curatedBadgeAwardGenericEvent.getAwardRecipientPublicKey());
-    assertEquals(
-       String.valueOf(badgeAwardGenericEvent.requireFirstTag(AddressTag.class).hashCode()),
-       curatedBadgeAwardGenericEvent.getIdentifierTag().getUuid());
-    assertEquals(
-       badgeAwardGenericEventReferenceTag,
-       curatedBadgeAwardGenericEvent.requireFirstTag(ReferenceTag.class));
+    ReferenceTag badgeAwardGenericEventReferenceTag = new ReferenceTag(relayArgUrl);
+
+    List<BaseTag> tags = List.of(
+       new PubKeyTag(expectedCurationBadgeAwardGenericEvent.getAwardRecipientPublicKey()),
+       expectedCurationBadgeAwardGenericEvent.getIdentifierTag(), // test that this is same as awardYesYes event id
+       award_YesYes_Defn_YesYes_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
+       new EventTag(award_YesYes_Defn_YesYes_Upvote.getId(), relayUrl),
+       relayArgRelayTag,
+       new ReferenceTag(relayUrl));
+
+    GenericEventRecord genericEventRecord = new GenericEventRecord(
+       expectedCurationBadgeAwardGenericEvent.getId(),
+       expectedCurationBadgeAwardGenericEvent.getPublicKey(),
+       System.currentTimeMillis(),
+       expectedCurationBadgeAwardGenericEvent.getKind(),
+       expectedCurationBadgeAwardGenericEvent.getTags(),
+       expectedCurationBadgeAwardGenericEvent.getContent(),
+       expectedCurationBadgeAwardGenericEvent.getSignature());
+
+    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(
+       genericEventRecord);
+
+//  
+    assertEquals(expectedCurationBadgeAwardGenericEvent.getIdentifierTag(), actual.getIdentifierTag());
+    assertEquals(aImgIdentity.getPublicKey(), actual.getAddressTag().getPublicKey());
+    assertEquals(AbstractSetsEvent.hashedAddressTag(award_YesYes_Defn_YesYes_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag()), actual.getAddressTag().getIdentifierTag());
+    assertEquals(expectedCurationBadgeAwardGenericEvent.requireFirstTag(AddressTag.class).getIdentifierTag(), actual.getAddressTag().getIdentifierTag());
+    assertEquals(expectedCurationBadgeAwardGenericEvent.requireFirstTag(AddressTag.class), actual.getAddressTag());
+    assertEquals(expectedCurationBadgeAwardGenericEvent.getEventTag(), actual.getEventTag());
+    assertEquals(expectedCurationBadgeAwardGenericEvent.requireFirstTag(RelayTag.class).getRelay(), actual.getEventTag().requireRelay());
+    assertEquals(award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey(), actual.getAwardRecipientPublicKey());
+    assertEquals(expectedCurationBadgeAwardGenericEvent.requireFirstTag(IdentifierTag.class), actual.getIdentifierTag());
+    assertTrue(actual.getTypeSpecificTags(ReferenceTag.class).isEmpty());
   }
 
   @Test
