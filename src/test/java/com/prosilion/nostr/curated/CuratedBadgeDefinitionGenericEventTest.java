@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 
@@ -42,10 +43,10 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
        new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    CuratedBadgeDefinitionGenericEvent newFromExisting = new CuratedBadgeDefinitionGenericEvent(
+    CuratedBadgeDefinitionGenericEvent actual = new CuratedBadgeDefinitionGenericEvent(
        curatedBadgeDefinitionGenericEvent.asGenericEventRecord());
 
-    SetsPairedEvent setsPairedUpvoteEvent = newFromExisting.getSetsPairedEvent();
+    SetsPairedEvent setsPairedUpvoteEvent = actual.getSetsPairedEvent();
     String upvoteEventId = setsPairedUpvoteEvent.getEventTagEventId();
 
     assertEquals(upvoteEventId, setsPairedUpvoteEvent.getEventTagEventId());
@@ -53,8 +54,12 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
     assertEquals(setsPairedUpvoteEvent.getEventTag().getEventId(), upvoteEventId);
 
     AddressTag upvoteAsAddressTag = award_YesYes_Defn_YesYes_Upvote.getAddressTag();
-    assertEquals(newFromExisting.getAddressTag(), upvoteAsAddressTag);
+    assertEquals(actual.getAddressTag(), upvoteAsAddressTag);
     assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedUpvoteEvent.getDefinitionEventRelay());
+    assertTrue(actual.getRelayTag().isPresent());
+    assertTrue(actual.getTypeSpecificTags(ReferenceTag.class).isEmpty());
+    assertTrue(actual.getAddressTag().findRelay().isPresent());
+    assertTrue(actual.getEventTag().findRelay().isPresent());
   }
 
   @Test
@@ -63,18 +68,22 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
        aImgIdentity,
        upvoteIdentifierTag);
 
-    CuratedBadgeDefinitionGenericEvent newFromExisting = new CuratedBadgeDefinitionGenericEvent(
+    CuratedBadgeDefinitionGenericEvent actual = new CuratedBadgeDefinitionGenericEvent(
        aImgIdentity,
        new BadgeDefinitionGenericEvent(badgeDefinitionUpvoteEventWithoutRelayTag.asGenericEventRecord()),
        new ReferenceTag(new Relay("ws://localhost-simualted-from-relay:5555").getUrl()),
        new Relay("ws://localhost-relay-generating-new-curated-event:5555"));
 
-    SetsPairedEvent setsPairedUpvoteEvent = newFromExisting.getSetsPairedEvent();
+    SetsPairedEvent setsPairedUpvoteEvent = actual.getSetsPairedEvent();
     assertEquals(badgeDefinitionUpvoteEventWithoutRelayTag.getId(), setsPairedUpvoteEvent.getEventTagEventId());
 
     IdentifierTag upvoteDefinitionIdentifierTag = badgeDefinitionUpvoteEventWithoutRelayTag.getIdentifierTag();
-    assertEquals(newFromExisting.getAddressTag().getIdentifierTag(), upvoteDefinitionIdentifierTag);
+    assertEquals(actual.getAddressTag().getIdentifierTag(), upvoteDefinitionIdentifierTag);
     assertEquals(setsPairedUpvoteEvent.getDefinitionEventRelay(), setsPairedUpvoteEvent.getDefinitionEventRelay());
+    assertTrue(actual.getRelayTag().isPresent());
+    assertTrue(actual.getTypeSpecificTags(ReferenceTag.class).isEmpty());
+    assertTrue(actual.getAddressTag().findRelay().isPresent());
+    assertTrue(actual.getEventTag().findRelay().isPresent());
   }
 
   final void testThrowsException() {

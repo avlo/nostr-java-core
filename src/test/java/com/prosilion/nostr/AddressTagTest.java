@@ -4,11 +4,13 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.filter.tag.AddressTagFilter;
 import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.util.Util;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,7 +34,7 @@ class AddressTagTest {
   @Test
   void getSupportedFields() {
     AddressTag addressTag = new AddressTag(
-      kind, publicKey, identifierTag, relay);
+       kind, publicKey, identifierTag, relay);
 
     List<Field> fields = addressTag.getSupportedFields();
     anyFieldNameMatch(fields, field -> field.getName().equals("kind"));
@@ -48,16 +50,16 @@ class AddressTagTest {
     assertFalse(fields.stream().anyMatch(field -> field.getName().equals("idEventXXX")));
 //        TODO: below needs failable stream
     assertFalse(
-      fields.stream().flatMap(field ->
-        {
-          try {
-            return addressTag.getFieldValue(field).stream();
-          } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-          }
-        })
-        .anyMatch(fieldValue ->
-          fieldValue.equals(identifierTag.toString() + "x")));
+       fields.stream().flatMap(field ->
+          {
+            try {
+              return addressTag.getFieldValue(field).stream();
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+              throw new RuntimeException(e);
+            }
+          })
+          .anyMatch(fieldValue ->
+             fieldValue.equals(identifierTag.toString() + "x")));
   }
 
   @Test
@@ -121,64 +123,103 @@ class AddressTagTest {
 
     AddressTag addressTagSansRelaySansIdentifierTag = new AddressTag(kind, publicKey);
     String expectedJoinedFirstPair = String.join(",\n",
-      expectedAddressTagPrettyPrint(addressTagSansRelay),
-      expectedAddressTagPrettyPrint(addressTagSansRelaySansIdentifierTag));
+       expectedAddressTagPrettyPrint(addressTagSansRelay),
+       expectedAddressTagPrettyPrint(addressTagSansRelaySansIdentifierTag));
 
     assertEquals(
-      expectedJoinedFirstPair,
-      Util.prettyPrintAddressTags(List.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag)));
+       expectedJoinedFirstPair,
+       Util.prettyPrintAddressTags(List.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag)));
     assertEquals(
-      expectedJoinedFirstPair,
-      Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",\n")));
+       expectedJoinedFirstPair,
+       Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",\n")));
 
     AddressTag properAddressTag = new AddressTag(kind, publicKey, identifierTag, relay);
     assertEquals(expectedAddressTagPrettyPrint(properAddressTag), Util.prettyPrintAddressTags(properAddressTag));
     String expectedJoinedSecondPair = String.join(",\n",
-      expectedJoinedFirstPair,
-      expectedAddressTagPrettyPrint(properAddressTag));
+       expectedJoinedFirstPair,
+       expectedAddressTagPrettyPrint(properAddressTag));
 
     assertEquals(
-      expectedJoinedSecondPair,
-      Util.prettyPrintAddressTags(List.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag)));
+       expectedJoinedSecondPair,
+       Util.prettyPrintAddressTags(List.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag)));
     assertEquals(
-      expectedJoinedSecondPair,
-      Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",\n")));
+       expectedJoinedSecondPair,
+       Stream.of(addressTagSansRelay, addressTagSansRelaySansIdentifierTag, properAddressTag).map(AddressTag::toStringPrettyPrint).collect(Collectors.joining(",\n")));
   }
 
   @Test
   void testRelayVariantsEquality() {
     AddressTag expected = new AddressTag(
-      kind,
-      publicKey,
-      identifierTag,
-      relay);
+       kind,
+       publicKey,
+       identifierTag,
+       relay);
 
-    assertEquals(expected,
-      new AddressTag(
-        expected.getKind(),
-        expected.getPublicKey(),
-        expected.getIdentifierTag(),
-        expected.getRelay()));
+    AddressTag actualContainsRelay = new AddressTag(
+       expected.getKind(),
+       expected.getPublicKey(),
+       expected.getIdentifierTag(),
+       expected.getRelay());
+    assertEquals(expected, actualContainsRelay);
 
-    assertEquals(expected,
-      new AddressTag(
-        expected.getKind(),
-        expected.getPublicKey(),
-        expected.getIdentifierTag()));
+    AddressTag actualNoContainsRelay = new AddressTag(
+       expected.getKind(),
+       expected.getPublicKey(),
+       expected.getIdentifierTag());
+    assertEquals(expected, actualNoContainsRelay);
 
-    assertEquals(expected,
-      new AddressTag(
-        expected.getKind(),
-        expected.getPublicKey(),
-        expected.getIdentifierTag(),
-        null));
+    AddressTag actualRelayTagIsNull = new AddressTag(
+       expected.getKind(),
+       expected.getPublicKey(),
+       expected.getIdentifierTag(),
+       null);
+    assertEquals(expected, actualRelayTagIsNull);
 
-    assertEquals(expected,
-      new AddressTag(
-        expected.getKind(),
-        expected.getPublicKey(),
-        expected.getIdentifierTag(),
-        new Relay("ws://localhost-nomatch:5555")));
+    AddressTag actualRelayTagDifferentValue = new AddressTag(
+       expected.getKind(),
+       expected.getPublicKey(),
+       expected.getIdentifierTag(),
+       new Relay("ws://localhost-nomatch:5555"));
+    assertEquals(expected, actualRelayTagDifferentValue);
+
+    assertTrue(Set.of(actualContainsRelay).contains(expected));
+    assertTrue(Set.of(actualNoContainsRelay).contains(expected));
+    assertTrue(Set.of(actualRelayTagIsNull).contains(expected));
+    assertTrue(Set.of(actualRelayTagDifferentValue).contains(expected));
+
+    AddressTag expectedWithoutRelayTag = new AddressTag(
+       kind,
+       publicKey,
+       identifierTag);
+
+    assertTrue(Set.of(actualContainsRelay).contains(expectedWithoutRelayTag));
+    assertTrue(Set.of(actualNoContainsRelay).contains(expectedWithoutRelayTag));
+    assertTrue(Set.of(actualRelayTagIsNull).contains(expectedWithoutRelayTag));
+    assertTrue(Set.of(actualRelayTagDifferentValue).contains(expectedWithoutRelayTag));
+
+    List<AddressTag> actualListContainsRelay = List.of(actualContainsRelay);
+    List<? extends BaseTag> list1 = actualListContainsRelay.stream().map(expectedWithoutRelayTag.getClass()::cast).toList();
+    Set<? extends BaseTag> collect1 = list1.stream().collect(Collectors.toSet());
+    assertFalse((collect1.contains(expectedWithoutRelayTag)));
+    assertTrue(collect1.stream().anyMatch(expectedWithoutRelayTag::equals));
+
+    List<AddressTag> actualListNoContainsRelay = List.of(actualNoContainsRelay);
+    List<? extends BaseTag> list2 = actualListNoContainsRelay.stream().map(expectedWithoutRelayTag.getClass()::cast).toList();
+    Set<? extends BaseTag> collect2 = list2.stream().collect(Collectors.toSet());
+    assertTrue(collect2.contains(expectedWithoutRelayTag));
+    assertTrue(collect2.stream().anyMatch(expectedWithoutRelayTag::equals));
+
+    List<AddressTag> actualListRelayNull = List.of(actualRelayTagIsNull);
+    List<? extends BaseTag> list3 = actualListRelayNull.stream().map(expectedWithoutRelayTag.getClass()::cast).toList();
+    Set<? extends BaseTag> collect3 = list3.stream().collect(Collectors.toSet());
+    assertTrue(collect3.contains(expectedWithoutRelayTag));
+    assertTrue(collect3.stream().anyMatch(expectedWithoutRelayTag::equals));
+
+    List<AddressTag> actualListRelayDifferentValue = List.of(actualRelayTagDifferentValue);
+    List<? extends BaseTag> list4 = actualListRelayDifferentValue.stream().map(expectedWithoutRelayTag.getClass()::cast).toList();
+    Set<? extends BaseTag> collect4 = list4.stream().collect(Collectors.toSet());
+    assertFalse(collect4.contains(expectedWithoutRelayTag));
+    assertTrue(collect4.stream().anyMatch(expectedWithoutRelayTag::equals));
   }
 
   @Test
@@ -204,11 +245,11 @@ class AddressTagTest {
 
   private String expectedAddressTagPrettyPrint(AddressTag addressTag) {
     return "AddressTag[\n" +
-      "  kind=" + addressTag.getKind().getValue() + "\n" +
-      "  publicKey=" + addressTag.getPublicKey().toString() + "\n" +
-      "  identifierTag=" + addressTag.findIdentifierTag().map(identifierTag ->
-      "IdentifierTag[uuid=".concat(identifierTag.getUuid()).concat("]")).orElse("null") + "\n" +
-      "  relay=" + addressTag.findRelay().map(relay ->
-      "Relay[url=".concat(relay.getUrl()).concat("]")).orElse("null") + "]";
+       "  kind=" + addressTag.getKind().getValue() + "\n" +
+       "  publicKey=" + addressTag.getPublicKey().toString() + "\n" +
+       "  identifierTag=" + addressTag.findIdentifierTag().map(identifierTag ->
+       "IdentifierTag[uuid=".concat(identifierTag.getUuid()).concat("]")).orElse("null") + "\n" +
+       "  relay=" + addressTag.findRelay().map(relay ->
+       "Relay[url=".concat(relay.getUrl()).concat("]")).orElse("null") + "]";
   }
 }

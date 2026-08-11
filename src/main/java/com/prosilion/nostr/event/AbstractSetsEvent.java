@@ -2,6 +2,7 @@ package com.prosilion.nostr.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.crypto.NostrUtil;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -11,6 +12,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -102,11 +104,14 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
   public static IdentifierTag hashedAddressTag(AddressTag addressTag) {
     return
        new IdentifierTag(
-          String.valueOf(new AddressTag(
-             addressTag.getKind(),
-             addressTag.getPublicKey(),
-             addressTag.getIdentifierTag()
-          ).hashCode()));
+          NostrUtil.bytesToHex(
+             NostrUtil.bytesFromBigInteger(
+                new BigInteger(
+                   String.valueOf(
+                      Objects.hash(
+                         addressTag.getKind().getValue(),
+                         addressTag.getPublicKey().toHexString(),
+                         addressTag.getIdentifierTag().getUuid()))))));
   }
 
   protected static AddressTag fillAddressTag(AddressTag addressTag, ReferenceTag referenceTag) {

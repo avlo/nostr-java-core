@@ -55,7 +55,7 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
              badgeDefinitionGenericEvent.getRelay().map(Relay::getUrl).orElse(
                 badgeDefinitionGenericEventReferenceTag.getUrl()))
        ),
-       List.of(badgeDefinitionGenericEventReferenceTag), content, relay);
+       List.of(), content, relay);
     this.badgeDefinitionGenericEvent = badgeDefinitionGenericEvent;
   }
 
@@ -69,12 +69,8 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
     super(
        genericEventRecord,
        new SetsPairedEvent(
-          fillAddressTag(
-             requiredTags.addressTag(),
-             requiredTags.referenceTag()),
-          fillEventTag(
-             requiredTags.eventTag(),
-             requiredTags.referenceTag())));
+          requiredTags.addressTag(),
+          requiredTags.eventTag()));
 
     this.badgeDefinitionGenericEvent =
        new BadgeDefinitionGenericEvent(
@@ -89,7 +85,7 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
   }
 
   private static final List<Class<? extends BaseTag>> REQUIRED_TAG_TYPES =
-     List.of(IdentifierTag.class, AddressTag.class, EventTag.class, RelayTag.class, ReferenceTag.class);
+     List.of(IdentifierTag.class, AddressTag.class, EventTag.class, RelayTag.class);
 
   static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
     validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
@@ -98,8 +94,7 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
        genericEventRecord.requireFirstTag(IdentifierTag.class),
        genericEventRecord.requireFirstTag(AddressTag.class),
        genericEventRecord.requireFirstTag(EventTag.class),
-       genericEventRecord.requireFirstTag(RelayTag.class),
-       genericEventRecord.requireFirstTag(ReferenceTag.class));
+       genericEventRecord.requireFirstTag(RelayTag.class));
   }
 
   private static List<BaseTag> curateBadgeDefinitionEventTags(@NonNull RequiredTags requiredTags) {
@@ -115,7 +110,6 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
      IdentifierTag identifierTag,
      AddressTag addressTag,
      EventTag eventTag,
-     RelayTag relayTag,
-     ReferenceTag referenceTag) {
+     RelayTag relayTag) {
   }
 }

@@ -9,10 +9,7 @@ import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
-import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
-import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
@@ -64,16 +61,6 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    ReferenceTag badgeAwardGenericEventReferenceTag = new ReferenceTag(relayArgUrl);
-
-    List<BaseTag> tags = List.of(
-       new PubKeyTag(expectedCurationBadgeAwardGenericEvent.getAwardRecipientPublicKey()),
-       expectedCurationBadgeAwardGenericEvent.getIdentifierTag(), // test that this is same as awardYesYes event id
-       award_YesYes_Defn_YesYes_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag(),
-       new EventTag(award_YesYes_Defn_YesYes_Upvote.getId(), relayUrl),
-       relayArgRelayTag,
-       new ReferenceTag(relayUrl));
-
     GenericEventRecord genericEventRecord = new GenericEventRecord(
        expectedCurationBadgeAwardGenericEvent.getId(),
        expectedCurationBadgeAwardGenericEvent.getPublicKey(),
@@ -83,10 +70,8 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        expectedCurationBadgeAwardGenericEvent.getContent(),
        expectedCurationBadgeAwardGenericEvent.getSignature());
 
-    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(
-       genericEventRecord);
+    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(genericEventRecord);
 
-//  
     assertEquals(expectedCurationBadgeAwardGenericEvent.getIdentifierTag(), actual.getIdentifierTag());
     assertEquals(aImgIdentity.getPublicKey(), actual.getAddressTag().getPublicKey());
     assertEquals(AbstractSetsEvent.hashedAddressTag(award_YesYes_Defn_YesYes_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag()), actual.getAddressTag().getIdentifierTag());
@@ -96,7 +81,10 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
     assertEquals(expectedCurationBadgeAwardGenericEvent.requireFirstTag(RelayTag.class).getRelay(), actual.getEventTag().requireRelay());
     assertEquals(award_NoNo_Defn_NoNo_Upvote.getAwardRecipientPublicKey(), actual.getAwardRecipientPublicKey());
     assertEquals(expectedCurationBadgeAwardGenericEvent.requireFirstTag(IdentifierTag.class), actual.getIdentifierTag());
+    assertTrue(actual.getRelayTag().isPresent());
     assertTrue(actual.getTypeSpecificTags(ReferenceTag.class).isEmpty());
+    assertTrue(actual.getAddressTag().findRelay().isPresent());
+    assertTrue(actual.getEventTag().findRelay().isPresent());
   }
 
   @Test

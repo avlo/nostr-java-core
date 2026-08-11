@@ -67,6 +67,11 @@ public record AddressTag(
        ;
   }
 
+  /**
+   * note: below hashCode() method is performed on AddressTag's constituent objects, as per standard java expectation. 
+   *   for AddressTag's constituent objects' hashed String values (as used by AbstractSetsEvent for IdentifierTag generation)
+   *   @see com.prosilion.nostr.event.AbstractSetsEvent#hashedAddressTag(AddressTag)
+   */
   @Override
   public int hashCode() {
     return Objects.hash(kind, publicKey, identifierTag, relay);
