@@ -53,6 +53,13 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
   }
 
   @Test
+  final void testGetIdentifierTagHex64() {
+    assertEquals(
+       "000000000000000000000000000000000000000000000000000000005187e8c5",
+       AbstractSetsEvent.getIdentifierTagHex64(award_YesYes_Defn_YesYes_Upvote.getBadgeDefinitionEvent().asAddressableEventAddressTag()));
+  }
+
+  @Test
   final void testValidBadgeSetsEventUsingGenericEventRecord() {
     CuratedBadgeAwardGenericEvent expectedCurationBadgeAwardGenericEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,
