@@ -6,13 +6,21 @@ import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
+import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AbstractSetsEventTest extends EventTestFixtures {
-  private final IdentifierTag expectedBadgeDefinitionUpvoteHashedIdentifierTag = new IdentifierTag("000000000000000000000000000000000000000000000000000000005187e8c5");
-  private final IdentifierTag expectedBadgeDefinitionDownvoteHashedIdentifierTag = new IdentifierTag("000000000000000000000000000000000000000000000000000000005c19c50c");
+  private final IdentifierTag expectedBadgeDefinitionUpvoteHashedIdentifierTag = new IdentifierTag
+//     ("000000000000000000000000000000000000000000000000000000005187e8c5");
+//     ("5187e8c5");
+  ("1367861445");
+  
+  private final IdentifierTag expectedBadgeDefinitionDownvoteHashedIdentifierTag = new IdentifierTag
+//     ("000000000000000000000000000000000000000000000000000000005c19c50c");
+//       ("5c19c50c");
+  ("1545192716");
   
   private final AddressTag badgeDefinitionUpvoteEventAsAddressTag;
   private final AddressTag badgeDefinitionDownvoteEventAsAddressTagWithoutRelay;

@@ -102,16 +102,24 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
   }
 
   public static IdentifierTag hashedAddressTag(AddressTag addressTag) {
+    return new IdentifierTag(getAddressTagValuesHashed(addressTag)); // return new IdentifierTag(getIdentifierTagHex64(addressTag));
+  }
+
+//  potentially expensive/resource-heavy.  for now, just use @getAddressTagValuesHashed (below) 
+  public static String getIdentifierTagHex64(AddressTag addressTag) {
     return
-       new IdentifierTag(
-          NostrUtil.bytesToHex(
-             NostrUtil.bytesFromBigInteger(
-                new BigInteger(
-                   String.valueOf(
-                      Objects.hash(
-                         addressTag.getKind().getValue(),
-                         addressTag.getPublicKey().toHexString(),
-                         addressTag.getIdentifierTag().getUuid()))))));
+       NostrUtil.bytesToHex(
+          NostrUtil.bytesFromBigInteger(
+             new BigInteger(
+                getAddressTagValuesHashed(addressTag))));
+  }
+
+  public static String getAddressTagValuesHashed(AddressTag addressTag) {
+    return String.valueOf(
+       Objects.hash(
+          addressTag.getKind().getValue(),
+          addressTag.getPublicKey().toHexString(),
+          addressTag.getIdentifierTag().getUuid()));
   }
 
   protected static AddressTag fillAddressTag(AddressTag addressTag, ReferenceTag referenceTag) {
