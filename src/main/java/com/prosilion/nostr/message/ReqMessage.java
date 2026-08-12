@@ -12,6 +12,7 @@ import com.prosilion.nostr.codec.serializer.ReqMessageSerializer;
 import com.prosilion.nostr.enums.Command;
 import com.prosilion.nostr.filter.Filters;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.NonNull;
@@ -70,6 +71,21 @@ public record ReqMessage(
   @SneakyThrows
   private static String readTree(String jsonString, int idx) {
     return I_DECODER_MAPPER_AFTERBURNER.readTree(jsonString).get(idx).toString();
+  }
+
+  @Override
+  public String toString() {
+    final String filters = filtersList.stream()
+       .map(Filters::toString)
+       .map(filter -> filter.replace("\n", "\n\t\t"))
+       .collect(Collectors.joining(",\n\t\t"));
+
+    return "ReqMessage[\n"
+       + "\tsubscriptionId=" + subscriptionId + ",\n"
+       + "\tfiltersList=[\n"
+       + "\t\t" + filters + "\n"
+       + "\t]\n"
+       + "]";
   }
 
   @Override

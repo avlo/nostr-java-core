@@ -78,11 +78,11 @@ public class JsonParseTest {
 
     String eventId = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
     final String parseTarget =
-        "[\"REQ\", " +
-            "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
-            "{\"kinds\": [1], " +
-            "\"ids\": [\"" + eventId + "\"]," +
-            "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
+       "[\"REQ\", " +
+          "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
+          "{\"kinds\": [1], " +
+          "\"ids\": [\"" + eventId + "\"]," +
+          "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
 
     final var message = BaseMessageDecoder.decode(parseTarget);
 
@@ -108,10 +108,10 @@ public class JsonParseTest {
   @Test
   public void testAbsentFilter() throws JsonProcessingException {
     final String parseTarget =
-        "[\"REQ\", " +
-            "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
-            "{\"kinds\": [1], " +
-            "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
+       "[\"REQ\", " +
+          "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
+          "{\"kinds\": [1], " +
+          "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
 
     final var message = BaseMessageDecoder.decode(parseTarget);
 
@@ -130,11 +130,11 @@ public class JsonParseTest {
     log.debug("testBaseMessageDecoderKindsAuthorsReferencedPublicKey");
 
     final String parseTarget =
-        "[\"REQ\", " +
-            "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
-            "{\"kinds\": [1], " +
-            "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
-            "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
+       "[\"REQ\", " +
+          "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
+          "{\"kinds\": [1], " +
+          "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
+          "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
 
     final var message = BaseMessageDecoder.decode(parseTarget);
 
@@ -166,11 +166,11 @@ public class JsonParseTest {
 
     String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     final String parseTarget =
-        "[\"REQ\", " +
-            "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
-            "{\"kinds\": [1], " +
-            "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
-            "\"#e\": [[\"" + event + "\"]]}]";
+       "[\"REQ\", " +
+          "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\", " +
+          "{\"kinds\": [1], " +
+          "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
+          "\"#e\": [[\"" + event + "\"]]}]";
 
     final var message = BaseMessageDecoder.decode(parseTarget);
 
@@ -201,8 +201,8 @@ public class JsonParseTest {
     var publicKey = Identity.generateRandomIdentity().getPublicKey();
 
     ReqMessage expectedReqMessage = new ReqMessage(publicKey.toString(),
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE)));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE)));
 
     String jsonMessage = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
 
@@ -228,12 +228,12 @@ public class JsonParseTest {
     var publicKey = Identity.generateRandomIdentity().getPublicKey();
 
     ReqMessage expectedReqMessage = new ReqMessage(publicKey.toString(),
-        new Filters(
-            new KindFilter(Kind.SET_METADATA),
-            new KindFilter(Kind.TEXT_NOTE),
-            new KindFilter(Kind.FOLLOW_LIST),
-            new KindFilter(Kind.DELETION),
-            new AuthorFilter(publicKey)));
+       new Filters(
+          new KindFilter(Kind.SET_METADATA),
+          new KindFilter(Kind.TEXT_NOTE),
+          new KindFilter(Kind.FOLLOW_LIST),
+          new KindFilter(Kind.DELETION),
+          new AuthorFilter(publicKey)));
 
     String jsonMessage = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
 
@@ -257,17 +257,17 @@ public class JsonParseTest {
     log.debug("testBaseEventMessageDecoder");
 
     final String parseTarget
-        = "[\"EVENT\","
-        + "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\","
-        + "{"
-        + "\"content\":\"直んないわ。まあええか\","
-        + "\"created_at\":1686199583,"
-        + "\"id\":\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\","
-        + "\"kind\":1,"
-        + "\"pubkey\":\"8c59239319637f97e007dad0d681e65ce35b1ace333b629e2d33f9465c132608\","
-        + "\"sig\":\"9584afd231c52fcbcec6ce668a2cc4b6dc9b4d9da20510dcb9005c6844679b4844edb7a2e1e0591958b0295241567c774dbf7d39a73932877542de1a5f963f4b\","
-        + "\"tags\":[]"
-        + "}]";
+       = "[\"EVENT\","
+       + "\"npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh\","
+       + "{"
+       + "\"content\":\"直んないわ。まあええか\","
+       + "\"created_at\":1686199583,"
+       + "\"id\":\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\","
+       + "\"kind\":1,"
+       + "\"pubkey\":\"8c59239319637f97e007dad0d681e65ce35b1ace333b629e2d33f9465c132608\","
+       + "\"sig\":\"9584afd231c52fcbcec6ce668a2cc4b6dc9b4d9da20510dcb9005c6844679b4844edb7a2e1e0591958b0295241567c774dbf7d39a73932877542de1a5f963f4b\","
+       + "\"tags\":[]"
+       + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(parseTarget);
 
@@ -285,20 +285,20 @@ public class JsonParseTest {
     log.debug("testBaseEventMessageAddressTagDecoder");
 
     final String json = "["
-        + "\"EVENT\","
-        + "\"temp20230627\","
-        + "{"
-        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
-        + "\"kind\":1,"
-        + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
-        + "\"created_at\":1687765220,"
-        + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
-        + "\"tags\":["
-        + "[\"a\",\"1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1\"],"
-        + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
-        + "],"
-        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
-        + "}]";
+       + "\"EVENT\","
+       + "\"temp20230627\","
+       + "{"
+       + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+       + "\"kind\":1,"
+       + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
+       + "\"created_at\":1687765220,"
+       + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
+       + "\"tags\":["
+       + "[\"a\",\"1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1\"],"
+       + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
+       + "],"
+       + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+       + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(json);
 
@@ -317,19 +317,19 @@ public class JsonParseTest {
     log.debug("testBaseEventMessageMarkerDecoder");
 
     final String json = "["
-        + "\"EVENT\","
-        + "\"temp20230627\","
-        + "{"
-        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
-        + "\"kind\":1,"
-        + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
-        + "\"created_at\":1687765220,"
-        + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
-        + "\"tags\":["
-        + "[\"custom-tag\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
-        + "],"
-        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
-        + "}]";
+       + "\"EVENT\","
+       + "\"temp20230627\","
+       + "{"
+       + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+       + "\"kind\":1,"
+       + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
+       + "\"created_at\":1687765220,"
+       + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
+       + "\"tags\":["
+       + "[\"custom-tag\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
+       + "],"
+       + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+       + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(json);
 
@@ -342,20 +342,20 @@ public class JsonParseTest {
     log.debug("testBaseEventMessageMarkerDecoder");
 
     final String json = "["
-        + "\"EVENT\","
-        + "\"temp20230627\","
-        + "{"
-        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
-        + "\"kind\":1,"
-        + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
-        + "\"created_at\":1687765220,"
-        + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
-        + "\"tags\":["
-        + "[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\",\"ws://localhost:5555\",\"root\"],"
-        + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
-        + "],"
-        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
-        + "}]";
+       + "\"EVENT\","
+       + "\"temp20230627\","
+       + "{"
+       + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+       + "\"kind\":1,"
+       + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
+       + "\"created_at\":1687765220,"
+       + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
+       + "\"tags\":["
+       + "[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\",\"ws://localhost:5555\",\"root\"],"
+       + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
+       + "],"
+       + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+       + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(json);
 
@@ -375,20 +375,20 @@ public class JsonParseTest {
     log.debug("testBaseEventMessageMarkerDecoder");
 
     final String json = "["
-        + "\"EVENT\","
-        + "\"temp20230627\","
-        + "{"
-        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
-        + "\"kind\":1,"
-        + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
-        + "\"created_at\":1687765220,"
-        + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
-        + "\"tags\":["
-        + "[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\",\"\",\"root\"],"
-        + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
-        + "],"
-        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
-        + "}]";
+       + "\"EVENT\","
+       + "\"temp20230627\","
+       + "{"
+       + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+       + "\"kind\":1,"
+       + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
+       + "\"created_at\":1687765220,"
+       + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
+       + "\"tags\":["
+       + "[\"e\",\"494001ac0c8af2a10f60f23538e5b35d3cdacb8e1cc956fe7a16dfa5cbfc4346\",\"\",\"root\"],"
+       + "[\"p\",\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\"]"
+       + "],"
+       + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+       + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(json);
 
@@ -420,19 +420,19 @@ public class JsonParseTest {
     log.debug("testBaseEventMessageExternalIdentityTagDecoder");
 
     final String json = "["
-        + "\"EVENT\","
-        + "\"temp20230627\","
-        + "{"
-        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
-        + "\"kind\":1,"
-        + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
-        + "\"created_at\":1687765220,"
-        + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
-        + "\"tags\":["
-        + "[\"i\",\"platform:identity\",\"proof\"]"
-        + "],"
-        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
-        + "}]";
+       + "\"EVENT\","
+       + "\"temp20230627\","
+       + "{"
+       + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+       + "\"kind\":1,"
+       + "\"pubkey\":\"2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984\","
+       + "\"created_at\":1687765220,"
+       + "\"content\":\"手順書が間違ってたら作業者は無理だな\","
+       + "\"tags\":["
+       + "[\"i\",\"platform:identity\",\"proof\"]"
+       + "],"
+       + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+       + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(json);
 
@@ -450,23 +450,23 @@ public class JsonParseTest {
   public void testClassifiedListingTagSerializer() throws JsonProcessingException {
     log.debug("testClassifiedListingSerializer");
     final String classifiedListingEventJson = "["
-        + "\"EVENT\","
-        + "\"temp20230627\","
-        + "{"
-        + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
-        + "\"kind\":30402,"
-        + "\"content\":\"content ipsum\","
-        + "\"pubkey\":\"ec0762fe78b0f0b763d1324452d973a38bef576d1d76662722d2b8ff948af1de\","
-        + "\"created_at\":1687765220,"
-        + "\"tags\":["
-        + "[\"p\",\"ec0762fe78b0f0b763d1324452d973a38bef576d1d76662722d2b8ff948af1de\"],"
-        + "[\"title\",\"title ipsum\"],"
-        + "[\"summary\",\"summary ipsum\"],"
-        + "[\"published_at\",\"1687765220\"],"
-        + "[\"location\",\"location ipsum\"],"
-        + "[\"price\",\"11111\",\"BTC\",\"1\"]],"
-        + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
-        + "}]";
+       + "\"EVENT\","
+       + "\"temp20230627\","
+       + "{"
+       + "\"id\":\"28f2fc030e335d061f0b9d03ce0e2c7d1253e6fadb15d89bd47379a96b2c861a\","
+       + "\"kind\":30402,"
+       + "\"content\":\"content ipsum\","
+       + "\"pubkey\":\"ec0762fe78b0f0b763d1324452d973a38bef576d1d76662722d2b8ff948af1de\","
+       + "\"created_at\":1687765220,"
+       + "\"tags\":["
+       + "[\"p\",\"ec0762fe78b0f0b763d1324452d973a38bef576d1d76662722d2b8ff948af1de\"],"
+       + "[\"title\",\"title ipsum\"],"
+       + "[\"summary\",\"summary ipsum\"],"
+       + "[\"published_at\",\"1687765220\"],"
+       + "[\"location\",\"location ipsum\"],"
+       + "[\"price\",\"11111\",\"BTC\",\"1\"]],"
+       + "\"sig\":\"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546\""
+       + "}]";
 
     BaseMessage message = BaseMessageDecoder.decode(classifiedListingEventJson);
     EventIF event = ((EventMessage) message).getEvent();
@@ -479,35 +479,35 @@ public class JsonParseTest {
     assertEquals("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546", event.getSignature().toString());
 
     assertEquals(new BigDecimal("11111"), event.getTags().stream().filter(baseTag ->
-            baseTag.getCode().equalsIgnoreCase("price"))
-        .filter(PriceTag.class::isInstance)
-        .map(PriceTag.class::cast)
-        .map(PriceTag::number).findFirst().orElseThrow());
+          baseTag.getCode().equalsIgnoreCase("price"))
+       .filter(PriceTag.class::isInstance)
+       .map(PriceTag.class::cast)
+       .map(PriceTag::number).findFirst().orElseThrow());
 
     assertEquals("BTC", event.findFirstTag(PriceTag.class)
-        .map(PriceTag::currency).orElseThrow());
+       .map(PriceTag::currency).orElseThrow());
 
     assertEquals("1", event.getTags().stream().filter(baseTag ->
-            baseTag.getCode().equalsIgnoreCase("price"))
-        .filter(PriceTag.class::isInstance)
-        .map(PriceTag.class::cast)
-        .map(PriceTag::frequency).findFirst().orElseThrow());
+          baseTag.getCode().equalsIgnoreCase("price"))
+       .filter(PriceTag.class::isInstance)
+       .map(PriceTag.class::cast)
+       .map(PriceTag::frequency).findFirst().orElseThrow());
 
     List<GenericTag> genericTags = event.getTags().stream()
-        .filter(GenericTag.class::isInstance)
-        .map(GenericTag.class::cast).toList();
+       .filter(GenericTag.class::isInstance)
+       .map(GenericTag.class::cast).toList();
 
     assertEquals("title ipsum", genericTags.stream()
-        .filter(tag -> tag.getCode().equalsIgnoreCase("title")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
+       .filter(tag -> tag.getCode().equalsIgnoreCase("title")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
 
     assertEquals("summary ipsum", genericTags.stream()
-        .filter(tag -> tag.getCode().equalsIgnoreCase("summary")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
+       .filter(tag -> tag.getCode().equalsIgnoreCase("summary")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
 
     assertEquals("1687765220", genericTags.stream()
-        .filter(tag -> tag.getCode().equalsIgnoreCase("published_at")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
+       .filter(tag -> tag.getCode().equalsIgnoreCase("published_at")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
 
     assertEquals("location ipsum", genericTags.stream()
-        .filter(tag -> tag.getCode().equalsIgnoreCase("location")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
+       .filter(tag -> tag.getCode().equalsIgnoreCase("location")).map(GenericTag::getAttributes).toList().getFirst().getFirst().getValue());
   }
 
   @Test
@@ -547,9 +547,9 @@ public class JsonParseTest {
     String second_geohash = "3abcde";
 
     ReqMessage reqMessage = new ReqMessage("npub1clk6vc9xhjp8q5cws262wuf2eh4zuvwupft03hy4ttqqnm7e0jrq3upup9",
-        new Filters(
-            new GenericTagQueryFilter(new GenericTagQuery("#g", new_geohash)),
-            new GenericTagQueryFilter(new GenericTagQuery("#g", second_geohash))));
+       new Filters(
+          new GenericTagQueryFilter(new GenericTagQuery("#g", new_geohash)),
+          new GenericTagQueryFilter(new GenericTagQuery("#g", second_geohash))));
 
     assertDoesNotThrow(() -> {
       String jsonMessage = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(reqMessage);
@@ -570,8 +570,8 @@ public class JsonParseTest {
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new GeohashTagFilter(new GeohashTag(geohashValue))));
+       new Filters(
+          new GeohashTagFilter(new GeohashTag(geohashValue))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
   }
@@ -590,9 +590,9 @@ public class JsonParseTest {
       BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFiltersToDecode);
 
       ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-          new Filters(
-              new GeohashTagFilter(new GeohashTag(geohashValue1)),
-              new GeohashTagFilter(new GeohashTag(geohashValue2))));
+         new Filters(
+            new GeohashTagFilter(new GeohashTag(geohashValue1)),
+            new GeohashTagFilter(new GeohashTag(geohashValue2))));
 
       assertEquals(reqJsonWithCustomTagQueryFiltersToDecode, ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
       assertEquals(expectedReqMessage, decodedReqMessage);
@@ -611,8 +611,8 @@ public class JsonParseTest {
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new HashtagTagFilter(new HashtagTag(hashtagValue))));
+       new Filters(
+          new HashtagTagFilter(new HashtagTag(hashtagValue))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
   }
@@ -631,9 +631,9 @@ public class JsonParseTest {
       BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFiltersToDecode);
 
       ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-          new Filters(
-              new HashtagTagFilter(new HashtagTag(hashtagValue1)),
-              new HashtagTagFilter(new HashtagTag(hashtagValue2))));
+         new Filters(
+            new HashtagTagFilter(new HashtagTag(hashtagValue1)),
+            new HashtagTagFilter(new HashtagTag(hashtagValue2))));
 
       assertEquals(reqJsonWithCustomTagQueryFiltersToDecode, ENCODER_MAPPED_AFTERBURNER.writeValueAsString((decodedReqMessage)));
       assertEquals(expectedReqMessage, decodedReqMessage);
@@ -654,26 +654,26 @@ public class JsonParseTest {
     Relay relay = new Relay("ws://localhost:5555");
     String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + "], " +
-            "\"authors\": [\"" + author + "\"]," +
-            "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
-            "\"#e\": [[\"" + event + "\"]]," +
-            "\"#p\": [\"" + author + "\"]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + "], " +
+          "\"authors\": [\"" + author + "\"]," +
+          "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
+          "\"#e\": [[\"" + event + "\"]]," +
+          "\"#p\": [\"" + author + "\"]" +
+          "}]";
 
     assertDoesNotThrow(() -> {
       BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
       ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-          new Filters(
-              new GeohashTagFilter(new GeohashTag(geohashValue1)),
-              new GeohashTagFilter(new GeohashTag(geohashValue2)),
-              new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
-              new KindFilter(Kind.TEXT_NOTE),
-              new AuthorFilter(new PublicKey(author)),
-              new ReferencedEventFilter(new EventTag(referencedEventId))));
+         new Filters(
+            new GeohashTagFilter(new GeohashTag(geohashValue1)),
+            new GeohashTagFilter(new GeohashTag(geohashValue2)),
+            new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
+            new KindFilter(Kind.TEXT_NOTE),
+            new AuthorFilter(new PublicKey(author)),
+            new ReferencedEventFilter(new EventTag(referencedEventId))));
 
       assertEquals(expectedReqMessage, decodedReqMessage);
     });
@@ -697,25 +697,25 @@ public class JsonParseTest {
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + "], " +
-            "\"authors\": [\"" + author + "\"]," +
-            "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
-            "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
-            "\"#e\": [[\"" + event + "\"]]}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + "], " +
+          "\"authors\": [\"" + author + "\"]," +
+          "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
+          "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
+          "\"#e\": [[\"" + event + "\"]]}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE),
-            new AuthorFilter(new PublicKey(author)),
-            new ReferencedEventFilter(new EventTag(referencedEventId)),
-            new GeohashTagFilter(new GeohashTag(geohashValue1)),
-            new GeohashTagFilter(new GeohashTag(geohashValue2)),
-            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
-            new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new AuthorFilter(new PublicKey(author)),
+          new ReferencedEventFilter(new EventTag(referencedEventId)),
+          new GeohashTagFilter(new GeohashTag(geohashValue1)),
+          new GeohashTagFilter(new GeohashTag(geohashValue2)),
+          new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+          new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
   }
@@ -735,26 +735,26 @@ public class JsonParseTest {
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
 
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + "], " +
-            "\"authors\": [\"" + author + "\"]," +
-            "\"#e\": [[\"" + event + "\"]]," +
-            "\"#a\": [\"" + addressableTag + "\"]," +
-            "\"#p\": [\"" + author + "\"]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + "], " +
+          "\"authors\": [\"" + author + "\"]," +
+          "\"#e\": [[\"" + event + "\"]]," +
+          "\"#a\": [\"" + addressableTag + "\"]," +
+          "\"#p\": [\"" + author + "\"]" +
+          "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     AddressTag addressTag1 = new AddressTag(kind, new PublicKey(author), new IdentifierTag(uuidValue1));
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE),
-            new AuthorFilter(new PublicKey(author)),
-            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
-            new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
-            new AddressTagFilter(addressTag1)));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new AuthorFilter(new PublicKey(author)),
+          new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
+          new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
+          new AddressTagFilter(addressTag1)));
 
     String encoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
     String decoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage);
@@ -777,26 +777,26 @@ public class JsonParseTest {
     String addressableTag = String.join(":", String.valueOf(kind), author, uuidValue1);
 
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + "], " +
-            "\"authors\": [\"" + author + "\"]," +
-            "\"#e\": [[\"" + event + "\"]]," +
-            "\"#a\": [\"" + addressableTag + "\"]," +
-            "\"#p\": [\"" + author + "\"]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + "], " +
+          "\"authors\": [\"" + author + "\"]," +
+          "\"#e\": [[\"" + event + "\"]]," +
+          "\"#a\": [\"" + addressableTag + "\"]," +
+          "\"#p\": [\"" + author + "\"]" +
+          "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     AddressTag addressTag1 = new AddressTag(kind, new PublicKey(author), new IdentifierTag(uuidValue1), new Relay(relay));
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE),
-            new AuthorFilter(new PublicKey(author)),
-            new ReferencedEventFilter(new EventTag(referencedEventId, relay)),
-            new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
-            new AddressTagFilter(addressTag1)));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new AuthorFilter(new PublicKey(author)),
+          new ReferencedEventFilter(new EventTag(referencedEventId, relay)),
+          new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
+          new AddressTagFilter(addressTag1)));
 
     String encoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage);
     String decoded = ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage);
@@ -817,22 +817,22 @@ public class JsonParseTest {
     Relay relay = new Relay("ws://localhost:5555");
     String event = String.join("\\\",\\\"", referencedEventId, relay.getUrl());
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + ", " + kind2 + "], " +
-            "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
-            "\"#e\": [[\"" + event + "\"]]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + ", " + kind2 + "], " +
+          "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
+          "\"#e\": [[\"" + event + "\"]]" +
+          "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE),
-            new KindFilter(Kind.RECOMMEND_SERVER),
-            new AuthorFilter(new PublicKey(author)),
-            new AuthorFilter(new PublicKey(author2)),
-            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl()))));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new KindFilter(Kind.RECOMMEND_SERVER),
+          new AuthorFilter(new PublicKey(author)),
+          new AuthorFilter(new PublicKey(author2)),
+          new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl()))));
 
     assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
     assertEquals(expectedReqMessage, decodedReqMessage);
@@ -849,19 +849,19 @@ public class JsonParseTest {
     String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
     String platformAndIdentity = Strings.join(platform, identity).with(":");
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{" +
-            "\"#i\": [\"" + platformAndIdentity + "\\\",\\\"" + proof + "\"]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{" +
+          "\"#i\": [\"" + platformAndIdentity + "\\\",\\\"" + proof + "\"]" +
+          "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new ExternalIdentityTagFilter(
-                new ExternalIdentityTag(
-                    platform, identity, proof))));
+       new Filters(
+          new ExternalIdentityTagFilter(
+             new ExternalIdentityTag(
+                platform, identity, proof))));
 
     assertEquals(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage), ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage));
     assertEquals(expectedReqMessage, decodedReqMessage);
@@ -886,39 +886,39 @@ public class JsonParseTest {
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + "," + kind2 + "], " +
-            "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
-            "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
-            "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
-            "\"#e\": [[\"" + event + "\"]]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + "," + kind2 + "], " +
+          "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
+          "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
+          "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
+          "\"#e\": [[\"" + event + "\"]]" +
+          "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE),
-            new KindFilter(Kind.RECOMMEND_SERVER),
-            new AuthorFilter(new PublicKey(author)),
-            new AuthorFilter(new PublicKey(author2)),
-            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
-            new GeohashTagFilter(new GeohashTag(geohashValue1)),
-            new GeohashTagFilter(new GeohashTag(geohashValue2)),
-            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
-            new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new KindFilter(Kind.RECOMMEND_SERVER),
+          new AuthorFilter(new PublicKey(author)),
+          new AuthorFilter(new PublicKey(author2)),
+          new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
+          new GeohashTagFilter(new GeohashTag(geohashValue1)),
+          new GeohashTagFilter(new GeohashTag(geohashValue2)),
+          new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+          new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
 
     jsonComparator.compare(
-        MAPPER_AFTERBURNER.createArrayNode()
-            .add(MAPPER_AFTERBURNER.readTree(
-                ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
-            .toString(),
-        MAPPER_AFTERBURNER.createArrayNode()
-            .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
-            .toString());
+       MAPPER_AFTERBURNER.createArrayNode()
+          .add(MAPPER_AFTERBURNER.readTree(
+             ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
+          .toString(),
+       MAPPER_AFTERBURNER.createArrayNode()
+          .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
+          .toString());
 
   }
 
@@ -930,28 +930,28 @@ public class JsonParseTest {
     String kind = "1";
     String kind2 = "2";
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + ", " + kind2 + "]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + ", " + kind2 + "]" +
+          "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE),
-            new KindFilter(Kind.RECOMMEND_SERVER)));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new KindFilter(Kind.RECOMMEND_SERVER)));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
 
     jsonComparator.compare(
-        MAPPER_AFTERBURNER.createArrayNode()
-            .add(MAPPER_AFTERBURNER.readTree(
-                ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
-            .toString(),
-        MAPPER_AFTERBURNER.createArrayNode()
-            .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
-            .toString());
+       MAPPER_AFTERBURNER.createArrayNode()
+          .add(MAPPER_AFTERBURNER.readTree(
+             ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
+          .toString(),
+       MAPPER_AFTERBURNER.createArrayNode()
+          .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
+          .toString());
   }
 
   @Test
@@ -973,39 +973,39 @@ public class JsonParseTest {
     String uuidValue1 = "UUID-1";
     String uuidValue2 = "UUID-2";
     String reqJsonWithCustomTagQueryFilterToDecode =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [" + kind + ", " + kind2 + "], " +
-            "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
-            "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
-            "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
-            "\"#e\": [[\"" + event + "\"]]" +
-            "}]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [" + kind + ", " + kind2 + "], " +
+          "\"authors\": [\"" + author + "\",\"" + author2 + "\"]," +
+          "\"" + geohashKey + "\": [\"" + geohashValue1 + "\",\"" + geohashValue2 + "\"]," +
+          "\"" + uuidKey + "\": [\"" + uuidValue1 + "\",\"" + uuidValue2 + "\"]," +
+          "\"#e\": [[\"" + event + "\"]]" +
+          "}]";
 
     BaseMessage decodedReqMessage = BaseMessageDecoder.decode(reqJsonWithCustomTagQueryFilterToDecode);
 
     ReqMessage expectedReqMessage = new ReqMessage(subscriptionId,
-        new Filters(
-            new KindFilter(Kind.TEXT_NOTE),
-            new KindFilter(Kind.RECOMMEND_SERVER),
-            new AuthorFilter(new PublicKey(author)),
-            new AuthorFilter(new PublicKey(author2)),
-            new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
-            new GeohashTagFilter(new GeohashTag(geohashValue1)),
-            new GeohashTagFilter(new GeohashTag(geohashValue2)),
-            new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
-            new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new KindFilter(Kind.RECOMMEND_SERVER),
+          new AuthorFilter(new PublicKey(author)),
+          new AuthorFilter(new PublicKey(author2)),
+          new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
+          new GeohashTagFilter(new GeohashTag(geohashValue1)),
+          new GeohashTagFilter(new GeohashTag(geohashValue2)),
+          new IdentifierTagFilter(new IdentifierTag(uuidValue1)),
+          new IdentifierTagFilter(new IdentifierTag(uuidValue2))));
 
     assertEquals(expectedReqMessage, decodedReqMessage);
 
     jsonComparator.compare(
-        MAPPER_AFTERBURNER.createArrayNode()
-            .add(MAPPER_AFTERBURNER.readTree(
-                ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
-            .toString(),
-        MAPPER_AFTERBURNER.createArrayNode()
-            .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
-            .toString());
+       MAPPER_AFTERBURNER.createArrayNode()
+          .add(MAPPER_AFTERBURNER.readTree(
+             ENCODER_MAPPED_AFTERBURNER.writeValueAsString(expectedReqMessage)))
+          .toString(),
+       MAPPER_AFTERBURNER.createArrayNode()
+          .add(MAPPER_AFTERBURNER.readTree(ENCODER_MAPPED_AFTERBURNER.writeValueAsString(decodedReqMessage)))
+          .toString());
 
   }
 
@@ -1015,11 +1015,11 @@ public class JsonParseTest {
 
     String malformedSubscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujhaa";
     final String parseTarget =
-        "[\"REQ\", " +
-            "\"" + malformedSubscriptionId + "\", " +
-            "{\"kinds\": [1], " +
-            "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
-            "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
+       "[\"REQ\", " +
+          "\"" + malformedSubscriptionId + "\", " +
+          "{\"kinds\": [1], " +
+          "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
+          "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
 
     assertThrows(IllegalArgumentException.class, () -> BaseMessageDecoder.decode(parseTarget));
   }
@@ -1030,11 +1030,11 @@ public class JsonParseTest {
 
     String malformedSubscriptionId = "";
     final String parseTarget =
-        "[\"REQ\", " +
-            "\"" + malformedSubscriptionId + "\", " +
-            "{\"kinds\": [1], " +
-            "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
-            "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
+       "[\"REQ\", " +
+          "\"" + malformedSubscriptionId + "\", " +
+          "{\"kinds\": [1], " +
+          "\"authors\": [\"f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75\"]," +
+          "\"#p\": [\"fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}]";
 
     assertThrows(IllegalArgumentException.class, () -> BaseMessageDecoder.decode(parseTarget));
   }
@@ -1047,7 +1047,7 @@ public class JsonParseTest {
     String reason = "auth-required: some reason";
 
     final String parseTarget =
-        "[\"CLOSED\", \"" + sessionId + "\", \"" + reason + "\"]";
+       "[\"CLOSED\", \"" + sessionId + "\", \"" + reason + "\"]";
 
     ClosedMessage decodedReqMessage = (ClosedMessage) BaseMessageDecoder.decode(parseTarget);
     ClosedMessage closedMessage = new ClosedMessage(sessionId, reason);
@@ -1061,16 +1061,16 @@ public class JsonParseTest {
     log.debug("testBaseEventMessageDecoderMultipleFiltersJson");
 
     final String eventJson
-        = "[\"EVENT\","
-        + "{"
-        + "\"content\":\"直ん直んないわ。まあええか\","
-        + "\"created_at\":1786199583,"
-        + "\"id\":\"ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\","
-        + "\"kind\":1,"
-        + "\"pubkey\":\"9c59239319637f97e007dad0d681e65ce35b1ace333b629e2d33f9465c132608\","
-        + "\"sig\":\"9584afd231c52fcbcec6ce668a2cc4b6dc9b4d9da20510dcb9005c6844679b4844edb7a2e1e0591958b0295241567c774dbf7d39a73932877542de1a5f963f4b\","
-        + "\"tags\":[]"
-        + "}]";
+       = "[\"EVENT\","
+       + "{"
+       + "\"content\":\"直ん直んないわ。まあええか\","
+       + "\"created_at\":1786199583,"
+       + "\"id\":\"ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\","
+       + "\"kind\":1,"
+       + "\"pubkey\":\"9c59239319637f97e007dad0d681e65ce35b1ace333b629e2d33f9465c132608\","
+       + "\"sig\":\"9584afd231c52fcbcec6ce668a2cc4b6dc9b4d9da20510dcb9005c6844679b4844edb7a2e1e0591958b0295241567c774dbf7d39a73932877542de1a5f963f4b\","
+       + "\"tags\":[]"
+       + "}]";
 
     BaseMessage eventMessage = BaseMessageDecoder.decode(eventJson);
 
@@ -1083,17 +1083,56 @@ public class JsonParseTest {
 
     String subscriptionId = "npub27x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
     final String requestJson =
-        "[\"REQ\", " +
-            "\"" + subscriptionId + "\", " +
-            "{\"kinds\": [1], \"authors\": [\"9c59239319637f97e007dad0d681e65ce35b1ace333b629e2d33f9465c132608\"]}," + // first filter set
-            "{\"kinds\": [1], \"#p\": [\"ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}" + // second filter set
-            "]";
+       "[\"REQ\", " +
+          "\"" + subscriptionId + "\", " +
+          "{\"kinds\": [1], \"authors\": [\"9c59239319637f97e007dad0d681e65ce35b1ace333b629e2d33f9465c132608\"]}," + // first filter set
+          "{\"kinds\": [1], \"#p\": [\"ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712\"]}" + // second filter set
+          "]";
 
     final var message = BaseMessageDecoder.decode(requestJson);
 
     assertEquals(Command.REQ, message.getCommand());
     assertEquals(subscriptionId, ((ReqMessage) message).getSubscriptionId());
     assertEquals(2, ((ReqMessage) message).getFiltersList().size());
+  }
+
+  @Test
+  public void testReqMessageRecordToString() {
+    log.debug("testReqMessageRecordToString");
+
+    String subscriptionId = "npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh";
+    Kind kind = Kind.TEXT_NOTE;
+    String author = "f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75";
+    String referencedEventId = "fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    String referencedEventId2 = "ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712";
+    Relay relay = new Relay("ws://localhost:5555");
+    String uuidValue1 = "UUID-1";
+
+    AddressTag addressTag1 = new AddressTag(kind, new PublicKey(author), new IdentifierTag(uuidValue1));
+
+    ReqMessage reqMessage = new ReqMessage(subscriptionId,
+       new Filters(
+          new KindFilter(Kind.TEXT_NOTE),
+          new AuthorFilter(new PublicKey(author)),
+          new ReferencedEventFilter(new EventTag(referencedEventId, relay.getUrl())),
+          new ReferencedEventFilter(new EventTag(referencedEventId2, relay.getUrl())),
+          new ReferencedPublicKeyFilter(new PubKeyTag(new PublicKey(author))),
+          new AddressTagFilter(addressTag1)));
+
+    String expected = """
+ReqMessage[
+	subscriptionId=npub17x6pn22ukq3n5yw5x9prksdyyu6ww9jle2ckpqwdprh3ey8qhe6stnpujh,
+	filtersList=[
+		#e: EventTag[eventId=fc7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712, recommendedRelayUrl=ws://localhost:5555, marker=null],
+		#e: EventTag[eventId=ec7f200c5bed175702bd06c7ca5dba90d3497e827350b42fc99c3a4fa276a712, recommendedRelayUrl=ws://localhost:5555, marker=null],
+		kinds: 1,
+		#p: PubKeyTag[publicKey=f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75, mainRelayUrl=null, petName=null],
+		#a: AddressTag[kind=1, publicKey=f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75, identifierTag=IdentifierTag[uuid=UUID-1], relay=null],
+		authors: f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75
+	]
+]""";
+    
+    assertEquals(expected, reqMessage.toString());
   }
 
   BaseTag decode(String jsonString) throws JsonProcessingException {
