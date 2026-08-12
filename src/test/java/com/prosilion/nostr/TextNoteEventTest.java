@@ -32,6 +32,20 @@ public class TextNoteEventTest {
   final void testGenericEventRecordCtorEquality() {
     TextNoteEvent fromGer = new TextNoteEvent(referenceTextNoteEvent.asGenericEventRecord());
     assertEquals(referenceTextNoteEvent, fromGer);
+    String prettyPrint = "" +
+       "[\n" +
+       "  \"" + fromGer.getId() + "\",\n" +
+       "  \"e04e1c1c30df6058433f61681644fd24914f2e02e420496086c61f53eb504c04\",\n" +
+       "  " + fromGer.getCreatedAt() + ",\n" +
+       "  1,\n" +
+       "  [\n" +
+       "    [ \"d\", \"FORMULA_UNIT_UPVOTE\" ],\n" +
+       "    [ \"d\", \"FORMULA_UNIT_DOWNVOTE\" ]\n" +
+       "  ],\n" +
+       "  \"referenceContent\",\n" +
+       "  \"" + fromGer.getSignature() + "\"\n" +
+       "]";
+    assertEquals(prettyPrint, fromGer.createPrettyPrintJson());
   }
 
   @Test

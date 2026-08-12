@@ -73,7 +73,7 @@ public class UtilTest {
   }
   
   @Test
-  void testNoSpaceUtilPrettyPrint() {
+  void testCollapsedArrayElementsToSingleLineMultiSpaceUtilPrettyPrint() {
     final String json = """
         [
           "EVENT",
@@ -84,22 +84,24 @@ public class UtilTest {
             "created_at": 1687765220,
             "content": "手順書が間違ってたら作業者は無理だな",
             "tags": [
-              [
-                "a",
-                "1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1"
-              ],
-              [
-                "p",
-                "2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"
-              ]
+              [ "a", "1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1" ],
+              [ "p", "2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984" ]
             ],
             "sig": "86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"
           }
         ]""";
 
     assertEquals(json, Util.prettyFormatJson(json));
-  }
+    assertEquals(json, Util.prettyFormatJson(json, 2));
 
+    assertEquals(json, Util.prettyFormatJson(json, 0));
+    assertEquals(json, Util.prettyFormatJson(json, 1));
+    assertEquals(json, Util.prettyFormatJson(json, -1));
+
+    assertNotEquals(json, Util.prettyFormatJson(json, 3));
+    assertNotEquals(json, Util.prettyFormatJson(json, 4));
+  }
+  
   @Test
   void testMultiSpaceUtilPrettyPrint() {
     final String json = """
@@ -112,14 +114,8 @@ public class UtilTest {
             "created_at": 1687765220,
             "content": "手順書が間違ってたら作業者は無理だな",
             "tags": [
-              [
-                "a",
-                "1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1"
-              ],
-              [
-                "p",
-                "2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984"
-              ]
+              [ "a", "1:f1b419a95cb0233a11d431423b41a42734e7165fcab16081cd08ef1c90e0be75:UUID-1" ],
+              [ "p", "2bed79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984" ]
             ],
             "sig": "86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"
           }

@@ -5,7 +5,9 @@ import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.ReferencedAbstractEventTag;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,10 +29,19 @@ public interface Util {
     final String newline = System.lineSeparator();
 
     StringBuilder ret = new StringBuilder();
+    Deque<Character> containers = new ArrayDeque<>();
     boolean begin_quotes = false;
 
     for (int i = 0, indent = 0; i < chars.length; i++) {
       char c = chars[i];
+
+      if (c == '\\' && begin_quotes) {
+        ret.append(c);
+        if (i + 1 < chars.length) {
+          ret.append(chars[++i]);
+        }
+        continue;
+      }
 
       if (c == '\"') {
         ret.append(c);
@@ -41,11 +52,26 @@ public interface Util {
       if (!begin_quotes) {
         switch (c) {
           case '{':
+            containers.push(c);
+            ret.append(c).append(newline).append(String.format("%" + (indent += indent_width) + "s", ""));
+            continue;
           case '[':
+            int scalarArrayEnd = containers.peek() != null && containers.peek() == '['
+               ? findScalarArrayEnd(chars, i)
+               : -1;
+            if (scalarArrayEnd >= 0) {
+              appendScalarArray(ret, chars, i, scalarArrayEnd);
+              i = scalarArrayEnd;
+              continue;
+            }
+            containers.push(c);
             ret.append(c).append(newline).append(String.format("%" + (indent += indent_width) + "s", ""));
             continue;
           case '}':
           case ']':
+            if (!containers.isEmpty()) {
+              containers.pop();
+            }
             ret.append(newline).append((indent -= indent_width) > 0 ? String.format("%" + indent + "s", "") : "").append(c);
             continue;
           case ':':
@@ -59,12 +85,66 @@ public interface Util {
         }
       }
 
-      ret.append(c).append(c == '\\' ? "" + chars[++i] : "");
+      ret.append(c);
     }
 
     return ret.toString().replaceAll(
        EMPTY_TAGS_VARIANTS_REGEX,
        EMPTY_TAGS_SUBSTITUTION);
+  }
+
+  private static int findScalarArrayEnd(char[] chars, int start) {
+    boolean inQuotes = false;
+
+    for (int i = start + 1; i < chars.length; i++) {
+      char c = chars[i];
+      if (c == '\\' && inQuotes) {
+        i++;
+      } else if (c == '"') {
+        inQuotes = !inQuotes;
+      } else if (!inQuotes) {
+        if (c == '[' || c == '{') {
+          return -1;
+        }
+        if (c == ']') {
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  private static void appendScalarArray(StringBuilder ret, char[] chars, int start, int end) {
+    StringBuilder contents = new StringBuilder();
+    boolean inQuotes = false;
+
+    for (int i = start + 1; i < end; i++) {
+      char c = chars[i];
+      if (c == '\\' && inQuotes) {
+        contents.append(c);
+        if (i + 1 < end) {
+          contents.append(chars[++i]);
+        }
+      } else if (c == '"') {
+        contents.append(c);
+        inQuotes = !inQuotes;
+      } else if (!inQuotes && Character.isWhitespace(c)) {
+        continue;
+      } else if (!inQuotes && c == ',') {
+        contents.append(", ");
+      } else if (!inQuotes && c == ':') {
+        contents.append(": ");
+      } else {
+        contents.append(c);
+      }
+    }
+
+    ret.append('[');
+    if (!contents.isEmpty()) {
+      ret.append(' ').append(contents).append(' ');
+    }
+    ret.append(']');
   }
 
   static String generateRandomHex64String() {
