@@ -80,7 +80,8 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
        new IdentifierTag(
           badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey().toHexString()),
 // re: IdentifierTag's value, see above note 
-       mapStream(badgeDefinitionReputationEvent, curatedBadgeAwardGenericEventList, baseTags),
+       mapStream(badgeDefinitionReputationEvent,
+          validateNonEmptyCuratedBadgeAwardGenericEventList(curatedBadgeAwardGenericEventList), baseTags),
        content, relay);
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
     this.curatedBadgeAwardGenericEventList = curatedBadgeAwardGenericEventList;
@@ -92,7 +93,8 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList) throws NostrException {
     super(genericEventRecord);
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
-    this.curatedBadgeAwardGenericEventList = curatedBadgeAwardGenericEventList;
+    this.curatedBadgeAwardGenericEventList =
+       validateNonEmptyCuratedBadgeAwardGenericEventList(curatedBadgeAwardGenericEventList);
   }
 
   public BadgeSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent) {
@@ -106,7 +108,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
     BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
        identity,
        getBadgeDefinitionReputationEvent(),
-       distinctCuratedBadgeAwardGenericEventList,
+       validateNonEmptyCuratedBadgeAwardGenericEventList(distinctCuratedBadgeAwardGenericEventList),
        getTags(),
        getContent(),
        getRelay().orElseThrow(() ->
@@ -145,5 +147,12 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
           .filter(Predicate.not(PubKeyTag.class::isInstance))
           .filter(Predicate.not(EventTag.class::isInstance))
           .filter(Predicate.not(AddressTag.class::isInstance))).toList();
+  }
+
+  private static List<CuratedBadgeAwardGenericEvent> validateNonEmptyCuratedBadgeAwardGenericEventList(List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList) {
+    if (curatedBadgeAwardGenericEventList.isEmpty())
+      throw new NostrException("BadgeSetsEvent constructor received empty List<CuratedBadgeAwardGenericEvent>");
+
+    return curatedBadgeAwardGenericEventList.stream().distinct().toList();
   }
 }

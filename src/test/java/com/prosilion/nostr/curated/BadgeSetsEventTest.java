@@ -1,13 +1,14 @@
 package com.prosilion.nostr.curated;
 
 import com.prosilion.nostr.EventTestFixtures;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.AbstractSetsEvent;
+import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
-import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
@@ -16,6 +17,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BadgeSetsEventTest extends EventTestFixtures {
@@ -25,7 +27,6 @@ public class BadgeSetsEventTest extends EventTestFixtures {
   private final BadgeDefinitionReputationEvent badgeDefinitionReputationEvent;
 
   public BadgeSetsEventTest() {
-
     CuratedFormulaEvent plusOneFormulaEvent =
        new CuratedFormulaEvent(
           aImgIdentity,
@@ -93,6 +94,13 @@ public class BadgeSetsEventTest extends EventTestFixtures {
        .map(AbstractSetsEvent::getEventId).anyMatch(curationSetsUpvoteEvent.getId()::equals));
     assertTrue(badgeSetsEvent.getCuratedBadgeAwardGenericEventList().stream()
        .map(AbstractSetsEvent::getEventId).anyMatch(curationSetsDownvoteEvent.getId()::equals));
+
+    assertThrows(NostrException.class, () ->
+       new BadgeSetsEvent(
+          aImgIdentity,
+          badgeDefinitionReputationEvent,
+          List.of(),
+          relayArgRelay));
   }
 
   @Test

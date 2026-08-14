@@ -1,5 +1,6 @@
 package com.prosilion.nostr;
 
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
@@ -83,6 +85,38 @@ public class FollowSetsEventTest extends EventTestFixtures {
        minusOneFormulaEvent);
   }
 
+  @Test
+  final void testCuratedBadgeAwardGenericEventList() {
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       relayArgRelay);
+
+    BadgeSetsEvent badgeSetsEvent = new BadgeSetsEvent(
+       aImgIdentity,
+       badgeDefinitionReputationEventPlusOneFormula,
+       List.of(curationSetsUpvoteEvent), relayArgRelay);
+
+    FollowSetsEvent expectedFollowSetsEvent = new FollowSetsEvent(
+       aImgIdentity,
+       badgeSetsEvent,
+       auxRelay);
+
+    GenericEventRecord genericEventRecord = expectedFollowSetsEvent.asGenericEventRecord();
+
+    FollowSetsEvent actualFollowSetsEvent = new FollowSetsEvent(
+       genericEventRecord,
+       List.of(badgeSetsEvent));
+
+    assertEquals(expectedFollowSetsEvent, actualFollowSetsEvent);
+
+    assertThrows(NostrException.class, () -> new FollowSetsEvent(
+       genericEventRecord,
+       List.of()));
+  }
+  
   @Test
   final void testValidFollowSetsEvent() {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(

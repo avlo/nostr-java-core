@@ -78,7 +78,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
        mapStream(badgeSetsEventList, baseTags),
        content,
        relay);
-    this.badgeSetsEventList = badgeSetsEventList.stream().distinct().toList();
+    this.badgeSetsEventList = validateNonEmptyBadgeSetsEventList(badgeSetsEventList);
   }
 
   public FollowSetsEvent(
@@ -91,7 +91,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull List<BadgeSetsEvent> badgeSetsEventList) {
     super(genericEventRecord);
-    this.badgeSetsEventList = badgeSetsEventList.stream().distinct().toList();
+    this.badgeSetsEventList = validateNonEmptyBadgeSetsEventList(badgeSetsEventList);
   }
 
   public FollowSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull BadgeSetsEvent newBadgeSetsEvent) {
@@ -101,7 +101,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
   public FollowSetsEvent createNewFromExisting(@NonNull Identity identity, @NonNull List<BadgeSetsEvent> newBadgeSetsEvents) {
     List<BadgeSetsEvent> appendList = new ArrayList<>(getBadgeSetsEventList());
     appendList.addAll(newBadgeSetsEvents);
-    List<BadgeSetsEvent> distinctBadgeSetsEventList = appendList.stream().distinct().toList();
+    List<BadgeSetsEvent> distinctBadgeSetsEventList = validateNonEmptyBadgeSetsEventList(appendList);
     if (getBadgeSetsEventList().equals(distinctBadgeSetsEventList))
       return this;
     return new FollowSetsEvent(
@@ -133,5 +133,12 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
        baseTags.stream()
           .filter(Predicate.not(PubKeyTag.class::isInstance))
           .filter(Predicate.not(EventTag.class::isInstance))).toList();
+  }
+
+  private static List<BadgeSetsEvent> validateNonEmptyBadgeSetsEventList(List<BadgeSetsEvent> badgeSetsEventList) {
+    if (badgeSetsEventList.isEmpty())
+      throw new NostrException("FollowSetsEvent constructor contains empty List<BadgeSetsEvent>");
+
+    return badgeSetsEventList.stream().distinct().toList();
   }
 }
