@@ -67,8 +67,7 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        plusOneFormulaEvent);
 
     IdentifierTag expectedIdentifierTag = AbstractSetsEvent.hashedAddressTag(badgeDefnUpvoteEvent.asAddressableEventAddressTag());
-    IdentifierTag plusOneFormulaEventsAddressTag = AbstractSetsEvent.hashedAddressTag(plusOneFormulaEvent.getAddressTag());
-    assertEquals(expectedIdentifierTag, plusOneFormulaEventsAddressTag);
+    assertEquals(expectedIdentifierTag, plusOneFormulaEvent.getIdentifierTag());
     assertEquals(expectedIdentifierTag, expected.getTypeSpecificTags(AddressTag.class).getFirst().getIdentifierTag());
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(

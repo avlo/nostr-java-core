@@ -41,11 +41,15 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
        hashedAddressTag(formulaEvent.requireFirstTag(AddressTag.class)),
        new SetsPairedEvent(
           fillAddressTag(
-             formulaEvent.requireFirstTag(AddressTag.class),
+             new AddressTag(
+                formulaEvent.getKind(),
+                formulaEvent.getPublicKey(),
+                formulaEvent.requireFirstTag(IdentifierTag.class),
+                formulaEvent.getRelayTag().map(RelayTag::getRelay).orElse(null)),
              formulaEventReferenceTag),
           new EventTag(
              formulaEvent.getId(),
-             formulaEvent.getRelayTag().map(RelayTag::relay).map(Relay::getUrl).orElse(formulaEventReferenceTag.getUrl()))),
+             formulaEvent.getRelayTag().map(RelayTag::getRelay).map(Relay::getUrl).orElse(formulaEventReferenceTag.getUrl()))),
        List.of(
           formulaEventReferenceTag,
           new PubKeyTag(formulaEvent.getPublicKey())),

@@ -29,9 +29,11 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
     assertEquals(defnEvent_YesYes_Upvote.asGenericEventRecord().getId(), setsPairedUpvoteEvent.getEventTagEventId());
     assertEquals(curatedBadgeDefinitionGenericEvent.getAddressTag(), defnEvent_YesYes_Upvote.asAddressableEventAddressTag());
     assertEquals(
-       curatedBadgeDefinitionGenericEvent.getIdentifierTag().getUuid(),
-       AbstractSetsEvent.hashedAddressTag(defnEvent_YesYes_Upvote.asAddressableEventAddressTag()).getUuid());
-
+       curatedBadgeDefinitionGenericEvent.getIdentifierTag(),
+       AbstractSetsEvent.hashedAddressTag(defnEvent_YesYes_Upvote.asAddressableEventAddressTag()));
+    assertEquals(
+       curatedBadgeDefinitionGenericEvent.getIdentifierTag(),
+       AbstractSetsEvent.hashedAddressTag(curatedBadgeDefinitionGenericEvent.getAddressTag()));
     assertEquals(defnEvent_YesYes_Upvote, curatedBadgeDefinitionGenericEvent.getBadgeDefinitionGenericEvent());
   }
 

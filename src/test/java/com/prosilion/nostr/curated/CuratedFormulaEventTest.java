@@ -24,7 +24,7 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
   @Test
   final void testCanonicalCtorAgainstGenericEventRecordCtor() {
     FormulaEvent formulaEvent = new FormulaEvent(
-       submitter,
+       formulaCreator,
        formulaUpvoteIdentifierTag,
        defnEvent_YesYes_Upvote,
        "+1",
@@ -50,21 +50,21 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
 
     assertEquals(expected.getIdentifierTag(), AbstractSetsEvent.hashedAddressTag(formulaEvent.getAddressTag()));
 
-    CuratedFormulaEvent actualFromExpected = new CuratedFormulaEvent(expected.asGenericEventRecord());
-    assertEquals(formulaEvent.getId(), actualFromExpected.getFormulaEventId());
-    assertEquals(formulaEvent.getId(), actualFromExpected.getEventTag().eventId());
-    assertEquals(formulaEvent.getId(), actualFromExpected.requireFirstTag(EventTag.class).eventId());
-    IdentifierTag actualFromExpectedIdentifierTag = actualFromExpected.getIdentifierTag();
-    assertEquals(expected.getIdentifierTag(), actualFromExpectedIdentifierTag);
+    CuratedFormulaEvent actualCuratedFormulaEventFromExpected = new CuratedFormulaEvent(expected.asGenericEventRecord());
+    assertEquals(formulaEvent.getId(), actualCuratedFormulaEventFromExpected.getFormulaEventId());
+    assertEquals(formulaEvent.getId(), actualCuratedFormulaEventFromExpected.getEventTag().eventId());
+    assertEquals(formulaEvent.getId(), actualCuratedFormulaEventFromExpected.requireFirstTag(EventTag.class).eventId());
+    assertEquals(formulaEvent.asAddressableEventAddressTag(), actualCuratedFormulaEventFromExpected.getAddressTag());
+    assertEquals(expected.getIdentifierTag(), actualCuratedFormulaEventFromExpected.getIdentifierTag());
 
     SetsPairedEvent setsPairedEvent = expected.getSetsPairedEvent();
 
-    assertEquals(defnEvent_YesYes_Upvote.asAddressableEventAddressTag(), setsPairedEvent.getAddressTag());
+    assertEquals(formulaEvent.asAddressableEventAddressTag(), setsPairedEvent.getAddressTag());
     assertEquals(formulaEvent.getId(), setsPairedEvent.getEventTag().getEventId());
     assertEquals(formulaEvent.getPublicKey(), expected.requireFirstTag(com.prosilion.nostr.tag.PubKeyTag.class).getPublicKey());
     assertEquals(referenceTag, expected.requireFirstTag(ReferenceTag.class));
     assertEquals(formulaEvent.getFormula(), expected.getFormula());
-    assertEquals(expected, actualFromExpected);
+    assertEquals(expected, actualCuratedFormulaEventFromExpected);
   }
 
   @Test
