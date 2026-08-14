@@ -2,9 +2,10 @@ package com.prosilion.nostr.curated;
 
 import com.prosilion.nostr.EventTestFixtures;
 import com.prosilion.nostr.NostrException;
-import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
+import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -24,7 +25,7 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
   final void testCanonicalCtorAgainstGenericEventRecordCtor() {
     FormulaEvent formulaEvent = new FormulaEvent(
        submitter,
-       new IdentifierTag("UNIT_FORMULA"),
+       formulaUpvoteIdentifierTag,
        defnEvent_YesYes_Upvote,
        "+1",
        relayArgRelay);
@@ -35,15 +36,35 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
        formulaEvent,
        referenceTag,
        relayArgRelay);
-    CuratedFormulaEvent actual = new CuratedFormulaEvent(expected.asGenericEventRecord());
+    assertEquals(formulaEvent.getId(), expected.getFormulaEventId());
+    assertEquals(formulaEvent.getId(), expected.getEventTag().eventId());
+    assertEquals(formulaEvent.getId(), expected.requireFirstTag(EventTag.class).eventId());
+
+    AddressTag downvoteEventAsAddressableAddressTag = defnEvent_YesYes_Downvote.asAddressableEventAddressTag();
+    IdentifierTag expectedDownvoteIdentifierTag = AbstractSetsEvent.hashedAddressTag(downvoteEventAsAddressableAddressTag);
+    assertEquals(new IdentifierTag("1545192716"), expectedDownvoteIdentifierTag);
+    
+    AddressTag upvoteEventAsAddressableAddressTag = defnEvent_YesYes_Upvote.asAddressableEventAddressTag();
+    IdentifierTag expectedUpvoteIdentifierTag = AbstractSetsEvent.hashedAddressTag(upvoteEventAsAddressableAddressTag);
+    assertEquals(new IdentifierTag("1367861445"), expectedUpvoteIdentifierTag); 
+
+    assertEquals(expected.getIdentifierTag(), AbstractSetsEvent.hashedAddressTag(formulaEvent.getAddressTag()));
+
+    CuratedFormulaEvent actualFromExpected = new CuratedFormulaEvent(expected.asGenericEventRecord());
+    assertEquals(formulaEvent.getId(), actualFromExpected.getFormulaEventId());
+    assertEquals(formulaEvent.getId(), actualFromExpected.getEventTag().eventId());
+    assertEquals(formulaEvent.getId(), actualFromExpected.requireFirstTag(EventTag.class).eventId());
+    IdentifierTag actualFromExpectedIdentifierTag = actualFromExpected.getIdentifierTag();
+    assertEquals(expected.getIdentifierTag(), actualFromExpectedIdentifierTag);
 
     SetsPairedEvent setsPairedEvent = expected.getSetsPairedEvent();
+
     assertEquals(defnEvent_YesYes_Upvote.asAddressableEventAddressTag(), setsPairedEvent.getAddressTag());
     assertEquals(formulaEvent.getId(), setsPairedEvent.getEventTag().getEventId());
     assertEquals(formulaEvent.getPublicKey(), expected.requireFirstTag(com.prosilion.nostr.tag.PubKeyTag.class).getPublicKey());
     assertEquals(referenceTag, expected.requireFirstTag(ReferenceTag.class));
     assertEquals(formulaEvent.getFormula(), expected.getFormula());
-    assertEquals(expected, actual);
+    assertEquals(expected, actualFromExpected);
   }
 
   @Test

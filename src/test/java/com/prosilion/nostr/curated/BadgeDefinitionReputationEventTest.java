@@ -2,19 +2,18 @@ package com.prosilion.nostr.curated;
 
 import com.prosilion.nostr.EventTestFixtures;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.AddressableEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.BaseEvent;
-import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
+import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.ExternalIdentityTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
-import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -28,38 +27,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   public static final Relay relay = new Relay("ws://localhost:5555");
 
-  public static final String REPUTATION = "REPUTATION";
-  public static final String UNIT_UPVOTE = "UNIT_UPVOTE";
-  public static final String UNIT_DOWNVOTE = "UNIT_DOWNVOTE";
+  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, upvoteIdentifierTag, relay);
+  private final BadgeDefinitionGenericEvent badgeDefnDownvoteEvent = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, relay);
 
-  public final IdentifierTag reputationIdentifierTag = new IdentifierTag(REPUTATION);
-  public final IdentifierTag upvoteIdentifierTag = new IdentifierTag(UNIT_UPVOTE);
-  public final IdentifierTag downvoteIdentifierTag = new IdentifierTag(UNIT_DOWNVOTE);
-
-  public final Identity aImgidentity = Identity.generateRandomIdentity();
-  private final BadgeDefinitionGenericEvent badgeDefnUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
-  private final BadgeDefinitionGenericEvent badgeDefnDownvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, downvoteIdentifierTag, relay);
-
-  private final PublicKey definitionCreatorPublicKey = // Identity.generateRandomIdentity();
-     Identity.create("bbb4585483196998204846989544737603523651520600328805626488477202").getPublicKey();
-
-  public static final String PLATFORM = BadgeDefinitionReputationEventTest.class.getPackageName();
-  public static final String IDENTITY = BadgeDefinitionReputationEventTest.class.getSimpleName();
-  public static final String PROOF = String.valueOf(BadgeDefinitionReputationEventTest.class.hashCode());
-
-  public static final String FORMULA_PLUS_ONE = "FORMULA_PLUS_ONE";
-  public static final String FORMULA_MINUS_ONE = "FORMULA_MINUS_ONE";
-  private final IdentifierTag formulaPlusOneIdentifierTag = new IdentifierTag(FORMULA_PLUS_ONE);
-  private final IdentifierTag formulaMinusOneIdentifierTag = new IdentifierTag(FORMULA_MINUS_ONE);
-
-  public static final String PLUS_ONE_FORMULA = "+1";
-  public static final String MINUS_ONE_FORMULA = "-1";
   private final CuratedFormulaEvent plusOneFormulaEvent =
      new CuratedFormulaEvent(
         aImgIdentity,
         new FormulaEvent(
            formulaCreator,
-           formulaPlusOneIdentifierTag,
+           formulaUpvoteIdentifierTag,
            badgeDefnUpvoteEvent,
            PLUS_ONE_FORMULA,
            relay),
@@ -71,14 +47,12 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
         aImgIdentity,
         new FormulaEvent(
            formulaCreator,
-           formulaMinusOneIdentifierTag,
+           formulaDownvoteIdentifierTag,
            badgeDefnDownvoteEvent,
            MINUS_ONE_FORMULA,
            relay),
         new ReferenceTag(relayArgUrl),
         relayArgRelay);
-
-  private final ExternalIdentityTag externalIdentityTag = new ExternalIdentityTag(PLATFORM, IDENTITY, PROOF);
 
   public BadgeDefinitionReputationEventTest() {
   }
@@ -86,11 +60,16 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   @Test
   void testValidBadgeDefinitionReputationEventWithPlusOneFormulaEvent() {
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
-       aImgidentity,
-       definitionCreatorPublicKey,
+       aImgIdentity,
+       repDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       externalIdentityTag, relay,
+       EXTERNAL_IDENTITY_TAG, relay,
        plusOneFormulaEvent);
+
+    IdentifierTag expectedIdentifierTag = AbstractSetsEvent.hashedAddressTag(badgeDefnUpvoteEvent.asAddressableEventAddressTag());
+    IdentifierTag plusOneFormulaEventsAddressTag = AbstractSetsEvent.hashedAddressTag(plusOneFormulaEvent.getAddressTag());
+    assertEquals(expectedIdentifierTag, plusOneFormulaEventsAddressTag);
+    assertEquals(expectedIdentifierTag, expected.getTypeSpecificTags(AddressTag.class).getFirst().getIdentifierTag());
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
        expected.getGenericEventRecord(),
@@ -105,10 +84,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   void testValidBadgeDefinitionReputationEventWithPlusOneMinusOneFormulaEvent() {
     List<CuratedFormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
-       aImgidentity,
-       definitionCreatorPublicKey,
+       aImgIdentity,
+       repDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       externalIdentityTag, relay,
+       EXTERNAL_IDENTITY_TAG, relay,
        formulaEvents);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
@@ -126,10 +105,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   @Test
   void testValidBadgeDefinitionReputationEventWithPlusOneMinusOneFormulaEventUsingVarArgs() {
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
-       aImgidentity,
-       definitionCreatorPublicKey,
+       aImgIdentity,
+       repDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       externalIdentityTag, relay,
+       EXTERNAL_IDENTITY_TAG, relay,
        plusOneFormulaEvent, minusOneFormulaEvent);
 
     List<CuratedFormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
@@ -163,8 +142,8 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
           formulaCreator,
           formulaMinusOneIdentifierTag,
           new BadgeDefinitionGenericEvent(
-             aImgidentity,
-             new IdentifierTag("UNIT_DOWNVOTE"),
+             aImgIdentity,
+             downvoteIdentifierTag,
              relay),
           MINUS_ONE_FORMULA,
           relay),
@@ -173,10 +152,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
 
     List<CuratedFormulaEvent> plusOneMinusOneFormulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
-       aImgidentity,
-       definitionCreatorPublicKey,
+       aImgIdentity,
+       repDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       externalIdentityTag, relay,
+       EXTERNAL_IDENTITY_TAG, relay,
        plusOneMinusOneFormulaEvents);
 
     List<CuratedFormulaEvent> expectedFormulaEvents = expected.getCuratedFormulaEvents();
@@ -197,23 +176,23 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   @Test
   void testValidBadgeDefinitionReputationEvent() {
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
-       aImgidentity,
-       definitionCreatorPublicKey,
+       aImgIdentity,
+       repDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       externalIdentityTag, relay,
+       EXTERNAL_IDENTITY_TAG, relay,
        plusOneFormulaEvent);
 
-    assertEquals(externalIdentityTag, badgeDefinitionReputationEvent.getExternalIdentityTag());
+    assertEquals(EXTERNAL_IDENTITY_TAG, badgeDefinitionReputationEvent.getExternalIdentityTag());
   }
 
   @Test
   void testInequalityEventCopies() {
-    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
+    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgIdentity, upvoteIdentifierTag, relay);
     CuratedFormulaEvent plusOneFormulaEvent = new CuratedFormulaEvent(
-       aImgidentity,
+       aImgIdentity,
        new FormulaEvent(
           formulaCreator,
-          formulaPlusOneIdentifierTag,
+          formulaUpvoteIdentifierTag,
           badgeDefinitionUpvoteEvent,
           PLUS_ONE_FORMULA,
           relay),
@@ -222,35 +201,35 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           plusOneFormulaEvent));
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           new CuratedFormulaEvent(
              aImgIdentity,
              new FormulaEvent(
                 formulaCreator,
-                formulaPlusOneIdentifierTag,
+                formulaUpvoteIdentifierTag,
                 badgeDefinitionUpvoteEvent,
                 PLUS_ONE_FORMULA,
                 relay),
@@ -260,13 +239,13 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
 
   @Test
   void testInequality() {
-    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
+    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgIdentity, upvoteIdentifierTag, relay);
     CuratedFormulaEvent plusOneFormulaEvent =
        new CuratedFormulaEvent(
-          aImgidentity,
+          aImgIdentity,
           new FormulaEvent(
              formulaCreator,
-             formulaPlusOneIdentifierTag,
+             formulaUpvoteIdentifierTag,
              badgeDefinitionUpvoteEvent,
              PLUS_ONE_FORMULA,
              relay),
@@ -275,35 +254,35 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           new IdentifierTag("DIFFERENT_REPUTATION"),
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           plusOneFormulaEvent));
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           plusOneFormulaEvent),
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           new CuratedFormulaEvent(
-             aImgidentity,
+             aImgIdentity,
              new FormulaEvent(
                 formulaCreator,
-                formulaPlusOneIdentifierTag,
+                formulaUpvoteIdentifierTag,
                 badgeDefinitionUpvoteEvent,
                 "+2",
                 relay),
@@ -312,10 +291,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
 
     assertNotEquals(
        new BadgeDefinitionReputationEvent(
-          aImgidentity,
-          definitionCreatorPublicKey,
+          aImgIdentity,
+          repDefnCreator.getPublicKey(),
           reputationIdentifierTag,
-          externalIdentityTag, relay,
+          EXTERNAL_IDENTITY_TAG, relay,
           plusOneFormulaEvent),
        plusOneFormulaEvent);
 
@@ -324,12 +303,12 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
 
   @Test
   void uniqueIdentifierTags() {
-    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgidentity, upvoteIdentifierTag, relay);
+    BadgeDefinitionGenericEvent badgeDefinitionUpvoteEvent = new BadgeDefinitionGenericEvent(aImgIdentity, upvoteIdentifierTag, relay);
     CuratedFormulaEvent plusOneFormulaEvent =
-       new CuratedFormulaEvent(aImgidentity,
+       new CuratedFormulaEvent(aImgIdentity,
           new FormulaEvent(
              formulaCreator,
-             formulaPlusOneIdentifierTag,
+             formulaUpvoteIdentifierTag,
              badgeDefinitionUpvoteEvent,
              PLUS_ONE_FORMULA,
              relay),
@@ -338,10 +317,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
     List<BaseTag> baseTags = new ArrayList<>();
     baseTags.add(new IdentifierTag("DIFFERENT_REPUTATION"));
     BadgeDefinitionReputationEvent badgeDefinitionReputationEvent = new BadgeDefinitionReputationEvent(
-       aImgidentity,
-       definitionCreatorPublicKey,
+       aImgIdentity,
+       upvoteDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       externalIdentityTag, baseTags, relay, List.of(plusOneFormulaEvent)
+       EXTERNAL_IDENTITY_TAG, baseTags, relay, List.of(plusOneFormulaEvent)
     );
 
     assertEquals(1, badgeDefinitionReputationEvent.getTypeSpecificTags(IdentifierTag.class).size());
@@ -352,10 +331,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
     assertTrue(
        assertThrows(
           NostrException.class, () -> new BadgeDefinitionReputationEvent(
-             aImgidentity,
-             definitionCreatorPublicKey,
+             aImgIdentity,
+             upvoteDefnCreator.getPublicKey(),
              reputationIdentifierTag,
-             externalIdentityTag, List.of(new IdentifierTag("DIFFERENT_REPUTATION")), relay, List.of()
+             EXTERNAL_IDENTITY_TAG, List.of(new IdentifierTag("DIFFERENT_REPUTATION")), relay, List.of()
           )
        ).getMessage().contains(BadgeDefinitionReputationEvent.MISSING_FORMULA_EVENTS));
   }
@@ -364,10 +343,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   void testDuplicateFormulaEventIdentifierTagsThrowsException() {
     CuratedFormulaEvent duplicatePlusOneFormulaEvent =
        new CuratedFormulaEvent(
-          aImgidentity,
+          aImgIdentity,
           new FormulaEvent(
              formulaCreator,
-             formulaPlusOneIdentifierTag,
+             formulaUpvoteIdentifierTag,
              badgeDefnUpvoteEvent,
              "+2",
              relay),
@@ -378,10 +357,10 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
        assertThrows(
           NostrException.class, () ->
              new BadgeDefinitionReputationEvent(
-                aImgidentity,
-                definitionCreatorPublicKey,
+                aImgIdentity,
+                upvoteDefnCreator.getPublicKey(),
                 reputationIdentifierTag,
-                externalIdentityTag, relay,
+                EXTERNAL_IDENTITY_TAG, relay,
                 List.of(plusOneFormulaEvent, duplicatePlusOneFormulaEvent))).getMessage().contains(
           BadgeDefinitionReputationEvent.MATCHING_IDENTIFIER_TAGS_FOUND));
   }
@@ -389,15 +368,15 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   @Test
   void testDifferentFormulaUuidsWithDuplicateFormulaContentsDoNotThrowException() {
     BadgeDefinitionReputationEvent event = new BadgeDefinitionReputationEvent(
-       aImgidentity, definitionCreatorPublicKey, reputationIdentifierTag, externalIdentityTag, relay,
+       aImgIdentity, upvoteDefnCreator.getPublicKey(), reputationIdentifierTag, EXTERNAL_IDENTITY_TAG, relay,
        List.of(
           new CuratedFormulaEvent(
-             aImgidentity,
+             aImgIdentity,
              new FormulaEvent(
                 formulaCreator,
-                new IdentifierTag(FORMULA_PLUS_ONE),
+                formulaUpvoteIdentifierTag,
                 new BadgeDefinitionGenericEvent(
-                   aImgidentity,
+                   aImgIdentity,
                    upvoteIdentifierTag,
                    relay),
                 PLUS_ONE_FORMULA,
@@ -405,13 +384,14 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
              new ReferenceTag(relayArgUrl),
              relayArgRelay),
           new CuratedFormulaEvent(
-             aImgidentity,
+             aImgIdentity,
              new FormulaEvent(
                 formulaCreator,
-                new IdentifierTag("FORMULA_PLUS_ONE_AGAIN"), new BadgeDefinitionGenericEvent(
-                aImgidentity,
-                new IdentifierTag(UNIT_UPVOTE + "_AGAIN"),
-                relay),
+                new IdentifierTag(FORMULA_UNIT_UPVOTE + "_AGAIN"),
+                new BadgeDefinitionGenericEvent(
+                   aImgIdentity,
+                   new IdentifierTag(AWARD_UNIT_UPVOTE + "_AGAIN"),
+                   relay),
                 PLUS_ONE_FORMULA,
                 relay),
              new ReferenceTag(relayArgUrl),
@@ -424,20 +404,20 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   @Test
   void testAddressTagCount() {
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(
-       aImgidentity,
+       aImgIdentity,
        repDefnCreator.getPublicKey(),
        reputationIdentifierTag,
-       externalIdentityTag, relay,
+       EXTERNAL_IDENTITY_TAG, relay,
        plusOneFormulaEvent);
-    
+
     assertEquals(1, expected.getCuratedFormulaEvents().size());
   }
-  
+
   @Test
   void testGetTypeSpecificTags() {
     assertEquals(1,
        new BadgeDefinitionGenericEvent(
-          aImgidentity,
+          aImgIdentity,
           reputationIdentifierTag, relay).getTypeSpecificTags(IdentifierTag.class).size());
   }
 }
