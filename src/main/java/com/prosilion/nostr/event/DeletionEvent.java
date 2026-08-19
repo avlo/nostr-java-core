@@ -2,68 +2,45 @@ package com.prosilion.nostr.event;
 
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.tag.AddressTag;
+import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
-import com.prosilion.nostr.tag.KindTag;
+import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.user.Identity;
-import com.prosilion.nostr.user.PublicKey;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 import lombok.NonNull;
 
 public class DeletionEvent extends BaseEvent {
 
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<EventTag> eventTags, @NonNull String content) throws NostrException {
-    super(identity, Kind.DELETION, new ArrayList<>(eventTags), content);
+  public DeletionEvent(
+     @NonNull Identity identity,
+     @NonNull EventTag eventTag,
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    this(identity, List.of(eventTag), content, relay);
   }
 
-  public DeletionEvent(@NonNull Identity identity, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException {
-    super(identity, Kind.DELETION,
-        addressTags.stream().map(
-            DeletionEvent::validatePubkeyMatch),
-        content);
-  }
-
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull List<EventTag> eventTags, @NonNull String content) throws NostrException {
-    super(identity, Kind.DELETION,
-        Stream.concat(
-            kindTags.stream(),
-            eventTags.stream()), content);
-  }
-
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull String content, @NonNull List<AddressTag> addressTags) throws NostrException {
-    super(identity, Kind.DELETION,
-        Stream.concat(
-            kindTags.stream(),
-            addressTags.stream().map(
-                DeletionEvent::validatePubkeyMatch)), content);
-  }
-
-  public DeletionEvent(@NonNull Identity identity, @NonNull List<KindTag> kindTags, @NonNull List<EventTag> eventTags, @NonNull List<AddressTag> addressTags, @NonNull String content) throws NostrException {
-    super(identity, Kind.DELETION,
-        Stream.concat(
-            Stream.concat(
-                kindTags.stream(),
-                eventTags.stream()),
-            addressTags.stream().map(
-                DeletionEvent::validatePubkeyMatch)), content);
+  public DeletionEvent(
+     @NonNull Identity identity,
+     @NonNull List<EventTag> eventTags,
+     @NonNull String content,
+     @NonNull Relay relay) throws NostrException {
+    super(
+       identity,
+       Kind.DELETION,
+       Stream.concat(
+             eventTags.stream(),
+             Stream.of(new RelayTag(relay)))
+          .<List<BaseTag>>map(List::of).flatMap(Collection::stream).toList(),
+       content);
   }
 
   public DeletionEvent(@NonNull GenericEventRecord genericEventRecord) {
-    super(genericEventRecord);
+    super(validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES));
   }
 
-  private static final BiPredicate<AddressTag, PublicKey> addressTagPredicate = (addressTag, publicKey) ->
-      addressTag.getPublicKey().equals(publicKey);
-
-  private static final BiFunction<AddressTag, PublicKey, String> errorMessage = (addressTag, publicKey) -> String.format("Deletion Event contains an AddressTag with PublicKey [%s] that does not match event-creator's PublicKey [%s]", addressTag.getPublicKey().toString(), publicKey.toString());
-
-  //  TODO: revisit below- commented impl may not match NIP-09 requirement
-  protected static AddressTag validatePubkeyMatch(@NonNull AddressTag addressTag) {
-//    assert ((Predicate<PublicKey>) DeletionEvent.addressTagPredicate).test(addressTag.getPublicKey()) : ((Function<AddressTag, String>) DeletionEvent.errorMessage).apply(addressTag);
-    return addressTag;
-  }
+  private static final List<Class<? extends BaseTag>> REQUIRED_TAG_TYPES =
+     List.of(EventTag.class, RelayTag.class);
 }
