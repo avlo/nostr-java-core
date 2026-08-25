@@ -1,12 +1,14 @@
 package com.prosilion.nostr;
 
+import com.prosilion.nostr.event.BadgeAwardGenericEvent;
+import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.FollowSetsEvent;
+import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
-import com.prosilion.nostr.event.FollowSetsEvent;
-import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -14,6 +16,7 @@ import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
 import com.prosilion.nostr.tag.SetsPairedEvent;
 import com.prosilion.nostr.user.Identity;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -116,7 +119,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
        genericEventRecord,
        List.of()));
   }
-  
+
   @Test
   final void testValidFollowSetsEvent() {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
@@ -412,6 +415,150 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
     assertTrue(newpUpvoteDownvoteEventsFromExistingUpvote.getBadgeSetsEventList().contains(badgeSetsEvent));
     assertTrue(newpUpvoteDownvoteEventsFromExistingUpvote.getBadgeSetsEventList().contains(badgeSetsHasUpvoteDownvoteEvents));
+  }
+
+  @Test
+  final void testGetNonMatchingBadgeSetsEventFromBadgeSetsEventLists() {
+    CuratedBadgeAwardGenericEvent curatedBadgeAwardUpvoteEvent_1 = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       createNewBadgeAwardUpvoteEvent(),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       relayArgRelay);
+
+    CuratedBadgeAwardGenericEvent curatedBadgeAwardDownvoteEvent_1 = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       createNewBadgeAwardDownvoteEvent(),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       relayArgRelay);
+
+    BadgeSetsEvent badgeSetsEvent_1 = new BadgeSetsEvent(
+       aImgIdentity,
+       badgeDefinitionReputationEventPlusOneFormula,
+       List.of(curatedBadgeAwardUpvoteEvent_1, curatedBadgeAwardDownvoteEvent_1),
+       relayArgRelay);
+
+    final IdentifierTag reputationDifferentIdentifierTag = new IdentifierTag("BADGE_DIFFERENT_DEFN_UNIT_REP");
+
+    CuratedBadgeAwardGenericEvent curatedBadgeAwardUpvoteEvent_2 = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       createNewBadgeAwardUpvoteEvent(),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       relayArgRelay);
+
+    CuratedBadgeAwardGenericEvent curatedBadgeAwardDownvoteEvent_2 = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       createNewBadgeAwardDownvoteEvent(),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       relayArgRelay);
+
+    BadgeDefinitionReputationEvent differentBadgeDefinitionReputationEvent =
+       new BadgeDefinitionReputationEvent(
+          repDefnCreator,
+          aImgIdentity.getPublicKey(),
+          reputationDifferentIdentifierTag,
+          EXTERNAL_IDENTITY_TAG, relayArgRelay,
+          List.of(plusOneFormulaEvent, minusOneFormulaEvent));
+
+    BadgeSetsEvent badgeSetsEvent_2 = new BadgeSetsEvent(
+       aImgIdentity,
+       differentBadgeDefinitionReputationEvent,
+       List.of(curatedBadgeAwardUpvoteEvent_2, curatedBadgeAwardDownvoteEvent_2),
+       relayArgRelay);
+
+    FollowSetsEvent followSetsEvent_1 = new FollowSetsEvent(
+       aImgIdentity,
+       List.of(badgeSetsEvent_1, badgeSetsEvent_2),
+       auxRelay);
+
+    CuratedBadgeAwardGenericEvent curatedBadgeAwardDownvoteEvent_3 = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       createNewBadgeAwardDownvoteEvent(),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       relayArgRelay);
+
+    BadgeSetsEvent badgeSetsEvent_3 = new BadgeSetsEvent(
+       aImgIdentity,
+       badgeDefinitionReputationEventPlusOneFormula,
+       List.of(curatedBadgeAwardDownvoteEvent_3),
+       relayArgRelay);
+
+    FollowSetsEvent followSetsEvent_2 = new FollowSetsEvent(
+       aImgIdentity,
+       List.of(badgeSetsEvent_3),
+       auxRelay);
+
+    FollowSetsEvent actual = createNewFromNonMatching(followSetsEvent_1, followSetsEvent_2);
+
+    assertEquals(1, actual.getBadgeSetsEventList().size());
+    assertEquals(
+       List.of(curatedBadgeAwardDownvoteEvent_3),
+       actual.getBadgeSetsEventList().getFirst().getCuratedBadgeAwardGenericEventList());
+  }
+
+//   copilot --resume=e40f1fed-c48c-4fd0-81c6-8bcbd3093f1a
+  
+  private FollowSetsEvent createNewFromNonMatching(FollowSetsEvent followSetsEventA, FollowSetsEvent followSetsEventB) {
+    List<BadgeSetsEvent> setListA = followSetsEventA.getBadgeSetsEventList();
+    List<BadgeSetsEvent> setListB = followSetsEventB.getBadgeSetsEventList();
+    List<BadgeSetsEvent> nonMatchingSetList = new ArrayList<>();
+
+    for (BadgeSetsEvent setB : setListB) {
+      boolean matchingBadgeDefinitionFound = false;
+
+      for (BadgeSetsEvent setA : setListA) {
+        if (setA.getBadgeDefinitionReputationEvent()
+           .equals(setB.getBadgeDefinitionReputationEvent())) {
+          matchingBadgeDefinitionFound = true;
+          List<CuratedBadgeAwardGenericEvent> filteredSet = filterBNotInA(setA, setB);
+
+          if (!filteredSet.isEmpty()) {
+            nonMatchingSetList.add(new BadgeSetsEvent(
+               aImgIdentity,
+               setB.getBadgeDefinitionReputationEvent(),
+               filteredSet,
+               setB.getTags(),
+               setB.getContent(),
+               setB.getRelay().orElseThrow(() ->
+                  new NostrException("createNewFromNonMatching BadgeSetsEvent is missing a Relay"))));
+          }
+        }
+      }
+
+      if (!matchingBadgeDefinitionFound) {
+        nonMatchingSetList.add(setB);
+      }
+    }
+
+    if (nonMatchingSetList.isEmpty()) {
+      throw new NostrException("createNewFromNonMatching found no non-matching BadgeSetsEvent");
+    }
+
+    return new FollowSetsEvent(
+       aImgIdentity,
+       nonMatchingSetList,
+       followSetsEventB.getTags(),
+       followSetsEventB.getContent(),
+       followSetsEventB.getRelay().orElseThrow(() ->
+          new NostrException("createNewFromNonMatching FollowSetsEvent is missing a Relay")));
+  }
+
+  private List<CuratedBadgeAwardGenericEvent> filterBNotInA(BadgeSetsEvent setA, BadgeSetsEvent setB) {
+    return setB.getCuratedBadgeAwardGenericEventList().stream()
+       .filter(incomingCuratedBadgeAwardVoteEvent ->
+          !setA.getCuratedBadgeAwardGenericEventList().contains(incomingCuratedBadgeAwardVoteEvent)).toList();
+  }
+
+  private BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> createNewBadgeAwardUpvoteEvent() {
+    return new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
+  }
+
+  private BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> createNewBadgeAwardDownvoteEvent() {
+    return new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
   }
 //
 //  @Test
