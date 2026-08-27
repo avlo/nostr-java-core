@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.BaseTag;
 import com.prosilion.nostr.tag.EventTag;
@@ -13,6 +14,7 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -63,6 +65,14 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
      @NonNull String content,
      @NonNull Relay relay) throws NostrException {
     this(identity, badgeSetsEventList, List.of(), content, relay);
+  }
+
+  public FollowSetsEvent(
+     @NonNull Identity identity,
+     @NonNull CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent,
+     @NonNull Function<CuratedBadgeAwardGenericEvent, List<BadgeSetsEvent>> fxn,
+     @NonNull Relay relay) {
+    this(identity, fxn.apply(curatedBadgeAwardGenericEvent), List.of(), DEFAULT_CONTENT, relay);
   }
 
   public FollowSetsEvent(
