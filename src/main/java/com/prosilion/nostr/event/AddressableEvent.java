@@ -84,6 +84,16 @@ public class AddressableEvent extends BaseEvent {
        getRelay().orElse(null));
   }
 
+  protected static GenericEventRecord validateGenericConstructorKind(GenericEventRecord genericEventRecord, Kind kind) {
+    if (genericEventRecord.getKind() != kind)
+      throw new NostrException(
+         String.format("Incorrect Kind [%s] (expected Kind: [%s]) in Generic Ctor for:\n%s",
+            genericEventRecord.getKind(),
+            kind,
+            genericEventRecord.createPrettyPrintJson()));
+    return genericEventRecord;
+  }
+
   @JsonIgnore
   public final Optional<Relay> getRelay() {
     return getRelayTag().map(RelayTag::getRelay);

@@ -61,7 +61,7 @@ public class CuratedFormulaEvent extends AbstractSetsEvent implements SetsPaired
     super(
        validateFormula(
           validateRequiredTags(
-             genericEventRecord,
+             validateGenericConstructorKind(genericEventRecord, Kind.CURATION_SETS_FORMULA_EVENT),
              List.of(
                 PubKeyTag.class,
                 IdentifierTag.class,

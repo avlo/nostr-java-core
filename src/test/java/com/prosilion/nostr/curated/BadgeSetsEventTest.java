@@ -13,6 +13,7 @@ import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -86,7 +87,9 @@ public class BadgeSetsEventTest extends EventTestFixtures {
        List.of(curationSetsUpvoteEvent, curationSetsDownvoteEvent),
        relayArgRelay);
 
-    assertEquals(badgeSetsEvent.getIdentifierTag().getUuid(), badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey().toHexString());
+    IdentifierTag identifierTag = BadgeSetsEvent.generateIdentifierTag(badgeDefinitionReputationEvent, curationSetsUpvoteEvent.getAwardRecipientPublicKey());
+
+    assertEquals(badgeSetsEvent.getIdentifierTag(), identifierTag);
     assertEquals(badgeSetsEvent.requireFirstTag(AddressTag.class), badgeDefinitionReputationEvent.asAddressableEventAddressTag());
     assertEquals(relayArgRelay, badgeSetsEvent.getRelay().orElseThrow());
 
@@ -95,7 +98,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
     assertTrue(badgeSetsEvent.getCuratedBadgeAwardGenericEventList().stream()
        .map(AbstractSetsEvent::getEventId).anyMatch(curationSetsDownvoteEvent.getId()::equals));
 
-    assertThrows(NostrException.class, () ->
+    assertThrows(NoSuchElementException.class, () ->
        new BadgeSetsEvent(
           aImgIdentity,
           badgeDefinitionReputationEvent,
@@ -155,6 +158,17 @@ public class BadgeSetsEventTest extends EventTestFixtures {
        curatedBadgeAwardGenericEventList);
 
     assertTrue(reversedOrder.getTags().containsAll(newFromExisting.getTags()));
+  }
+
+  @Test
+  final void testGenericEventRecordCtorIncorrectKind() {
+    assertTrue(
+       assertThrows(NostrException.class, () ->
+          new BadgeSetsEvent(
+             badgeDefinitionReputationEvent.asGenericEventRecord(),
+             badgeDefinitionReputationEvent,
+             List.of()))
+          .getMessage().contains("Incorrect Kind [30009] (expected Kind: [30008])"));
   }
 //
 //  @Test

@@ -121,6 +121,7 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
      List.of(IdentifierTag.class, PubKeyTag.class, AddressTag.class, EventTag.class, RelayTag.class);
 
   private static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
+    validateGenericConstructorKind(genericEventRecord, Kind.CURATION_SETS_BADGE_AWARD_EVENT);
     validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
     return new RequiredTags(
        genericEventRecord.requireFirstTag(IdentifierTag.class),

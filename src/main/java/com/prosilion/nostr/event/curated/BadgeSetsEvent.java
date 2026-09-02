@@ -3,6 +3,7 @@ package com.prosilion.nostr.event.curated;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.AddressableEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.TagMappedEventIF;
@@ -16,6 +17,7 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -76,10 +78,9 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
     super(
        identity,
        Kind.BADGE_SETS_EVENT,
-// BadgeSetsEvent IdentifierTag points to BadgeDefinitionReputationEvent's PubKeyTag (Reputation Definition Creator's Public Key)
-       new IdentifierTag(
-          badgeDefinitionReputationEvent.getReputationDefinitionCreatorPublicKey().toHexString()),
-// re: IdentifierTag's value, see above note 
+       generateIdentifierTag(
+          badgeDefinitionReputationEvent,
+          curatedBadgeAwardGenericEventList.getFirst().getAwardRecipientPublicKey()),
        mapStream(badgeDefinitionReputationEvent,
           validateNonEmptyCuratedBadgeAwardGenericEventList(curatedBadgeAwardGenericEventList), baseTags),
        content, relay);
@@ -91,7 +92,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull BadgeDefinitionReputationEvent badgeDefinitionReputationEvent,
      @NonNull List<CuratedBadgeAwardGenericEvent> curatedBadgeAwardGenericEventList) throws NostrException {
-    super(genericEventRecord);
+    super(validateGenericConstructorKind(genericEventRecord, Kind.BADGE_SETS_EVENT));
     this.badgeDefinitionReputationEvent = badgeDefinitionReputationEvent;
     this.curatedBadgeAwardGenericEventList =
        validateNonEmptyCuratedBadgeAwardGenericEventList(curatedBadgeAwardGenericEventList);
@@ -154,5 +155,13 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
       throw new NostrException("BadgeSetsEvent constructor received empty List<CuratedBadgeAwardGenericEvent>");
 
     return curatedBadgeAwardGenericEventList.stream().distinct().toList();
+  }
+
+  public static IdentifierTag generateIdentifierTag(BadgeDefinitionReputationEvent event, PublicKey publicKey) {
+    return new IdentifierTag(
+       String.valueOf(
+          Objects.hash(
+             AbstractSetsEvent.getAddressTagValuesHashed(event.asAddressableEventAddressTag()),
+             publicKey.toHexString())));
   }
 }

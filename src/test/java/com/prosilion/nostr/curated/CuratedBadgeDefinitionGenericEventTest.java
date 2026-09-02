@@ -1,6 +1,7 @@
 package com.prosilion.nostr.curated;
 
 import com.prosilion.nostr.EventTestFixtures;
+import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
@@ -13,6 +14,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
@@ -62,6 +64,15 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
     assertTrue(actual.getTypeSpecificTags(ReferenceTag.class).isEmpty());
     assertTrue(actual.getAddressTag().findRelay().isPresent());
     assertTrue(actual.getEventTag().findRelay().isPresent());
+  }
+
+  @Test
+  final void testGenericEventRecordCtorIncorrectKind() {
+    assertTrue(
+       assertThrows(NostrException.class, () ->
+          new CuratedBadgeDefinitionGenericEvent(
+             award_YesYes_Defn_YesYes_Upvote.asGenericEventRecord()))
+          .getMessage().contains("Incorrect Kind [8] (expected Kind: [30005])"));
   }
 
   @Test

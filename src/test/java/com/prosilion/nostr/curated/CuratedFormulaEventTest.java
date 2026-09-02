@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,10 +44,10 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
     AddressTag downvoteEventAsAddressableAddressTag = defnEvent_YesYes_Downvote.asAddressableEventAddressTag();
     IdentifierTag expectedDownvoteIdentifierTag = AbstractSetsEvent.hashedAddressTag(downvoteEventAsAddressableAddressTag);
     assertEquals(new IdentifierTag("1545192716"), expectedDownvoteIdentifierTag);
-    
+
     AddressTag upvoteEventAsAddressableAddressTag = defnEvent_YesYes_Upvote.asAddressableEventAddressTag();
     IdentifierTag expectedUpvoteIdentifierTag = AbstractSetsEvent.hashedAddressTag(upvoteEventAsAddressableAddressTag);
-    assertEquals(new IdentifierTag("1367861445"), expectedUpvoteIdentifierTag); 
+    assertEquals(new IdentifierTag("1367861445"), expectedUpvoteIdentifierTag);
 
     assertEquals(expected.getIdentifierTag(), AbstractSetsEvent.hashedAddressTag(formulaEvent.getAddressTag()));
 
@@ -116,6 +117,14 @@ public class CuratedFormulaEventTest extends EventTestFixtures {
   final void testGenericRecordDoesNotThrowUsingNegativeDecimal() {
     GenericEventRecord genericEventRecordPlusDecimal = mockGenericEventRecordWithContent("+-.5");
     assertDoesNotThrow(() -> new CuratedFormulaEvent(genericEventRecordPlusDecimal));
+  }
+
+  @Test
+  final void testGenericEventRecordCtorIncorrectKind() {
+    assertTrue(
+       assertThrows(NostrException.class, () ->
+          new CuratedFormulaEvent(award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord()))
+          .getMessage().contains("Incorrect Kind [8] (expected Kind: [30006])"));
   }
 
   private GenericEventRecord mockGenericEventRecordWithContent(String content) {

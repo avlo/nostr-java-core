@@ -80,6 +80,16 @@ public class BadgeDefinitionReputationEventTest extends EventTestFixtures {
   }
 
   @Test
+  final void testGenericEventRecordCtorIncorrectKind() {
+    assertTrue(
+       assertThrows(NostrException.class, () ->
+          new BadgeDefinitionReputationEvent(
+             plusOneFormulaEvent.asGenericEventRecord(),
+             addressTag -> plusOneFormulaEvent))
+          .getMessage().contains("Incorrect Kind [30006] (expected Kind: [30009])"));
+  }
+
+  @Test
   void testValidBadgeDefinitionReputationEventWithPlusOneMinusOneFormulaEvent() {
     List<CuratedFormulaEvent> formulaEvents = List.of(plusOneFormulaEvent, minusOneFormulaEvent);
     BadgeDefinitionReputationEvent expected = new BadgeDefinitionReputationEvent(

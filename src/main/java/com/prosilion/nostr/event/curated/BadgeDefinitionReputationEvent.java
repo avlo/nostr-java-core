@@ -2,6 +2,7 @@ package com.prosilion.nostr.event.curated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
+import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.AddressableEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -84,7 +85,8 @@ public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent 
   public BadgeDefinitionReputationEvent(
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull Function<AddressTag, CuratedFormulaEvent> eventTagFormulaEventFunction) {
-    super(genericEventRecord);
+    super(
+       validateGenericConstructorKind(genericEventRecord, Kind.BADGE_DEFINITION_EVENT));
     this.curatedFormulaEvents = mapTagsToEvents(this, eventTagFormulaEventFunction, AddressTag.class);
   }
 

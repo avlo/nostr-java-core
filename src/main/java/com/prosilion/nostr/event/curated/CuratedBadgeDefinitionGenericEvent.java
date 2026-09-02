@@ -88,6 +88,7 @@ public class CuratedBadgeDefinitionGenericEvent extends AbstractSetsEvent implem
      List.of(IdentifierTag.class, AddressTag.class, EventTag.class, RelayTag.class);
 
   static RequiredTags requireTags(@NonNull GenericEventRecord genericEventRecord) {
+    validateGenericConstructorKind(genericEventRecord, Kind.CURATION_SETS_BADGE_DEFINITION_EVENT);
     validateRequiredTags(genericEventRecord, REQUIRED_TAG_TYPES);
     validateIdentifierTagHash(genericEventRecord);
     return new RequiredTags(
