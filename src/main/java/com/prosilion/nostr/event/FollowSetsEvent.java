@@ -6,8 +6,8 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
-import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
@@ -128,21 +128,27 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
     return requireFirstTag(PubKeyTag.class).getPublicKey();
   }
 
+  @JsonIgnore
+  public List<AddressTag> getAddressTags() {
+    return getTypeSpecificTags(AddressTag.class);
+  }
+
   private static List<BaseTag> mapStream(@NonNull List<BadgeSetsEvent> badgeSetsEventList, @NonNull List<BaseTag> baseTags) {
     return Stream.concat(
        Stream.concat(
           Stream.of(
-             new PubKeyTag(badgeSetsEventList.getFirst()
-                .getCuratedBadgeAwardGenericEventList().getFirst()
-                .getAwardRecipientPublicKey())),
+             getRecipientPublicKey(badgeSetsEventList.getFirst())),
           badgeSetsEventList.stream().distinct()
-             .map(badgeSetsEvent ->
-                new EventTag(
-                   badgeSetsEvent.getId(),
-                   badgeSetsEvent.getRelay().map(Relay::getUrl).orElse(null)))),
+             .map(AddressableEvent::asAddressableEventAddressTag)),
        baseTags.stream()
           .filter(Predicate.not(PubKeyTag.class::isInstance))
-          .filter(Predicate.not(EventTag.class::isInstance))).toList();
+          .filter(Predicate.not(AddressTag.class::isInstance))).toList();
+  }
+
+  private static PubKeyTag getRecipientPublicKey(BadgeSetsEvent badgeSetsEvent) {
+    return new PubKeyTag(badgeSetsEvent
+       .getCuratedBadgeAwardGenericEventList().getFirst()
+       .getAwardRecipientPublicKey());
   }
 
   private static List<BadgeSetsEvent> validateNonEmptyBadgeSetsEventList(List<BadgeSetsEvent> badgeSetsEventList) {

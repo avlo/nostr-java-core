@@ -10,6 +10,7 @@ import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
+import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
 import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.ReferenceTag;
@@ -198,10 +199,12 @@ public class FollowSetsEventTest extends EventTestFixtures {
     assertEquals(expectedFollowSetsEvent.getEventTags(), followSetsEvent.getEventTags());
     assertEquals(expectedFollowSetsEvent, followSetsEvent);
 
-    assertEquals(1, followSetsEvent.getEventTags().size());
-    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
-    assertEquals(1, followSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
-    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
+    assertEquals(0, followSetsEvent.getEventTags().size());
+
+    assertEquals(1, followSetsEvent.getAddressTags().size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(AddressTag.class).size());
+    assertEquals(1, followSetsEvent.getTags().stream().filter(AddressTag.class::isInstance).toList().size());
+    assertEquals(1, followSetsEvent.getTypeSpecificTags(AddressTag.class).size());
 
     assertEquals(1, followSetsEvent.getTypeSpecificTags(RelayTag.class).size());
     assertEquals(1, followSetsEvent.getTags().stream().filter(RelayTag.class::isInstance).toList().size());
@@ -237,10 +240,12 @@ public class FollowSetsEventTest extends EventTestFixtures {
        badgeSetsEvent,
        auxRelay);
 
-    assertEquals(1, expectedFollowSetsEvent.getEventTags().size());
-    assertEquals(1, expectedFollowSetsEvent.getTypeSpecificTags(EventTag.class).size());
-    assertEquals(1, expectedFollowSetsEvent.getTags().stream().filter(EventTag.class::isInstance).toList().size());
-    assertEquals(1, expectedFollowSetsEvent.getTypeSpecificTags(EventTag.class).size());
+    assertEquals(0, expectedFollowSetsEvent.getEventTags().size());
+
+    assertEquals(1, expectedFollowSetsEvent.getAddressTags().size());
+    assertEquals(1, expectedFollowSetsEvent.getTypeSpecificTags(AddressTag.class).size());
+    assertEquals(1, expectedFollowSetsEvent.getTags().stream().filter(AddressTag.class::isInstance).toList().size());
+    assertEquals(1, expectedFollowSetsEvent.getTypeSpecificTags(AddressTag.class).size());
 
     List<BadgeSetsEvent> expectedBadgeSetsEventList = expectedFollowSetsEvent.getBadgeSetsEventList();
     List<CuratedBadgeAwardGenericEvent> expectedCuratedBadgeAwardGenericEventList = expectedBadgeSetsEventList.stream().map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList).flatMap(Collection::stream).toList();
@@ -501,7 +506,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
   }
 
 //   copilot --resume=e40f1fed-c48c-4fd0-81c6-8bcbd3093f1a
-  
+
   private FollowSetsEvent createNewFromNonMatching(FollowSetsEvent followSetsEventA, FollowSetsEvent followSetsEventB) {
     List<BadgeSetsEvent> setListA = followSetsEventA.getBadgeSetsEventList();
     List<BadgeSetsEvent> setListB = followSetsEventB.getBadgeSetsEventList();

@@ -2,13 +2,13 @@ package com.prosilion.nostr;
 
 import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
+import com.prosilion.nostr.event.FollowSetsEvent;
+import com.prosilion.nostr.event.FormulaEvent;
+import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
-import com.prosilion.nostr.event.FollowSetsEvent;
-import com.prosilion.nostr.event.FormulaEvent;
-import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.message.EventMessage;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.EventTag;
@@ -17,7 +17,6 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.tag.ReferenceTag;
 import com.prosilion.nostr.tag.RelayTag;
-import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import com.prosilion.nostr.user.Signature;
 import java.io.IOException;
@@ -38,11 +37,6 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
   private final GenericEventRecord genericEventRecordWithAddressTag;
   private final GenericEventRecord genericEventRecordWithEventTag;
 
-  private final Identity platformIdentity = Identity.generateRandomIdentity();
-
-  private final static String FOLLOW_SETS_EVENT_UUID = "PROSILION_FOLLOW_SETS_EVENT";
-  private final IdentifierTag followSetsIdentifierTag = new IdentifierTag(FOLLOW_SETS_EVENT_UUID);
-
   private final FollowSetsEvent followSetsEvent;
   private final BadgeSetsEvent badgeSetsEvent;
 
@@ -55,7 +49,6 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
   private final String followSetsEventWithEventTagEventId;
   private final String followSetsEventWithEventTagCreatedAt;
   private final String followSetsEventWithEventTagSignature;
-  private final String followSetsEventReferencedEventId;
 
   public EventMessageSerializerWithContainedAddressableEventsTest() {
     this.genericEventRecordWithAddressTag = new GenericEventRecord(
@@ -112,7 +105,7 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
           relayArgRelay);
 
     BadgeDefinitionReputationEvent badgeDefinitionReputationEventPlusOneFormula = new BadgeDefinitionReputationEvent(
-       platformIdentity,
+       aImgIdentity,
        upvoteDefnCreator.getPublicKey(),
        FollowSetsEvent.defaultIdentifierTag,
        new ExternalIdentityTag("afterimage", "badge_definition_reputation", String.valueOf(BadgeDefinitionReputationEvent.class.hashCode())), relayArgRelay,
@@ -126,20 +119,19 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
        relayArgRelay);
 
     this.badgeSetsEvent = new BadgeSetsEvent(
-       submitter,
+       aImgIdentity,
        badgeDefinitionReputationEventPlusOneFormula,
        curationSetsUpvoteEvent,
        relayArgRelay);
 
     this.followSetsEvent = new FollowSetsEvent(
-       platformIdentity,
+       aImgIdentity,
        badgeSetsEvent,
        relayArgRelay);
 
     this.followSetsEventWithEventTagEventId = followSetsEvent.getId();
     this.followSetsEventWithEventTagCreatedAt = followSetsEvent.getCreatedAt().toString();
     this.followSetsEventWithEventTagSignature = followSetsEvent.getSignature().toString();
-    this.followSetsEventReferencedEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
   }
 
   @Test
@@ -247,10 +239,10 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
   }
 
   private String expectedStringEventMessageAddressTagFollowSetsEvent() {
-    String withUrl = badgeSetsEvent.getId() + "\",\"" + relayArgUrl;
-    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + platformIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"]," +
+    String addressTag = badgeSetsEvent.getKind() + ":" + aImgIdentity.getPublicKey() + ":" + badgeSetsEvent.getIdentifierTag().getUuid() + "\",\"" + relayArgUrl;
+    return "[\"EVENT\",{\"id\":\"" + followSetsEventWithEventTagEventId + "\",\"pubkey\":\"" + aImgIdentity.getPublicKey().toHexString() + "\",\"created_at\":" + followSetsEventWithEventTagCreatedAt + ",\"kind\":30000,\"tags\":[[\"d\",\"PROSILION_FOLLOW_SETS_EVENT\"]," +
        "[\"p\",\"" + upvotedUserPubkey + "\"]," +
-       "[\"e\",\"" + withUrl + "\"]," +
+       "[\"a\",\"" + addressTag + "\"]," +
        "[\"relay\",\"" + relayArgUrl + "\"]],\"content\":\"AfterImage generated FollowSetsEvent\",\"sig\":\"" + followSetsEventWithEventTagSignature + "\"}]";
   }
 }
