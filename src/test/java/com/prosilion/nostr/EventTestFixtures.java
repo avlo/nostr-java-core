@@ -1,7 +1,7 @@
 package com.prosilion.nostr;
 
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
+import com.prosilion.nostr.event.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.EventTag;

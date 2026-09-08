@@ -1,8 +1,5 @@
-package com.prosilion.nostr.event.curated;
+package com.prosilion.nostr.event;
 
-import com.prosilion.nostr.event.BadgeAwardGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
-import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;

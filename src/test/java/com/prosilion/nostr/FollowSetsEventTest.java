@@ -3,7 +3,7 @@ package com.prosilion.nostr;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
-import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
+import com.prosilion.nostr.event.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;

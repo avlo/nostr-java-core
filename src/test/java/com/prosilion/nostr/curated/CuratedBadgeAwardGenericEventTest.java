@@ -5,7 +5,7 @@ import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
-import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
+import com.prosilion.nostr.event.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;

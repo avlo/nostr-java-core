@@ -5,7 +5,7 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
-import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
+import com.prosilion.nostr.event.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
