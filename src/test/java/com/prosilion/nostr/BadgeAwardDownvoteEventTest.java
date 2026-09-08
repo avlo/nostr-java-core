@@ -1,7 +1,7 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
+import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -23,34 +23,34 @@ public class BadgeAwardDownvoteEventTest {
 
   PublicKey badgeReceiverPublicKey = Identity.generateRandomIdentity().getPublicKey();
 
-  BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> expected;
+  BadgeAwardCanonicalEvent expected;
 
   public BadgeAwardDownvoteEventTest() {
     this.badgeDefnDownvoteEvent = new BadgeDefinitionGenericEvent(identity, downvoteIdentifierTag, relay);
-    this.expected = new BadgeAwardGenericEvent<>(
-        identity,
-        badgeReceiverPublicKey,
+    this.expected = new BadgeAwardCanonicalEvent(
+       identity,
+       badgeReceiverPublicKey,
        badgeDefnDownvoteEvent, relay
     );
   }
 
   @Test
   void testValidBadgeAwardReputationEvent() {
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
-        expected.getGenericEventRecord(),
-        addressTag -> badgeDefnDownvoteEvent);
+    BadgeAwardCanonicalEvent badgeAwardDownvoteEvent = new BadgeAwardCanonicalEvent(
+       expected.getGenericEventRecord(),
+       addressTag -> badgeDefnDownvoteEvent);
 
     assertEquals(expected, badgeAwardDownvoteEvent);
     assertEquals(
-        expected.getAddressableEvent().asAddressableEventAddressTag(),
-        badgeAwardDownvoteEvent.getAddressableEvent().asAddressableEventAddressTag());
+       expected.getAddressableEvent().asAddressableEventAddressTag(),
+       badgeAwardDownvoteEvent.getAddressableEvent().asAddressableEventAddressTag());
   }
 
   @Test
   void testSingularAddressTag() {
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardDownvoteEvent = new BadgeAwardGenericEvent<>(
-        identity,
-        badgeReceiverPublicKey,
+    BadgeAwardCanonicalEvent badgeAwardDownvoteEvent = new BadgeAwardCanonicalEvent(
+       identity,
+       badgeReceiverPublicKey,
        badgeDefnDownvoteEvent, List.of(expected.getAddressableEvent().asAddressableEventAddressTag()), relay
     );
 

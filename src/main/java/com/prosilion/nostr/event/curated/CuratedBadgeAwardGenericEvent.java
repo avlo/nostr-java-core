@@ -3,8 +3,6 @@ package com.prosilion.nostr.event.curated;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.AbstractSetsEvent;
-import com.prosilion.nostr.event.BadgeAwardGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -35,16 +33,16 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
 
   public CuratedBadgeAwardGenericEvent(
      @NonNull Identity identity,
-     @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent,
+     @NonNull BadgeAwardCanonicalEvent badgeAwardCanonicalEvent,
      @NonNull ReferenceTag badgeDefinitionGenericEventReferenceTag,
      @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
      @NonNull Relay relay) {
     this(
        identity,
-       badgeAwardGenericEvent,
+       badgeAwardCanonicalEvent,
        new CuratedBadgeDefinitionGenericEvent(
           identity,
-          badgeAwardGenericEvent.getBadgeDefinitionEvent(),
+          badgeAwardCanonicalEvent.getBadgeDefinitionEvent(),
           badgeDefinitionGenericEventReferenceTag,
           relay),
        badgeAwardGenericEventReferenceTag,
@@ -53,7 +51,7 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
 
   public CuratedBadgeAwardGenericEvent(
      @NonNull Identity identity,
-     @NonNull BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent,
+     @NonNull BadgeAwardCanonicalEvent badgeAwardCanonicalEvent,
      @NonNull CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent,
      @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
      @NonNull Relay relay) {
@@ -69,14 +67,14 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
                 curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag().getIdentifierTag()),
              badgeAwardGenericEventReferenceTag),
           new EventTag(
-             badgeAwardGenericEvent.getId(),
-             badgeAwardGenericEvent.getRelay().map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),
+             badgeAwardCanonicalEvent.getId(),
+             badgeAwardCanonicalEvent.getRelay().map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),
        List.of(
-          new PubKeyTag(badgeAwardGenericEvent.getAwardRecipientPublicKey())),
-       String.format(DEFAULT_CONTENT, badgeAwardGenericEvent.getContent()),
+          new PubKeyTag(badgeAwardCanonicalEvent.getAwardRecipientPublicKey())),
+       String.format(DEFAULT_CONTENT, badgeAwardCanonicalEvent.getContent()),
        relay);
 // TODO: potentially re-add later if can resolve below Generic variant    
-//    this.badgeAwardGenericEvent = badgeAwardGenericEvent;
+//    this.badgeAwardCanonicalEvent = badgeAwardCanonicalEvent;
 //    this.curatedBadgeDefinitionGenericEvent = curatedBadgeDefinitionGenericEvent;
   }
 

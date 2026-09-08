@@ -1,10 +1,9 @@
 package com.prosilion.nostr;
 
-import com.prosilion.nostr.event.BadgeAwardGenericEvent;
-import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
@@ -558,12 +557,12 @@ public class FollowSetsEventTest extends EventTestFixtures {
           !setA.getCuratedBadgeAwardGenericEventList().contains(incomingCuratedBadgeAwardVoteEvent)).toList();
   }
 
-  private BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> createNewBadgeAwardUpvoteEvent() {
-    return new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
+  private BadgeAwardCanonicalEvent createNewBadgeAwardUpvoteEvent() {
+    return new BadgeAwardCanonicalEvent(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
   }
 
-  private BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> createNewBadgeAwardDownvoteEvent() {
-    return new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
+  private BadgeAwardCanonicalEvent createNewBadgeAwardDownvoteEvent() {
+    return new BadgeAwardCanonicalEvent(submitter, recipient.getPublicKey(), defnEvent_NoNo_Downvote, relayArgRelay);
   }
 //
 //  @Test

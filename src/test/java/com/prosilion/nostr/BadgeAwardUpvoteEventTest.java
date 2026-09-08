@@ -2,10 +2,10 @@ package com.prosilion.nostr;
 
 import com.google.common.base.Function;
 import com.prosilion.nostr.enums.Kind;
-import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.IdentifierTag;
@@ -39,7 +39,7 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
   final void D_YesYes__testEventHasRelayHasRelayTag() {
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-from-another-relay-tag:5555"));
     testTags(relayArgRelayTag,
-       new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, List.of(anotherRelayTag), relayArgRelay));
+       new BadgeAwardCanonicalEvent(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, List.of(anotherRelayTag), relayArgRelay));
   }
 
   @Test
@@ -47,15 +47,15 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
     RelayTag anotherRelayTag = new RelayTag(new Relay("ws://localhost-from-another-relay-tag:5555"));
     RelayTag yetAnotherRelayTag = new RelayTag(new Relay("ws://localhost-from-yet-another-relay-tag:5555"));
     testTags(anotherRelayTag,
-       new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote,
+       new BadgeAwardCanonicalEvent(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote,
           List.of(anotherRelayTag, yetAnotherRelayTag)));
 
     testTags(yetAnotherRelayTag,
-       new BadgeAwardGenericEvent<>(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote,
+       new BadgeAwardCanonicalEvent(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote,
           List.of(yetAnotherRelayTag, anotherRelayTag)));
   }
 
-  private void testTags(RelayTag relayTag, BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> event) {
+  private void testTags(RelayTag relayTag, BadgeAwardCanonicalEvent event) {
     assertTrue(event.getRelay().isPresent());
     assertTrue(event.findFirstTag(RelayTag.class).isPresent());
     assertEquals(relayTag, event.getRelayTag().orElseThrow());
@@ -71,7 +71,7 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
 
   @Test
   final void testValidBadgeAwardReputationEvent() {
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent badgeAwardUpvoteEvent = new BadgeAwardCanonicalEvent(
        award_NoNo_Defn_NoNo_Upvote.getGenericEventRecord(),
        addressTag -> defnEvent_NoNo_Upvote);
 
@@ -84,7 +84,7 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
 
   @Test
   final void testSingularAddressTag() {
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardUpvoteEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent badgeAwardUpvoteEvent = new BadgeAwardCanonicalEvent(
        submitter,
        recipient.getPublicKey(),
        defnEvent_NoNo_Upvote, List.of(award_NoNo_Defn_NoNo_Upvote.getAddressableEvent().asAddressableEventAddressTag()),
@@ -133,12 +133,12 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
           expectedBadgeDefinitionGenericEvent.getContent(),
           expectedBadgeDefinitionGenericEvent.getSignature()));
 
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> expectedBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent expectedBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
        submitter,
        recipient.getPublicKey(),
        expectedBadgeDefinitionGenericEvent,
        relay);
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> actualBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent actualBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
        new GenericEventRecord(
           expectedBadgeAwardGenericEvent.getId(),
           expectedBadgeAwardGenericEvent.getPublicKey(),
@@ -156,7 +156,7 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
     assertTrue(actualBadgeAwardGenericEvent.getRelay().isPresent());
     assertEquals(relay, actualBadgeAwardGenericEvent.getRelay().orElseThrow());
     assertNotEquals(expectedBadgeAwardGenericEvent.getCreatedAt(), actualBadgeAwardGenericEvent.getCreatedAt());
-    
+
     assertEquals(actualBadgeAwardGenericEvent.getAddressTag(), actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag());
     assertEquals(actualBadgeAwardGenericEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
     assertNotEquals(actualBadgeAwardGenericEvent.getRelay().orElseThrow(), actualBadgeDefinitionGenericEvent.getRelay().orElseThrow());
@@ -178,11 +178,11 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
           expectedBadgeDefinitionGenericEvent.getContent(),
           expectedBadgeDefinitionGenericEvent.getSignature()));
 
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> expectedBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent expectedBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
        submitter,
        recipient.getPublicKey(),
        expectedBadgeDefinitionGenericEvent);
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> actualBadgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent actualBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
        new GenericEventRecord(
           expectedBadgeAwardGenericEvent.getId(),
           expectedBadgeAwardGenericEvent.getPublicKey(),
@@ -204,7 +204,7 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
     assertEquals(actualBadgeAwardGenericEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
     assertNotEquals(actualBadgeAwardGenericEvent.getId(), actualBadgeDefinitionGenericEvent.getId());
   }
-  
+
   private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {
     assertEquals(award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord(), genericEventRecordVariant);
   }

@@ -3,9 +3,9 @@ package com.prosilion.nostr.curated;
 import com.prosilion.nostr.EventTestFixtures;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.event.AbstractSetsEvent;
-import com.prosilion.nostr.event.BadgeAwardGenericEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
+import com.prosilion.nostr.event.curated.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
@@ -26,8 +26,8 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
   @Test
   final void testValidBadgeSetsEventUsingBadgeAwardGenericEvent() {
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote =
-       new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent award_YesYes_Defn_YesYes_Upvote =
+       new BadgeAwardCanonicalEvent(
           submitter,
           recipient.getPublicKey(),
           defnEvent_YesYes_Upvote,
@@ -118,8 +118,8 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> award_YesYes_Defn_YesYes_Upvote =
-       new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent award_YesYes_Defn_YesYes_Upvote =
+       new BadgeAwardCanonicalEvent(
           submitter,
           recipient.getPublicKey(),
           defnEvent_YesYes_Upvote,
@@ -232,7 +232,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        upvoteDefnCreator,
        upvoteIdentifierTag,
        relay);
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent badgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
        submitter,
        recipient.getPublicKey(),
        badgeDefinitionGenericEvent);            // <------------------------- no relay
@@ -253,12 +253,12 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        upvoteDefnCreator,
        upvoteIdentifierTag);  // <------------------------- no relay
 
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEventAndBadgeDefinitionEventBothWithoutRelayTag = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent badgeAwardGenericEventAndBadgeDefinitionEventBothWithoutRelayTag = new BadgeAwardCanonicalEvent(
        submitter,
        recipient.getPublicKey(),
        badgeDefinitionGenericEventWithoutRelayTag);  // <------------------------- no relay
 
-    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> setupBadgeAwardGenericEventWithoutRelayTag = new BadgeAwardGenericEvent<>(
+    BadgeAwardCanonicalEvent setupBadgeAwardGenericEventWithoutRelayTag = new BadgeAwardCanonicalEvent(
        badgeAwardGenericEventAndBadgeDefinitionEventBothWithoutRelayTag.asGenericEventRecord(),
        addressTag -> badgeDefinitionGenericEventWithoutRelayTag);
 
@@ -321,7 +321,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 //       upvoteIdentifierTag,
 //       relay);
 //
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent badgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
 //       upvoteDefnCreator,
 //       recipient,
 //       relay,
@@ -354,7 +354,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 //       upvoteIdentifierTag,
 //       relay);
 //
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent badgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
 //       upvoteDefnCreator,
 //       recipient,
 //       relay,
@@ -383,7 +383,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       followSetsEventRelay,
-//       List.of(new BadgeAwardGenericEvent<>(
+//       List.of(new BadgeAwardCanonicalEvent(
 //          upvoteDefnCreator,
 //          recipient,
 //          badgeAwardGenericEventRelay,
@@ -438,7 +438,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 //  @Test
 //  final void testIdenticalPublicKeys() {
 //    PublicKey nonMatchingPublicKey = Identity.generateRandomIdentity().getPublicKey();
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> notMatchingRecipientDownvoteEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent notMatchingRecipientDownvoteEvent = new BadgeAwardCanonicalEvent(
 //       upvoteDefnCreator,
 //       nonMatchingPublicKey,
 //       relay,
