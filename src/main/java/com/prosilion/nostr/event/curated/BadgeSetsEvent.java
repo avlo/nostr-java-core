@@ -15,6 +15,7 @@ import com.prosilion.nostr.tag.IdentifierTag;
 import com.prosilion.nostr.tag.PubKeyTag;
 import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -162,6 +163,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
        String.valueOf(
           Objects.hash(
              AbstractSetsEvent.getAddressTagValuesHashed(event.asAddressableEventAddressTag()),
-             publicKey.toHexString())));
+             publicKey.toHexString(),
+             String.valueOf(Instant.now()))));
   }
 }
