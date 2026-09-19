@@ -108,6 +108,34 @@ public class BadgeSetsEventTest extends EventTestFixtures {
   }
 
   @Test
+  final void testEqualsSoftEquality() {
+    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+       aImgIdentity,
+       award_NoNo_Defn_NoNo_Upvote,
+       new ReferenceTag(relayArgRelay.getUrl()),
+       new ReferenceTag(relayArgRelay.getUrl()),
+       relayArgRelay);
+
+    BadgeSetsEvent badgeSetsEventWithUpvoteCurationEvent = new BadgeSetsEvent(
+       aImgIdentity,
+       badgeDefinitionReputationEvent,
+       curationSetsUpvoteEvent,
+       relayArgRelay);
+
+    BadgeSetsEvent newFromExistingHasUpvoteAndDownvote = badgeSetsEventWithUpvoteCurationEvent.createNewFromExisting(aImgIdentity, curationSetsUpvoteEvent);
+
+    assertTrue(badgeSetsEventWithUpvoteCurationEvent.equalsSoft(newFromExistingHasUpvoteAndDownvote));
+
+    BadgeSetsEvent badgeSetsEventWithUpvoteCurationEvent_2 = new BadgeSetsEvent(
+       aImgIdentity,
+       badgeDefinitionReputationEvent,
+       curationSetsUpvoteEvent,
+       relayArgRelay);
+
+    assertTrue(badgeSetsEventWithUpvoteCurationEvent.equalsSoft(badgeSetsEventWithUpvoteCurationEvent_2));
+  }
+
+  @Test
   final void testEquality() {
     CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
        aImgIdentity,

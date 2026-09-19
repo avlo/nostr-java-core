@@ -1,7 +1,6 @@
 package com.prosilion.nostr;
 
 import com.google.common.base.Function;
-import com.google.common.base.Supplier;
 import com.prosilion.nostr.event.BaseEvent;
 import com.prosilion.nostr.event.EventIF;
 import com.prosilion.nostr.event.GenericEventRecord;
@@ -39,21 +38,21 @@ public class BaseEventConcreteEventEqualityTest {
   void testEventIFAsGenericEventRecord() {
     EventIF textNoteEventAsEventIF = textNoteEventHardEquality;
     assertEquals(
-        textNoteEventAsEventIF.asGenericEventRecord(),
-        textNoteEventHardEquality.asGenericEventRecord());
+       textNoteEventAsEventIF.asGenericEventRecord(),
+       textNoteEventHardEquality.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-        ((Supplier<GenericEventRecord>) textNoteEventAsEventIF::asGenericEventRecord).get());
-    
-    assertEquals_VariantDemonstration(
-        ((Supplier<GenericEventRecord>) textNoteEventHardEquality::asGenericEventRecord).get());
+       textNoteEventAsEventIF.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-        EventIF.asGenericEventRecord.apply(textNoteEventHardEquality));
+       textNoteEventHardEquality.asGenericEventRecord());
+
+    assertEquals_VariantDemonstration(
+       EventIF.asGenericEventRecord.apply(textNoteEventHardEquality));
 
     Function<EventIF, GenericEventRecord> methodInstance_AsGenericEventRecord = EventIF::asGenericEventRecord;
     assertEquals_VariantDemonstration(
-        methodInstance_AsGenericEventRecord.apply(textNoteEventHardEquality));
+       methodInstance_AsGenericEventRecord.apply(textNoteEventHardEquality));
   }
 
   private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {

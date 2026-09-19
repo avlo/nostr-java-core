@@ -17,8 +17,10 @@ import com.prosilion.nostr.user.Identity;
 import com.prosilion.nostr.user.PublicKey;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -165,5 +167,25 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
              AbstractSetsEvent.getAddressTagValuesHashed(event.asAddressableEventAddressTag()),
              publicKey.toHexString(),
              String.valueOf(Instant.now()))));
+  }
+
+  private final Function<List<BaseTag>, List<BaseTag>> filterFxn =
+     baseTags -> baseTags.stream()
+        .filter(baseTag ->
+           baseTag.getClass().equals(AddressTag.class) ||
+              baseTag.getClass().equals(EventTag.class) ||
+              baseTag.getClass().equals(PubKeyTag.class)
+        ).toList();
+
+
+  public final boolean equalsSoft(BadgeSetsEvent that) {
+    return equalsSoft(that.asGenericEventRecord());
+  }
+
+  public final boolean equalsSoft(GenericEventRecord genericEventRecord) {
+    return
+       new HashSet<>(
+          filterFxn.apply(this.getTags())).containsAll(filterFxn.apply(genericEventRecord.getTags())) &&
+          Objects.equals(this.getPublicKey(), genericEventRecord.getPublicKey());
   }
 }
