@@ -156,7 +156,7 @@ public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF
   private static List<CuratedBadgeAwardCanonicalEvent> validateNonEmptyCuratedBadgeAwardCanonicalEventList(
      List<CuratedBadgeAwardCanonicalEvent> curatedBadgeAwardCanonicalEventList) {
     if (curatedBadgeAwardCanonicalEventList.isEmpty())
-      throw new NostrException("BadgeSetsEvent constructor received empty List<CuratedBadgeAwarCanonicalEvent>");
+      throw new NostrException("BadgeSetsEvent constructor received empty List<CuratedBadgeAwardCanonicalEvent>");
 
     return curatedBadgeAwardCanonicalEventList.stream().distinct().toList();
   }

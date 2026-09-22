@@ -568,7 +568,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
 //  @Test
 //  final void relayTagCountTest() {
 //    Relay followSetsEventRelay = new Relay("ws://localhost:5555");
-//    Relay badgeAwardGenericEventRelay = new Relay("ws://localhost:5554");
+//    Relay badgeAwardCanonicalEventRelay = new Relay("ws://localhost:5554");
 //    Relay badgeDefinitionGenericEventRelay = new Relay("ws://localhost:5553");
 //
 //    FollowSetsEvent followSetsEventWithBaseTags = new FollowSetsEvent(
@@ -576,10 +576,10 @@ public class FollowSetsEventTest extends EventTestFixtures {
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       followSetsEventRelay,
 //       List.of(
-//          new BadgeAwardGenericEventAux<>(
+//          new BadgeAwardCanonicalEventAux<>(
 //             authorIdentity,
 //             upvotedUserPublicKey,
-//             badgeAwardGenericEventRelay,
+//             badgeAwardCanonicalEventRelay,
 //             new BadgeDefinitionGenericEventAux(
 //                new BadgeDefinitionGenericEvent(
 //                   authorIdentity,
@@ -609,7 +609,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
 //  }
 //
 //  @Test
-//  final void testInvalidEmptyBadgeAwardGenericEventsList() {
+//  final void testInvalidEmptyBadgeAwardCanonicalEventsList() {
 //    assertTrue(
 //       assertThrows(
 //          NostrException.class, () -> new FollowSetsEvent(
@@ -633,7 +633,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
 //  @Test
 //  final void testIdenticalPublicKeys() {
 //    PublicKey nonMatchingPublicKey = Identity.generateRandomIdentity().getPublicKey();
-//    BadgeAwardGenericEventAux<BadgeDefinitionGenericEventAux> notMatchingRecipientDownvoteEvent = new BadgeAwardGenericEventAux<>(
+//    BadgeAwardCanonicalEventAux<BadgeDefinitionGenericEventAux> notMatchingRecipientDownvoteEvent = new BadgeAwardCanonicalEventAux<>(
 //       authorIdentity,
 //       nonMatchingPublicKey,
 //       auxRelay,

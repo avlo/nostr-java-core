@@ -22,11 +22,11 @@ import lombok.NonNull;
 
 public class CuratedBadgeAwardCanonicalEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
   public static final String DEFAULT_CONTENT =
-     "AfterImage generated CuratedBadgeAwardCanonicalEvent- appending BadgeAwardGenericEvent content: %s";
+     "AfterImage generated CuratedBadgeAwardCanonicalEvent- appending BadgeAwardCanonicalEvent content: %s";
 // TODO: potentially re-add later if can resolve generic ctor variant
 //  @Getter
 //  @JsonIgnore
-//  protected final BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent;
+//  protected final BadgeAwardCanonicalEvent badgeAwardCanonicalEvent;
 //
 //  @Getter
 //  @JsonIgnore
@@ -36,7 +36,7 @@ public class CuratedBadgeAwardCanonicalEvent extends AbstractSetsEvent implement
      @NonNull Identity identity,
      @NonNull BadgeAwardCanonicalEvent badgeAwardCanonicalEvent,
      @NonNull ReferenceTag badgeDefinitionGenericEventReferenceTag,
-     @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
+     @NonNull ReferenceTag badgeAwardCanonicalEventReferenceTag,
      @NonNull Relay relay) {
     this(
        identity,
@@ -46,7 +46,7 @@ public class CuratedBadgeAwardCanonicalEvent extends AbstractSetsEvent implement
           badgeAwardCanonicalEvent.getBadgeDefinitionEvent(),
           badgeDefinitionGenericEventReferenceTag,
           relay),
-       badgeAwardGenericEventReferenceTag,
+       badgeAwardCanonicalEventReferenceTag,
        relay);
   }
 
@@ -54,7 +54,7 @@ public class CuratedBadgeAwardCanonicalEvent extends AbstractSetsEvent implement
      @NonNull Identity identity,
      @NonNull BadgeAwardCanonicalEvent badgeAwardCanonicalEvent,
      @NonNull CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent,
-     @NonNull ReferenceTag badgeAwardGenericEventReferenceTag,
+     @NonNull ReferenceTag badgeAwardCanonicalEventReferenceTag,
      @NonNull Relay relay) {
     super(
        identity,
@@ -66,10 +66,10 @@ public class CuratedBadgeAwardCanonicalEvent extends AbstractSetsEvent implement
                 curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag().getKind(),
                 identity.getPublicKey(),
                 curatedBadgeDefinitionGenericEvent.asAddressableEventAddressTag().getIdentifierTag()),
-             badgeAwardGenericEventReferenceTag),
+             badgeAwardCanonicalEventReferenceTag),
           new EventTag(
              badgeAwardCanonicalEvent.getId(),
-             badgeAwardCanonicalEvent.getRelay().map(Relay::getUrl).orElse(badgeAwardGenericEventReferenceTag.getUrl()))),
+             badgeAwardCanonicalEvent.getRelay().map(Relay::getUrl).orElse(badgeAwardCanonicalEventReferenceTag.getUrl()))),
        List.of(
           new PubKeyTag(badgeAwardCanonicalEvent.getAwardRecipientPublicKey())),
        String.format(DEFAULT_CONTENT, badgeAwardCanonicalEvent.getContent()),
@@ -98,7 +98,7 @@ public class CuratedBadgeAwardCanonicalEvent extends AbstractSetsEvent implement
 //             
 //          ));
 //
-//    this.badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//    this.badgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent(
 //       genericEventRecord, addressTag ->
 //       new BadgeDefinitionGenericEvent(
 //          new GenericEventRecord(

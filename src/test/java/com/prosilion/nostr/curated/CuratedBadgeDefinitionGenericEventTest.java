@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 
   @Test
-  final void testValidBadgeSetsEventUsingBadgeAwardGenericEvent() {
+  final void testValidBadgeSetsEventUsingBadgeAwardCanonicalEvent() {
     CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent = new CuratedBadgeDefinitionGenericEvent(
        aImgIdentity,
        defnEvent_YesYes_Upvote,
@@ -105,7 +105,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 
 //  @Test
 //  final void testFollowSetsEventEquality() {
-//    List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+//    List<BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent>> badgeAwardAbstractEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
 //    FollowSetsEvent expected = new FollowSetsEvent(
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
@@ -116,7 +116,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //       expected.getGenericEventRecord(),
 //       eventTag ->
 //          badgeAwardAbstractEvents.stream().filter(badgeAwardAbstractEvent ->
-//             FollowSetsEvent.badgeAwardGenericEventAsEventTag(badgeAwardAbstractEvent).equals(eventTag)).findFirst().orElseThrow(),
+//             FollowSetsEvent.badgeAwardCanonicalEventAsEventTag(badgeAwardAbstractEvent).equals(eventTag)).findFirst().orElseThrow(),
 //       addressTag -> badgeDefinitionReputationEventPlusOneFormula);
 //
 //    assertEquals(expected.getAddressTag(), followSetsEvent.getAddressTag());
@@ -126,21 +126,21 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //
 //  @Test
 //  final void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {
-//    List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+//    List<BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent>> badgeAwardCanonicalEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
 //    FollowSetsEvent actual = new FollowSetsEvent(
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       relay,
-//       badgeAwardGenericEvents);
+//       badgeAwardCanonicalEvents);
 //
 //    assertEquals(
-//       badgeAwardGenericEvents.stream()
+//       badgeAwardCanonicalEvents.stream()
 //          .map(
-//             FollowSetsEvent::badgeAwardGenericEventAsEventTag).toList(),
+//             FollowSetsEvent::badgeAwardCanonicalEventAsEventTag).toList(),
 //       actual.getEventTags());
 //
 //    assertEquals(
-//       badgeAwardGenericEvents.stream().map(badgeAwardAbstractEvent ->
+//       badgeAwardCanonicalEvents.stream().map(badgeAwardAbstractEvent ->
 //          new EventTag(
 //             badgeAwardAbstractEvent.getId())).toList(),
 //       actual.getEventTags());
@@ -155,7 +155,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //       upvoteIdentifierTag,
 //       relay);
 //
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent> badgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent<>(
 //       upvoteDefnCreator,
 //       recipient,
 //       relay,
@@ -166,7 +166,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       relay,
-//       badgeAwardGenericEvent);
+//       badgeAwardCanonicalEvent);
 //
 //    assertEquals(1, followSetsEvent.getEventTags().size());
 //    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
@@ -188,7 +188,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //       upvoteIdentifierTag,
 //       relay);
 //
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent> badgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent<>(
 //       upvoteDefnCreator,
 //       recipient,
 //       relay,
@@ -198,7 +198,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       relay,
-//       List.of(badgeAwardGenericEvent),
+//       List.of(badgeAwardCanonicalEvent),
 //       FollowSetsEvent.class.getSimpleName());
 //
 //    assertEquals(1, followSetsEvent.getEventTags().size());
@@ -210,17 +210,17 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //  @Test
 //  final void relayTagCountTest() {
 //    Relay followSetsEventRelay = new Relay("ws://localhost:5555");
-//    Relay badgeAwardGenericEventRelay = new Relay("ws://localhost:5554");
+//    Relay badgeAwardCanonicalEventRelay = new Relay("ws://localhost:5554");
 //    Relay badgeDefinitionGenericEventRelay = new Relay("ws://localhost:5553");
 //
 //    FollowSetsEvent followSetsEventWithBaseTags = new FollowSetsEvent(
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       followSetsEventRelay,
-//       List.of(new BadgeAwardGenericEvent<>(
+//       List.of(new BadgeAwardCanonicalEvent<>(
 //          upvoteDefnCreator,
 //          recipient,
-//          badgeAwardGenericEventRelay,
+//          badgeAwardCanonicalEventRelay,
 //          new BadgeDefinitionGenericEvent(
 //             upvoteDefnCreator,
 //             upvoteIdentifierTag,
@@ -248,7 +248,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //  }
 //
 //  @Test
-//  final void testInvalidEmptyBadgeAwardGenericEventsList() {
+//  final void testInvalidEmptyBadgeAwardCanonicalEventsList() {
 //    assertTrue(
 //       assertThrows(
 //          NostrException.class, () -> new FollowSetsEvent(
@@ -272,7 +272,7 @@ public class CuratedBadgeDefinitionGenericEventTest extends EventTestFixtures {
 //  @Test
 //  final void testIdenticalPublicKeys() {
 //    PublicKey nonMatchingPublicKey = Identity.generateRandomIdentity().getPublicKey();
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> notMatchingRecipientDownvoteEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent> notMatchingRecipientDownvoteEvent = new BadgeAwardCanonicalEvent<>(
 //       upvoteDefnCreator,
 //       nonMatchingPublicKey,
 //       relay,

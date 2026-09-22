@@ -207,21 +207,21 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //
 //  @Test
 //  final void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {
-//    List<BadgeAwardGenericEvent<BadgeDefinitionGenericEvent>> badgeAwardGenericEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
+//    List<BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent>> badgeAwardCanonicalEvents = List.of(badgeAwardUpvoteEvent, badgeAwardDownvoteEvent);
 //    FollowSetsEvent actual = new FollowSetsEvent(
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       relay,
-//       badgeAwardGenericEvents);
+//       badgeAwardCanonicalEvents);
 //
 //    assertEquals(
-//       badgeAwardGenericEvents.stream()
+//       badgeAwardCanonicalEvents.stream()
 //          .map(
-//             FollowSetsEvent::badgeAwardGenericEventAsEventTag).toList(),
+//             FollowSetsEvent::badgeAwardCanonicalEventAsEventTag).toList(),
 //       actual.getEventTags());
 //
 //    assertEquals(
-//       badgeAwardGenericEvents.stream().map(badgeAwardAbstractEvent ->
+//       badgeAwardCanonicalEvents.stream().map(badgeAwardAbstractEvent ->
 //          new EventTag(
 //             badgeAwardAbstractEvent.getId())).toList(),
 //       actual.getEventTags());
@@ -236,7 +236,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //       upvoteIdentifierTag,
 //       relay);
 //
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent> badgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent<>(
 //       upvoteDefnCreator,
 //       recipient,
 //       relay,
@@ -247,7 +247,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       relay,
-//       badgeAwardGenericEvent);
+//       badgeAwardCanonicalEvent);
 //
 //    assertEquals(1, followSetsEvent.getEventTags().size());
 //    assertEquals(1, followSetsEvent.getTypeSpecificTags(EventTag.class).size());
@@ -269,7 +269,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //       upvoteIdentifierTag,
 //       relay);
 //
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> badgeAwardGenericEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent> badgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent<>(
 //       upvoteDefnCreator,
 //       recipient,
 //       relay,
@@ -279,7 +279,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       relay,
-//       List.of(badgeAwardGenericEvent),
+//       List.of(badgeAwardCanonicalEvent),
 //       FollowSetsEvent.class.getSimpleName());
 //
 //    assertEquals(1, followSetsEvent.getEventTags().size());
@@ -291,17 +291,17 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //  @Test
 //  final void relayTagCountTest() {
 //    Relay followSetsEventRelay = new Relay("ws://localhost:5555");
-//    Relay badgeAwardGenericEventRelay = new Relay("ws://localhost:5554");
+//    Relay badgeAwardCanonicalEventRelay = new Relay("ws://localhost:5554");
 //    Relay badgeDefinitionGenericEventRelay = new Relay("ws://localhost:5553");
 //
 //    FollowSetsEvent followSetsEventWithBaseTags = new FollowSetsEvent(
 //       aImgIdentity,
 //       badgeDefinitionReputationEventPlusOneFormula,
 //       followSetsEventRelay,
-//       List.of(new BadgeAwardGenericEvent<>(
+//       List.of(new BadgeAwardCanonicalEvent<>(
 //          upvoteDefnCreator,
 //          recipient,
-//          badgeAwardGenericEventRelay,
+//          badgeAwardCanonicalEventRelay,
 //          new BadgeDefinitionGenericEvent(
 //             upvoteDefnCreator,
 //             upvoteIdentifierTag,
@@ -329,7 +329,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //  }
 //
 //  @Test
-//  final void testInvalidEmptyBadgeAwardGenericEventsList() {
+//  final void testInvalidEmptyBadgeAwardCanonicalEventsList() {
 //    assertTrue(
 //       assertThrows(
 //          NostrException.class, () -> new FollowSetsEvent(
@@ -353,7 +353,7 @@ public class BadgeSetsEventTest extends EventTestFixtures {
 //  @Test
 //  final void testIdenticalPublicKeys() {
 //    PublicKey nonMatchingPublicKey = Identity.generateRandomIdentity().getPublicKey();
-//    BadgeAwardGenericEvent<BadgeDefinitionGenericEvent> notMatchingRecipientDownvoteEvent = new BadgeAwardGenericEvent<>(
+//    BadgeAwardCanonicalEvent<BadgeDefinitionGenericEvent> notMatchingRecipientDownvoteEvent = new BadgeAwardCanonicalEvent<>(
 //       upvoteDefnCreator,
 //       nonMatchingPublicKey,
 //       relay,

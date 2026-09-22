@@ -101,13 +101,13 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
 
   @Test
   final void testEventIFAsGenericEventRecord() {
-    EventIF badgeAwardGenericEventAsEventIF = award_NoNo_Defn_NoNo_Upvote;
+    EventIF badgeAwardCanonicalEventAsEventIF = award_NoNo_Defn_NoNo_Upvote;
     assertEquals(
-       badgeAwardGenericEventAsEventIF.asGenericEventRecord(),
+       badgeAwardCanonicalEventAsEventIF.asGenericEventRecord(),
        award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
-       badgeAwardGenericEventAsEventIF.asGenericEventRecord());
+       badgeAwardCanonicalEventAsEventIF.asGenericEventRecord());
 
     assertEquals_VariantDemonstration(
        award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord());
@@ -133,35 +133,35 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
           expectedBadgeDefinitionGenericEvent.getContent(),
           expectedBadgeDefinitionGenericEvent.getSignature()));
 
-    BadgeAwardCanonicalEvent expectedBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
+    BadgeAwardCanonicalEvent expectedBadgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent(
        submitter,
        recipient.getPublicKey(),
        expectedBadgeDefinitionGenericEvent,
        relay);
-    BadgeAwardCanonicalEvent actualBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
+    BadgeAwardCanonicalEvent actualBadgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent(
        new GenericEventRecord(
-          expectedBadgeAwardGenericEvent.getId(),
-          expectedBadgeAwardGenericEvent.getPublicKey(),
+          expectedBadgeAwardCanonicalEvent.getId(),
+          expectedBadgeAwardCanonicalEvent.getPublicKey(),
           System.currentTimeMillis(),
           Kind.BADGE_AWARD_EVENT,
-          expectedBadgeAwardGenericEvent.getTags(),
-          expectedBadgeAwardGenericEvent.getContent(),
-          expectedBadgeAwardGenericEvent.getSignature()),
+          expectedBadgeAwardCanonicalEvent.getTags(),
+          expectedBadgeAwardCanonicalEvent.getContent(),
+          expectedBadgeAwardCanonicalEvent.getSignature()),
        addressTag -> actualBadgeDefinitionGenericEvent);
 
-    assertEquals(expectedBadgeAwardGenericEvent, actualBadgeAwardGenericEvent);
-    assertEquals(expectedBadgeAwardGenericEvent.getId(), actualBadgeAwardGenericEvent.getId());
-    assertEquals(expectedBadgeAwardGenericEvent.getSignature(), actualBadgeAwardGenericEvent.getSignature());
-    assertEquals(expectedBadgeAwardGenericEvent.getTags(), actualBadgeAwardGenericEvent.getTags());
-    assertTrue(actualBadgeAwardGenericEvent.getRelay().isPresent());
-    assertEquals(relay, actualBadgeAwardGenericEvent.getRelay().orElseThrow());
-    assertNotEquals(expectedBadgeAwardGenericEvent.getCreatedAt(), actualBadgeAwardGenericEvent.getCreatedAt());
+    assertEquals(expectedBadgeAwardCanonicalEvent, actualBadgeAwardCanonicalEvent);
+    assertEquals(expectedBadgeAwardCanonicalEvent.getId(), actualBadgeAwardCanonicalEvent.getId());
+    assertEquals(expectedBadgeAwardCanonicalEvent.getSignature(), actualBadgeAwardCanonicalEvent.getSignature());
+    assertEquals(expectedBadgeAwardCanonicalEvent.getTags(), actualBadgeAwardCanonicalEvent.getTags());
+    assertTrue(actualBadgeAwardCanonicalEvent.getRelay().isPresent());
+    assertEquals(relay, actualBadgeAwardCanonicalEvent.getRelay().orElseThrow());
+    assertNotEquals(expectedBadgeAwardCanonicalEvent.getCreatedAt(), actualBadgeAwardCanonicalEvent.getCreatedAt());
 
-    assertEquals(actualBadgeAwardGenericEvent.getAddressTag(), actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag());
-    assertEquals(actualBadgeAwardGenericEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
-    assertNotEquals(actualBadgeAwardGenericEvent.getRelay().orElseThrow(), actualBadgeDefinitionGenericEvent.getRelay().orElseThrow());
-    assertNotEquals(actualBadgeAwardGenericEvent.getId(), actualBadgeDefinitionGenericEvent.getId());
-    assertEquals(auxRelay, actualBadgeAwardGenericEvent.getAddressTag().getRelay());
+    assertEquals(actualBadgeAwardCanonicalEvent.getAddressTag(), actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag());
+    assertEquals(actualBadgeAwardCanonicalEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
+    assertNotEquals(actualBadgeAwardCanonicalEvent.getRelay().orElseThrow(), actualBadgeDefinitionGenericEvent.getRelay().orElseThrow());
+    assertNotEquals(actualBadgeAwardCanonicalEvent.getId(), actualBadgeDefinitionGenericEvent.getId());
+    assertEquals(auxRelay, actualBadgeAwardCanonicalEvent.getAddressTag().getRelay());
     assertEquals(auxRelay, actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag().getRelay());
   }
 
@@ -178,31 +178,31 @@ public class BadgeAwardUpvoteEventTest extends EventTestFixtures {
           expectedBadgeDefinitionGenericEvent.getContent(),
           expectedBadgeDefinitionGenericEvent.getSignature()));
 
-    BadgeAwardCanonicalEvent expectedBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
+    BadgeAwardCanonicalEvent expectedBadgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent(
        submitter,
        recipient.getPublicKey(),
        expectedBadgeDefinitionGenericEvent);
-    BadgeAwardCanonicalEvent actualBadgeAwardGenericEvent = new BadgeAwardCanonicalEvent(
+    BadgeAwardCanonicalEvent actualBadgeAwardCanonicalEvent = new BadgeAwardCanonicalEvent(
        new GenericEventRecord(
-          expectedBadgeAwardGenericEvent.getId(),
-          expectedBadgeAwardGenericEvent.getPublicKey(),
+          expectedBadgeAwardCanonicalEvent.getId(),
+          expectedBadgeAwardCanonicalEvent.getPublicKey(),
           System.currentTimeMillis(),
           Kind.BADGE_AWARD_EVENT,
-          expectedBadgeAwardGenericEvent.getTags(),
-          expectedBadgeAwardGenericEvent.getContent(),
-          expectedBadgeAwardGenericEvent.getSignature()),
+          expectedBadgeAwardCanonicalEvent.getTags(),
+          expectedBadgeAwardCanonicalEvent.getContent(),
+          expectedBadgeAwardCanonicalEvent.getSignature()),
        addressTag -> actualBadgeDefinitionGenericEvent);
 
-    assertEquals(expectedBadgeAwardGenericEvent, actualBadgeAwardGenericEvent);
-    assertEquals(expectedBadgeAwardGenericEvent.getId(), actualBadgeAwardGenericEvent.getId());
-    assertEquals(expectedBadgeAwardGenericEvent.getSignature(), actualBadgeAwardGenericEvent.getSignature());
-    assertEquals(expectedBadgeAwardGenericEvent.getTags(), actualBadgeAwardGenericEvent.getTags());
-    assertTrue(actualBadgeAwardGenericEvent.getRelay().isEmpty());
-    assertNotEquals(expectedBadgeAwardGenericEvent.getCreatedAt(), actualBadgeAwardGenericEvent.getCreatedAt());
+    assertEquals(expectedBadgeAwardCanonicalEvent, actualBadgeAwardCanonicalEvent);
+    assertEquals(expectedBadgeAwardCanonicalEvent.getId(), actualBadgeAwardCanonicalEvent.getId());
+    assertEquals(expectedBadgeAwardCanonicalEvent.getSignature(), actualBadgeAwardCanonicalEvent.getSignature());
+    assertEquals(expectedBadgeAwardCanonicalEvent.getTags(), actualBadgeAwardCanonicalEvent.getTags());
+    assertTrue(actualBadgeAwardCanonicalEvent.getRelay().isEmpty());
+    assertNotEquals(expectedBadgeAwardCanonicalEvent.getCreatedAt(), actualBadgeAwardCanonicalEvent.getCreatedAt());
 
-    assertEquals(actualBadgeAwardGenericEvent.getAddressTag(), actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag());
-    assertEquals(actualBadgeAwardGenericEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
-    assertNotEquals(actualBadgeAwardGenericEvent.getId(), actualBadgeDefinitionGenericEvent.getId());
+    assertEquals(actualBadgeAwardCanonicalEvent.getAddressTag(), actualBadgeDefinitionGenericEvent.asAddressableEventAddressTag());
+    assertEquals(actualBadgeAwardCanonicalEvent.getBadgeDefinitionEvent(), actualBadgeDefinitionGenericEvent);
+    assertNotEquals(actualBadgeAwardCanonicalEvent.getId(), actualBadgeDefinitionGenericEvent.getId());
   }
 
   private void assertEquals_VariantDemonstration(GenericEventRecord genericEventRecordVariant) {

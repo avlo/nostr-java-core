@@ -82,7 +82,7 @@ public class EventTestFixtures {
 
   public static final BadgeDefinitionGenericEvent defnEvent_YesYes_Downvote = new BadgeDefinitionGenericEvent(upvoteDefnCreator, downvoteIdentifierTag, List.of(baseTagsRelayTag), "", relayArgRelay);
 
-  //  BadgeAwardGenericEvent
+  //  BadgeAwardCanonicalEvent
 //  _NoNo_NoNo_   = _NoNo_  Defn, Award No  relayArgRelayTag, Award No baseTagsRelayTag
   public static final BadgeAwardCanonicalEvent award_NoNo_Defn_NoNo_Upvote = new BadgeAwardCanonicalEvent(submitter, recipient.getPublicKey(), defnEvent_NoNo_Upvote, relayArgRelay);
   public static final SetsPairedEvent defnAuxNo_defnEvent_NoNo_Upvote = create(award_NoNo_Defn_NoNo_Upvote, null);

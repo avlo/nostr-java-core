@@ -40,10 +40,10 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
   private final FollowSetsEvent followSetsEvent;
   private final BadgeSetsEvent badgeSetsEvent;
 
-  private final String badgeAwardGenericEventWithAddressTagEventId;
-  private final String badgeAwardGenericEventWithAddressTagCreatedAt;
+  private final String badgeAwardCanonicalEventWithAddressTagEventId;
+  private final String badgeAwardCanonicalEventWithAddressTagCreatedAt;
   private final String upvotedUserPubkey;
-  private final String badgeAwardGenericEventWithAddressTagSignature;
+  private final String badgeAwardCanonicalEventWithAddressTagSignature;
 
   private final GenericEventRecord followSetsAsGenericEventEventWithEventTag;
   private final String followSetsEventWithEventTagEventId;
@@ -74,10 +74,10 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
        "matching kind, author, identity-tag filter test",
        new Signature("86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"));
 
-    this.badgeAwardGenericEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
-    this.badgeAwardGenericEventWithAddressTagCreatedAt = award_NoNo_Defn_NoNo_Upvote.getCreatedAt().toString();
+    this.badgeAwardCanonicalEventWithAddressTagEventId = eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId();
+    this.badgeAwardCanonicalEventWithAddressTagCreatedAt = award_NoNo_Defn_NoNo_Upvote.getCreatedAt().toString();
     this.upvotedUserPubkey = recipient.getPublicKey().toHexString();
-    this.badgeAwardGenericEventWithAddressTagSignature = award_NoNo_Defn_NoNo_Upvote.getSignature().toString();
+    this.badgeAwardCanonicalEventWithAddressTagSignature = award_NoNo_Defn_NoNo_Upvote.getSignature().toString();
 
     this.followSetsAsGenericEventEventWithEventTag = new GenericEventRecord(
        "09848ce3194d4db99443a1032463092c33454e62b57839ab0e51676ace290c50",
@@ -143,11 +143,11 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
   }
 
   @Test
-  void testStringEventMessageAddressTagBadgeAwardGenericEventEncoder() throws IOException, NostrException {
+  void testStringEventMessageAddressTagBadgeAwardCanonicalEventEncoder() throws IOException, NostrException {
     getStringEquals(
        new EventMessage(
           award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord()),
-       expectedStringEventMessageAddressTagBadgeAwardGenericEvent());
+       expectedStringEventMessageAddressTagBadgeAwardCanonicalEvent());
   }
 
   @Test
@@ -227,10 +227,10 @@ public class EventMessageSerializerWithContainedAddressableEventsTest extends Ev
        ["EVENT",{"id":"5f66a36101d3d152c6270e18f5622d1f8bce4ac5da9ab62d7c3cc0006e590001","pubkey":"bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","created_at":1111111111111,"kind":8,"tags":[["e","bbbd79f81439ff794cf5ac5f7bff9121e257f399829e472c7a14d3e86fe76984","ws://localhost:5555"]],"content":"matching kind, author, identity-tag filter test","sig":"86f25c161fec51b9e441bdb2c09095d5f8b92fdce66cb80d9ef09fad6ce53eaa14c5e16787c42f5404905536e43ebec0e463aee819378a4acbe412c533e60546"}]""";
   }
 
-  private String expectedStringEventMessageAddressTagBadgeAwardGenericEvent() {
+  private String expectedStringEventMessageAddressTagBadgeAwardCanonicalEvent() {
     String withUrl = "\"" + EventTestFixtures.FORMULA_UNIT_UPVOTE + "\",\"" + relayArgUrl + "\"";
     String relayTag = ",[\"relay\",\"ws://localhost:5555\"]";
-    return "[\"EVENT\",{\"id\":\"" + badgeAwardGenericEventWithAddressTagEventId + "\",\"pubkey\":\"" + submitter.getPublicKey().toHexString() + "\",\"created_at\":" + badgeAwardGenericEventWithAddressTagCreatedAt + ",\"kind\":8,\"tags\":[[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + EventTestFixtures.AWARD_UNIT_UPVOTE + "\"],[\"p\",\"" + upvotedUserPubkey + "\"]" + relayTag + "],\"content\":\"\",\"sig\":\"" + badgeAwardGenericEventWithAddressTagSignature + "\"}]";
+    return "[\"EVENT\",{\"id\":\"" + badgeAwardCanonicalEventWithAddressTagEventId + "\",\"pubkey\":\"" + submitter.getPublicKey().toHexString() + "\",\"created_at\":" + badgeAwardCanonicalEventWithAddressTagCreatedAt + ",\"kind\":8,\"tags\":[[\"a\",\"30009:" + upvoteDefnCreator.getPublicKey().toHexString() + ":" + EventTestFixtures.AWARD_UNIT_UPVOTE + "\"],[\"p\",\"" + upvotedUserPubkey + "\"]" + relayTag + "],\"content\":\"\",\"sig\":\"" + badgeAwardCanonicalEventWithAddressTagSignature + "\"}]";
   }
 
   private String expectedStringFollowSetsEventMessageAddressTagGenericEventRecord() {
