@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prosilion.nostr.NostrException;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
-import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
@@ -69,10 +69,10 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   public FollowSetsEvent(
      @NonNull Identity identity,
-     @NonNull CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent,
-     @NonNull Function<CuratedBadgeAwardGenericEvent, List<BadgeSetsEvent>> fxn,
+     @NonNull CuratedBadgeAwardCanonicalEvent curatedBadgeAwardCanonicalEvent,
+     @NonNull Function<CuratedBadgeAwardCanonicalEvent, List<BadgeSetsEvent>> fxn,
      @NonNull Relay relay) {
-    this(identity, fxn.apply(curatedBadgeAwardGenericEvent), List.of(), DEFAULT_CONTENT, relay);
+    this(identity, fxn.apply(curatedBadgeAwardCanonicalEvent), List.of(), DEFAULT_CONTENT, relay);
   }
 
   public FollowSetsEvent(
@@ -147,7 +147,7 @@ public class FollowSetsEvent extends AddressableEvent implements TagMappedEventI
 
   private static PubKeyTag getRecipientPublicKey(BadgeSetsEvent badgeSetsEvent) {
     return new PubKeyTag(badgeSetsEvent
-       .getCuratedBadgeAwardGenericEventList().getFirst()
+       .getCuratedBadgeAwardCanonicalEventList().getFirst()
        .getAwardRecipientPublicKey());
   }
 

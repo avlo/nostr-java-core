@@ -6,7 +6,7 @@ import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.BadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.BadgeAwardCanonicalEvent;
-import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.CuratedBadgeDefinitionGenericEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
+public class CuratedBadgeAwardCanonicalEventTest extends EventTestFixtures {
 
   @Test
   final void testValidBadgeSetsEventUsingBadgeAwardGenericEvent() {
@@ -34,7 +34,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
           List.of(baseTagsRelayTag),
           relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_YesYes_Defn_YesYes_Upvote,
        new ReferenceTag(relayArgUrl),
@@ -63,7 +63,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
   @Test
   final void testValidBadgeSetsEventUsingGenericEventRecord() {
-    CuratedBadgeAwardGenericEvent expectedCurationBadgeAwardGenericEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent expectedCurationBadgeAwardGenericEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_YesYes_Defn_YesYes_Upvote,
        new ReferenceTag(relayArgUrl),
@@ -79,7 +79,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        expectedCurationBadgeAwardGenericEvent.getContent(),
        expectedCurationBadgeAwardGenericEvent.getSignature());
 
-    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(genericEventRecord);
+    CuratedBadgeAwardCanonicalEvent actual = new CuratedBadgeAwardCanonicalEvent(genericEventRecord);
 
     assertEquals(expectedCurationBadgeAwardGenericEvent.getIdentifierTag(), actual.getIdentifierTag());
     assertEquals(aImgIdentity.getPublicKey(), actual.getAddressTag().getPublicKey());
@@ -100,7 +100,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
   final void testGenericEventRecordCtorIncorrectKind() {
     assertTrue(
        assertThrows(NostrException.class, () ->
-          new CuratedBadgeAwardGenericEvent(
+          new CuratedBadgeAwardCanonicalEvent(
              award_NoNo_Defn_NoNo_Upvote.asGenericEventRecord()))
           .getMessage().contains("Incorrect Kind [8] (expected Kind: [30004])"));
   }
@@ -126,7 +126,7 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
           List.of(baseTagsRelayTag),
           relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_YesYes_Defn_YesYes_Upvote,
        new ReferenceTag(relayArgUrl),
@@ -148,14 +148,14 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
   @Test
   final void testValidBadgeSetsEvent() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgUrl),
        new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsDownvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
        new ReferenceTag(relayArgUrl),
@@ -180,14 +180,14 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
   @Test
   final void testNewFromExisting() {
-    CuratedBadgeAwardGenericEvent curatedUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curatedUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgUrl),
        new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent newFromExisting = new CuratedBadgeAwardGenericEvent(curatedUpvoteEvent.asGenericEventRecord());
+    CuratedBadgeAwardCanonicalEvent newFromExisting = new CuratedBadgeAwardCanonicalEvent(curatedUpvoteEvent.asGenericEventRecord());
 
     assertEquals(curatedUpvoteEvent.getAddressTag(), newFromExisting.getAddressTag());
     assertEquals(curatedUpvoteEvent.getAddressTagEventTagPairAsBaseTags(), newFromExisting.getAddressTagEventTagPairAsBaseTags());
@@ -202,27 +202,27 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
 
   @Test
   final void testNewFromGenericEventRecord() {
-    CuratedBadgeAwardGenericEvent expected = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent expected = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgUrl),
        new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(expected.asGenericEventRecord());
+    CuratedBadgeAwardCanonicalEvent actual = new CuratedBadgeAwardCanonicalEvent(expected.asGenericEventRecord());
     assertEquals(expected, actual);
   }
 
   @Test
   final void testManualConstruction() {
-    CuratedBadgeAwardGenericEvent expected = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent expected = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgUrl),
        new ReferenceTag(relayArgUrl),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent actual = new CuratedBadgeAwardGenericEvent(expected.asGenericEventRecord());
+    CuratedBadgeAwardCanonicalEvent actual = new CuratedBadgeAwardCanonicalEvent(expected.asGenericEventRecord());
     assertEquals(expected, actual);
   }
 
@@ -237,14 +237,14 @@ public class CuratedBadgeAwardGenericEventTest extends EventTestFixtures {
        recipient.getPublicKey(),
        badgeDefinitionGenericEvent);            // <------------------------- no relay
 
-    CuratedBadgeAwardGenericEvent curatedBadgeAwardGenericEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curatedBadgeAwardCanonicalEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        badgeAwardGenericEvent,
        new ReferenceTag(relayArgUrl),
        new ReferenceTag(relayArgUrl),
        relay);
 
-    assertEquals(recipient.getPublicKey(), curatedBadgeAwardGenericEvent.getAwardRecipientPublicKey());
+    assertEquals(recipient.getPublicKey(), curatedBadgeAwardCanonicalEvent.getAwardRecipientPublicKey());
   }
 
   @Test

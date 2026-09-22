@@ -20,9 +20,9 @@ import com.prosilion.nostr.user.PublicKey;
 import java.util.List;
 import lombok.NonNull;
 
-public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
+public class CuratedBadgeAwardCanonicalEvent extends AbstractSetsEvent implements SetsPairedEventTagIF {
   public static final String DEFAULT_CONTENT =
-     "AfterImage generated CuratedBadgeAwardGenericEvent- appending BadgeAwardGenericEvent content: %s";
+     "AfterImage generated CuratedBadgeAwardCanonicalEvent- appending BadgeAwardGenericEvent content: %s";
 // TODO: potentially re-add later if can resolve generic ctor variant
 //  @Getter
 //  @JsonIgnore
@@ -32,7 +32,7 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
 //  @JsonIgnore
 //  protected final CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent;
 
-  public CuratedBadgeAwardGenericEvent(
+  public CuratedBadgeAwardCanonicalEvent(
      @NonNull Identity identity,
      @NonNull BadgeAwardCanonicalEvent badgeAwardCanonicalEvent,
      @NonNull ReferenceTag badgeDefinitionGenericEventReferenceTag,
@@ -50,7 +50,7 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
        relay);
   }
 
-  public CuratedBadgeAwardGenericEvent(
+  public CuratedBadgeAwardCanonicalEvent(
      @NonNull Identity identity,
      @NonNull BadgeAwardCanonicalEvent badgeAwardCanonicalEvent,
      @NonNull CuratedBadgeDefinitionGenericEvent curatedBadgeDefinitionGenericEvent,
@@ -79,11 +79,11 @@ public class CuratedBadgeAwardGenericEvent extends AbstractSetsEvent implements 
 //    this.curatedBadgeDefinitionGenericEvent = curatedBadgeDefinitionGenericEvent;
   }
 
-  public CuratedBadgeAwardGenericEvent(@NonNull GenericEventRecord genericEventRecord) {
+  public CuratedBadgeAwardCanonicalEvent(@NonNull GenericEventRecord genericEventRecord) {
     this(genericEventRecord, requireTags(genericEventRecord));
   }
 
-  private CuratedBadgeAwardGenericEvent(
+  private CuratedBadgeAwardCanonicalEvent(
      @NonNull GenericEventRecord genericEventRecord,
      @NonNull RequiredTags requiredTags) {
     super(

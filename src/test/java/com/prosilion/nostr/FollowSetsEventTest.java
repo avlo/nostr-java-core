@@ -6,7 +6,7 @@ import com.prosilion.nostr.event.GenericEventRecord;
 import com.prosilion.nostr.event.BadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
-import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
@@ -89,8 +89,8 @@ public class FollowSetsEventTest extends EventTestFixtures {
   }
 
   @Test
-  final void testCuratedBadgeAwardGenericEventList() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+  final void testCuratedBadgeAwardCanonicalEventList() {
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -122,14 +122,14 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
   @Test
   final void testValidFollowSetsEvent() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),
        new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsDownvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -151,7 +151,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
   @Test
   final void testValidFollowSetsEventBadgeSetsEventContainsDuplicate() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -174,7 +174,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
   @Test
   final void testFollowSetsEventEquality() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -213,14 +213,14 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
   @Test
   final void testFollowSetsEventEqualityViaGetContainedAddressableEvents() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),
        new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsDownvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -247,9 +247,9 @@ public class FollowSetsEventTest extends EventTestFixtures {
     assertEquals(1, expectedFollowSetsEvent.getTypeSpecificTags(AddressTag.class).size());
 
     List<BadgeSetsEvent> expectedBadgeSetsEventList = expectedFollowSetsEvent.getBadgeSetsEventList();
-    List<CuratedBadgeAwardGenericEvent> expectedCuratedBadgeAwardGenericEventList = expectedBadgeSetsEventList.stream().map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList).flatMap(Collection::stream).toList();
-    List<EventTag> eventTags = expectedCuratedBadgeAwardGenericEventList.stream()
-       .map(CuratedBadgeAwardGenericEvent::getEventTags).flatMap(Collection::stream).toList();
+    List<CuratedBadgeAwardCanonicalEvent> expectedCuratedBadgeAwardCanonicalEventList = expectedBadgeSetsEventList.stream().map(BadgeSetsEvent::getCuratedBadgeAwardCanonicalEventList).flatMap(Collection::stream).toList();
+    List<EventTag> eventTags = expectedCuratedBadgeAwardCanonicalEventList.stream()
+       .map(CuratedBadgeAwardCanonicalEvent::getEventTags).flatMap(Collection::stream).toList();
 
     assertTrue(eventTags.contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTag()));
     assertTrue(eventTags.contains(eventAuxNo_award_NoNo_defn_NoNo_Downvote.getEventTag()));
@@ -264,7 +264,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
   @Test
   final void eventTagCountAsListTest() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -295,7 +295,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
           new BadgeSetsEvent(
              aImgIdentity,
              badgeDefinitionReputationEventPlusOneFormula,
-             new CuratedBadgeAwardGenericEvent(
+             new CuratedBadgeAwardCanonicalEvent(
                 aImgIdentity,
                 award_NoNo_Defn_NoNo_Upvote,
                 new ReferenceTag(relayArgRelay.getUrl()),
@@ -306,7 +306,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
           List.of(new BadgeSetsEvent(
              aImgIdentity,
              badgeDefinitionReputationEventPlusOneFormula,
-             new CuratedBadgeAwardGenericEvent(
+             new CuratedBadgeAwardCanonicalEvent(
                 aImgIdentity,
                 award_NoNo_Defn_NoNo_Upvote,
                 new ReferenceTag(relayArgRelay.getUrl()),
@@ -314,7 +314,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
                 relayArgRelay), relayArgRelay), new BadgeSetsEvent(
              aImgIdentity,
              badgeDefinitionReputationEventPlusOneFormula,
-             new CuratedBadgeAwardGenericEvent(
+             new CuratedBadgeAwardCanonicalEvent(
                 aImgIdentity,
                 award_NoNo_Defn_YesNo_Upvote,
                 new ReferenceTag(relayArgRelay.getUrl()),
@@ -323,9 +323,9 @@ public class FollowSetsEventTest extends EventTestFixtures {
           auxRelay))
        .allMatch(followSetsEvent ->
           followSetsEvent.getBadgeSetsEventList().stream()
-             .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
+             .map(BadgeSetsEvent::getCuratedBadgeAwardCanonicalEventList)
              .flatMap(Collection::stream)
-             .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
+             .map(CuratedBadgeAwardCanonicalEvent::getSetsPairedEvent)
              .map(SetsPairedEvent::getEventTagEventId).toList()
              .contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId())));
 
@@ -334,7 +334,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
           new BadgeSetsEvent(
              aImgIdentity,
              badgeDefinitionReputationEventPlusOneFormula,
-             new CuratedBadgeAwardGenericEvent(
+             new CuratedBadgeAwardCanonicalEvent(
                 aImgIdentity,
                 award_NoNo_Defn_NoNo_Downvote,
                 new ReferenceTag(relayArgRelay.getUrl()),
@@ -345,7 +345,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
           List.of(new BadgeSetsEvent(
              aImgIdentity,
              badgeDefinitionReputationEventPlusOneFormula,
-             new CuratedBadgeAwardGenericEvent(
+             new CuratedBadgeAwardCanonicalEvent(
                 aImgIdentity,
                 award_NoNo_Defn_NoNo_Upvote,
                 new ReferenceTag(relayArgRelay.getUrl()),
@@ -353,7 +353,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
                 relayArgRelay), relayArgRelay), new BadgeSetsEvent(
              aImgIdentity,
              badgeDefinitionReputationEventPlusOneFormula,
-             new CuratedBadgeAwardGenericEvent(
+             new CuratedBadgeAwardCanonicalEvent(
                 aImgIdentity,
                 award_NoNo_Defn_YesNo_Upvote,
                 new ReferenceTag(relayArgRelay.getUrl()),
@@ -362,16 +362,16 @@ public class FollowSetsEventTest extends EventTestFixtures {
           auxRelay))
        .allMatch(followSetsEvent ->
           followSetsEvent.getBadgeSetsEventList().stream()
-             .map(BadgeSetsEvent::getCuratedBadgeAwardGenericEventList)
+             .map(BadgeSetsEvent::getCuratedBadgeAwardCanonicalEventList)
              .flatMap(Collection::stream)
-             .map(CuratedBadgeAwardGenericEvent::getSetsPairedEvent)
+             .map(CuratedBadgeAwardCanonicalEvent::getSetsPairedEvent)
              .map(SetsPairedEvent::getEventTagEventId).toList()
              .contains(eventAuxNo_award_NoNo_defn_NoNo_UpvoteSetsPairedEvent.getEventTagEventId())));
   }
 
   @Test
   final void testNewFromExisting() {
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -401,7 +401,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
     assertEquals(1, followSetsUpvoteEvent.getBadgeSetsEventList().size());
     assertEquals(1, newFromExisting.getBadgeSetsEventList().size());
 
-    CuratedBadgeAwardGenericEvent curationSetsDownvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsDownvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Downvote,
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -423,14 +423,14 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
   @Test
   final void testGetNonMatchingBadgeSetsEventFromBadgeSetsEventLists() {
-    CuratedBadgeAwardGenericEvent curatedBadgeAwardUpvoteEvent_1 = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curatedBadgeAwardUpvoteEvent_1 = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        createNewBadgeAwardUpvoteEvent(),
        new ReferenceTag(relayArgRelay.getUrl()),
        new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curatedBadgeAwardDownvoteEvent_1 = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curatedBadgeAwardDownvoteEvent_1 = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        createNewBadgeAwardDownvoteEvent(),
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -445,14 +445,14 @@ public class FollowSetsEventTest extends EventTestFixtures {
 
     final IdentifierTag reputationDifferentIdentifierTag = new IdentifierTag("BADGE_DIFFERENT_DEFN_UNIT_REP");
 
-    CuratedBadgeAwardGenericEvent curatedBadgeAwardUpvoteEvent_2 = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curatedBadgeAwardUpvoteEvent_2 = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        createNewBadgeAwardUpvoteEvent(),
        new ReferenceTag(relayArgRelay.getUrl()),
        new ReferenceTag(relayArgRelay.getUrl()),
        relayArgRelay);
 
-    CuratedBadgeAwardGenericEvent curatedBadgeAwardDownvoteEvent_2 = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curatedBadgeAwardDownvoteEvent_2 = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        createNewBadgeAwardDownvoteEvent(),
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -478,7 +478,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
        List.of(badgeSetsEvent_1, badgeSetsEvent_2),
        auxRelay);
 
-    CuratedBadgeAwardGenericEvent curatedBadgeAwardDownvoteEvent_3 = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curatedBadgeAwardDownvoteEvent_3 = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        createNewBadgeAwardDownvoteEvent(),
        new ReferenceTag(relayArgRelay.getUrl()),
@@ -501,7 +501,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
     assertEquals(1, actual.getBadgeSetsEventList().size());
     assertEquals(
        List.of(curatedBadgeAwardDownvoteEvent_3),
-       actual.getBadgeSetsEventList().getFirst().getCuratedBadgeAwardGenericEventList());
+       actual.getBadgeSetsEventList().getFirst().getCuratedBadgeAwardCanonicalEventList());
   }
 
 //   copilot --resume=e40f1fed-c48c-4fd0-81c6-8bcbd3093f1a
@@ -518,7 +518,7 @@ public class FollowSetsEventTest extends EventTestFixtures {
         if (setA.getBadgeDefinitionReputationEvent()
            .equals(setB.getBadgeDefinitionReputationEvent())) {
           matchingBadgeDefinitionFound = true;
-          List<CuratedBadgeAwardGenericEvent> filteredSet = filterBNotInA(setA, setB);
+          List<CuratedBadgeAwardCanonicalEvent> filteredSet = filterBNotInA(setA, setB);
 
           if (!filteredSet.isEmpty()) {
             nonMatchingSetList.add(new BadgeSetsEvent(
@@ -551,10 +551,10 @@ public class FollowSetsEventTest extends EventTestFixtures {
           new NostrException("createNewFromNonMatching FollowSetsEvent is missing a Relay")));
   }
 
-  private List<CuratedBadgeAwardGenericEvent> filterBNotInA(BadgeSetsEvent setA, BadgeSetsEvent setB) {
-    return setB.getCuratedBadgeAwardGenericEventList().stream()
+  private List<CuratedBadgeAwardCanonicalEvent> filterBNotInA(BadgeSetsEvent setA, BadgeSetsEvent setB) {
+    return setB.getCuratedBadgeAwardCanonicalEventList().stream()
        .filter(incomingCuratedBadgeAwardVoteEvent ->
-          !setA.getCuratedBadgeAwardGenericEventList().contains(incomingCuratedBadgeAwardVoteEvent)).toList();
+          !setA.getCuratedBadgeAwardCanonicalEventList().contains(incomingCuratedBadgeAwardVoteEvent)).toList();
   }
 
   private BadgeAwardCanonicalEvent createNewBadgeAwardUpvoteEvent() {

@@ -4,7 +4,7 @@ import com.prosilion.nostr.codec.IDecoder;
 import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.curated.BadgeDefinitionReputationEvent;
 import com.prosilion.nostr.event.curated.BadgeSetsEvent;
-import com.prosilion.nostr.event.curated.CuratedBadgeAwardGenericEvent;
+import com.prosilion.nostr.event.curated.CuratedBadgeAwardCanonicalEvent;
 import com.prosilion.nostr.event.curated.CuratedFormulaEvent;
 import com.prosilion.nostr.event.FollowSetsEvent;
 import com.prosilion.nostr.event.FormulaEvent;
@@ -75,7 +75,7 @@ public class EventMessageSerializerWithPubKeyTagsContainingRelayTest extends Eve
        "AfterImage generated FollowSetsEvent",
        new Signature("27683ca56acf67502769eb2900f53803086e56e5ae6aaa8a19f12441f9b29c58f5950ee4ac05ce8559a61295e036bae3609c022522e85588b5a21de5c1518843"));
 
-    CuratedBadgeAwardGenericEvent curationSetsUpvoteEvent = new CuratedBadgeAwardGenericEvent(
+    CuratedBadgeAwardCanonicalEvent curationSetsUpvoteEvent = new CuratedBadgeAwardCanonicalEvent(
        aImgIdentity,
        award_NoNo_Defn_NoNo_Upvote,
        new ReferenceTag(relayArgRelay.getUrl()),

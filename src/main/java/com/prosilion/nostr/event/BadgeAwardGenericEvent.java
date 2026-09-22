@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import lombok.NonNull;
 
-public class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> extends BadgeAwardAbstractEvent<T> {
+public abstract class BadgeAwardGenericEvent<T extends BadgeDefinitionGenericEvent> extends BadgeAwardAbstractEvent<T> {
   public BadgeAwardGenericEvent(
      @NonNull Identity authorIdentity,
      @NonNull PublicKey awardRecipientPublicKey,
