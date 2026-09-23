@@ -24,7 +24,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractSetsEvent extends AddressableEvent implements TagMappedEventIF {
+public abstract class AbstractSetsEvent extends AddressableEvent {
   @Getter
   @JsonIgnore
   protected final SetsPairedEvent setsPairedEvent;
@@ -105,7 +105,7 @@ public abstract class AbstractSetsEvent extends AddressableEvent implements TagM
     return new IdentifierTag(getAddressTagValuesHashed(addressTag)); // return new IdentifierTag(getIdentifierTagHex64(addressTag));
   }
 
-//  potentially expensive/resource-heavy.  for now, just use @getAddressTagValuesHashed (below) 
+  //  potentially expensive/resource-heavy.  for now, just use @getAddressTagValuesHashed (below) 
   public static String getIdentifierTagHex64(AddressTag addressTag) {
     return
        NostrUtil.bytesToHex(

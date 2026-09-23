@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class FollowSetsEvent extends AddressableEvent implements TagMappedEventIF {
+public class FollowSetsEvent extends AddressableEvent {
   public static final String DEFAULT_IDENTIFIER = "PROSILION_FOLLOW_SETS_EVENT";
   public static final IdentifierTag defaultIdentifierTag = new IdentifierTag(DEFAULT_IDENTIFIER);
   public static final String DEFAULT_CONTENT = "AfterImage generated FollowSetsEvent";

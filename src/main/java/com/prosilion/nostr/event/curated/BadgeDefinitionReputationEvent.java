@@ -28,7 +28,7 @@ import lombok.NonNull;
 import org.apache.logging.log4j.util.Strings;
 
 @Getter
-public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent implements TagMappedEventIF {
+public class BadgeDefinitionReputationEvent extends BadgeDefinitionGenericEvent {
   public static final String MISSING_FORMULA_EVENTS = "BadgeDefinitionReputationEvent Ctor() is missing CuratedFormulaEvent(s) parameter";
   public static final String MATCHING_IDENTIFIER_TAGS_FOUND = "Formula events containing illegal matching identifier tags found: ";
   public static final String CONCAT_INVALID_MATCHING_TAGS = Strings.concat(MATCHING_IDENTIFIER_TAGS_FOUND, " %s");

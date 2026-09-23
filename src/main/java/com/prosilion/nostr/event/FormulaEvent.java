@@ -19,7 +19,7 @@ import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
 @Getter
-public class FormulaEvent extends ArbitraryCustomAppDataEvent implements TagMappedEventIF {
+public class FormulaEvent extends ArbitraryCustomAppDataEvent {
   @JsonIgnore
   private final BadgeDefinitionGenericEvent badgeDefinitionGenericEvent; // aTag
 

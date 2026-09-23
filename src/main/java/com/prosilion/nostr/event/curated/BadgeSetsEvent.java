@@ -6,7 +6,6 @@ import com.prosilion.nostr.enums.Kind;
 import com.prosilion.nostr.event.AbstractSetsEvent;
 import com.prosilion.nostr.event.AddressableEvent;
 import com.prosilion.nostr.event.GenericEventRecord;
-import com.prosilion.nostr.event.TagMappedEventIF;
 import com.prosilion.nostr.event.internal.Relay;
 import com.prosilion.nostr.tag.AddressTag;
 import com.prosilion.nostr.tag.BaseTag;
@@ -26,7 +25,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class BadgeSetsEvent extends AddressableEvent implements TagMappedEventIF {
+public class BadgeSetsEvent extends AddressableEvent {
   public static final String DEFAULT_CONTENT = "AfterImage generated BadgeSetsEvent";
 
   @Getter
